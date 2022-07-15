@@ -1,0 +1,19 @@
+建议安装 mvnd，可并发编译
+
+mvnd clean install -Dmaven.test.skip=true
+
+编译
+mvnd compile
+
+jprotobuf
+mvnd jprotobuf:precompile
+
+生成 html doc
+mvnd clean install -Dmaven.test.skip=true
+
+依赖相关
+mvnd dependency:tree>doc_game.txt
+
+重复依赖检测，并解决冲突jar
+mvnd enforcer:display-info
+mvnd validate
