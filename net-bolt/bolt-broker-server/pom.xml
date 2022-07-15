@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>iogame</artifactId>
+        <groupId>com.iohao.game</groupId>
+        <version>17.1.2</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>bolt-broker-server</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.iohao.game</groupId>
+            <artifactId>bolt-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.scalecube/scalecube-cluster -->
+        <dependency>
+            <groupId>io.scalecube</groupId>
+            <artifactId>scalecube-cluster</artifactId>
+            <version>2.6.12</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.scalecube/scalecube-transport-netty -->
+        <dependency>
+            <groupId>io.scalecube</groupId>
+            <artifactId>scalecube-transport-netty</artifactId>
+            <version>2.6.12</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

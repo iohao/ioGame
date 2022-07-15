@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>iogame</artifactId>
+        <groupId>com.iohao.game</groupId>
+        <version>17.1.2</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>light-jprotobuf</artifactId>
+
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.iohao.game</groupId>
+            <artifactId>common-kit</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.thoughtworks.qdox/qdox -->
+        <dependency>
+            <groupId>com.thoughtworks.qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>${qdox.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baidu</groupId>
+            <artifactId>jprotobuf</artifactId>
+            <version>${jprotobuf.version}</version>
+        </dependency>
+    </dependencies>
+</project>

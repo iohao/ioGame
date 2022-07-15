@@ -1,0 +1,4 @@
+jdbcDriver = com.mysql.jdbc.Driver
+jdbcUrl = jdbc:mysql://xxx:3306/myarpg?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+jdbcUser = common
+jdbcPwd = commonPwd

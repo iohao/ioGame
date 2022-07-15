@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>iogame</artifactId>
+        <groupId>com.iohao.game</groupId>
+        <version>17.1.2</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>bolt-run-one</artifactId>
+
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.iohao.game</groupId>
+            <artifactId>bolt-external</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.iohao.game</groupId>
+            <artifactId>bolt-broker-server</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- 这个不是必须的， 这里使用了 springboot 的控制台色彩相关日志 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

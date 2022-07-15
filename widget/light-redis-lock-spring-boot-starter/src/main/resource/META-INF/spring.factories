@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.iohao.game.widget.light.redis.lock.spring.service.config.DistributedLockAutoConfiguration

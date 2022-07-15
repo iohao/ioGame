@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <groupId>com.iohao.game</groupId>
+    <artifactId>iogame</artifactId>
+    <version>17.1.2</version>
+    <name>ioGame</name>
+    <description>ioGame网络游戏服务器框架</description>
+    <url>https://www.yuque.com/iohao/game</url>
+
+    <modules>
+        <!-- 网络游戏框架 - 业务框架 -->
+        <module>common/common-kit</module>
+        <module>common/common-core</module>
+        <!-- 网络游戏框架 - 网络通信 -->
+        <module>net-bolt/bolt-core</module>
+        <!-- Broker （游戏网关） -->
+        <module>net-bolt/bolt-broker-server</module>
+        <!-- BrokerClient （逻辑服） -->
+        <module>net-bolt/bolt-client</module>
+        <!-- 网络游戏框架 : 对外的服务器 （面向真实用户） -->
+        <module>net-bolt/bolt-external-core</module>
+        <module>net-bolt/bolt-external</module>
+        <!-- 单体启动辅助，一个进程内可以启动 ： 对外服、游戏网关、游戏逻辑服 -->
+        <module>net-bolt/bolt-run-one</module>
+
+        <!-- 小部件 : 任务延时器 -->
+        <module>widget/light-timer-task</module>
+        <!-- 小部件 : 领域事件 -->
+        <module>widget/light-domain-event</module>
+        <!-- 小部件 : 多环境切换 -->
+        <module>widget/light-profile</module>
+        <!-- 小部件 : jprotobuf 增强 -->
+        <module>widget/light-jprotobuf</module>
+        <!-- 小部件 ： 基于redis实现的分布式锁-->
+        <module>widget/light-redis-lock</module>
+        <!-- 小部件 ： 基于redis实现的分布式锁 for springBootStarter -->
+        <module>widget/light-redis-lock-spring-boot-starter</module>
+
+        <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
+        <module>widget-game/light-game-room</module>
+
+        <!-- 扩展服 - 监控相关 -->
+        <module>broker-starter-ext/broker-starter-monitor-logic</module>
+
+    </modules>
+
+    <!--统一管理版本 的一个父 pom-->
+    <properties>
+        <!-- jdk 版本 -->
+        <java.version>17</java.version>
+
+        <encoding>UTF-8</encoding>
+
+        <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
+        <netty.version>4.1.78.Final</netty.version>
+        <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
+        <bolt.version>1.6.5</bolt.version>
+        <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
+        <hessian.version>4.0.66</hessian.version>
+        <!--  Jansi 控制台输出彩色文字 https://www.oschina.net/p/jansi https://mvnrepository.com/artifact/org.fusesource.jansi/jansi  -->
+        <jansi.version>2.4.0</jansi.version>
+        <!-- Java文档解析器 https://mvnrepository.com/artifact/com.thoughtworks.qdox/qdox -->
+        <qdox.version>2.0.1</qdox.version>
+
+        <!-- JCTools 是一款对jdk并发数据结构进行增强的并发工具 see http://jctools.github.io/JCTools/ https://mvnrepository.com/artifact/org.jctools/jctools-core -->
+        <jctools-core.version>3.3.0</jctools-core.version>
+
+        <!-- lombok 消除冗长的 Java 代码 https://www.oschina.net/p/lombok https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <lombok.version>1.18.24</lombok.version>
+
+        <!-- redis internal : https://www.oschina.net/p/redisson https://mvnrepository.com/artifact/org.redisson/redisson -->
+        <redisson.version>3.17.4</redisson.version>
+        <!-- json 解析器 : https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
+        <fastjson.version>2.0.8</fastjson.version>
+
+        <!--  reflectasm 高性能的反射处理 https://www.oschina.net/p/reflectasm https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm  -->
+        <reflectasm.version>1.11.9</reflectasm.version>
+
+        <!-- ==============轻量小部件============== -->
+        <!--  cache2k https://mvnrepository.com/artifact/org.cache2k -->
+        <cache2k.version>1.2.4.Final</cache2k.version>
+        <!--  disruptor https://mvnrepository.com/artifact/com.lmax/disruptor -->
+        <disruptor.version>3.4.4</disruptor.version>
+
+        <!-- JSR-380 bean 验证框架 https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+        <hibernate-validator.version>7.0.4.Final</hibernate-validator.version>
+        <!-- JSR-380 https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
+        <!-- JSR-380 https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
+        <jakarta.el.version>4.0.2</jakarta.el.version>
+
+        <!-- Java 实体映射工具 https://mvnrepository.com/artifact/org.mapstruct/mapstruct https://mapstruct.org/documentation/reference-guide/ -->
+        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+
+        <!-- temp spring boot https://mvnrepository.com/artifact/org.springframework/spring-core -->
+        <spring.version>5.3.20</spring.version>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
+        <springboot.version>2.7.0</springboot.version>
+        <!--  junit https://mvnrepository.com/artifact/junit/junit  -->
+        <junit.version>4.13.2</junit.version>
+
+        <!-- slf4j https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <slf4j-api.version>1.7.36</slf4j-api.version>
+        <!-- slf4j https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <logback.version>1.2.11</logback.version>
+        <!-- OSHI 是一个免费的基于 JNA（本机）的 Java 操作系统和硬件信息库。 -->
+        <!-- https://mvnrepository.com/artifact/com.github.oshi/oshi-core -->
+        <oshi-core.version>6.2.1</oshi-core.version>
+
+        <reactor-bom.version>2020.0.17</reactor-bom.version>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <guava.version>31.1-jre</guava.version>
+
+
+        <!-- other 后期整理，需要从全局移动到局部模块中 -->
+        <!-- Hutool是一个Java工具包 see https://www.hutool.cn/ https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
+        <hutool.version>5.8.4</hutool.version>
+        <!-- jprotobuf是针对Java程序开发一套简易类库，目的是简化java语言对protobuf类库的使用 https://github.com/jhunters/jprotobuf/ https://mvnrepository.com/artifact/com.baidu/jprotobuf -->
+        <jprotobuf.version>2.4.15</jprotobuf.version>
+
+    </properties>
+
+    <dependencies>
+        <!-- lombok 简化 java 代码 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baidu</groupId>
+            <artifactId>jprotobuf</artifactId>
+            <version>${jprotobuf.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+    </dependencies>
+
+    <!--dependencyManagement 标签用于控制子模块的依赖版本等信息，该标签只用来控制版本，不能将依赖引入 -->
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-bom</artifactId>
+                <version>${reactor-bom.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-api.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/iohao/iogame/issues</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>渔民小镇</name>
+            <email>262610965@qq.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/iohao/iogame</url>
+        <connection>https://github.com/iohao/iogame.git</connection>
+        <developerConnection>https://github.com/iohao</developerConnection>
+    </scm>
+
+    <build>
+        <plugins>
+
+            <!--
+            编译插件
+            mvn compile
+            To compile your test sources, you'll do:
+            mvn test-compile
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <compilerVersion>${java.version}</compilerVersion>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <!-- maven 3.6.2及之后加上编译参数，可以让我们在运行期获取方法参数名称。 -->
+                    <parameters>true</parameters>
+                    <skip>true</skip>
+                    <!-- JDK9+ with module-info.java -->
+                    <annotationProcessorPaths>
+                        <!-- 实体映射工具 -->
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+
+                        <!-- lombok 消除冗长的 Java 代码 -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <!-- additional annotation processor required as of Lombok 1.18.16 -->
+                        <!-- mapStruct 支持 lombok -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!-- 打包时跳过单元测试 https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+
+            <!-- 打包源码 https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+                重复依赖检测，并解决冲突jar
+                mvnd enforcer:display-info
+                https://maven.apache.org/enforcer/maven-enforcer-plugin/index.html
+            -->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-enforcer-plugin</artifactId>-->
+<!--                <version>3.0.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>enforce-versions</id>-->
+<!--                        <goals>-->
+<!--                            <goal>enforce</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <rules>-->
+<!--                                <bannedPlugins>-->
+<!--                                    &lt;!&ndash; will only display a warning but does not fail the build. &ndash;&gt;-->
+<!--                                    <level>WARN</level>-->
+<!--                                    <excludes>-->
+<!--                                        <exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>-->
+<!--                                    </excludes>-->
+<!--                                    <message>Please consider using the maven-invoker-plugin-->
+<!--                                        (http://maven.apache.org/plugins/maven-invoker-plugin/)!-->
+<!--                                    </message>-->
+<!--                                </bannedPlugins>-->
+<!--                                <requireMavenVersion>-->
+<!--                                    <version>2.0.6</version>-->
+<!--                                </requireMavenVersion>-->
+<!--                                <requireJavaVersion>-->
+<!--                                    <version>1.5</version>-->
+<!--                                </requireJavaVersion>-->
+<!--                                <requireOS>-->
+<!--                                    <family>unix</family>-->
+<!--                                </requireOS>-->
+<!--                            </rules>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addBuildEnvironmentEntries>true</addBuildEnvironmentEntries>
+                        </manifest>
+                        <manifestSections>
+                            <manifestSection>
+                                <name>hope</name>
+                                <manifestEntries>
+                                    <id>Public ownership of means of production</id>
+                                </manifestEntries>
+                            </manifestSection>
+                            <manifestSection>
+                                <name>zhu luo yi</name>
+                                <manifestEntries>
+                                    <id>渔民小镇</id>
+                                </manifestEntries>
+                            </manifestSection>
+                        </manifestSections>
+
+                    </archive>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- mvn clean deploy -P oss-release -Dmaven.test.skip=true -e -->
+        <profile>
+            <id>oss-release</id>
+
+            <build>
+                <plugins>
+
+                    <!-- Gpg Signature -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- 自动发布 -->
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>oss-iogame</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <!-- false 手动关闭 release -->
+                            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                        </configuration>
+                        <dependencies>
+                            <!--
+                            apparently this needs to be exactly this version
+                            https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream
+                            -->
+                            <dependency>
+                                <groupId>com.thoughtworks.xstream</groupId>
+                                <artifactId>xstream</artifactId>
+                                <version>1.4.15</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+
+                    <!--                    <plugin>-->
+                    <!--                        <groupId>org.sonatype.plugins</groupId>-->
+                    <!--                        <artifactId>nexus-staging-maven-plugin</artifactId>-->
+                    <!--                        <version>1.6.3</version>-->
+                    <!--                        <extensions>true</extensions>-->
+                    <!--                        <configuration>-->
+                    <!--                            <serverId>snapshots</serverId>-->
+                    <!--                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
+                    <!--                            <autoReleaseAfterClose>true</autoReleaseAfterClose>-->
+                    <!--                        </configuration>-->
+                    <!--                    </plugin>-->
+
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.4.0</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                            <doclint>none</doclint>
+                        </configuration>
+
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <distributionManagement>
+        <repository>
+            <!-- 这里的id要与 maven setting.xml 中 server 的 id 一致 -->
+            <id>oss-iogame</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <uniqueVersion>true</uniqueVersion>
+        </repository>
+    </distributionManagement>
+</project>

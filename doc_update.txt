@@ -1,0 +1,650 @@
+
+
+
+增强：相同路由可以用在 action 与广播上；当 action 返回值为 void 时，可以复用路由来做为广播的响应路由。
+
+-- 3类通讯方式相关 - 广播，新增 --
+广播推送添加新成员，新增顺序特性成员。 BroadcastOrderContext
+BroadcastOrderContext 可以确保消息是严格顺序的
+
+```java
+... ... 省略部份代码
+// 得到严格顺序的广播上下文
+var broadcastOrderContext = BrokerClientHelper.getBroadcastOrderContext();
+
+// 使用示例
+for (int i = 0; i < 10; i++) {
+    BarHelloPb helloPb = new BarHelloPb();
+    helloPb.amount = i;
+
+    broadcastOrderContext.broadcastOrder(cmdInfo, helloPb);
+}
+```
+
+如果没有特殊业务需求，建议使用 BroadcastContext；
+因为实际的业务中，关于战斗中的广播都是会设置一个类似帧率的参数，只要不是太密集基本都没问题，
+所以我们可以巧妙的利用帧率间隔来达到顺序广播的目的；
+
+BroadcastContext 与 BroadcastOrderContext 的使用方式上基本是一致的；
+
+广播日志 --- 严格顺序广播日志
+# 广播给单个玩家
+┏━━━━━ 严格顺序广播. [(Broadcast.java:121)] ━━━ [cmd:2 - subCmd:8 - cmdMerge:131080]
+┣ userId: 1
+┣ 广播数据: BarHelloPb(amount=7)
+┣ 广播时间: 2022-07-14 18:26:49.786
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 广播给多个玩家
+┏━━━━━ 严格顺序广播. [(Broadcast.java:121)] ━━━ [cmd:2 - subCmd:8 - cmdMerge:131080]
+┣ userId: [1,5,7]
+┣ 广播数据: BarHelloPb(amount=7)
+┣ 广播时间: 2022-07-14 18:26:49.786
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 广播给全服玩家
+┏━━━━━ 严格顺序广播. [(Broadcast.java:121)] ━━━ [cmd:2 - subCmd:8 - cmdMerge:131080]
+┣ userId: 全服广播
+┣ 广播数据: BarHelloPb(amount=7)
+┣ 广播时间: 2022-07-14 18:26:49.786
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+广播日志 --- 默认的广播日志
+# 广播给单个玩家
+┏━━━━━ 广播. [(TankAction.java:116)] ━━━ [cmd:2 - subCmd:7 - cmdMerge:131079]
+┣ userId: 1
+┣ 广播数据: BarHelloPb(amount=7)
+┣ 广播时间: 2022-07-14 18:31:02.253
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 广播给多个玩家
+┏━━━━━ 广播. [(TankAction.java:116)] ━━━ [cmd:2 - subCmd:7 - cmdMerge:131079]
+┣ userId: [1,5,7]
+┣ 广播数据: BarHelloPb(amount=7)
+┣ 广播时间: 2022-07-14 18:31:02.253
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 广播给全服玩家
+┏━━━━━ 广播. [(TankAction.java:116)] ━━━ [cmd:2 - subCmd:7 - cmdMerge:131079]
+┣ userId: 全服广播
+┣ 广播数据: BarHelloPb(amount=7)
+┣ 广播时间: 2022-07-14 18:31:02.253
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+
+2022-07-11
+v17.1.2 (#I5G0FC、#I5GB1D)
+
+3类通讯方式，逻辑服间的相互通信相关
+InvokeModuleContext，新增无参请求方法，单个逻辑服与单个逻辑服通信请求 invokeModuleMessage
+
+变更 BarMessage 成员变量类型（#I5G0FC）
+BarMessage.dataClass 字段，由 Class<?> 类型改为 String类型
+具体的原因可以查看 issu https://gitee.com/iohao/iogame/issues/I5G0FC
+
+当建立多个项目时，在游戏逻辑服处理完业务却无法响应数据到请求端；但可以接收到来自请求端的请求数据； 由于 dataClass 变量是 Class<?> 类型的，如果游戏对外服、游戏网关服没有对应的 class 会造成解码失败，而引发 ClassNotFoundException
+
+将 BarMessage.dataClass 改为 String 类型，这样即使没有在 游戏对外服、游戏网关、游戏逻辑服中引入 PB 业务类，也不会引发这些问题！
+
+将 dataClass 改为 String 类型，这些改动不会对开发者造成影响！
+
+新增综合示例 （#I5GB1D）
+综合示例文档 https://www.yuque.com/iohao/game/ruaqza
+
+综合示例内容包含
+1. 多服多进程的方式部署
+2. 多服单进程的方式部署（类似单体应用的方式部署与开发）
+3. springboot 集成
+4. JSR380验证
+5. 断言 + 异常机制 = 清晰简洁的代码
+6. 请求、无响应
+7. 请求、响应
+8. 广播指定玩家
+9. 广播全服玩家
+10. 单个逻辑服与单个逻辑服通信请求 - 有返回值（可跨进程）
+11. 单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）
+12. 单个逻辑服与同类型多个逻辑服通信请求（可跨进程）
+13. 业务参数自动装箱、拆箱基础类型（解决协议碎片问题）
+14. 游戏文档生成
+15. 业务协议文件 .proto 的生成
+
+JSR380相关
+移除 JSR303 相关，使用符合 JSR380 标准的校验。这里推荐使用 hibernate-validator 用户需引入validation-api的实现，如：hibernate-validator。注意：hibernate-validator 还依赖了javax.el，需自行引入。
+具体使用可以查看 https://www.yuque.com/iohao/game/ghng6g
+
+增加，当触发 JSR380 验证时，会给请求端一些对应的错误信息
+
+
+2022-07-06
+v17.1.1 (上传到中央仓库)
+(#I5EE8E、#I5DFRM)
+
+ioGame上传到中央仓库；
+
+ioGame 版本规则 x.y.z
+    x 表示当前使用的 JDK 版本
+    y 表示 ioGame API变更版本 （基本上不会变动、常规下是变动 x 才会变动 API）
+    z 表示 ioGame 新特性、新功能、新模块、bugfix 相关
+
+    ioGame 的 x 会跟着最新的 JDK LTS 版本来走的，目的是确保 ioGame 的API 不会发生很大的变化。
+    为了保持新活力与接受新鲜事物， ioGame 基本会用上最新的 JDK LTS;
+    x 一般延后 1~4 个季度，给开发者一个缓冲。即下一个 JDK LTS 出来后，那么 ioGame 的 x 会在 1~4个季度后跟上。
+    也就是说，下一个 x 将会是 21;
+
+扩展库移到
+https://gitee.com/iohao/ext-iogame
+
+2022-06-30
+(#I5EVQQ)
+当开启登录验证时，客户端没登录而请求业务方法时，返回对应的错误码到请求端；
+
+将网络游戏服务器框架的示例放到单独的 git 仓库；前期放在一起是为了方便运行演示，好给开发者进行一个快速的体验；
+https://gitee.com/iohao/example-iogame
+
+移除
+BrokerClientContext.invokeModuleMessage
+--> 请用 InvokeModuleContext.invokeModuleMessage(RequestMessage)
+
+BrokerClientContext.invokeModuleCollectMessage
+--> 请用 InvokeModuleContext.invokeModuleCollectMessage(RequestMessage)
+
+参考 https://www.yuque.com/iohao/game/nelwuz#UwwUI
+
+
+2022-06-27
+v1.4.0 (#I5C57I、#I5DTZN)
+
+新增业务参数自动装箱、拆箱基础类型
+    int : IntPb
+    List<Integer> : IntListPb
+
+    long : LongPb
+    List<Long> : LongListPb
+
+文档 https://www.yuque.com/iohao/game/ieimzn
+
+新增 ClientProcessorHooks
+    业务框架处理请求时，开发者可以自定义业务线程编排，
+    使得框架可以具备集成其他的并发框架的能力，可以无锁实现并发写的需求；
+    即逻辑服之间通信时，可以同时写，且不需要开发者显示的加锁。
+    建议配合 Disruptor 来使用，框架中提供了一个 Disruptor 的封装，领域事件 https://www.yuque.com/iohao/game/gmfy1k
+文档 https://www.yuque.com/iohao/game/eixd6x
+
+IdleProcessSetting
+    方法名变更 idleHandler --> idlePipeline，
+    因为与成员变量 ChannelHandler idleHandler 重名了，
+    重名理论上是方法重载的情况，因为方法参数不同；
+    但 lombok 似乎直接给覆盖了，导致成员变量 ChannelHandler idleHandler 不能设置
+
+2022-06-08
+v1.3.0 (#I5B8V4)
+将模块之间的访问独立一个接口
+新增单个逻辑服与单个逻辑服通信请求（可跨进程）无返回值
+    如： 模块A 访问 模块B 的某个方法，但是不需要任何返回值
+文档 https://www.yuque.com/iohao/game/anguu6#cZfdx
+
+新增 InvokeModuleContext 接口，使得在3类通讯方式上的语义与使用上更明确
+
+
+2022-06-04
+监控相关的
+    逻辑服数据上报
+    监控逻辑服接收来自各逻辑服的
+
+2022-05-30
+v1.2.0 (#I599B9、#I59O74)
+支持对外服的玩家绑定指定的游戏逻辑服（可以做到动态分配逻辑服资源）
+    描述：
+        支持对外服的玩家绑定指定的游戏逻辑服id，如果用户绑定了指定的游戏逻辑服id，之后与该游戏逻辑服的请求都由这个绑定的游戏逻辑服来处理
+    场景举例：
+        1. 什么意思呢？这里用匹配与象棋的场景举例。
+        2. 假设我们部署了 5 台象棋逻辑服，在玩家开始游戏之前。我们可以在匹配服中进行匹配，当匹配逻辑服把A、B两个玩家匹配到一起了。
+        3. 此时我们可以通过 访问【同类型】的多个逻辑服方法，当得到象棋房间数最少的象棋逻辑服后（这里假设是房间数最少的象棋逻辑服是《象棋逻辑服-2》），把《象棋逻辑服-2》的逻辑服id 绑定到 A、B 两个玩家身上。
+        4. 之后与象棋相关的操作请求都会由《象棋逻辑服-2》这个游戏逻辑服来处理，比如：开始游戏、下棋、吃棋、和棋等。
+        5. 也可以简单点把这理解成，类似 LOL、王者荣耀的匹配机制。在匹配服匹配到玩家后，把匹配结果中的所有玩家分配到一个房间（节点）里面。
+        6. 这是一种动态分配资源最少的节点（逻辑服）的用法之一。
+        7. 这个版本先做成只能绑定一个逻辑服的，因为暂时没有想到多个的场景。
+
+        这是一种动态分配资源最少的节点（逻辑服）的用法之一。
+        这个版本先做成只能绑定一个逻辑服的，因为暂时没有想到多个的场景。
+
+新增示例
+    示例目录 （#I599B9）
+        https://www.yuque.com/iohao/game/lxqbnb
+        钩子相关
+        心跳钩子在项目中的使用
+        用户上线、下线钩子在项目中的使用
+    示例目录 （#I59O74）
+        https://www.yuque.com/iohao/game/idl1wm
+        用户动态绑定逻辑服节点
+
+DebugInOut （业务框架插件机制）
+    新增设置最小触发打印时间
+    之前的是任何请求都打印，现在可以设置一个最小触发打印时间了，
+    比如给 DebugInout 设置了 50 ms（构造重载），只有请求超过这个时间的请求才进行打印。
+
+    ioGame ActionMethodInOut 是业务框架的插件机制。
+    是很有用的，比如开发者想记录执行时间比较长的 action，可以通过该机制来做。
+    通过这个接口，你可以做很多事情，当然这要看你的想象力有多丰富了
+    https://www.yuque.com/iohao/game/pf3sx0
+
+2022-05-23
+v1.2.0
+模块之间的访问，访问【同类型】的多个逻辑服 (#I58LNI)
+    如： 模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是逻辑服。
+    假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起
+场景举例：
+    【象棋逻辑服】有 3 台，分别是：《象棋逻辑服-1》、《象棋逻辑服-2》、《象棋逻辑服-3》，这些逻辑服可以在不同有进程中。
+    我们可以在大厅逻辑服中向同类型的多个游戏逻辑服通信请求，意思是大厅发起一个向这 3 台象棋逻辑服的请求，框架会收集这 3 个结果集（假设结果是：当前服务器房间数）。
+    当大厅得到这个结果集，可以统计房间的总数，又或者说根据这些信息做一些其他的业务逻辑；当然实际中不会这么做；这里只是举个例子。    实际当中可以发挥大伙的想象力。
+
+示例文档
+    https://www.yuque.com/iohao/game/rf9rb9
+
+业务框架
+    action 的返回值支持 null
+    debugInout 新增逻辑服id、逻辑服类型的打印信息
+
+SimpleHelper、SimpleRunOne、ClusterSimpleHelper、ClusterSimpleRunOne
+的逻辑服参数改为由 BrokerClientStartup --> AbstractBrokerClientStartup
+
+明确这是一个 BrokerClient 启动器
+BrokerClientService --> BrokerClientApplication
+
+2022-05-20
+v1.0
+异步化、事件驱动的架构设计；网关集群无中心节点、负载均衡
+每个逻辑服都可以独立进程部署
+
+新增 Broker 概念与 BrokerClient 概念
+    Broker 相当于之前的游戏网关，BrokerClient相当于之前的逻辑服
+    BrokerClient 负责与 Broker 建立连接
+
+Broker 集群，集群使用 gossip 协议
+简化游戏逻辑服的创建
+
+业务框架新增
+    DataCodec 开发者可以自定义业务参数的编解码
+
+新增广播（推送日志）与相关示例
+
+包名变更
+此次的架构更新很大，相关的文档也进行了更新
+支持逻辑服（BrokerClient）与游戏网关（Broker）的数量扩展，并能很好的进行负载均衡。
+
+在结构上进行了明确
+    1 业务框架目录 common
+    2 网络通信框架目录 net-bolt
+    3 内置模块目录
+    4 游戏实战目录
+    5 示例目录
+
+game-collect --> example-game-collect
+    明确这个目录是一个示例目录
+
+后续计划
+    日志传输、Metrics采集、染色日志、链路追踪。
+
+Issues (#I57QAZ、#I510AK)
+
+2022-05-08
+新增 分布式锁-基于Redisson的简单实现 (#I53XW3)
+参考： https://www.yuque.com/iohao/game/wz7af5
+
+2022-04-13
+新增 u3d、cocos 连接示例 和 tcp socket 的连接示例
+
+u3d 连接示例 https://www.yuque.com/iohao/game/syv5mm
+cocos 连接示例 https://www.yuque.com/iohao/game/ua4afq
+tcp socket 示例 https://www.yuque.com/iohao/game/ywe7uc
+
+游戏示例目录 game-collect 新增一些文档说明和单独启动逻辑服的方法
+
+删除 game-test 示例目录
+
+2022-04-06
+为添加 alibroker 网络通信框架做准备 (#I510AK)
+全异步化架构设计
+https://alibroker.info/
+
+独立 bolt 网络通信框架到单独目录 net-bolt。
+
+2022-03-31
+添加游戏部件抽象模块
+    用于游戏实践的开发，进一步减少开发实践过程中的工作量
+    只提供抽象骨架, 具体的逻辑实现由子游戏自定义
+
+    提供抽象流程的有：
+        游戏规则接口 RoomRuleInfoCustom
+        创建玩家接口 RoomPlayerCreateCustom
+        房间创建接口 RoomCreateCustom
+        进入房间接口 RoomEnterCustom
+        游戏开始接口 RoomGameStartCustom
+
+    提供抽象类的有：
+        抽象房间 AbstractRoom
+        抽象玩家 AbstractPlayer
+        业务操作接口 OperationHandler
+
+    玩法操作的处理对象, 享元工厂 OperationFlyweightFactory
+
+2022-03-27
+新增 spring 集成 (#I4Z2HS)
+
+移除 widget-common 模块
+
+业务框架优化
+    优化部份 list 结构改为 array
+    DefaultActionFactoryBean 新增创建 action 混合特性
+
+业务框架文档相关
+    自动生成系统错误码到 doc_game.txt 文件中，不需要在手动配置
+
+新增示例
+    example/example-for-spring
+    spring集成 相关 DemoSpringBootApplication.java
+
+    example/example-interaction
+    多逻辑服相互交互的 DemoInteractionApplication.java
+
+FlowContext 新增方法
+    getCmdInfo 路由信息
+    invokeModuleMessageData （请求其他子服务器（其他逻辑服）的数据）
+    broadcast (广播)
+
+changeName
+    ClientStartupConfig --> ClientStartup
+    ServerStartupConfig --> ServerStartup
+    ActionControllerFactoryBean --> ActionFactoryBean
+    InOutInfo --> InOutManager
+    AbstractExternalClientStartupConfig --> AbstractExternalClientStartup
+
+2022-03-21
+新增 UserSession (与 channel 是 1:1 的关系，可取到对应的 userId、channel 等信息。 )
+
+FlowContext 新增动态属性
+    FlowOptionDynamic、FlowOption
+
+登录相关
+    用户登录相关移 除虚拟userId
+    新增 UserIdSettingKit，简化开发者登录业务
+
+优化业务框架
+    统一业务入口
+    优化 FlowContext
+
+删除一些遗留代码 game-logic-all 相关
+
+
+2022-03-14
+新增心跳相关设置 IdleProcessSetting
+    心跳事件回调 IdleCallback
+    心跳 handler IdleHandler
+    (#I4XSCD)
+
+
+新增ExternalJoinEnum:
+    UDP (udp socket 预留扩展)
+    EXT_SOCKET (特殊的预留扩展)
+
+新增用户钩子接口 UserHook 上线时、下线时会触发
+    利用好该接口，可以把用户当前在线状态通知到逻辑服，比如使用 redis PubSub 之类的。
+    (#I4XSCH)
+
+简化对外服务器 - 构建器 ExternalServerBuilder
+
+2022-03-11
+动态属性示例
+
+2022-03-10
+Copyright
+
+2022-03-08
+业务框架新增 InOutInfo 管理插件相关
+    把插件的执行放入 InOutInfo 中。
+    当只有一个插件时，不走 foreach
+
+2022-03-07
+新增基于 FXGL游戏引擎的游戏示例(坦克射击)
+    TankApp.java
+新增基于FXGL的JAVA游戏引擎，示例 文档
+
+网络游戏框架 change name, ioGame
+
+
+2022-03-01
+新增简单的启动器 SimpleRunOne
+简化对外服 ExternalServer 的内部逻辑服启动
+文档更新
+移除 example 的示例，只保留少量
+
+
+2022-02-25
+文档更新:快速从零编写服务器完整示例
+DebugInOut
+    打印微调
+    打印用户自定义异常的msg
+
+新增 快速从零编写服务器完整示例代码
+    HelloReq
+    DemoAction
+    DemoLogicServer
+
+    DemoApplication
+    DemoWebsocketClient
+
+BarSkeletonBuilderParamConfig 新增构建 BarSkeletonBuilder 方法
+
+2022-02-23
+文档更新
+
+
+2022-02-21
+游戏实践 game-one pom 添加 maven-assembly-plugin 打包 jar, 方便测试
+业务框架 bugfix , 业务文档相关 在打包后没有java源码引发的 null
+游戏框架对外服 默认连接协议改为 WEBSOCKET
+
+2022-02-11
+编写游戏框架文档
+    通信协议
+    Action的业务参数获取
+    快速入门示例
+    用户连接登录编写
+    对外服的协议说明
+    Action
+    路由 - 术语
+    异常机制
+    业务框架的构建器
+    开启JSR303+验证规范
+
+2022-02-07
+编写业务框架文档 https://www.yuque.com/iohao/game
+    异常机制
+    业务框架的构建器
+    游戏开发需要具备的知识
+    业务文档的生成
+    业务PB的生成
+
+    FlowContext
+    网关服的编写
+    逻辑服的编写
+    对外服的编写
+
+新增对外服逻辑服的抽象类 AbstractExternalClientStartupConfig
+
+2022-02-03
+新增 游戏（错误码）文档的生成
+新增 游戏（异常信息）文档的生成
+
+游戏实践新增大厅服
+    与游戏逻辑服关联不强的业务逻辑或比较通用的业务就写在大厅服中
+    比如登录... 等.
+
+2022-02-02
+删除 DocActionBroadcast 统一使用 DocActionSends 来生成推送文档
+
+新增 BarSkeletonBuilderParamConfig 构建参数的配置
+
+新增注解 DocActionSends 消息推送文档的生成
+    配合 DocActionSend 生成多条推送文档
+
+2022-02-01
+新增抽象推送 AbstractFlowContextSend
+新增推送文档注解
+    用于补充推送相关的文档，因为推送是不是用户主动发起的请求，
+    所以需要单独标记，以便业务框架生成推送文档。
+    文档在生成还未实现
+
+新增动态属性 AttrOptionDynamic 接口
+    配合 AttrOption 可以更明确动态属性的类型
+
+FlowContext 的动态属性由 AttrDynamic 改为 AttrOptionDynamic
+    可以更明确动态属性的类型
+
+移除业务框架参数解析器的 userId 解析，全部由 FlowContext 接管，
+因为 FlowContext 是流程上下文。
+
+2022-01-30
+移除广播小部件 模块 (感觉设计过于凌乱)
+独立广播操作，将广播内嵌到（逻辑服、网关、对外服）中
+新增客户端模拟
+修复广播时的 bug （在逻辑服传输数据到网关时，response.data 对象如果没有实现 Serializable 会异常）
+
+
+2022-01-29
+新增游戏文档 广播相关(简单的业务方法版)
+
+2022-01-25
+新增轻量小部件 light-jprotobuf
+    简化 jprotobuf 的编写方式
+
+    不在需要 @Protobuf(description = "xxx") 来生成注释了
+    现在 jprotobuf 的类中，注释即文档
+
+    可将多个 jprotobuf 类 合并生成为一个原生的 .proto 文件， 不使用 jprotobuf 提供的生成插件，
+    因为 jprotobuf 生成的 .proto 文件太乱（会有重复的文件类），在阅读时也不方便
+
+2022-01-24
+坦克 pb 更新
+
+2022-01-23
+业务框架支持文档生成, java代码即文档
+业务框架日志可定位代码行数
+    debug插件
+    启动时
+删除部分编解码代码
+
+2022-01-22
+新增路由错误码： 一般是客户端请求了不存在的路由引起的
+网关增加 路由错误码 逻辑，如果客户端请求了不存在的路由，直接响应错误
+新增 websocket  编解码
+增加 websocket 数据压缩扩展
+对外服传输协议改为纯 PB
+
+2022-01-21
+网关新增路由检测:
+    对外服请求逻辑服时
+    如果没有找到对应的逻辑服来处理请求，不在往逻辑服发送
+    并立即返回错误码给对外服
+
+2022-01-20
+对外服的 socket 和 websocket 共用一个业务处理类 ExternalBizHandler (负责把游戏端的请求 转发给网关)
+对外服的 socket 和 websocket 接收来自网关的响应也逻辑也保持一至
+
+2022-01-19
+登录业务 新增 ChangeUserIdKit 工具：
+    变更对外服的 userId, userId与channel 关联
+    用在用户登录时，从程序员的业务数据库中获得 userId
+
+新增用户登录, 登录流程：
+    真实客户端发送请求 --> 对外服 --> 网关服 --> 逻辑服（
+        逻辑服通知对外服变更：逻辑服 --> 网关服 --> 对外服 --> 网关服 --> 逻辑服
+    ） --> 网关服 --> 对外服
+
+业务框架:
+BarMessage 增加 rpcCommandType 字段:
+    特性如下：
+        在 bolt 中， 调用方使用
+        （com.alipay.remoting.rpc.RpcServer.oneway
+        或 com.alipay.remoting.rpc.RpcClient.oneway）的 oneway 方法
+
+        则 AsyncContext.sendResponse 无法回传响应
+        原因可阅读 com.alipay.remoting.rpc.protocol.RpcRequestProcessor.sendResponseIfNecessary 源码。
+
+        业务框架保持与 bolt 的风格一至使用 RpcCommandType
+        不同的是业务框架会用 RpcCommandType 区别使用什么方式来发送响应。
+
+        如果 rpcCommandType != RpcCommandType.REQUEST_ONEWAY ,
+        就使用 com.alipay.remoting.AsyncContext.sendResponse 来发送响应
+        具体发送逻辑可读 DefaultActionAfter 源码
+
+2022-01-18
+优化业务框架: 新增 action void 特性， 定义为 void 的业务方法，不在给调用端响应（除非有业务异常码）
+优化业务框架: DebugInOut 日志可以支持 JSR 303、JSR 349、JSR 380 验证规范 的日志
+优化业务框架: Flow 流程，在开启业务参数验证规范功能时，业务参数如果验证不通过,则直接响应带有错误码的消息给调用端
+
+2022-01-17
+业务框架支持 JSR 303、JSR 349、JSR 380 验证规范
+业务框架新增 flow 上下文 (FlowContext), 生命周期存在于当前执行流程
+
+2022-01-16
+对外服 新增接收并处理 来自网关的广播消息
+广播小部件 新增广播上下文
+
+2022-01-15
+整合 protobuf、mapstruct、lombok 的使用
+新增坦克游戏相关 pb
+规范子游戏的 cmd 编写方式
+
+2022-01-14
+业务框架加强规范异常处理
+提供异常全局统一处理规范
+领域事件新增默认异常处理
+
+2022-01-13
+对外服务器 支持 websocket
+
+2022-01-12
+业务框架支持 proto
+实战(网关、对外服、逻辑服)，简化配置
+
+2022-01-11
+编写对外服务器
+对外服务器连接到网关
+
+2022-01-07
+轻量小部件多环境切换
+
+2022-01-02
+boot 加载项 BootConfig
+动态属性
+
+2021-12-26
+轻量小部件-领域事件
+1. 领域驱动设计，基于LMAX架构。
+2. 单一职责原则，可以给系统的可扩展、高伸缩、低耦合达到极致。
+3. 异步高并发，线程安全的并且基于lmax架构。可并发执行，性能超高，执行1000W次事件只需要1.1秒左右(这个得看你的电脑配置)。
+4. 使用事件消费的方式编写代码，使得业务在复杂也不会使得代码混乱，维护代码成本更低。
+5. 插件形式提供事件领域，做到了可插拔，就像玩乐高积木般有趣。
+
+2021-12-21
+业务框架更新
+change ActionMethodInOut method
+新增 InOutContext 上下文, 方便扩展 ActionMethodInOut
+新增 ActionMethodInOut 实现类DebugInOut 用于开发时，打印一些参数
+如:
+┏━━━━━ Debug [BeeAction.java] ━━━ [.(BeeAction.java:1).hello]
+┣ 参数 : beeApple : BeeApple(id=101, content= jackson )
+┣ 返回值: : hello:
+┣ 方法名: hello
+┣ 时间 : 1 ms (业务方法总耗时)
+┗━━━━━ Debug [BeeAction.java] ━━━
+
+2021-12-20
+完善客户端示例与启动流程
+整合 sofa-bolt
+
+2021-12-15
+初始化项目
+编写业务框架
