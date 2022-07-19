@@ -1,8 +1,11 @@
 
+2022-07-19
+v17.1.3 (#I5H8NV、#I5H8H9)
 
-
+#I5H8H9
 增强：相同路由可以用在 action 与广播上；当 action 返回值为 void 时，可以复用路由来做为广播的响应路由。
 
+#I5H8NV
 -- 3类通讯方式相关 - 广播，新增 --
 广播推送添加新成员，新增顺序特性成员。 BroadcastOrderContext
 BroadcastOrderContext 可以确保消息是严格顺序的
