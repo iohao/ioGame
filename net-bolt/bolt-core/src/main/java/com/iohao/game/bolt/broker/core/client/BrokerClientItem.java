@@ -24,14 +24,13 @@ import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.RpcClient;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.commumication.BroadcastContext;
-import com.iohao.game.action.skeleton.core.commumication.BroadcastOrderContext;
-import com.iohao.game.action.skeleton.core.commumication.InvokeModuleContext;
-import com.iohao.game.action.skeleton.core.commumication.ProcessorContext;
+import com.iohao.game.action.skeleton.core.commumication.*;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.collect.RequestCollectMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
+import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
+import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.processor.ExtRequestMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
@@ -49,6 +48,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -66,7 +66,7 @@ import java.util.concurrent.TimeUnit;
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrokerClientItem implements BroadcastContext, ProcessorContext, InvokeModuleContext, BroadcastOrderContext {
+public class BrokerClientItem implements CommunicationAggregationContext {
 
     public enum Status {
         /** 活跃 */
@@ -194,6 +194,20 @@ public class BrokerClientItem implements BroadcastContext, ProcessorContext, Inv
         return null;
     }
 
+    @Override
+    public ResponseCollectExternalMessage invokeExternalModuleCollectMessage(int bizCode, Serializable data) {
+        RequestCollectExternalMessage request = new RequestCollectExternalMessage()
+                .setBizCode(bizCode)
+                .setData(data);
+
+        try {
+            return (ResponseCollectExternalMessage) this.invokeSync(request);
+        } catch (RemotingException | InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return null;
+    }
 
     @Override
     public void invokeOneway(Object message) {

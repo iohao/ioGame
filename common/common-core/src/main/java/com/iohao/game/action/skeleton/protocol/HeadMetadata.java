@@ -111,7 +111,7 @@ public class HeadMetadata implements Serializable {
     byte rpcCommandType;
 
     /**
-     * json 扩展字段
+     * 扩展字段
      * <pre>
      *     开发者有特殊业务可以通过这个字段来扩展元信息，该字段的信息会跟随每一个请求；
      *
@@ -125,9 +125,10 @@ public class HeadMetadata implements Serializable {
      *     一但玩家登录后，将会使用玩家的 userId 而不是 channelId 来查找对应的连接（channel），
      *     因为 channelId 的字符串实在太长了，每次将该值传输到逻辑服会小小的影响性能。
      *     出于这个原因就这样约定使用了。
+     *
      * </pre>
      */
-    String extJsonField;
+    byte[] attachmentData;
 
     public HeadMetadata setCmdInfo(CmdInfo cmdInfo) {
         this.cmd = cmdInfo.getCmd();

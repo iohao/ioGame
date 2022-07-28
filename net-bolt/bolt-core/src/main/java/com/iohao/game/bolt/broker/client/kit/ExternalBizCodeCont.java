@@ -14,19 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.bolt.broker.client.external.config;
-
-import lombok.experimental.UtilityClass;
+package com.iohao.game.bolt.broker.client.kit;
 
 /**
+ * 对外服业务码
+ * <pre>
+ *     开发者扩展时，用正数的业务码
+ *     框架会从负数开始使用
+ * </pre>
+ *
  * @author 渔民小镇
- * @date 2022-03-22
+ * @date 2022-07-27
  */
-@UtilityClass
-public class ExternalGlobalConfig {
-    /** true 表示请求业务方法需要先登录 */
-    @Deprecated
-    public boolean verifyIdentity = true;
-    /** 访问验证钩子接口 */
-    public AccessAuthenticationHook accessAuthenticationHook = new DefaultAccessAuthenticationHook();
+public interface ExternalBizCodeCont {
+    /** 用户（玩家）是否在线，ExistUserExternalBizRegion */
+    int existUser = -1;
+    /** 强制用户（玩家）下线，ForcedOfflineExternalBizRegion */
+    int forcedOffline = -2;
 }

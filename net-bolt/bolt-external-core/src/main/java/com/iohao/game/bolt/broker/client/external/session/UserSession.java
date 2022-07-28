@@ -71,7 +71,7 @@ public class UserSession {
     /**
      * 给请求消息加上一些 user 自身的数据
      * <pre>
-     *     如果开发者要扩展数据，可通过 {@link HeadMetadata#setExtJsonField(String)} 字段来扩展
+     *     如果开发者要扩展数据，可通过 {@link HeadMetadata#setAttachmentData(byte[])} 字段来扩展
      *     这些数据可以传递到逻辑服
      * </pre>
      *
@@ -84,7 +84,8 @@ public class UserSession {
             // 只有没进行验证的，才给 userChannelId
             String channelId = this.getChannelId();
             // 一般指用户的 channelId （来源于对外服的 channel 长连接）
-            headMetadata.setExtJsonField(channelId);
+            byte[] channelIdBytes = channelId.getBytes();
+            headMetadata.setAttachmentData(channelIdBytes);
         }
 
         // 设置请求用户的id
@@ -98,6 +99,14 @@ public class UserSession {
         }
     }
 
+    /**
+     * 设置当前用户（玩家）的 id
+     * <pre>
+     *     当设置好玩家 id ，也表示着已经身份验证了（表示登录过了）。
+     * </pre>
+     *
+     * @param userId userId
+     */
     public void setUserId(long userId) {
         this.userId = userId;
         this.channel.attr(UserSessionAttr.verifyIdentity).set(true);
@@ -137,7 +146,11 @@ public class UserSession {
         return this.channel.hasAttr(key);
     }
 
-
+    /**
+     * 是否进行身份验证
+     *
+     * @return true 已经身份验证了，表示登录过了。
+     */
     public boolean isVerifyIdentity() {
         return this.channel.attr(UserSessionAttr.verifyIdentity).get();
     }

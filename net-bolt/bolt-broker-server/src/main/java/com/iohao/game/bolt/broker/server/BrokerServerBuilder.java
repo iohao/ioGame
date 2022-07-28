@@ -266,6 +266,9 @@ public class BrokerServerBuilder {
 
         // 处理 - 模块之间的访问，访问同类型的多个逻辑服
         Supplier<UserProcessor<?>> innerModuleRequestCollectMessageSupplier = InnerModuleRequestCollectMessageBrokerProcessor::new;
+        // 处理 - 模块之间的访问，游戏逻辑服同时访问多个游戏对外服
+        Supplier<UserProcessor<?>> innerModuleRequestCollectExternalMessageSupplier = InnerModuleRequestCollectExternalMessageBrokerProcessor::new;
+
         // 处理 - 把绑定消息转发到对外服
         Supplier<UserProcessor<?>> endPointLogicServerMessageSupplier = EndPointLogicServerMessageBrokerProcessor::new;
 
@@ -289,6 +292,7 @@ public class BrokerServerBuilder {
                 .registerUserProcessor(innerModuleMessageSupplier)
                 .registerUserProcessor(innerModuleVoidMessageSupplier)
                 .registerUserProcessor(innerModuleRequestCollectMessageSupplier)
+                .registerUserProcessor(innerModuleRequestCollectExternalMessageSupplier)
                 .registerUserProcessor(broadcastMessageSupplier)
                 .registerUserProcessor(broadcastOrderMessageSupplier)
                 .registerUserProcessor(brokerClientItemConnectMessageSupplier)

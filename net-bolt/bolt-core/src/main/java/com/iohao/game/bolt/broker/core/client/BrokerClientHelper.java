@@ -27,6 +27,10 @@ import lombok.Getter;
  *     会在 {@link BrokerClientBuilder#build()} 时赋值
  *
  *     对于多个 BrokerClient 的引用管理，可以参考 {@link BrokerClients}
+ *
+ *
+ *     这个类的主要作用是为了更好的区分框架提供的通讯方式
+ *     让开发者在使用时更加的清晰
  * </pre>
  *
  * @author 渔民小镇
@@ -42,36 +46,44 @@ public class BrokerClientHelper implements AttrOptionDynamic {
         return this.brokerClient;
     }
 
-    public BroadcastContext getBroadcastContext() {
-        if (this.brokerClient == null) {
-            return null;
-        }
-
-        return this.brokerClient.getBroadcastContext();
-    }
-
-    public BroadcastOrderContext getBroadcastOrderContext() {
-        if (this.brokerClient == null) {
-            return null;
-        }
-
-        return this.brokerClient.getBroadcastOrderContext();
-    }
-
     public ProcessorContext getProcessorContext() {
-        if (this.brokerClient == null) {
-            return null;
-        }
-
-        return this.brokerClient.getProcessorContext();
+        return brokerClient.getCommunicationAggregationContext();
     }
 
-    public InvokeModuleContext getInvokeModuleContext() {
-        if (this.brokerClient == null) {
-            return null;
-        }
+    /**
+     * 广播通讯上下文
+     *
+     * @return BroadcastContext
+     */
+    public BroadcastContext getBroadcastContext() {
+        return brokerClient.getCommunicationAggregationContext();
+    }
 
-        return this.brokerClient.getInvokeModuleContext();
+    /**
+     * 广播通讯上下文 - 严格顺序的
+     *
+     * @return BroadcastOrderContext
+     */
+    public BroadcastOrderContext getBroadcastOrderContext() {
+        return brokerClient.getCommunicationAggregationContext();
+    }
+
+    /**
+     * 游戏逻辑服与游戏逻辑服之间的通讯上下文
+     *
+     * @return InvokeModuleContext
+     */
+    public InvokeModuleContext getInvokeModuleContext() {
+        return brokerClient.getCommunicationAggregationContext();
+    }
+
+    /**
+     * 游戏逻辑服与游戏对外服的通讯上下文
+     *
+     * @return InvokeExternalModuleContext
+     */
+    public InvokeExternalModuleContext getInvokeExternalModuleContext() {
+        return brokerClient.getCommunicationAggregationContext();
     }
 
     private BrokerClientHelper() {

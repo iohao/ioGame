@@ -80,6 +80,13 @@ public abstract class AbstractRoom implements Serializable {
     /** 房间状态 */
     RoomStatusEnum roomStatusEnum = RoomStatusEnum.wait;
 
+    /**
+     * 创建推送对象
+     *
+     * @param flowContext flowContext
+     * @param <T>         t
+     * @return AbstractFlowContextSend
+     */
     protected abstract <T extends AbstractFlowContextSend> T createSend(FlowContext flowContext);
 
     /**

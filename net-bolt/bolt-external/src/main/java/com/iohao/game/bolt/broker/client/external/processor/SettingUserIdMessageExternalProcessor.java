@@ -42,6 +42,7 @@ public class SettingUserIdMessageExternalProcessor extends AsyncUserProcessor<Se
 
         UserChannelId userChannelId = new UserChannelId(channelId);
 
+        // 当设置好玩家 id ，也表示着已经身份验证了（表示登录过了）。
         boolean result = UserSessions.me().settingUserId(userChannelId, userId);
 
         SettingUserIdMessageResponse response = new SettingUserIdMessageResponse();

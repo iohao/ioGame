@@ -54,7 +54,7 @@ public class ExternalChannelInitializerCallbackFactory {
         ExternalChannelInitializerCallback channelInitializerCallback = supplier.get();
 
         if (BrokerGlobalConfig.openLog) {
-            log.info("对外服-启动方式===={}====", externalJoinEnum.getName());
+            log.info("游戏对外服-启动方式 ==== {} ====", externalJoinEnum.getName());
         }
 
         return channelInitializerCallback;

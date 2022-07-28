@@ -17,11 +17,14 @@
 package com.iohao.game.bolt.broker.client.external.bootstrap.handler;
 
 import com.alipay.remoting.exception.RemotingException;
+import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
+import com.iohao.game.bolt.broker.client.external.config.ExternalGlobalConfig;
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -42,6 +45,23 @@ public class ExternalBizHandler extends SimpleChannelInboundHandler<ExternalMess
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage message) {
+
+        // 得到 session
+        UserSession userSession = UserSessions.me().getUserSession(ctx);
+
+        // 是否可以访问业务方法（action），true 表示可以访问该路由对应的业务方法
+        boolean pass = ExternalGlobalConfig.accessAuthenticationHook.pass(userSession, message.getCmdMerge());
+
+        // 当访问验证没通过，通知玩家
+        if (!pass) {
+            message.setResponseStatus(ActionErrorEnum.verifyIdentity.getCode());
+            message.setValidMsg("请先登录，在请求业务方法");
+            // 响应结果给用户
+            Channel channel = userSession.getChannel();
+            channel.writeAndFlush(message);
+            return;
+        }
+
         // 将 message 转换成 RequestMessage
         RequestMessage requestMessage = ExternalKit.convertRequestMessage(message);
 

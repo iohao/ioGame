@@ -23,6 +23,9 @@ import com.alipay.remoting.exception.RemotingException;
  * 当前服务器上下文
  * <pre>
  *     see BrokerClientHelper
+ *
+ *     当增加网络通讯聚合概念后，之后的在增加相关的通讯上下文就方便很多了
+ *     新增的通讯上下都作为聚合的父类，在使用的分类上也简单了
  * </pre>
  *
  * @author 渔民小镇
@@ -39,30 +42,54 @@ public interface BrokerClientContext extends AsyncContext {
     void oneway(final Object request) throws RemotingException;
 
     /**
+     * 框架网络通讯聚合接口
+     *
+     * @return 框架网络通信聚合接口
+     */
+    CommunicationAggregationContext getCommunicationAggregationContext();
+
+    /**
      * 推送通讯相关 - 得到广播通讯上下文
      *
      * @return 广播通讯上下文
      */
-    BroadcastContext getBroadcastContext();
+    default BroadcastContext getBroadcastContext() {
+        return this.getCommunicationAggregationContext();
+    }
 
     /**
      * 推送通讯相关 - 得到顺序的 - 广播通讯上下文
      *
      * @return 顺序的 - 广播通讯上下文
      */
-    BroadcastOrderContext getBroadcastOrderContext();
+    default BroadcastOrderContext getBroadcastOrderContext() {
+        return this.getCommunicationAggregationContext();
+    }
 
     /**
      * 得到 processor 上下文
      *
      * @return processor 上下文
      */
-    ProcessorContext getProcessorContext();
+    default ProcessorContext getProcessorContext() {
+        return this.getCommunicationAggregationContext();
+    }
 
     /**
      * 逻辑服间的相互通信相关 - 得到内部模块通讯上下文
      *
      * @return 内部模块通讯上下文
      */
-    InvokeModuleContext getInvokeModuleContext();
+    default InvokeModuleContext getInvokeModuleContext() {
+        return this.getCommunicationAggregationContext();
+    }
+
+    /**
+     * 内部模块通讯上下文，内部模块指的是游戏对外服
+     *
+     * @return 游戏对外服通讯上下文
+     */
+    default InvokeExternalModuleContext getInvokeExternalModuleContext() {
+        return this.getCommunicationAggregationContext();
+    }
 }

@@ -57,7 +57,8 @@ public class UserIdSettingKit {
         HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
         // 一般指用户的 channelId （来源于对外服的 channel 长连接）
         // see UserSession#employ
-        String userChannelId = headMetadata.getExtJsonField();
+        byte[] attachmentData = headMetadata.getAttachmentData();
+        String userChannelId = new String(attachmentData);
 
         SettingUserIdMessage userIdMessage = new SettingUserIdMessage()
                 .setUserId(userId)

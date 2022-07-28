@@ -67,6 +67,8 @@ public class ExternalBrokerClientStartup extends AbstractBrokerClientStartup {
         Supplier<UserProcessor<?>> responseMessageProcessorSupplier = ResponseMessageExternalProcessor::new;
         // 注册 用户绑定逻辑服
         Supplier<UserProcessor<?>> endPointLogicServerMessageProcessorSupplier = EndPointLogicServerMessageExternalProcessor::new;
+        // 注册 处理来自游戏逻辑服的请求，并响应结果给请求方
+        Supplier<UserProcessor<?>> requestCollectExternalMessageExternalProcessorSupplier = RequestCollectExternalMessageExternalProcessor::new;
 
         builder
                 .registerUserProcessor(requestBrokerClientModuleSupplier)
@@ -77,7 +79,7 @@ public class ExternalBrokerClientStartup extends AbstractBrokerClientStartup {
                 .registerUserProcessor(settingUserIdMessageProcessorSupplier)
                 .registerUserProcessor(responseMessageProcessorSupplier)
                 .registerUserProcessor(endPointLogicServerMessageProcessorSupplier)
-
+                .registerUserProcessor(requestCollectExternalMessageExternalProcessorSupplier)
         ;
     }
 

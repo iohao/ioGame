@@ -24,6 +24,10 @@ import java.util.Collection;
 
 /**
  * 广播通讯上下文
+ * <pre>
+ *     see:
+ *     https://www.yuque.com/iohao/game/qv4qfo#nJage
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2022-05-18

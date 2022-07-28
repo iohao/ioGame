@@ -14,19 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.bolt.broker.client.external.config;
+package com.iohao.game.bolt.broker.client.external.ext;
 
-import lombok.experimental.UtilityClass;
+import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import lombok.experimental.FieldDefaults;
 
 /**
  * @author 渔民小镇
- * @date 2022-03-22
+ * @date 2022-07-27
  */
-@UtilityClass
-public class ExternalGlobalConfig {
-    /** true 表示请求业务方法需要先登录 */
-    @Deprecated
-    public boolean verifyIdentity = true;
-    /** 访问验证钩子接口 */
-    public AccessAuthenticationHook accessAuthenticationHook = new DefaultAccessAuthenticationHook();
+@Getter
+@Setter
+@Accessors(chain = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ExternalBizRegionContext {
+    RequestCollectExternalMessage requestCollectExternalMessage;
 }

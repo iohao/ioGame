@@ -137,12 +137,12 @@ public final class ExternalServerBuilder {
     }
 
     /**
-     * 表示请求业务方法需要先登录
+     * true 表示请求业务方法需要先登录
      *
      * @return me
      */
     public ExternalServerBuilder enableVerifyIdentity(boolean verifyIdentity) {
-        ExternalGlobalConfig.verifyIdentity = verifyIdentity;
+        ExternalGlobalConfig.accessAuthenticationHook.setVerifyIdentity(verifyIdentity);
         return this;
     }
 

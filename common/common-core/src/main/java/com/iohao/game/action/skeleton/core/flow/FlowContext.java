@@ -29,6 +29,7 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
+import com.iohao.game.common.kit.ProtoKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -91,6 +92,24 @@ public final class FlowContext implements FlowOptionDynamic {
     public CmdInfo getCmdInfo() {
         HeadMetadata headMetadata = this.request.getHeadMetadata();
         return headMetadata.getCmdInfo();
+    }
+
+    /**
+     * 元附加信息
+     * <pre>
+     *     一般是在游戏对外服中设置的一些附加信息
+     *     这些信息会跟随请求来到游戏逻辑服中
+     * </pre>
+     *
+     * @param clazz clazz
+     * @param <T>   t
+     * @return 元附加信息
+     */
+    public <T> T getAttachment(Class<T> clazz) {
+        byte[] attachmentData = this.request.getHeadMetadata().getAttachmentData();
+
+        // 默认使用 pb 来序列化
+        return ProtoKit.parseProtoByte(attachmentData, clazz);
     }
 
     /**
@@ -212,10 +231,10 @@ public final class FlowContext implements FlowOptionDynamic {
          * 通过 flowContext 上下文创建的 RequestMessage 把userId、extJsonField 添加上
          * 理论上内部模块通讯也很少用得上这些信息
          */
-        String extJsonField = this.request.getHeadMetadata().getExtJsonField();
+        byte[] attachmentData = this.request.getHeadMetadata().getAttachmentData();
         requestMessage.getHeadMetadata()
                 .setUserId(this.getUserId())
-                .setExtJsonField(extJsonField)
+                .setAttachmentData(attachmentData);
         ;
 
         return requestMessage;

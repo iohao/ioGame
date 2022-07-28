@@ -19,12 +19,10 @@ package com.iohao.game.bolt.broker.client.external.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
-import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
-import com.iohao.game.bolt.broker.client.external.config.ExternalGlobalConfig;
 import com.iohao.game.bolt.broker.client.external.session.UserChannelId;
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
@@ -51,53 +49,39 @@ public class ResponseMessageExternalProcessor extends AsyncUserProcessor<Respons
         }
 
         ExternalMessage message = ExternalKit.convertExternalMessage(responseMessage);
-        HeadMetadata headMetadata = responseMessage.getHeadMetadata();
 
-        UserSession userSession;
-        // 这里将有两种情况，一种是要求登录，一种是没有要求登录
-
-        // 要求登录的情况：表示请求业务方法需要先登录
-        if (ExternalGlobalConfig.verifyIdentity) {
-            // 如果通过 userId 得不到 UserSession 表示没有登录，返回错误码
-            try {
-                long userId = headMetadata.getUserId();
-                userSession = UserSessions.me().getUserSession(userId);
-            } catch (RuntimeException e) {
-                log.error(e.getMessage(), e);
-                message.setResponseStatus(ActionErrorEnum.verifyIdentity.getCode());
-                message.setValidMsg("请先登录，在请求业务方法");
-                // 没登录但请求了业务方法，则返回错误码
-                sendError(message, headMetadata);
-                return;
-            }
-        } else {
-            // 一般指用户的 channelId （来源于对外服的 channel 长连接）
-            // see UserSession#employ
-            try {
-                String channelId = headMetadata.getExtJsonField();
-                userSession = UserSessions.me().getUserSession(new UserChannelId(channelId));
-            } catch (RuntimeException e) {
-                log.error(e.getMessage(), e);
-                // 通常是找不到对应的 UserSession
-                return;
-            }
-        }
+        UserSession userSession = getUserSession(responseMessage);
 
         // 响应结果给用户
+        if (userSession == null) {
+            return;
+        }
+
         Channel channel = userSession.getChannel();
         channel.writeAndFlush(message);
     }
 
-    private void sendError(ExternalMessage message, HeadMetadata headMetadata) {
+    private UserSession getUserSession(ResponseMessage responseMessage) {
+        HeadMetadata headMetadata = responseMessage.getHeadMetadata();
+        long userId = headMetadata.getUserId();
+
         try {
-            String channelId = headMetadata.getExtJsonField();
-            UserSession userSession = UserSessions.me().getUserSession(new UserChannelId(channelId));
-            // 响应结果给用户
-            Channel channel = userSession.getChannel();
-            channel.writeAndFlush(message);
+
+            // 当存在 userId 时，并且可以找到对应的 UserSession
+            if (userId > 0 && UserSessions.me().existUserSession(userId)) {
+                return UserSessions.me().getUserSession(userId);
+            } else {
+                // 通过 channelId 来查找 UserSession
+                byte[] attachmentData = headMetadata.getAttachmentData();
+                String channelId = new String(attachmentData);
+                return UserSessions.me().getUserSession(new UserChannelId(channelId));
+            }
+
         } catch (RuntimeException e) {
             log.error(e.getMessage(), e);
         }
+
+        return null;
     }
 
     /**

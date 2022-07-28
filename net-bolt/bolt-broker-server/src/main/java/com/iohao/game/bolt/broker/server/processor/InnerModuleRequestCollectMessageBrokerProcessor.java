@@ -28,18 +28,19 @@ import com.iohao.game.action.skeleton.protocol.collect.RequestCollectMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectItemMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
+import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
+import com.iohao.game.common.kit.CompletableFutureKit;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -66,7 +67,6 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AsyncUserPr
 
     @Setter
     BrokerServer brokerServer;
-    static final CompletableFuture<?>[] EMPTY_ARRAY = new CompletableFuture[0];
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestCollectMessage requestCollectMessage) {
@@ -93,7 +93,7 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AsyncUserPr
         // 并行调用多个逻辑服
         var futureList = this.listFuture(requestMessage, brokerClientRegion);
         // 将多个逻辑服的结果收集到 list 中
-        var aggregationItemMessages = this.sequence(futureList);
+        var aggregationItemMessages = CompletableFutureKit.sequence(futureList);
 
         responseCollectMessage.setMessageList(aggregationItemMessages);
 
@@ -105,6 +105,11 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AsyncUserPr
 
     private void print(ResponseCollectMessage responseCollectMessage) {
         if (BrokerGlobalConfig.requestResponseLog) {
+
+            if (this.brokerServer.getBrokerRunMode() != BrokerRunModeEnum.CLUSTER) {
+                return;
+            }
+
             int port = brokerServer.getPort();
             String brokerId = brokerServer.getBrokerId();
             BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
@@ -151,20 +156,8 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AsyncUserPr
                         .setLogicServerId(logicServerId);
 
             });
+
         }).collect(Collectors.toList());
-    }
-
-    private <T> List<T> sequence(List<CompletableFuture<T>> futures) {
-        // 组合处理 allOf
-        CompletableFuture<Void> allDoneFuture = CompletableFuture.allOf(futures.toArray(EMPTY_ARRAY));
-
-        return allDoneFuture.thenApply(v ->
-                futures.stream()
-                        .map(CompletableFuture::join)
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList())
-        ).join();
-        // see https://nurkiewicz.com/2013/05/java-8-completablefuture-in-action.html
     }
 
     /**

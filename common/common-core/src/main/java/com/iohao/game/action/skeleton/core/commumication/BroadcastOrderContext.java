@@ -27,6 +27,9 @@ import java.util.Collection;
  * <pre>
  *     顺序的广播，框架中只使用一个线程来广播数据，确保消息是严格顺序的
  *     如果没有特殊业务需求，建议使用 BroadcastContext
+ *
+ *     see:
+ *     https://www.yuque.com/iohao/game/qv4qfo#nJage
  * </pre>
  *
  * @author 渔民小镇

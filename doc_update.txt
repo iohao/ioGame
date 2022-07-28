@@ -1,9 +1,41 @@
+2022-07-28
+17.1.4
+（#I5J96X、#I5J7JU、#I5J7HG、#I5J7GI、#I5J7G5、#I5IS7V、#I5IEXO）
+
+-- 3类通讯方式相关 --
+新增 【游戏逻辑服】访问多个【游戏对外服】的上下文
+可以在游戏逻辑服中向游戏对外服拿一些数据，或做一些其他的处理。
+
+对外服扩展
+新增 游戏对外服新增 ExternalBizRegion 概念，开发者可以更好地扩展游戏对外服，
+通过这一特性，可以获取到游戏对外服的一些数据、或对游戏对外服做一些特殊的操作。
+
+ExternalBizRegion 新增实现类
+新增 用户（玩家）是否存在实现
+新增 强制用户（玩家）下线
+具体使用可以查看 ExternalCommunicationKit 工具类。
+
+参考 https://www.yuque.com/iohao/game/ivxsw5
+
+元信息 - 附加信息
+废弃 HeadMetadata.extJsonField 字段，由 attachment 字段代替。
+attachment 为 byte[] 类型。
+由于某些数据只存在于游戏对外服中，如果需要将这些数据传递到游戏逻辑服中，
+开发者可以使用这个字段保存需要传递的数据，之后的每次请求都会携带这个字段的数据，
+可以通过 FlowContext.getAttachment() 来得到这个字段的数据
+
+参考 https://www.yuque.com/iohao/game/ivxsw5
+
+废弃 ExternalGlobalConfig.verifyIdentity 由功能更强的 ExternalGlobalConfig.accessAuthenticationHook 来代替
+AccessAuthenticationHook 可以在游戏对外服中，更好的控制路由的访问权限。
+
+参考 https://www.yuque.com/iohao/game/tywkqv#qEvtB
 
 2022-07-19
 v17.1.3 (#I5H8NV、#I5H8H9)
 
 #I5H8H9
-增强：相同路由可以用在 action 与广播上；当 action 返回值为 void 时，可以复用路由来做为广播的响应路由。
+增强：相同路由可以用在 action 与广播上；当 action 返回值为 void 时，可以复用路由来作为广播的响应路由。
 
 #I5H8NV
 -- 3类通讯方式相关 - 广播，新增 --

@@ -120,28 +120,13 @@ public class BrokerClient implements BrokerClientContext {
         this.initBoltClientManager();
     }
 
-    public BrokerClientItem next() {
+    private BrokerClientItem next() {
         return this.brokerClientManager.next();
     }
 
     @Override
-    public BroadcastContext getBroadcastContext() {
-        return next();
-    }
-
-    @Override
-    public BroadcastOrderContext getBroadcastOrderContext() {
-        return next();
-    }
-
-    @Override
-    public ProcessorContext getProcessorContext() {
-        return next();
-    }
-
-    @Override
-    public InvokeModuleContext getInvokeModuleContext() {
-        return next();
+    public CommunicationAggregationContext getCommunicationAggregationContext() {
+        return this.brokerClientManager.next();
     }
 
     public Object invokeSync(final Object request, final int timeoutMillis) throws RemotingException, InterruptedException {

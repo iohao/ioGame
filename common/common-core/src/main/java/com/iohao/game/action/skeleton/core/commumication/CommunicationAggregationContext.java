@@ -14,19 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.bolt.broker.client.external.config;
-
-import lombok.experimental.UtilityClass;
+package com.iohao.game.action.skeleton.core.commumication;
 
 /**
+ * 框架网络通讯聚合接口
+ *
  * @author 渔民小镇
- * @date 2022-03-22
+ * @date 2022-07-27
  */
-@UtilityClass
-public class ExternalGlobalConfig {
-    /** true 表示请求业务方法需要先登录 */
-    @Deprecated
-    public boolean verifyIdentity = true;
-    /** 访问验证钩子接口 */
-    public AccessAuthenticationHook accessAuthenticationHook = new DefaultAccessAuthenticationHook();
+public interface CommunicationAggregationContext extends
+        ProcessorContext,
+        BroadcastContext,
+        BroadcastOrderContext,
+        InvokeModuleContext,
+        InvokeExternalModuleContext {
 }

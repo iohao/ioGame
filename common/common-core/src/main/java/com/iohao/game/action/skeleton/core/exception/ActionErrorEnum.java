@@ -50,6 +50,8 @@ public enum ActionErrorEnum implements MsgExceptionInfo {
     verifyIdentity(-1004, "请先登录"),
     /** class 不存在 */
     classNotExist(-1005, "class 不存在"),
+    /** 数据不存在 */
+    dataNotExist(-1006, "数据不存在"),
     ;
 
     /** 消息码 */
