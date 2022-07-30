@@ -16,7 +16,6 @@
  */
 package com.iohao.game.widget.light.protobuf.pojo.animal;
 
-import com.baidu.bjf.remoting.protobuf.annotation.EnableZigZap;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
 import lombok.AccessLevel;
@@ -29,10 +28,9 @@ import lombok.experimental.FieldDefaults;
  * @author 渔民小镇
  * @date 2022-01-25
  */
-@ProtobufClass
-@EnableZigZap
-@FieldDefaults(level = AccessLevel.PUBLIC)
 @ToString
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
 @ProtoFileMerge(fileName = "one.proto", filePackage = "pb.one")
 public class Food {
     /** id */

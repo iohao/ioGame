@@ -16,7 +16,6 @@
  */
 package com.iohao.game.action.skeleton.protocol.wrapper;
 
-import com.baidu.bjf.remoting.protobuf.annotation.EnableZigZap;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import lombok.AccessLevel;
 import lombok.ToString;
@@ -31,7 +30,6 @@ import java.util.List;
  * @date 2022-06-26
  */
 @ToString
-@EnableZigZap
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
 public class IntListPb {

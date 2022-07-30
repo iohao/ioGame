@@ -1,35 +1,51 @@
+更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
+
 2022-07-28
-17.1.4
-（#I5J96X、#I5J7JU、#I5J7HG、#I5J7GI、#I5J7G5、#I5IS7V、#I5IEXO）
+v17.1.4 （#I5J96X、#I5J7JU、#I5J7HG、#I5J7GI、#I5J7G5、#I5IS7V、#I5IEXO）
 
 -- 3类通讯方式相关 --
-新增 【游戏逻辑服】访问多个【游戏对外服】的上下文
-可以在游戏逻辑服中向游戏对外服拿一些数据，或做一些其他的处理。
+新增：【游戏逻辑服】访问多个【游戏对外服】的上下文。
+具体可以查看 https://gitee.com/iohao/iogame/issues/I5J7JU
 
-对外服扩展
-新增 游戏对外服新增 ExternalBizRegion 概念，开发者可以更好地扩展游戏对外服，
-通过这一特性，可以获取到游戏对外服的一些数据、或对游戏对外服做一些特殊的操作。
+新增：游戏对外服扩展
+游戏对外服新增 ExternalBizRegion 接口，开发者可以更好地扩展游戏对外服，通过这个接口与本次新增的上下文配合使用；开发者可以通过实现这个接口，向游戏逻辑服提供一些，如
+1. 只存在于游戏对外服中的数据
+2. 只有游戏对外服可以做的事
 
-ExternalBizRegion 新增实现类
-新增 用户（玩家）是否存在实现
-新增 强制用户（玩家）下线
-具体使用可以查看 ExternalCommunicationKit 工具类。
+框架通过这一扩展，在不到 15 行的有效代码中，就轻松实现了重复登录、顶号功能；
+● ExistUserExternalBizRegion 查询用户（玩家）是否在线
+● ForcedOfflineExternalBizRegion 强制用户（玩家）下线
+重复登录 具体查看 https://gitee.com/iohao/iogame/issues/I5J7G5
+顶号 具体查看 https://gitee.com/iohao/iogame/issues/I5J7GI
+ExternalBizRegion 扩展具体查看 https://www.yuque.com/iohao/game/ivxsw5
 
-参考 https://www.yuque.com/iohao/game/ivxsw5
 
-元信息 - 附加信息
-废弃 HeadMetadata.extJsonField 字段，由 attachment 字段代替。
-attachment 为 byte[] 类型。
-由于某些数据只存在于游戏对外服中，如果需要将这些数据传递到游戏逻辑服中，
-开发者可以使用这个字段保存需要传递的数据，之后的每次请求都会携带这个字段的数据，
-可以通过 FlowContext.getAttachment() 来得到这个字段的数据
+新增：元信息 - 附加信息 - 在 action 中得到附加数据
+废弃 HeadMetadata.extJsonField 字段，由 attachment 字段代替，attachment 为 byte[] 类型。
 
-参考 https://www.yuque.com/iohao/game/ivxsw5
+在处理 action 时，我们可以通过 FlowContext.userId 可以很方便得到当前用户（玩家）id，userId 实际的保存地方是游戏对外服的 UserSession 中。每次请求时会在游戏对外服中，将当前 userId 设置到 RequestMessage 的元信息对象中；如果开发者想在处理 action 时，携带上一些自定义的信息时，可以通过 HeadMetadata.attachmentData 属性来完成。
 
-废弃 ExternalGlobalConfig.verifyIdentity 由功能更强的 ExternalGlobalConfig.accessAuthenticationHook 来代替
-AccessAuthenticationHook 可以在游戏对外服中，更好的控制路由的访问权限。
+假如我们想要把 channel 的 ip（由于这些数据只在游戏对外服中），携带上到 action 业务处理中得到，我们就可以把这些数据设置到 HeadMetadata.attachmentData 属性中，在游戏对外服转发请求到网关之前设置就好的。
 
-参考 https://www.yuque.com/iohao/game/tywkqv#qEvtB
+当设置好需要携带到游戏逻辑服的数据时，我们可以通过 FlowContext.getAttachment () 方法来获取我们在游戏对外服设置的数据
+
+具体查看 https://gitee.com/iohao/iogame/issues/I5J96X
+
+新增：严格登录，路由访问权限的控制
+严格登录指的是，如果玩家没有登录，是不能访问其他业务方法的（即 action）。
+var accessAuthenticationHook = ExternalGlobalConfig.accessAuthenticationHook;
+// 表示登录才能访问业务方法
+accessAuthenticationHook.setVerifyIdentity(true);
+// 添加不需要登录（身份验证）也能访问的业务方法 (action)
+accessAuthenticationHook.addIgnoreAuthenticationCmd(1, 1);
+
+/** 通常这段代码放到游戏对外服中，因为是在游戏对外服做的权限控制。 */
+
+当 setVerifyIdentity = true 时，是不能访问任何业务方法的，包括开发者编写的登录业务方法。但我们可以放开权限，使得玩家可以访问我们的业务方法。上面的伪代码中，放开了路由 1-1 的访问权限，这样不需要登录也可以访问游戏逻辑服的业务方法了。
+
+默认配置下，setVerifyIdentity = false ，就是不登录就可以访问所有的业务方法。
+
+具体查看 https://gitee.com/iohao/iogame/issues/I5J7HG
 
 2022-07-19
 v17.1.3 (#I5H8NV、#I5H8H9)

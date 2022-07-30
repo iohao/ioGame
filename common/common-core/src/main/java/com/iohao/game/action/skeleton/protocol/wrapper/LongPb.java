@@ -29,7 +29,6 @@ import lombok.experimental.FieldDefaults;
  * @date 2022-06-26
  */
 @ToString
-@EnableZigZap
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
 public class LongPb {

@@ -16,7 +16,6 @@
  */
 package com.iohao.game.bolt.broker.client.external.bootstrap.message;
 
-import com.baidu.bjf.remoting.protobuf.annotation.EnableZigZap;
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.action.skeleton.core.CmdKit;
@@ -31,7 +30,6 @@ import lombok.experimental.FieldDefaults;
  * @date 2022-01-10
  */
 @Data
-@EnableZigZap
 @ProtobufClass(description = "对外数据协议")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExternalMessage {

@@ -85,4 +85,11 @@ public class ExternalBizHandler extends SimpleChannelInboundHandler<ExternalMess
         // 加入到 session 管理
         UserSessions.me().add(ctx);
     }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        // 从 session 管理中移除
+        UserSession userSession = UserSessions.me().getUserSession(ctx);
+        UserSessions.me().removeUserSession(userSession);
+    }
 }

@@ -16,7 +16,6 @@
  */
 package com.iohao.game.action.skeleton.core.action.pojo;
 
-import com.baidu.bjf.remoting.protobuf.annotation.EnableZigZap;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -24,7 +23,6 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @ProtobufClass
-@EnableZigZap
 @FieldDefaults(level = AccessLevel.PUBLIC)
 public class BeeApple {
     int id;
