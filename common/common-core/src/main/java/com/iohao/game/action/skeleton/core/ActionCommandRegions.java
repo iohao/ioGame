@@ -107,6 +107,10 @@ public class ActionCommandRegions {
                 ;
     }
 
+    Stream<ActionCommandRegion> streamActionCommandRegion() {
+        return this.regionMap.values().parallelStream();
+    }
+
     ActionCommandRegion getActionCommandRegion(int cmd) {
 
         var actionCommandRegion = this.regionMap.get(cmd);
