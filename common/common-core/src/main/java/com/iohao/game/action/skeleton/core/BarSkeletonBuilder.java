@@ -194,8 +194,6 @@ public final class BarSkeletonBuilder {
         var actionCommandRegions = actionCommandInfoBuilder.getActionCommandRegions();
 
         barSkeleton.setActionCommandRegions(actionCommandRegions);
-
-
     }
 
     private BarSkeleton createBarSkeleton() {

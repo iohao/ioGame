@@ -16,6 +16,7 @@
  */
 package com.iohao.game.simple;
 
+import com.iohao.game.action.skeleton.core.ActionCommandRegionGlobalCheckKit;
 import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.client.BrokerClientApplication;
@@ -84,6 +85,9 @@ public class SimpleRunOne {
 
         // 启动逻辑服、对外服
         this.startupLogic();
+
+        // 全局重复路由检测工具
+        ActionCommandRegionGlobalCheckKit.checkGlobalExistSubCmd();
     }
 
     /**

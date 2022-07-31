@@ -16,8 +16,12 @@
  */
 package com.iohao.game.bolt.broker.client;
 
+import com.iohao.game.action.skeleton.core.ActionCommandRegionGlobalCheckKit;
+import com.iohao.game.action.skeleton.core.ActionCommandRegions;
+import com.iohao.game.bolt.broker.boot.monitor.ext.MonitorExtRegion;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientBuilder;
+import com.iohao.game.bolt.broker.core.ext.ExtRegions;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -49,10 +53,35 @@ public class BrokerClientApplication {
     public BrokerClient start(BrokerClientBuilder builder) {
         BrokerClient brokerClient = builder.build();
         brokerClient.init();
+
+        experiment(builder);
+
         return brokerClient;
     }
 
     public BrokerClientBuilder initConfig(AbstractBrokerClientStartup brokerClientStartup) {
         return brokerClientStartup.initConfig();
+    }
+
+
+    /**
+     * 实验性功能，将来可能移除的。
+     */
+    private void experiment(BrokerClientBuilder builder) {
+        ExtRegions.me().add(new MonitorExtRegion());
+
+        ActionCommandRegions actionCommandRegions = builder.barSkeleton().getActionCommandRegions();
+        String tag = builder.tag();
+
+        /*
+         * 全局重复路由校验
+         * 原计划是内置到业务框架中，但是突然想起单进程中可以启动多个相同的逻辑服
+         * 所以放到这里比较合适，即使有多个游戏逻辑服，可以用 tag 来区分
+         *
+         * 实际上这个全局重复路由检测是可有可无的，如果遵循 COC ，是可以不需要的。
+         *
+         */
+        ActionCommandRegionGlobalCheckKit.putActionCommandRegions(tag, actionCommandRegions);
+
     }
 }
