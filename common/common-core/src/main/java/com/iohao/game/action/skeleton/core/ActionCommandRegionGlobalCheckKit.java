@@ -26,13 +26,14 @@ import java.util.*;
  * 全局重复路由检测工具
  * <pre>
  *     实际上，如果是按照 COC 原则的项目结构，是不需要这个工具的。
+ *     这个工具主要是对多个业务框架中，加载相同的 action 进行检查。
+ *
+ *     具体查看
+ *     https://gitee.com/iohao/iogame/issues/I5IEUJ
  *
  *     如果不是使用框架提供的 bolt-run-one 启动的，需要开发者自己调用
  *     这里的 bolt-run-one 指的是
  *     SimpleRunOne、ClusterSimpleRunOne
- *
- *     具体查看
- *     https://gitee.com/iohao/iogame/issues/I5IEUJ
  * </pre>
  *
  * @author 渔民小镇
@@ -43,8 +44,14 @@ import java.util.*;
 public class ActionCommandRegionGlobalCheckKit {
 
     Map<String, ActionCommandRegions> map = new HashMap<>();
+    /** 开启全局检查路由 */
+    public boolean check = true;
 
     public void putActionCommandRegions(String key, ActionCommandRegions actionCommandRegions) {
+
+        if (!check) {
+            return;
+        }
 
         if (map.containsKey(key)) {
             return;
@@ -60,6 +67,9 @@ public class ActionCommandRegionGlobalCheckKit {
      * 这个检测只能用来意思一下的提示
      */
     public void checkGlobalExistSubCmd() {
+        if (!check) {
+            return;
+        }
 
         Map<Integer, ActionCommand> cmdMap = new HashMap<>(100);
 
