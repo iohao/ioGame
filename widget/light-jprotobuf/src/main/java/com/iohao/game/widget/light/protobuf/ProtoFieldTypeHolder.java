@@ -44,11 +44,11 @@ public class ProtoFieldTypeHolder {
         filedTypeMap.put(Float.class, "float");
         filedTypeMap.put(float.class, "float");
 
-        filedTypeMap.put(Long.class, "sint64");
-        filedTypeMap.put(long.class, "sint64");
+        filedTypeMap.put(Long.class, "int64");
+        filedTypeMap.put(long.class, "int64");
 
-        filedTypeMap.put(Integer.class, "sint32");
-        filedTypeMap.put(int.class, "sint32");
+        filedTypeMap.put(Integer.class, "int32");
+        filedTypeMap.put(int.class, "int32");
 
         filedTypeMap.put(Boolean.class, "bool");
         filedTypeMap.put(boolean.class, "bool");
