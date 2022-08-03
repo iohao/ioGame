@@ -16,6 +16,8 @@
  */
 package com.iohao.game.action.skeleton.protocol.wrapper;
 
+import com.baidu.bjf.remoting.protobuf.FieldType;
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import lombok.AccessLevel;
 import lombok.ToString;
@@ -34,5 +36,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PUBLIC)
 public class IntListPb {
     /** intList */
+    @Protobuf(fieldType = FieldType.SINT32, order = 1)
     List<Integer> intValues;
 }

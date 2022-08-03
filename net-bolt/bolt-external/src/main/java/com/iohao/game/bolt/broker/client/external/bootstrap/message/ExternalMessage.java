@@ -16,6 +16,7 @@
  */
 package com.iohao.game.bolt.broker.client.external.bootstrap.message;
 
+import com.baidu.bjf.remoting.protobuf.FieldType;
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.action.skeleton.core.CmdKit;
@@ -30,17 +31,17 @@ import lombok.experimental.FieldDefaults;
  * @date 2022-01-10
  */
 @Data
-@ProtobufClass(description = "对外数据协议")
+@ProtobufClass
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExternalMessage {
     /** 请求命令类型: 0 心跳，1 业务 */
-    @Protobuf(description = "请求命令类型: 0 心跳，1 业务")
+    @Protobuf(fieldType = FieldType.INT32, order = 1)
     int cmdCode;
     /** 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验 */
-    @Protobuf(description = "协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验")
+    @Protobuf(fieldType = FieldType.INT32, order = 2)
     int protocolSwitch;
     /** 业务路由（高16为主, 低16为子） */
-    @Protobuf(description = "业务路由（高16为主, 低16为子）")
+    @Protobuf(fieldType = FieldType.INT32, order = 3)
     int cmdMerge;
 
     /**
@@ -53,12 +54,12 @@ public class ExternalMessage {
      *     !=0: 表示有错误
      * </pre>
      */
-    @Protobuf(description = "响应码: 0:成功, 其他表示有错误")
+    @Protobuf(fieldType = FieldType.SINT32, order = 4)
     int responseStatus;
     /** 验证信息 */
-    @Protobuf(description = "验证信息: 当 responseStatus == -1001 时， 会有值")
+    @Protobuf(fieldType = FieldType.STRING, order = 5)
     String validMsg;
-    @Protobuf(description = "业务请求数据")
+    @Protobuf(fieldType = FieldType.BYTES, order = 6)
     byte[] data;
 
     /**

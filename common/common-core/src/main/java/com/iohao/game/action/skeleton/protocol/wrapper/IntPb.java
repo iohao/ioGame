@@ -16,6 +16,8 @@
  */
 package com.iohao.game.action.skeleton.protocol.wrapper;
 
+import com.baidu.bjf.remoting.protobuf.FieldType;
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import lombok.AccessLevel;
 import lombok.ToString;
@@ -32,5 +34,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PUBLIC)
 public class IntPb {
     /** int 值 */
+    @Protobuf(fieldType = FieldType.SINT32, order = 1)
     int intValue;
 }

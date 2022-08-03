@@ -6,7 +6,7 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>iogame</artifactId>
-    <version>17.1.6</version>
+    <version>17.1.7</version>
     <name>ioGame</name>
     <description>ioGame网络游戏服务器框架</description>
     <url>https://www.yuque.com/iohao/game</url>
@@ -155,6 +155,11 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--
+        jprotobuf是针对Java程序开发一套简易类库，目的是简化java语言对protobuf类库的使用
+        https://github.com/jhunters/jprotobuf/
+        https://mvnrepository.com/artifact/com.baidu/jprotobuf
+        -->
         <dependency>
             <groupId>com.baidu</groupId>
             <artifactId>jprotobuf</artifactId>

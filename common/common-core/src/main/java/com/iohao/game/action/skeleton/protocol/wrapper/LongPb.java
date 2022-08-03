@@ -16,7 +16,8 @@
  */
 package com.iohao.game.action.skeleton.protocol.wrapper;
 
-import com.baidu.bjf.remoting.protobuf.annotation.EnableZigZap;
+import com.baidu.bjf.remoting.protobuf.FieldType;
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import lombok.AccessLevel;
 import lombok.ToString;
@@ -33,5 +34,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PUBLIC)
 public class LongPb {
     /** long 值 */
+    @Protobuf(fieldType = FieldType.SINT64, order = 1)
     long longValue;
 }
