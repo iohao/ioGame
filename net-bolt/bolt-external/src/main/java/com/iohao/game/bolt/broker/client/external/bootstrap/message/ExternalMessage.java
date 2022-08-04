@@ -25,7 +25,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 /**
- * 对外数据的协议
+ * 对外服数据协议
  *
  * @author 渔民小镇
  * @date 2022-01-10

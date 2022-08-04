@@ -1,5 +1,36 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+v17.1.5 ~ v17.1.8
+
+https://gitee.com/iohao/iogame/issues/I5K3WE
+#I5K3WE
+顶号强制下线时，发送一个错误码给连接端
+
+https://gitee.com/iohao/iogame/issues/I5KLDA
+#I5KLDA
+新增：原生 PB 与 jprotobuf 互转示例，具体查看示例源码的 spring-websocket-native-pb-client 模块
+示例文档：https://www.yuque.com/iohao/game/ruaqza
+
+
+更新对外服数据协议：使用 jprotobuf 明确协议类型
+
+框架内置可选模块 light-jprotobuf
+变更 light-jprotobuf 生成 .proto 文件时，sint64、sint32 改为 int64、int32。
+使用 sint64、sint32 类型，需要使用原生的 jprotobuf 。light-jprotobuf 暂时不打算支持。
+文档地址： https://www.yuque.com/iohao/game/vpe2t6
+
+https://gitee.com/iohao/iogame/issues/I5KLED
+#I5KLED
+前端示例与综合示例调通 （登录）
+前端示例代码：https://gitee.com/iohao/io-game-cocos
+综合示例代码：https://www.yuque.com/iohao/game/ruaqza
+服务器示例启动类： SpringGameOneApplication
+
+打 jar、docker 部署、全局重复路由检测
+
+移除示例中 EnableZigZap 注解的使用，减少相关理解。
+
+
 2022-07-28
 v17.1.4 （#I5J96X、#I5J7JU、#I5J7HG、#I5J7GI、#I5J7G5、#I5IS7V、#I5IEXO）
 
