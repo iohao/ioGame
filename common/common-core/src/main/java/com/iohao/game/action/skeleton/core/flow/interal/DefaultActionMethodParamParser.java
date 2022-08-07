@@ -18,6 +18,7 @@ package com.iohao.game.action.skeleton.core.flow.interal;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.ValidatorKit;
+import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodParamParser;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
@@ -78,6 +79,7 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
                 // 进行 JSR303+ 相关的验证
                 String validateMsg = ValidatorKit.validate(params[i]);
                 response.setValidatorMsg(validateMsg);
+                response.setResponseStatus(ActionErrorEnum.validateErrCode.getCode());
             }
 
         }

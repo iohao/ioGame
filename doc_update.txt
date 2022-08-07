@@ -1,5 +1,16 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-08-08
+v17.1.9
+
+#I5KR7T
+UserHook quit方法中调用ExternalKit.requestGateway(userSession, requestMessage); 抛出异常
+https://gitee.com/iohao/iogame/issues/I5KR7T
+
+#I5KZTP
+断言抛异常没有带异常信息
+https://gitee.com/iohao/iogame/issues/I5KZTP
+
 2022-08-04
 v17.1.5 ~ v17.1.8
 
@@ -101,7 +112,7 @@ v17.1.3 (#I5H8NV、#I5H8H9)
 BroadcastOrderContext 可以确保消息是严格顺序的
 
 ```java
-... ... 省略部份代码
+... ... 省略部分代码
 // 得到严格顺序的广播上下文
 var broadcastOrderContext = BrokerClientHelper.getBroadcastOrderContext();
 
@@ -428,7 +439,7 @@ https://alibroker.info/
 移除 widget-common 模块
 
 业务框架优化
-    优化部份 list 结构改为 array
+    优化部分 list 结构改为 array
     DefaultActionFactoryBean 新增创建 action 混合特性
 
 业务框架文档相关

@@ -30,6 +30,8 @@ import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
+
 
 /**
  * 接收来自网关的响应
@@ -42,6 +44,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ResponseMessageExternalProcessor extends AsyncUserProcessor<ResponseMessage> {
+    final UserChannelId emptyUserChannelId = new UserChannelId("empty");
+
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, ResponseMessage responseMessage) {
         if (BrokerGlobalConfig.isExternalLog()) {
@@ -71,10 +75,19 @@ public class ResponseMessageExternalProcessor extends AsyncUserProcessor<Respons
             if (userId > 0 && UserSessions.me().existUserSession(userId)) {
                 return UserSessions.me().getUserSession(userId);
             } else {
-                // 通过 channelId 来查找 UserSession
+
+                final UserChannelId userChannelId;
                 byte[] attachmentData = headMetadata.getAttachmentData();
-                String channelId = new String(attachmentData);
-                return UserSessions.me().getUserSession(new UserChannelId(channelId));
+
+                if (Objects.isNull(attachmentData)) {
+                    userChannelId = emptyUserChannelId;
+                } else {
+                    String channelId = new String(attachmentData);
+                    userChannelId = new UserChannelId(channelId);
+                }
+
+                // 通过 channelId 来查找 UserSession
+                return UserSessions.me().getUserSession(userChannelId);
             }
 
         } catch (RuntimeException e) {

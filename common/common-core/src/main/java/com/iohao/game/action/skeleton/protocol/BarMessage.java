@@ -18,7 +18,6 @@ package com.iohao.game.action.skeleton.protocol;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.common.kit.ToJson;
 import lombok.AccessLevel;
@@ -87,7 +86,6 @@ public abstract sealed class BarMessage implements Serializable, ToJson permits 
     public BarMessage setValidatorMsg(String validatorMsg) {
         if (validatorMsg != null) {
             this.validatorMsg = validatorMsg;
-            this.responseStatus = ActionErrorEnum.validateErrCode.getCode();
         }
 
         return this;

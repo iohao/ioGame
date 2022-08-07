@@ -103,7 +103,7 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
     /**
      * 初始化一些配置到构建器中
      * <pre>
-     *     这个方法的目的在于，先设置一些配置到 builder 中，后续有需要修改的部份配置在单独到 builder 中设置
+     *     这个方法的目的在于，先设置一些配置到 builder 中，后续有需要修改的部分配置在单独到 builder 中设置
      * </pre>
      *
      * @return BoltBrokerClientBuilder
