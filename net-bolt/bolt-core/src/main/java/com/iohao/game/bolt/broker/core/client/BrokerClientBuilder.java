@@ -99,6 +99,8 @@ public class BrokerClientBuilder {
 
     /** bolt 业务处理器的钩子管理器 */
     ClientProcessorHooks clientProcessorHooks;
+    /** 管理 bolt client */
+    BrokerClientManager brokerClientManager;
 
     BrokerClientBuilder() {
     }
@@ -167,7 +169,8 @@ public class BrokerClientBuilder {
                 .setTimeoutMillis(this.timeoutMillis)
                 .setConnectionEventProcessorMap(this.connectionEventProcessorMap)
                 .setProcessorList(this.processorList)
-                .setClientProcessorHooks(this.clientProcessorHooks);
+                .setClientProcessorHooks(this.clientProcessorHooks)
+                .setBrokerClientManager(this.brokerClientManager);
 
         // 保存一下 BrokerClient 的引用
         if (this.brokerClientType == BrokerClientType.LOGIC) {

@@ -94,12 +94,12 @@
         <jakarta.el.version>4.0.2</jakarta.el.version>
 
         <!-- Java 实体映射工具 https://mvnrepository.com/artifact/org.mapstruct/mapstruct https://mapstruct.org/documentation/reference-guide/ -->
-        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+        <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
 
         <!-- temp spring boot https://mvnrepository.com/artifact/org.springframework/spring-core -->
-        <spring.version>5.3.20</spring.version>
+        <spring.version>5.3.22</spring.version>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
-        <springboot.version>2.7.0</springboot.version>
+        <springboot.version>2.7.2</springboot.version>
         <!--  junit https://mvnrepository.com/artifact/junit/junit  -->
         <junit.version>4.13.2</junit.version>
 
@@ -109,13 +109,12 @@
         <logback.version>1.2.11</logback.version>
         <!-- OSHI 是一个免费的基于 JNA（本机）的 Java 操作系统和硬件信息库。 -->
         <!-- https://mvnrepository.com/artifact/com.github.oshi/oshi-core -->
-        <oshi-core.version>6.2.1</oshi-core.version>
+        <oshi-core.version>6.2.2</oshi-core.version>
 
         <reactor-bom.version>2020.0.17</reactor-bom.version>
 
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <guava.version>31.1-jre</guava.version>
-
 
         <!-- other 后期整理，需要从全局移动到局部模块中 -->
         <!-- Hutool是一个Java工具包 see https://www.hutool.cn/ https://mvnrepository.com/artifact/cn.hutool/hutool-all -->

@@ -228,7 +228,7 @@ public final class FlowContext implements FlowOptionDynamic {
         RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo, data);
 
         /*
-         * 通过 flowContext 上下文创建的 RequestMessage 把userId、extJsonField 添加上
+         * 通过 flowContext 上下文创建的 RequestMessage 把userId、headMetadata 添加上
          * 理论上内部模块通讯也很少用得上这些信息
          */
         byte[] attachmentData = this.request.getHeadMetadata().getAttachmentData();

@@ -22,6 +22,7 @@ import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelector;
+import com.iohao.game.bolt.broker.core.loadbalance.ElementSelectorFactory;
 import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,12 +66,18 @@ public final class BrokerClientManager {
     List<Supplier<UserProcessor<?>>> processorList;
     /** 业务框架 */
     BarSkeleton barSkeleton;
-    ElementSelector<BrokerClientItem> randomElementSelector = new RandomElementSelector<>(Collections.emptyList());
+    /** 元素选择器生产工厂 */
+    ElementSelectorFactory<BrokerClientItem> elementSelectorFactory = RandomElementSelector::new;
+    /** BrokerClientItem 元素选择器 */
+    ElementSelector<BrokerClientItem> elementSelector;
     /** 消息发送超时时间 */
     int timeoutMillis;
     BrokerClient brokerClient;
 
     public void init() {
+
+        this.elementSelector = elementSelectorFactory.createElementSelector(Collections.emptyList());
+
         this.register(this.brokerAddress.getAddress());
     }
 
@@ -134,27 +141,25 @@ public final class BrokerClientManager {
     }
 
     void resetSelector() {
-        // 生成负载对象
-        List<BrokerClientItem> list = boltClientMap.values()
+        // 生成负载对象；注意，这个 List 是不支持序列化的
+        List<BrokerClientItem> brokerClientItems = boltClientMap.values()
                 .stream()
                 .filter(brokerClientItem -> brokerClientItem.getStatus() == BrokerClientItem.Status.ACTIVE)
                 .toList();
 
-        List<BrokerClientItem> brokerClientItems = new ArrayList<>(list);
-        randomElementSelector = new RandomElementSelector<>(brokerClientItems);
+        // 重置负载对象
+        this.elementSelector = this.elementSelectorFactory.createElementSelector(brokerClientItems);
     }
 
     public int countActiveItem() {
-        return boltClientMap.values()
+        return (int) boltClientMap.values()
                 .stream()
                 .filter(brokerClientItem -> brokerClientItem.getStatus() == BrokerClientItem.Status.ACTIVE)
-                .toList()
-                .size()
-                ;
+                .count();
     }
 
     public BrokerClientItem next() {
-        return randomElementSelector.next();
+        return elementSelector.next();
     }
 
     public List<BrokerClientItem> listBrokerClientItem() {

@@ -37,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -52,9 +53,9 @@ import java.util.function.Supplier;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Slf4j
 @Getter
 @Setter(value = AccessLevel.PROTECTED)
-@Slf4j
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerClient implements BrokerClientContext {
@@ -195,7 +196,9 @@ public class BrokerClient implements BrokerClientContext {
     }
 
     private void initBoltClientManager() {
-        this.brokerClientManager = new BrokerClientManager();
+        if (Objects.isNull(this.brokerClientManager)) {
+            this.brokerClientManager = new BrokerClientManager();
+        }
 
         this.brokerClientManager
                 .setBrokerAddress(this.brokerAddress)

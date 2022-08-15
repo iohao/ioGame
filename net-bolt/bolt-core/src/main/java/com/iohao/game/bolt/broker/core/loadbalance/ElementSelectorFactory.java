@@ -16,19 +16,21 @@
  */
 package com.iohao.game.bolt.broker.core.loadbalance;
 
-import java.util.function.Supplier;
+import java.util.List;
 
 /**
- * 元素选择器
+ * 元素选择器生产工厂
  *
  * @author 渔民小镇
- * @date 2022-05-15
+ * @date 2022-08-15
  */
-public interface ElementSelector<T> extends Supplier<T> {
+public interface ElementSelectorFactory<T> {
     /**
-     * 得到下一个元素
+     * 创建元素选择器
      *
-     * @return t
+     * @param list element list
+     * @return 元素选择器
      */
-    T next();
+    ElementSelector<T> createElementSelector(List<T> list);
 }
+
