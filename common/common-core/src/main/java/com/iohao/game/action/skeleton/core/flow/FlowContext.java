@@ -119,12 +119,18 @@ public final class FlowContext implements FlowOptionDynamic {
      *     https://www.yuque.com/iohao/game/anguu6
      * </pre>
      *
+     * <pre>
+     *     将在下个大版本中移除，因为类职责的原因
+     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     * </pre>
+     *
      * @param cmdInfo 路由信息
      * @param data    请求参数
      * @param clazz   pb class
      * @param <T>     t
      * @return pb 对象
      */
+    @Deprecated
     public <T> T invokeModuleMessageData(CmdInfo cmdInfo, Object data, Class<T> clazz) {
         // 当前项目启动的服务上下文
         BrokerClientContext brokerClientContext = this.option(FlowAttr.brokerClientContext);
@@ -140,11 +146,17 @@ public final class FlowContext implements FlowOptionDynamic {
      *     https://www.yuque.com/iohao/game/anguu6
      * </pre>
      *
+     * <pre>
+     *     将在下个大版本中移除，因为类职责的原因
+     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     * </pre>
+     *
      * @param cmdInfo 路由信息
      * @param clazz   pb class
      * @param <T>     t
      * @return pb 对象
      */
+    @Deprecated
     public <T> T invokeModuleMessageData(CmdInfo cmdInfo, Class<T> clazz) {
         return this.invokeModuleMessageData(cmdInfo, null, clazz);
     }
@@ -156,10 +168,16 @@ public final class FlowContext implements FlowOptionDynamic {
      *     https://www.yuque.com/iohao/game/anguu6
      * </pre>
      *
+     * <pre>
+     *     将在下个大版本中移除，因为类职责的原因
+     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     * </pre>
+     *
      * @param cmdInfo cmdInfo
      * @param data    请求参数
      * @return ResponseMessage
      */
+    @Deprecated
     public ResponseMessage invokeModuleMessage(CmdInfo cmdInfo, Object data) {
 
         RequestMessage requestMessage = getRequestMessage(cmdInfo, data);
@@ -177,9 +195,15 @@ public final class FlowContext implements FlowOptionDynamic {
      *     https://www.yuque.com/iohao/game/anguu6
      * </pre>
      *
+     * <pre>
+     *     将在下个大版本中移除，因为类职责的原因
+     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     * </pre>
+     *
      * @param cmdInfo cmdInfo
      * @return ResponseMessage
      */
+    @Deprecated
     public ResponseMessage invokeModuleMessage(CmdInfo cmdInfo) {
         return this.invokeModuleMessage(cmdInfo, null);
     }
@@ -194,10 +218,16 @@ public final class FlowContext implements FlowOptionDynamic {
      *     https://www.yuque.com/iohao/game/rf9rb9
      * </pre>
      *
+     * <pre>
+     *     将在下个大版本中移除，因为类职责的原因
+     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     * </pre>
+     *
      * @param cmdInfo 路由信息
      * @param data    业务数据
      * @return ResponseCollectMessage
      */
+    @Deprecated
     public ResponseCollectMessage invokeModuleCollectMessage(CmdInfo cmdInfo, Object data) {
         RequestMessage requestMessage = getRequestMessage(cmdInfo, data);
         // 当前项目启动的服务上下文
@@ -217,9 +247,15 @@ public final class FlowContext implements FlowOptionDynamic {
      *     https://www.yuque.com/iohao/game/rf9rb9
      * </pre>
      *
+     * <pre>
+     *     将在下个大版本中移除，因为类职责的原因
+     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     * </pre>
+     *
      * @param cmdInfo 路由信息
      * @return ResponseCollectMessage
      */
+    @Deprecated
     public ResponseCollectMessage invokeModuleCollectMessage(CmdInfo cmdInfo) {
         return invokeModuleCollectMessage(cmdInfo, null);
     }
