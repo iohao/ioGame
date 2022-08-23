@@ -86,6 +86,9 @@ public final class BarSkeletonBuilder {
     /** 错误码相关的文档 */
     ErrorCodeDocs errorCodeDocs = new ErrorCodeDocs();
 
+    /** 业务框架 flow 上下文 工厂 */
+    FlowContextFactory flowContextFactory = FlowContext::new;
+
     BarSkeletonBuilder() {
     }
 
@@ -122,7 +125,10 @@ public final class BarSkeletonBuilder {
                 // 推送相关的文档
                 .setActionSendDocs(this.actionSendDocs)
                 // 错误码相关的文档
-                .setErrorCodeDocs(this.errorCodeDocs);
+                .setErrorCodeDocs(this.errorCodeDocs)
+                // 业务框架 flow 上下文 工厂
+                .setFlowContextFactory(this.flowContextFactory)
+                ;
 
         // 保存业务数据的编解码器
         DataCodecKit.dataCodec = this.dataCodec;

@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 模块之间的请求处理
  * <pre>
- *     模块间的请求
+ *     模块间的请求 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）
  *
  *     如果需要返回值的，see {@link InnerModuleMessageBrokerProcessor}
  * </pre>

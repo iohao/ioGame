@@ -195,7 +195,7 @@ public final class DebugInOut implements ActionMethodInOut {
 
     private void methodRequestParam(FlowContext flowContext, Map<String, Object> paramMap) {
         ActionCommand actionCommand = flowContext.getActionCommand();
-        if (!actionCommand.isHasMethodParam()) {
+        if (!actionCommand.isMethodHasParam()) {
             return;
         }
 

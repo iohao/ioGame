@@ -19,8 +19,6 @@ package com.iohao.game.bolt.broker.server.balanced.region;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.RpcServer;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
-import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
 import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
@@ -86,16 +84,8 @@ public class BrokerClientProxy implements ToJson {
         this.rpcServer = rpcServer;
     }
 
-    public <T> T invokeSync(RequestMessage requestMessage) throws RemotingException, InterruptedException {
-        return (T) rpcServer.invokeSync(address, requestMessage, timeoutMillis);
-    }
-
     public void oneway(Object request) throws RemotingException, InterruptedException {
         rpcServer.oneway(address, request);
-    }
-
-    public Object invokeSync(ResponseMessage responseMessage) throws RemotingException, InterruptedException {
-        return rpcServer.invokeSync(address, responseMessage, timeoutMillis);
     }
 
     public <T> T invokeSync(Object message) throws RemotingException, InterruptedException {

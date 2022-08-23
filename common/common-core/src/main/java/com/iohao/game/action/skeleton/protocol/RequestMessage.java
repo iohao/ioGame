@@ -24,7 +24,7 @@ import java.io.Serial;
  * @author 渔民小镇
  * @date 2021-12-20
  */
-public final class RequestMessage extends BarMessage {
+public sealed class RequestMessage extends BarMessage permits SyncRequestMessage {
     @Serial
     private static final long serialVersionUID = 8564408386704453534L;
 
@@ -38,5 +38,18 @@ public final class RequestMessage extends BarMessage {
 
     public void settingCommonAttr(final ResponseMessage responseMessage) {
         responseMessage.setHeadMetadata(this.headMetadata);
+    }
+
+    /**
+     * 设置自身属性到 request 中
+     *
+     * @param requestMessage request
+     */
+    public void copyTo(RequestMessage requestMessage) {
+        requestMessage.responseStatus = this.responseStatus;
+        requestMessage.validatorMsg = this.validatorMsg;
+        requestMessage.headMetadata = this.headMetadata;
+        requestMessage.dataClass = this.dataClass;
+        requestMessage.data = this.data;
     }
 }

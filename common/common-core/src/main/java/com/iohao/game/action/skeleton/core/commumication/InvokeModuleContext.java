@@ -21,6 +21,7 @@ import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 
 /**
@@ -130,6 +131,7 @@ public interface InvokeModuleContext {
      */
     default ResponseMessage invokeModuleMessage(CmdInfo cmdInfo, Object data) {
         RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo, data);
+
         return this.invokeModuleMessage(requestMessage);
     }
 
@@ -176,7 +178,10 @@ public interface InvokeModuleContext {
      * @return ResponseCollectMessage
      */
     default ResponseCollectMessage invokeModuleCollectMessage(CmdInfo cmdInfo, Object data) {
-        RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo, data);
+        SyncRequestMessage requestMessage = new SyncRequestMessage();
+
+        BarMessageKit.employ(requestMessage, cmdInfo, data);
+
         return this.invokeModuleCollectMessage(requestMessage);
     }
 

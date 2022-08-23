@@ -21,10 +21,7 @@ import com.alipay.remoting.ConnectionEventType;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.bolt.broker.boot.monitor.ext.MonitorExtRegion;
-import com.iohao.game.bolt.broker.client.processor.BrokerClusterMessageClientProcessor;
-import com.iohao.game.bolt.broker.client.processor.ExtRequestMessageClientProcessor;
-import com.iohao.game.bolt.broker.client.processor.RequestBrokerClientModuleMessageClientProcessor;
-import com.iohao.game.bolt.broker.client.processor.RequestMessageClientProcessor;
+import com.iohao.game.bolt.broker.client.processor.*;
 import com.iohao.game.bolt.broker.client.processor.connection.CloseConnectEventClientProcessor;
 import com.iohao.game.bolt.broker.client.processor.connection.ConnectEventClientProcessor;
 import com.iohao.game.bolt.broker.client.processor.connection.ConnectFailedEventClientProcessor;
@@ -91,12 +88,14 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
 
         // 客户端请求处理器
         Supplier<UserProcessor<?>> requestMessageClientSupplier = RequestMessageClientProcessor::new;
+        Supplier<UserProcessor<?>> syncRequestMessageClientSupplier = SyncRequestMessageClientProcessor::new;
 
         brokerClientBuilder
                 .registerUserProcessor(requestBrokerClientModuleSupplier)
                 .registerUserProcessor(brokerClusterMessageProcessorSupplier)
                 .registerUserProcessor(extRequestMessageProcessorSupplier)
                 .registerUserProcessor(requestMessageClientSupplier)
+                .registerUserProcessor(syncRequestMessageClientSupplier)
         ;
     }
 

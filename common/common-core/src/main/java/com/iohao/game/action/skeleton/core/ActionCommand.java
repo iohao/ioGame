@@ -85,7 +85,7 @@ public final class ActionCommand {
     /** 方法参数信息 数组 */
     final ParamInfo[] paramInfos;
     /** 方法是否有参数: true 有参数 */
-    final boolean hasMethodParam;
+    final boolean methodHasParam;
     /** 方法是否有异常抛出, 一般是错误码: true 有异常 */
     final boolean throwException;
     /** 返回类型 */
@@ -117,7 +117,7 @@ public final class ActionCommand {
 
         // -------------- 控制器-方法参数相关 --------------
         this.paramInfos = builder.paramInfos;
-        this.hasMethodParam = builder.paramInfos != null;
+        this.methodHasParam = builder.paramInfos != null;
         this.throwException = builder.actionMethod.getExceptionTypes().length != 0;
         this.actionMethodReturnInfo = new ActionMethodReturnInfo(builder);
 
@@ -133,13 +133,13 @@ public final class ActionCommand {
     }
 
     private String info() {
-        String template = "ActionCommand(parameters={},clazz={}, methodName={}, hasThrowException={}, hasMethodParam={})";
+        String template = "ActionCommand(parameters={},clazz={}, methodName={}, hasThrowException={}, methodHasParam={})";
         return StrKit.format(template
                 , Arrays.deepToString(paramInfos)
                 , actionControllerClazz
                 , actionMethodName
                 , throwException
-                , hasMethodParam
+                , methodHasParam
         );
     }
 

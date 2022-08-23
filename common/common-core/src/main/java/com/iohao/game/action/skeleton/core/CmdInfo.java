@@ -24,7 +24,11 @@ import lombok.Getter;
  *     平常大部分框架使用一个 cmd 来约定协议
  *     这里使用cmd,subCmd是为了模块的划分清晰, 当然这样规划还有更多好处
  *
- *     参考：
+ *     cmdInfo 的创建可以通过：
+ *     1 {@link CmdInfoFlyweightFactory} 来完成
+ *     2 {@link CmdInfo#getCmdInfo(int, int)} 静态方法来完成
+ *
+ *     其他参考：
  *     https://www.yuque.com/iohao/game/soxp4u
  * </pre>
  *
@@ -61,6 +65,16 @@ public final class CmdInfo {
         this.info = CmdKit.mergeToString(this.cmdMerge);
     }
 
+    /**
+     * 获取 cmdInfo
+     * <pre>
+     *     内部使用享元工厂来获取 cmdInfo
+     * </pre>
+     *
+     * @param cmd    主路由
+     * @param subCmd 子路由
+     * @return 路由信息
+     */
     public static CmdInfo getCmdInfo(int cmd, int subCmd) {
         return CmdInfoFlyweightFactory.me().getCmdInfo(cmd, subCmd);
     }

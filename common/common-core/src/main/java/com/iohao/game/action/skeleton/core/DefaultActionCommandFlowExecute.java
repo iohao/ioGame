@@ -71,9 +71,11 @@ public final class DefaultActionCommandFlowExecute implements ActionCommandFlowE
             actionMethodResultWrap.wrap(flowContext);
         }
 
-        // 5 ---- after 一般用于响应数据到 请求端
-        ActionAfter actionAfter = barSkeleton.getActionAfter();
-        actionAfter.execute(flowContext);
+        if (flowContext.isExecuteActionAfter()) {
+            // 5 ---- after 一般用于响应数据到 请求端
+            ActionAfter actionAfter = barSkeleton.getActionAfter();
+            actionAfter.execute(flowContext);
+        }
 
         // 6 ---- fuck后 在调用控制器对应处理方法结束后, 执行inout的out.
         inOutManager.fuckOut(flowContext);

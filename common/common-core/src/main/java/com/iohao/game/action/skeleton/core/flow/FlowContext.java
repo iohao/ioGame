@@ -46,6 +46,11 @@ import java.util.Map;
  *
  *     实现了类型明确的动态属性接口 {@link FlowOptionDynamic} ，实现类只需要实现 getOptions 方法就能具有动态属性的功能。
  *     动态属性可以更方便的为 FlowContext 实现属性的扩展，以方便开发者。
+ *
+ *     扩展属性接口 {@link FlowAttr}
+ *
+ *     FlowContext 还支持开发者自定义，具体参考
+ *     https://www.yuque.com/iohao/game/zz8xiz#sLySn
  * </pre>
  *
  * @author 渔民小镇
@@ -55,7 +60,7 @@ import java.util.Map;
 @Getter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class FlowContext implements FlowOptionDynamic {
+public class FlowContext implements FlowOptionDynamic {
     /** 动态属性 */
     final Map<FlowOption<?>, Object> options = new HashMap<>();
 
@@ -77,17 +82,9 @@ public final class FlowContext implements FlowOptionDynamic {
     long userId;
     /** true 业务方法有异常 */
     boolean error;
+    /** true 执行 ActionAfter 接口 {@link ActionAfter} */
+    boolean executeActionAfter = true;
 
-    /**
-     * cmdInfo
-     *
-     * @param cmd    主 cmd
-     * @param subCmd 子 cmd
-     * @return cmdInfo
-     */
-    public CmdInfo getCmdInfo(int cmd, int subCmd) {
-        return CmdInfo.getCmdInfo(cmd, subCmd);
-    }
 
     public CmdInfo getCmdInfo() {
         HeadMetadata headMetadata = this.request.getHeadMetadata();
@@ -113,6 +110,28 @@ public final class FlowContext implements FlowOptionDynamic {
     }
 
     /**
+     * cmdInfo
+     * <pre>
+     *     将在下个大版本中移除，因为类职责的原因
+     *
+     *     flowContext 中已经有 getCmdInfo() 方法，这个方法表示当前请求的上下文中的 cmdInfo 信息
+     *
+     *     如果在 flowContext 中提供这个带参数的 getCmdInfo(int,int) 方法，
+     *     会给使用的开发者造成理解上的困难，因为这个方法表示获取一个"新的" cmdInfo 信息
+     *
+     *     建议使用 {@link CmdInfo#getCmdInfo(int, int)} 来代替
+     * </pre>
+     *
+     * @param cmd    主 cmd
+     * @param subCmd 子 cmd
+     * @return cmdInfo
+     */
+    @Deprecated
+    public CmdInfo getCmdInfo(int cmd, int subCmd) {
+        return CmdInfo.getCmdInfo(cmd, subCmd);
+    }
+
+    /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
      * <pre>
      *     相关文档
@@ -121,7 +140,7 @@ public final class FlowContext implements FlowOptionDynamic {
      *
      * <pre>
      *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -148,7 +167,7 @@ public final class FlowContext implements FlowOptionDynamic {
      *
      * <pre>
      *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -170,7 +189,7 @@ public final class FlowContext implements FlowOptionDynamic {
      *
      * <pre>
      *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -197,7 +216,7 @@ public final class FlowContext implements FlowOptionDynamic {
      *
      * <pre>
      *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -220,7 +239,7 @@ public final class FlowContext implements FlowOptionDynamic {
      *
      * <pre>
      *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -249,7 +268,7 @@ public final class FlowContext implements FlowOptionDynamic {
      *
      * <pre>
      *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://gitee.com/iohao/iogame/issues/I5LL08#note_12289968_link
+     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -260,7 +279,7 @@ public final class FlowContext implements FlowOptionDynamic {
         return invokeModuleCollectMessage(cmdInfo, null);
     }
 
-    private RequestMessage getRequestMessage(CmdInfo cmdInfo, Object data) {
+    protected RequestMessage getRequestMessage(CmdInfo cmdInfo, Object data) {
         RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo, data);
 
         /*
@@ -271,7 +290,6 @@ public final class FlowContext implements FlowOptionDynamic {
         requestMessage.getHeadMetadata()
                 .setUserId(this.getUserId())
                 .setAttachmentData(attachmentData);
-        ;
 
         return requestMessage;
     }

@@ -38,7 +38,7 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
     public Object[] listParam(final FlowContext flowContext) {
 
         var actionCommand = flowContext.getActionCommand();
-        if (!actionCommand.isHasMethodParam()) {
+        if (!actionCommand.isMethodHasParam()) {
             return METHOD_PARAMS;
         }
 
@@ -54,7 +54,7 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
             ActionCommand.ParamInfo paramInfo = paramInfos[i];
             Class<?> paramClazz = paramInfo.getActualTypeArgumentClazz();
 
-            if (FlowContext.class.equals(paramClazz)) {
+            if (FlowContext.class.isAssignableFrom(paramClazz)) {
                 // flow 上下文
                 params[i] = flowContext;
                 continue;

@@ -22,8 +22,8 @@ import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import com.iohao.game.action.skeleton.protocol.collect.RequestCollectMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectItemMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
@@ -71,7 +71,7 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AsyncUserPr
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestCollectMessage requestCollectMessage) {
 
-        RequestMessage requestMessage = requestCollectMessage.getRequestMessage();
+        SyncRequestMessage requestMessage = requestCollectMessage.getRequestMessage();
         HeadMetadata headMetadata = requestMessage.getHeadMetadata();
         int cmdMerge = headMetadata.getCmdMerge();
 
@@ -122,7 +122,7 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AsyncUserPr
         }
     }
 
-    private List<CompletableFuture<ResponseCollectItemMessage>> listFuture(RequestMessage requestMessage, BrokerClientRegion brokerClientRegion) {
+    private List<CompletableFuture<ResponseCollectItemMessage>> listFuture(SyncRequestMessage requestMessage, BrokerClientRegion brokerClientRegion) {
 
         // 逻辑服列表 stream
         return brokerClientRegion.listBrokerClientProxy().stream().map(brokerClientProxy -> {

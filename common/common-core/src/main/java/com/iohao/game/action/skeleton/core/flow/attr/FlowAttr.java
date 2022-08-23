@@ -20,9 +20,13 @@ import com.alipay.remoting.AsyncContext;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
 import com.iohao.game.action.skeleton.core.*;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
 
 /**
  * flow 上下文的一些扩展属性
+ * <pre>
+ *     参考 {@link FlowContext}
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2022-01-31

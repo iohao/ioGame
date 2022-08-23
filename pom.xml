@@ -6,7 +6,7 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>iogame</artifactId>
-    <version>17.1.10</version>
+    <version>17.1.13</version>
     <name>ioGame</name>
     <description>ioGame网络游戏服务器框架</description>
     <url>https://www.yuque.com/iohao/game</url>
@@ -56,7 +56,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.78.Final</netty.version>
+        <netty.version>4.1.79.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.5</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
@@ -75,7 +75,7 @@
         <!-- redis internal : https://www.oschina.net/p/redisson https://mvnrepository.com/artifact/org.redisson/redisson -->
         <redisson.version>3.17.4</redisson.version>
         <!-- json 解析器 : https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
-        <fastjson.version>2.0.8</fastjson.version>
+        <fastjson.version>2.0.11</fastjson.version>
 
         <!--  reflectasm 高性能的反射处理 https://www.oschina.net/p/reflectasm https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm  -->
         <reflectasm.version>1.11.9</reflectasm.version>
@@ -118,7 +118,7 @@
 
         <!-- other 后期整理，需要从全局移动到局部模块中 -->
         <!-- Hutool是一个Java工具包 see https://www.hutool.cn/ https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
-        <hutool.version>5.8.4</hutool.version>
+        <hutool.version>5.8.5</hutool.version>
         <!-- jprotobuf是针对Java程序开发一套简易类库，目的是简化java语言对protobuf类库的使用 https://github.com/jhunters/jprotobuf/ https://mvnrepository.com/artifact/com.baidu/jprotobuf -->
         <jprotobuf.version>2.4.15</jprotobuf.version>
 

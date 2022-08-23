@@ -23,10 +23,12 @@ import com.alipay.remoting.config.BoltClientOption;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.RpcClient;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
+import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.commumication.*;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import com.iohao.game.action.skeleton.protocol.collect.RequestCollectMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
@@ -154,6 +156,7 @@ public class BrokerClientItem implements CommunicationAggregationContext {
 
     @Override
     public ResponseMessage invokeModuleMessage(RequestMessage requestMessage) {
+
         InnerModuleMessage moduleMessage = new InnerModuleMessage();
         moduleMessage.setRequestMessage(requestMessage);
 
@@ -170,6 +173,7 @@ public class BrokerClientItem implements CommunicationAggregationContext {
 
     @Override
     public void invokeModuleVoidMessage(RequestMessage requestMessage) {
+
         InnerModuleVoidMessage moduleVoidMessage = new InnerModuleVoidMessage();
         moduleVoidMessage.setRequestMessage(requestMessage);
 
@@ -182,8 +186,11 @@ public class BrokerClientItem implements CommunicationAggregationContext {
 
     @Override
     public ResponseCollectMessage invokeModuleCollectMessage(RequestMessage requestMessage) {
+
+        SyncRequestMessage syncRequestMessage = BarMessageKit.convertSyncRequestMessage(requestMessage);
+
         RequestCollectMessage requestCollectMessage = new RequestCollectMessage()
-                .setRequestMessage(requestMessage);
+                .setRequestMessage(syncRequestMessage);
 
         try {
             return (ResponseCollectMessage) this.invokeSync(requestCollectMessage);

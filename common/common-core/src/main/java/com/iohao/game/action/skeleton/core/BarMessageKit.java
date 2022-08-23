@@ -18,6 +18,7 @@ package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import lombok.experimental.UtilityClass;
 
 import java.util.Objects;
@@ -29,16 +30,39 @@ import java.util.Objects;
 @UtilityClass
 public class BarMessageKit {
     public RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
-        HeadMetadata headMetadata = new HeadMetadata()
-                .setCmdInfo(cmdInfo);
 
         RequestMessage requestMessage = new RequestMessage();
-        requestMessage.setHeadMetadata(headMetadata);
+
+        employ(requestMessage, cmdInfo, data);
+
+        return requestMessage;
+    }
+
+    public void employ(RequestMessage requestMessage, CmdInfo cmdInfo, Object data) {
+
+        requestMessage.setHeadMetadata(new HeadMetadata().setCmdInfo(cmdInfo));
 
         if (Objects.nonNull(data)) {
             requestMessage.setData(data);
         }
+    }
 
-        return requestMessage;
+    /**
+     * 将 RequestMessage 转为 SyncRequestMessage
+     *
+     * @param requestMessage RequestMessage
+     * @return SyncRequestMessage
+     */
+    public SyncRequestMessage convertSyncRequestMessage(RequestMessage requestMessage) {
+        SyncRequestMessage syncRequestMessage;
+
+        if (requestMessage instanceof SyncRequestMessage theSyncRequestMessage) {
+            syncRequestMessage = theSyncRequestMessage;
+        } else {
+            syncRequestMessage = new SyncRequestMessage();
+            requestMessage.copyTo(syncRequestMessage);
+        }
+
+        return syncRequestMessage;
     }
 }

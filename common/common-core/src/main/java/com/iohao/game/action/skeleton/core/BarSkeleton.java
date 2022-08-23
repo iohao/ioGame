@@ -81,6 +81,9 @@ public class BarSkeleton {
     /** 错误码相关的文档 */
     @Getter
     ErrorCodeDocs errorCodeDocs;
+    /** 业务框架 flow 上下文 工厂 */
+    @Getter
+    FlowContextFactory flowContextFactory;
 
     BarSkeleton(Handler[] handlers) {
         this.handlers = handlers;
