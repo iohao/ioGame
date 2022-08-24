@@ -16,7 +16,7 @@
   <br>
 	<strong>对webMVC开发者友好</strong>
   <br>
-	<strong>部署多样性</strong>
+	<strong>可跨进程通信</strong>
 </p>
 <p align="center">
 	<a href="https://www.yuque.com/iohao/game">https://www.yuque.com/iohao/game</a>
@@ -85,7 +85,7 @@ https://search.maven.org/search?q=a:bolt-run-one
 
 
 
-ioGame 是轻量级的网络游戏服务器框架，只需要在 pom 中引入如下就可以使用了，无需在安装任何的其他产品了。
+ioGame 是轻量级的网络游戏服务器框架，只需要在 pom 中引入如下就可以使用了，无需在安装任何其他产品了。
 
 ```xml
 <dependency>
@@ -133,13 +133,15 @@ ioGame 是轻量级的网络游戏服务器框架，在使用 ioGame 时，无�
 
 
 
-ioGame 可以很方便的与 spring 集成（5 行代码）。在部署上，支持多服单进程的方式部署（类似单体应用、在分步式开发时，调试更加方便）、也支持多服多进程多机器的方式部署。在部署方式上可以随意切换，而不需要更改代码；日常中按照单体思维开发，在生产上可以使用多进程的方式部署；当然，也可以使用单进程的方式部署。
+在部署上，支持多服单进程的方式部署（类似单体应用、在分步式开发时，调试更加方便）、也支持多服多进程多机器的方式部署。在部署方式上可以随意切换，而不需要更改代码；日常中按照单体思维开发，在生产上可以使用多进程的方式部署；当然，也可以使用单进程的方式部署。
 
 
 
 ioGame 框架职责清晰、业务开发几乎零学习成本、源码有高质量注释、示例多、使用文档多，开发体验最佳、对接文档自动生成、逻辑服之间可跨进程跨机器通信、业务代码定位--神级特性、异常机制。提供了丰富的在线高质量使用文档，为你的团队助力，带上你们的小伙伴一起，这样就不用手把手的教了。
 
 
+
+ioGame 可以很方便的与 spring 集成（5 行代码）。
 
 ------
 
@@ -245,7 +247,7 @@ broker （游戏网关）可以**集群**的方式部署，集群无中心节点
 - 游戏对外服、Broker（游戏网关）、游戏逻辑服这三部分，在多个进程中；
 - 游戏对外服、Broker（游戏网关）这两部分在一个进程中；而游戏逻辑服在多个进程中；（类似之前游戏的传统架构）
 - Broker（游戏网关）在一个进程中；游戏对外服、游戏逻辑服这两部分在多个进程中
-- 甚至可以不需要游戏对外服，只使用Broker（游戏网关）和游戏逻辑服这两部分，其他系统业务；
+- 甚至可以不需要游戏对外服，只使用Broker（游戏网关）和游戏逻辑服这两部分，用于其他系统业务；
 
 
 
@@ -534,7 +536,7 @@ public class DemoAction {
 ```
 
 > Debug. [(DemoAction.java:4).here]：
-> 表示执行业务的是 DemoAction 类下的 here 方法，4 表示业务方法所在的代码行数。在工具中点击控制台的 DemoAction.java:4 这条信息，就可以跳转到对应的代码中（快速导航到对应的代码）。
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;表示执行业务的是 DemoAction 类下的 here 方法，4 表示业务方法所在的代码行数。在工具中点击控制台的 DemoAction.java:4 这条信息，就可以跳转到对应的代码中（快速导航到对应的代码）。
 > 
 > userId :  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当前发起请求的 用户 id。
@@ -591,7 +593,7 @@ public class DemoAction {
 <details>
 <summary>游戏服务器框架内置功能详细--点我展开</summary>
 
-- [领域事件](https://www.yuque.com/iohao/game/gmfy1k) （[disruptor](https://www.yuque.com/iohao/game/gmfy1k) 实现类似Spring事件驱动模型 ApplicationEvent）
+- [领域事件](https://www.yuque.com/iohao/game/gmfy1k) （轻量级单机最快MQ -- disruptor；可为你的系统实现类似 Spring 事件驱动模型 ApplicationEvent、业务解耦、规避并发、不阻塞主线程...等，各种浪操作）
 - [任务延时器](https://www.yuque.com/iohao/game/niflk0) （将来某个时间可对任务进行执行、暂停、取消等操作，并不是类似 Quartz 的任务调度）
 - [多环境切换](https://www.yuque.com/iohao/game/ekx6ve) （不同运行环境下的配置支持）
 - [light-jprotobuf ](https://www.yuque.com/iohao/game/vpe2t6) （补足 jprotobuf 不能让多个对象在单个 .proto 源文件中生成的需求，并简化jprotobuf对源文件的注释）
