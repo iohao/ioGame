@@ -76,15 +76,11 @@ public class ResponseMessageExternalProcessor extends AsyncUserProcessor<Respons
                 return UserSessions.me().getUserSession(userId);
             } else {
 
-                final UserChannelId userChannelId;
-                byte[] attachmentData = headMetadata.getAttachmentData();
+                String channelId = headMetadata.getChannelId();
 
-                if (Objects.isNull(attachmentData)) {
-                    userChannelId = emptyUserChannelId;
-                } else {
-                    String channelId = new String(attachmentData);
-                    userChannelId = new UserChannelId(channelId);
-                }
+                final UserChannelId userChannelId = Objects.isNull(channelId)
+                        ? emptyUserChannelId
+                        : new UserChannelId(channelId);
 
                 // 通过 channelId 来查找 UserSession
                 return UserSessions.me().getUserSession(userChannelId);

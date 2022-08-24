@@ -56,9 +56,7 @@ public class UserIdSettingKit {
         // 这个 userId 一般是首次建立连接时，系统随机分配的临时 id
         HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
         // 一般指用户的 channelId （来源于对外服的 channel 长连接）
-        // see UserSession#employ
-        byte[] attachmentData = headMetadata.getAttachmentData();
-        String userChannelId = new String(attachmentData);
+        String userChannelId = headMetadata.getChannelId();
 
         SettingUserIdMessage userIdMessage = new SettingUserIdMessage()
                 .setUserId(userId)
