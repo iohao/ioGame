@@ -114,21 +114,21 @@ public class HeadMetadata implements Serializable {
      * 扩展字段
      * <pre>
      *     开发者有特殊业务可以通过这个字段来扩展元信息，该字段的信息会跟随每一个请求；
-     *
-     *     框架只会在玩家没有登录的时候，临时的使用了一下这个字段来存放 netty 的 channelId。
-     *     原因是不想为了这一次的使用，而特意声明一个变量来存放 netty 的 channelId。
-     *     简单点说就是在玩家没有登录时，开发者是不能使用该字段的。
-     *     只登录了的玩家，框架才不会占用该字段来存放 netty 的 channelId。
-     *
-     *     解释：
-     *     框架存放 netty 的 channelId 是为了能在对外服查找到对应的连接，
-     *     一但玩家登录后，将会使用玩家的 userId 而不是 channelId 来查找对应的连接（channel），
-     *     因为 channelId 的字符串实在太长了，每次将该值传输到逻辑服会小小的影响性能。
-     *     出于这个原因就这样约定使用了。
-     *
      * </pre>
      */
     byte[] attachmentData;
+
+    /**
+     * netty 的 channelId。
+     * <pre>
+     *     框架存放 netty 的 channelId 是为了能在对外服查找到对应的连接，
+     *     一但玩家登录后，框架将会使用玩家的 userId 而不是 channelId 来查找对应的连接（channel），
+     *     因为 channelId 的字符串实在太长了，每次将该值传输到逻辑服会小小的影响性能。
+     *
+     *     一但玩家登录后，框架不会在使用这个属性了；开发者如果有需要，可以把这个字段利用起来。
+     * </pre>
+     */
+    String channelId;
 
     public HeadMetadata setCmdInfo(CmdInfo cmdInfo) {
         this.cmd = cmdInfo.getCmd();

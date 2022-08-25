@@ -37,6 +37,7 @@ public sealed class RequestMessage extends BarMessage permits SyncRequestMessage
     }
 
     public void settingCommonAttr(final ResponseMessage responseMessage) {
+        // response 与 request 使用的 headMetadata 为同一引用
         responseMessage.setHeadMetadata(this.headMetadata);
     }
 

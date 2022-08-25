@@ -84,8 +84,7 @@ public class UserSession {
             // 只有没进行验证的，才给 userChannelId
             String channelId = this.getChannelId();
             // 一般指用户的 channelId （来源于对外服的 channel 长连接）
-            byte[] channelIdBytes = channelId.getBytes();
-            headMetadata.setAttachmentData(channelIdBytes);
+            headMetadata.setChannelId(channelId);
         }
 
         // 设置请求用户的id

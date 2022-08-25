@@ -199,7 +199,7 @@ public class FlowContext implements FlowOptionDynamic {
     @Deprecated
     public ResponseMessage invokeModuleMessage(CmdInfo cmdInfo, Object data) {
 
-        RequestMessage requestMessage = getRequestMessage(cmdInfo, data);
+        RequestMessage requestMessage = createRequestMessage(cmdInfo, data);
         // 当前项目启动的服务上下文
         BrokerClientContext brokerClientContext = this.option(FlowAttr.brokerClientContext);
         InvokeModuleContext invokeModuleContext = brokerClientContext.getInvokeModuleContext();
@@ -248,7 +248,7 @@ public class FlowContext implements FlowOptionDynamic {
      */
     @Deprecated
     public ResponseCollectMessage invokeModuleCollectMessage(CmdInfo cmdInfo, Object data) {
-        RequestMessage requestMessage = getRequestMessage(cmdInfo, data);
+        RequestMessage requestMessage = createRequestMessage(cmdInfo, data);
         // 当前项目启动的服务上下文
         BrokerClientContext brokerClientContext = this.option(FlowAttr.brokerClientContext);
         InvokeModuleContext invokeModuleContext = brokerClientContext.getInvokeModuleContext();
@@ -279,17 +279,19 @@ public class FlowContext implements FlowOptionDynamic {
         return invokeModuleCollectMessage(cmdInfo, null);
     }
 
-    protected RequestMessage getRequestMessage(CmdInfo cmdInfo, Object data) {
+    protected RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
         RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo, data);
-
         /*
          * 通过 flowContext 上下文创建的 RequestMessage 把userId、headMetadata 添加上
          * 理论上内部模块通讯也很少用得上这些信息
          */
-        byte[] attachmentData = this.request.getHeadMetadata().getAttachmentData();
+        HeadMetadata headMetadata = this.request.getHeadMetadata();
+
         requestMessage.getHeadMetadata()
                 .setUserId(this.getUserId())
-                .setAttachmentData(attachmentData);
+                .setAttachmentData(headMetadata.getAttachmentData())
+                .setChannelId(headMetadata.getChannelId())
+        ;
 
         return requestMessage;
     }
