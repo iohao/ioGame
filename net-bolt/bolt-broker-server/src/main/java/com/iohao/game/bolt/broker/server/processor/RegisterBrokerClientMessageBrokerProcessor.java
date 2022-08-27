@@ -67,7 +67,7 @@ public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcess
         BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
         BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
 
-        if (BrokerGlobalConfig.openLog) {
+        if (BrokerGlobalConfig.isBrokerClusterLog()) {
             log.info("broker（游戏网关）: [{}] --  集群数量[{}] - 详细：[{}]"
                     , this.brokerServer.getPort()
                     , brokerClusterMessage.count()

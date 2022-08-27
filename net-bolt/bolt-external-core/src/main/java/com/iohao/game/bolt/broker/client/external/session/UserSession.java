@@ -49,10 +49,11 @@ import java.util.Objects;
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserSession {
-    /** userId */
-    long userId;
+
     /** user channel */
     final Channel channel;
+    /** userId */
+    long userId;
     /** 用户状态 */
     @Setter
     UserSessionState state;

@@ -52,6 +52,8 @@ public enum ActionErrorEnum implements MsgExceptionInfo {
     classNotExist(-1005, "class 不存在"),
     /** 数据不存在 */
     dataNotExist(-1006, "数据不存在"),
+    /** 强制玩家下线 */
+    forcedOffline(-1007, "强制玩家下线"),
     ;
 
     /** 消息码 */

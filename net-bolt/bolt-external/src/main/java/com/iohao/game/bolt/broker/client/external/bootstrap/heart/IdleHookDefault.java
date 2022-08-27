@@ -17,6 +17,7 @@
 package com.iohao.game.bolt.broker.client.external.bootstrap.heart;
 
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
+import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessageCmdCode;
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
@@ -51,7 +52,8 @@ public class IdleHookDefault implements IdleHook {
             log.debug("ALL_IDLE 总超时");
         }
 
-        ExternalMessage externalMessage = new ExternalMessage();
+        ExternalMessage externalMessage = ExternalKit.createExternalMessage();
+        // 请求命令类型: 心跳
         externalMessage.setCmdCode(ExternalMessageCmdCode.idle);
         // 错误码
         externalMessage.setResponseStatus(ActionErrorEnum.idleErrorCode.getCode());

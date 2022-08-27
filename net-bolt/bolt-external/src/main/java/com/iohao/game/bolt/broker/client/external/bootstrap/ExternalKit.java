@@ -27,11 +27,13 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.client.external.ExternalHelper;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessageCmdCode;
+import com.iohao.game.bolt.broker.client.external.config.ExternalGlobalConfig;
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
+import com.iohao.game.common.kit.ProtoKit;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.experimental.UtilityClass;
@@ -113,12 +115,55 @@ public class ExternalKit {
     public ExternalMessage convertExternalMessage(ResponseMessage responseMessage) {
         HeadMetadata headMetadata = responseMessage.getHeadMetadata();
 
-        ExternalMessage externalMessage = new ExternalMessage();
-        externalMessage.setCmdCode(ExternalMessageCmdCode.biz);
-        externalMessage.setCmdMerge(headMetadata.getCmdMerge());
+        // 路由
+        int cmdMerge = headMetadata.getCmdMerge();
+        // 业务数据
+        byte[] data = responseMessage.getData();
+
+        // 游戏框架内置的协议， 与游戏前端相互通讯的协议
+        ExternalMessage externalMessage = createExternalMessage();
+        externalMessage.setCmdMerge(cmdMerge);
+        externalMessage.setData(data);
+        // 状态码
         externalMessage.setResponseStatus(responseMessage.getResponseStatus());
-        externalMessage.setData(responseMessage.getData());
+        // 验证信息（异常消息）
         externalMessage.setValidMsg(responseMessage.getValidatorMsg());
+
+        return externalMessage;
+    }
+
+    public ExternalMessage createExternalMessage() {
+        // 游戏框架内置的协议， 与游戏前端相互通讯的协议
+        ExternalMessage externalMessage = new ExternalMessage();
+        // 请求命令类型: 0 心跳，1 业务
+        externalMessage.setCmdCode(ExternalMessageCmdCode.biz);
+        // 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验
+        externalMessage.setProtocolSwitch(ExternalGlobalConfig.protocolSwitch);
+        return externalMessage;
+    }
+
+    public ExternalMessage createExternalMessage(int cmd, int subCmd) {
+        ExternalMessage externalMessage = ExternalKit.createExternalMessage();
+        externalMessage.setCmdMerge(cmd, subCmd);
+        return externalMessage;
+    }
+
+    public ExternalMessage createExternalMessage(int cmd, int subCmd, Object object) {
+        byte[] data = null;
+
+        if (object != null) {
+            data = ProtoKit.toBytes(object);
+        }
+
+        return ExternalKit.createExternalMessage(cmd, subCmd, data);
+    }
+
+    public ExternalMessage createExternalMessage(int cmd, int subCmd, byte[] data) {
+        // 游戏框架内置的协议， 与游戏前端相互通讯的协议
+        ExternalMessage externalMessage = ExternalKit.createExternalMessage(cmd, subCmd);
+
+        // 业务数据
+        externalMessage.setData(data);
 
         return externalMessage;
     }

@@ -122,7 +122,9 @@ public class BrokerClusterManagerBuilder {
             log.warn("因为你没有设置 种子节点信息，这里为你添加一些默认设置的种子节点");
         }
 
-        log.info("当前种子节点信息: {}", this.seedAddress);
+        if (BrokerGlobalConfig.isBrokerClusterLog()) {
+            log.info("当前种子节点信息: {}", this.seedAddress);
+        }
     }
 
 }

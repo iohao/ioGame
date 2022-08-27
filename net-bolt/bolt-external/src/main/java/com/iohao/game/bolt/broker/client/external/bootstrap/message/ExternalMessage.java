@@ -56,7 +56,7 @@ public class ExternalMessage {
      */
     @Protobuf(fieldType = FieldType.SINT32, order = 4)
     int responseStatus;
-    /** 验证信息 */
+    /** 验证信息（错误消息、异常消息） */
     @Protobuf(fieldType = FieldType.STRING, order = 5)
     String validMsg;
     @Protobuf(fieldType = FieldType.BYTES, order = 6)

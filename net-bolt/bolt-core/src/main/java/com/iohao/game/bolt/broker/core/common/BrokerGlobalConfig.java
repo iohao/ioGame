@@ -41,7 +41,14 @@ public class BrokerGlobalConfig {
     /** true 开启广播相关日志 */
     public boolean broadcastLog = false;
 
+    /** true 开启集群相关日志 */
+    public boolean brokerClusterLog = true;
+
     public boolean isExternalLog() {
         return openLog && externalLog;
     }
+    public boolean isBrokerClusterLog() {
+        return openLog && brokerClusterLog;
+    }
+
 }

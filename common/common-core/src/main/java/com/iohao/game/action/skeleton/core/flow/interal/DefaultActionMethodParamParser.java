@@ -76,10 +76,13 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
 
             // 如果开启了验证
             if (paramInfo.isValidator()) {
-                // 进行 JSR303+ 相关的验证
+                // 进行 JSR380 相关的验证
                 String validateMsg = ValidatorKit.validate(params[i]);
-                response.setValidatorMsg(validateMsg);
-                response.setResponseStatus(ActionErrorEnum.validateErrCode.getCode());
+                // 有错误消息，表示验证不通过
+                if (Objects.nonNull(validateMsg)) {
+                    response.setValidatorMsg(validateMsg);
+                    response.setResponseStatus(ActionErrorEnum.validateErrCode.getCode());
+                }
             }
 
         }

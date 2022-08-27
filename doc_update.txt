@@ -1,5 +1,21 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-08-23
+v17.1.13
+#I5N97K
+(可跨进程通信) 游戏逻辑服与同类型逻辑服通信，超时问题；
+在之前的版本中，使用通讯方式 -- 游戏逻辑服与同类型逻辑服通信时，当目标游戏逻辑服中的业务处理时间过长时，框架不能按开发者的预期值返回（相当于超时了），现在改为默认是在调用端进行阻塞，直到得到目标游戏逻辑服返回的结果为止；
+新增 SyncRequestMessageClientProcessor、SyncRequestMessage 来处理超业务逻辑时间比较长的业务。
+这个改进对开发者是无感知的；
+使用的处理方式还是： CompletableFuture、ForkJoinPool 等，即总耗时为最长那个业务逻辑的耗时；如，A 用时 1 秒、B 用时 2 秒、C 用时 2.2 秒，那么总耗时大概是 2.2 秒；
+但如果超过在 BrokerGlobalConfig.timeoutMillis 中设置的时间，仍然会做报错的提示，防止开发者因为编写业务逻辑时引发的问题；
+
+#I5N97H
+自定义 FlowContext
+开发者可以自定义 FlowContext 方便做一些方法上的扩展，这些定制可以更好的服务于开发者的项目；业务框架新增 FlowContextFactory 业务框架 flow 上下文工厂，用于创建自定义的 FlowContext。通常使用自定义的 FlowContext，一般用于为 FlowContext 添加上一些方法；
+框架默认提供的 FlowContext 已经将 invokeXXX 系列方法给标记为 Deprecated ，因为这是前期的一个 API 错误设计，invokeXXX 系列方法严格来说不算是 FlowContext 的职责；但在实际的业务开发中，开发者自定义的 FlowContext 是可以这么做的；
+对于更详细的描述与具体使用，可以参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn 在线文档
+
 2022-08-16
 v17.1.10
 #I5LL08

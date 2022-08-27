@@ -41,7 +41,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
-import java.net.InetAddress;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -143,11 +142,8 @@ public class BrokerClusterManager implements ClusterMessageHandler {
 
         this.brokers.put(clusterAddress, this.localBroker);
 
-        String hostAddress = InetAddress.getLocalHost().getHostAddress();
-        log.info("hostAddress : {}", hostAddress);
         // 种子节点（seed node）：作为其他节点加入集群的连接点的节点。实际上，一个节点可以通过向集群中的任何一个节点发送Join（加入）命令加入集群。
         // SeedNode是种子节点，用于新节点的加入和节点之间同步数据，种子节点是任意约定的，可以是A,B,C中的一个或者几个；
-
     }
 
     void send() {
@@ -155,7 +151,7 @@ public class BrokerClusterManager implements ClusterMessageHandler {
 
         executorService.scheduleAtFixedRate(() -> {
             Message message = Message.fromData("Greetings from Carol~~~~~");
-            if (BrokerGlobalConfig.openLog) {
+            if (BrokerGlobalConfig.isBrokerClusterLog()) {
                 log.info("message : {}", message);
             }
 
@@ -173,6 +169,10 @@ public class BrokerClusterManager implements ClusterMessageHandler {
      */
     public void inform() {
         if (Objects.isNull(this.clusterMessageListener)) {
+            return;
+        }
+
+        if (!BrokerGlobalConfig.isBrokerClusterLog()) {
             return;
         }
 
@@ -211,7 +211,6 @@ public class BrokerClusterManager implements ClusterMessageHandler {
 
     @Override
     public void onMembershipEvent(MembershipEvent event) {
-        log.info("event : {}", event);
         // 事件广播
         // xx.send(member, msg); 会触发到这
         Broker broker = memberToBroker(event.member());
@@ -249,7 +248,9 @@ public class BrokerClusterManager implements ClusterMessageHandler {
 
     @Override
     public void onGossip(Message gossip) {
-        log.info("Message gossip : {}", gossip);
+        if (BrokerGlobalConfig.isBrokerClusterLog()) {
+            log.info("Message gossip : {}", gossip);
+        }
     }
 
     @Override

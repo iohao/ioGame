@@ -17,6 +17,7 @@
 package com.iohao.game.bolt.broker.client.external.config;
 
 import lombok.experimental.UtilityClass;
+import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 
 /**
  * @author 渔民小镇
@@ -29,4 +30,11 @@ public class ExternalGlobalConfig {
     public boolean verifyIdentity = true;
     /** 访问验证钩子接口 */
     public AccessAuthenticationHook accessAuthenticationHook = new DefaultAccessAuthenticationHook();
+    /**
+     * 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验
+     * <pre>
+     *     see {@link  ExternalMessage#getProtocolSwitch()}
+     * </pre>
+     */
+    public int protocolSwitch;
 }
