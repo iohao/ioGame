@@ -67,7 +67,7 @@ public class ProtoKit {
      */
     public <T> T parseProtoByte(byte[] data, Class<T> clazz) {
 
-        if (Objects.isNull(data) || data.length == 0) {
+        if (Objects.isNull(data)) {
             return null;
         }
 

@@ -36,7 +36,6 @@ public class ProtoDataCodec implements DataCodec {
         return (T) ProtoKit.parseProtoByte(data, paramClazz);
     }
 
-
     private ProtoDataCodec() {
 
     }

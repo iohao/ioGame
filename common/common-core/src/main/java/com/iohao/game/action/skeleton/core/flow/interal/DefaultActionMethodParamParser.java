@@ -42,15 +42,18 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
             return METHOD_PARAMS;
         }
 
+        // 请求、响应对象
         var request = flowContext.getRequest();
         var response = flowContext.getResponse();
 
+        // 方法参数信息 数组
         final var paramInfos = actionCommand.getParamInfos();
 
         final var len = paramInfos.length;
         final var params = new Object[len];
 
         for (int i = 0; i < len; i++) {
+            // 方法参数信息
             ActionCommand.ParamInfo paramInfo = paramInfos[i];
             Class<?> paramClazz = paramInfo.getActualTypeArgumentClazz();
 
@@ -67,7 +70,8 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
                 continue;
             }
 
-            var methodParser = MethodParsers.me().getMethodParser(paramInfo);
+            // 得到方法参数解析器
+            var methodParser = MethodParsers.me().getMethodParser(paramClazz);
 
             // 把字节解析成 pb 对象
             params[i] = methodParser.parseParam(data, paramInfo);
@@ -84,12 +88,10 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
                     response.setResponseStatus(ActionErrorEnum.validateErrCode.getCode());
                 }
             }
-
         }
 
         return params;
     }
-
 
     public static DefaultActionMethodParamParser me() {
         return Holder.ME;

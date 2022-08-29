@@ -73,7 +73,7 @@ public final class MethodParsers {
         return this.methodParserMap.keySet();
     }
 
-    private MethodParser getMethodParser(Class<?> paramClazz) {
+    public MethodParser getMethodParser(Class<?> paramClazz) {
         return methodParserMap.getOrDefault(paramClazz, DefaultMethodParser.me());
     }
 
