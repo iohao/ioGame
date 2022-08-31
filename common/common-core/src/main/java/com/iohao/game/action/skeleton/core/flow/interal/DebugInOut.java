@@ -42,7 +42,7 @@ import java.util.Objects;
  * ┣ 参数: active : Active(id=101, name=塔姆)
  * ┣ 响应: 塔姆, I'm here
  * ┣ 时间: 1 ms (业务方法总耗时)
- * ┗━━━━━ Debug [ActivityAction.java] ━━━
+ * ┗━━━━━ Debug [ActivityAction.java] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  *
  * 参数 :  通常是游戏前端传入的值
  * 响应：通常是业务方法返回的值 （游戏后端人员编写的业务）
@@ -154,7 +154,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 ┣ 错误码: {errorCode}
                 ┣ 错误信息: {validatorMsg}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━ Debug [{className}.java] ━━━
+                ┗━━━━━━━━ Debug  [{className}.java] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 """;
 
         String message = StrKit.format(template, paramMap);
@@ -176,7 +176,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 ┣ 参数: {paramName} : {paramData}
                 ┣ 响应: {returnData}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━ Debug [{className}.java] ━━━
+                ┗━━━━━ Debug  [{className}.java] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 """;
 
         String message = StrKit.format(template, paramMap);

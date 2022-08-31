@@ -10,7 +10,7 @@ message ExternalMessage {
   int32 cmdMerge = 3;
   // 响应码: 0:成功, 其他为有错误
   sint32 responseStatus = 4;
-  // 验证信息: 当 responseStatus == -1001 时， 会有值
+  // 验证信息（错误消息、异常消息），通常情况下 responseStatus == -1001 时， 会有值
   string validMsg = 5;
   // 业务请求数据
   bytes data = 6;
