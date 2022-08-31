@@ -136,6 +136,17 @@ public abstract class AbstractRoom implements Serializable {
         this.playerSeatMap.put(player.getSeat(), userId);
     }
 
+    /**
+     * 移出玩家
+     *
+     * @param player 玩家
+     */
+    public void removePlayer(AbstractPlayer player){
+        long userId = player.getId();
+        this.playerMap.remove(userId);
+        this.playerSeatMap.remove(player.getSeat());
+    }
+
     public boolean isStatus(RoomStatusEnum roomStatusEnum) {
         return this.roomStatusEnum == roomStatusEnum;
     }

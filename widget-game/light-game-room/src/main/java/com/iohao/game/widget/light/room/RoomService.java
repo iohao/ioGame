@@ -21,6 +21,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 房间的管理
@@ -38,7 +39,7 @@ public class RoomService {
      *     value : room
      * </pre>
      */
-    final Map<Long, AbstractRoom> roomMap = new HashMap<>();
+    final Map<Long, AbstractRoom> roomMap = new ConcurrentHashMap<>();
 
     /**
      * 玩家对应的房间 map
@@ -47,7 +48,7 @@ public class RoomService {
      *     value : roomId
      * </pre>
      */
-    final Map<Long, Long> userRoomMap = new HashMap<>();
+    final Map<Long, Long> userRoomMap = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")
     public <T extends AbstractRoom> T getRoomByUserId(long userId) {
@@ -72,9 +73,30 @@ public class RoomService {
         this.roomMap.put(roomId, room);
     }
 
+    /**
+     * 删除房间
+     *
+     * @param room 房间
+     */
+    public void removeRoom(AbstractRoom room){
+        long roomId = room.getRoomId();
+        this.roomMap.remove(roomId);
+    }
+
     public void addPlayer(AbstractRoom room, AbstractPlayer player) {
         room.addPlayer(player);
         this.userRoomMap.put(player.getId(), room.getRoomId());
+    }
+
+    /**
+     * 移出房间内的玩家 删除用户与房间的对应关系
+     *
+     * @param room   房间
+     * @param player 玩家
+     */
+    public void removePlayer(AbstractRoom room, AbstractPlayer player){
+        room.removePlayer(player);
+        this.userRoomMap.remove(player.getId());
     }
 
     @SuppressWarnings("unchecked")
