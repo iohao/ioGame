@@ -4,23 +4,26 @@
 <p align="center">
 	<strong>国内首个基于蚂蚁金服 SOFABolt 的 java 网络游戏服务器框架；无锁异步化、事件驱动的架构设计；</strong>
 	<br>
-	<strong>通过 ioGame 可以很容易的搭建出一个集群无中心节点、有状态的分步式网络游戏服务器 </strong>
+	<strong>通过 ioGame 可以很容易的搭建出一个集群无中心节点、有状态多进程的分步式游戏服务器</strong>
   <br>
 	<strong>无中间件依赖、代码即文档、JSR380、断言 + 异常机制 = 更少的维护与开发成本</strong>
 	<br>
 	<strong>轻量级、启动快、更节约、更简单、开箱即用、无配置文件、超高性能</strong>
 	<br>
-	<strong>近原生、业务框架平均每秒可以执行 1152 万次业务逻辑</strong>
+	<strong>近原生的快、业务框架平均每秒可以执行 1152 万次业务逻辑</strong>
 	<br>
-	<strong>神级特性：业务代码访问定位与跳转</strong>
+	<strong>业务开发中的神级特性：业务代码访问定位与跳转</strong>
   <br>
-	<strong>对webMVC开发者友好</strong>
+	<strong>各个逻辑服之间可以相互的跨进程通信</strong>
   <br>
-	<strong>可跨进程通信</strong>
+	<strong>对 webMVC 开发者友好</strong>
+  <br>
+	<strong>部署多样性</strong>
 </p>
 <p align="center">
 	<a href="https://www.yuque.com/iohao/game">https://www.yuque.com/iohao/game</a>
 </p>
+
 
 
 
@@ -53,7 +56,7 @@
 
 提供高质量的使用文档！
 
-如果您觉得还不错，帮忙给个 start 关注
+如果您觉得还不错，帮忙给个 star 关注
 
 <br>
 
@@ -91,13 +94,9 @@ ioGame 是轻量级的网络游戏服务器框架，只需要在 pom 中引入�
 <dependency>
     <groupId>com.iohao.game</groupId>
     <artifactId>bolt-run-one</artifactId>
-    <version>${ioGame.version}</version>
+    <version>17.1.18</version>
 </dependency>
 ```
-
-> 将变量 ${ioGame.version} 替换成最新版本就可以了。
-
-<br>
 
 
 
@@ -130,6 +129,10 @@ ioGame 是轻量级的网络游戏服务器框架，在使用 ioGame 时，无�
 
 
 即使之前没有游戏编程的经验，也能参与到游戏编程中。如果你之前具备一些游戏开发或者 webMVC 相关的知识，则会更容易上手游戏服务器的开发。
+
+
+
+开发者基于 ioGame 编写的项目、模块通常是条理清晰的，得益于框架对路由的合理设计。当我们整理好这些模块后，对于其他开发者接管项目或后续的维护中，会是一个不错的帮助（[模块的整理与建议](https://www.yuque.com/iohao/game/ruaqza/#OBwXQ)）。
 
 
 
@@ -252,6 +255,16 @@ broker （游戏网关）可以**集群**的方式部署，集群无中心节点
 
 
 因为 ioGame 遵循面向对象的设计原则（单一职责原则、开闭原则、里式替换原则、依赖倒置原则、接口隔离原则、迪米特法则）等，所以使得架构的职责分明，可以灵活的进行组合；
+
+
+
+**架构优点**
+
+架构有很高程度的抽象，让设计者更加关注于业务，而无需考虑底层的实现、通信参数等问题。
+
+
+
+逻辑服的位置透明性；同时，由于模块化、抽象化，使得整个架构各服务器之间耦合度很低，逻辑服注册即可用，大大增加了可伸缩性、可维护性，动态扩展变得简单而高效。由于逻辑服是注册到 Broker（游戏网关） 上的，所以逻辑服可以动态的增加、删除、改变；由于逻辑服之间耦合度较小，调试和测试的工作也是可控的；
 
 
 
@@ -532,24 +545,26 @@ public class DemoAction {
 ┣ 参数: helloReq : HelloReq(name=塔姆)
 ┣ 响应: HelloReq(name=塔姆, I'm here )
 ┣ 时间: 0 ms (业务方法总耗时)
-┗━━━━━ Debug [DemoAction.java] ━━━
+┗━━━━━ Debug [DemoAction.java] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
+#### 控制台打印说明
 
 > Debug. [(DemoAction.java:4).here]：
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;表示执行业务的是 DemoAction 类下的 here 方法，4 表示业务方法所在的代码行数。在工具中点击控制台的 DemoAction.java:4 这条信息，就可以跳转到对应的代码中（快速导航到对应的代码）。
-> 
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;表示执行业务的是 DemoAction 类下的 here 方法，4 表示业务方法所在的代码行数。
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在工具中点击控制台的 DemoAction.java:4 这条信息，就可以跳转到对应的代码中（快速导航到对应的代码）。
+>
 > userId :  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当前发起请求的 用户 id。
-> 
+>
 > 参数 :  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;通常是游戏前端传入的值。
-> 
+>
 > 响应 :  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;通常是业务方法返回的值 ，业务框架会把这个返回值推送到游戏前端。
-> 
+>
 > 时间 :  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;执行业务方法总耗时，我们可根据业务方法总耗时的时长来优化业务。
-> 
+>
 > 路由信息 :  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[路由](https://www.yuque.com/iohao/game/soxp4u) 是唯一的访问地址。
 
@@ -653,6 +668,10 @@ ioGame游戏框架由 [网络通信框架] 和 [业务框架] 组成。所以我
 **1. 网络传输的性能**
 
 网络传输方面的性能上限取决于网络通信框架 [sofa-bolt](https://www.sofastack.tech/projects/sofa-bolt/overview/) 。
+
+<br>
+
+由于 [sofa-bolt](https://www.sofastack.tech/projects/sofa-bolt/overview/) 基础通信功能中支持：**批量解包**与**批量提交处理器**的特性，在理论上会比原生的 netty 会好一些；在就基于  [sofa-bolt](https://www.sofastack.tech/projects/sofa-bolt/overview/) 开发的产品较多，如：SOFARPC、消息中心、分布式事务、分布式开关、以及配置中心等众多产品上，所以在稳定性与性能上不是一个问题。
 
 <br>
 
@@ -938,7 +957,7 @@ ioGame 源码内提供了一个基于 [FXGL](https://www.oschina.net/p/fxgl) 游
 
 ![img](https://oscimg.oschina.net/oscnet/up-5ae3d9516142c4e3aecd73c62d495104bed.png)
 
-**如果您觉得还不错，帮忙给个 start 关注**
+**如果您觉得还不错，帮忙给个 star 关注**
 
 
 

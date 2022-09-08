@@ -34,7 +34,7 @@ import com.iohao.game.action.skeleton.core.flow.FlowContext;
 public interface FlowAttr {
     /** 异常消息 */
     FlowOption<String> msgException = FlowOption.valueOf("msgException");
-    /** 当前项目启动的服务上下文（当前服务器） */
+    /** 当前项目启动的服务上下文（当前服务器），see: BrokerClient */
     FlowOption<BrokerClientContext> brokerClientContext = FlowOption.valueOf("brokerClientContext");
     /** bolt async 上下文 */
     FlowOption<AsyncContext> asyncContext = FlowOption.valueOf("asyncContext");

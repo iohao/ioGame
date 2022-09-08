@@ -46,7 +46,13 @@ public class DefaultDisruptorCreate implements DisruptorCreate {
         ProducerType producerType = param.getProducerType();
         WaitStrategy waitStrategy = param.getWaitStrategy();
         // 自定义线程工厂
-        ThreadFactory threadFactory = r -> {
+        ThreadFactory threadFactory = createThreadFactory(topic);
+
+        return new Disruptor<>(EventDisruptor::new, ringBufferSize, threadFactory, producerType, waitStrategy);
+    }
+
+    private ThreadFactory createThreadFactory(Class<?> topic) {
+        return r -> {
             String domainEventHandlerName = getName(r);
 
             List<String> nameParamList = new ArrayList<>();
@@ -68,30 +74,28 @@ public class DefaultDisruptorCreate implements DisruptorCreate {
 
             return thread;
         };
-
-        return new Disruptor<>(EventDisruptor::new, ringBufferSize, threadFactory, producerType, waitStrategy);
     }
 
     private String getName(Runnable r) {
-        if (!(r instanceof BatchEventProcessor)) {
-            return "";
-        }
 
         String domainEventHandlerName = "";
-        BatchEventProcessor eventProcessor = (BatchEventProcessor) r;
 
-        try {
-            Field eventHandler = BatchEventProcessor.class.getDeclaredField("eventHandler");
-            eventHandler.setAccessible(true);
-            Object o = eventHandler.get(eventProcessor);
+        if (r instanceof BatchEventProcessor eventProcessor) {
+            try {
+                Field eventHandler = BatchEventProcessor.class.getDeclaredField("eventHandler");
+                eventHandler.setAccessible(true);
+                Object o = eventHandler.get(eventProcessor);
 
-            if (o instanceof ConsumeEventHandler) {
-                ConsumeEventHandler consumeEventHandler = (ConsumeEventHandler) o;
-                domainEventHandlerName = consumeEventHandler.eventHandler().getName();
+                if (o instanceof ConsumeEventHandler consumeEventHandler) {
+                    domainEventHandlerName = consumeEventHandler.eventHandler().getName();
+                }
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                log.error(e.getMessage(), e);
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            log.error(e.getMessage(), e);
+
+            return domainEventHandlerName;
         }
+
         return domainEventHandlerName;
     }
 }

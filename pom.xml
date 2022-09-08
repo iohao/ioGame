@@ -6,7 +6,7 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>iogame</artifactId>
-    <version>17.1.17</version>
+    <version>17.1.18</version>
     <name>ioGame</name>
     <description>ioGame网络游戏服务器框架</description>
     <url>https://www.yuque.com/iohao/game</url>
@@ -56,7 +56,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.79.Final</netty.version>
+        <netty.version>4.1.80.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.5</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->

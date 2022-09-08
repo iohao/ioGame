@@ -1,5 +1,43 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-09-08
+v17.1.18
+（#I5PU5R、#I5PFGP、#I5NDEG、#I5Q1AO、#I5Q89K）
+
+#I5PFGP
+新增 unity 与 ioGame 综合示例的联调示例，此 unity 连接示例由 licheng 提供。之前赵少提供的 unity 示例，由于我没 fork, 估计项目被删除了（原因是 git 仓库满了，就删除了）
+u3d 连接示例语雀在线文档 https://www.yuque.com/iohao/game/syv5mm
+
+#I5Q1AO
+语雀在线文档 https://www.yuque.com/iohao/game/gmfy1
+领域事件变更默认配置
+DomainEventContextParam.producerType 由 ProducerType.SINGLE 改为 ProducerType.MULTI
+DomainEventContextParam.waitStrategy 由 BlockingWaitStrategy 改为 LiteBlockingWaitStrategy
+
+2022-08-29
+v17.1.17
+#I5O5QH
+新增集群日志开关 BrokerGlobalConfig.brokerClusterLog，默认为 true
+
+#I5NUGF
+之前框架只会在玩家没有登录的时候，临时的使用了一下这个属性来存放 netty 的 channelId。
+原因是不想为了这一次的使用，而特意声明一个变量来存放 netty 的 channelId。
+简单点说就是在玩家没有登录时，开发者是不能使用该属性的。
+只登录了的玩家，框架才不会占用该属性来存放 netty 的 channelId。
+
+现在改为即使没有登录，框架也不占用 HeadMetadata.attachmentData 属性了，开发者可以放心的使用了；
+比如，用于在登录时，拿到玩家IP，用于封号相关和其他的（比如日志、等）
+
+具体使用可参考 https://www.yuque.com/iohao/game/sw1y8u
+
+#I5K3WE
+增强顶号强制下线的问题，在发送强制离线时，需要先给个客户端发个错误码。
+防止客户端会自动进行重试再次连接。
+这里顶号服务端主动断开连接，如果服务器不发送错误码，会导致2个客户端来回顶号的情况。
+
+#I5OB8T
+修复 JSR380 验证相关缺少判断
+
 2022-08-23
 v17.1.13
 #I5N97K

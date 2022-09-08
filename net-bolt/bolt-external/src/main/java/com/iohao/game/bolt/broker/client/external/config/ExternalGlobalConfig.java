@@ -25,10 +25,23 @@ import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMess
  */
 @UtilityClass
 public class ExternalGlobalConfig {
-    /** true 表示请求业务方法需要先登录 */
+    /**
+     * true 表示请求业务方法需要先登录
+     * <pre>
+     *     将在下个大版本中移除
+     *
+     *     请使用 {@link  ExternalGlobalConfig#accessAuthenticationHook} 代替
+     * </pre>
+     */
     @Deprecated
     public boolean verifyIdentity = true;
-    /** 访问验证钩子接口 */
+    /**
+     * 访问验证钩子接口
+     * <pre>
+     *     使用文档
+     *     https://www.yuque.com/iohao/game/tywkqv#qEvtB
+     * </pre>
+     */
     public AccessAuthenticationHook accessAuthenticationHook = new DefaultAccessAuthenticationHook();
     /**
      * 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验

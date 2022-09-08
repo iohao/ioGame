@@ -57,8 +57,8 @@ public class DomainEventContextParam {
      *
      * </pre>
      */
-    WaitStrategy waitStrategy = new BlockingWaitStrategy();
-    ProducerType producerType = ProducerType.SINGLE;
+    WaitStrategy waitStrategy = new LiteBlockingWaitStrategy();
+    ProducerType producerType = ProducerType.MULTI;
 
     int ringBufferSize = 1024;
 

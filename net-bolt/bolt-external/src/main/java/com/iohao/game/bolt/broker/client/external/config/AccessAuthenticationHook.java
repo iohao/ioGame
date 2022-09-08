@@ -23,6 +23,9 @@ import com.iohao.game.bolt.broker.client.external.session.UserSession;
  * 访问验证钩子接口
  * <pre>
  *     可以通过这个接口来控制玩家是否可以访问业务方法
+ *
+ *     文档参考
+ *     https://www.yuque.com/iohao/game/tywkqv#qEvtB
  * </pre>
  *
  * @author 渔民小镇
