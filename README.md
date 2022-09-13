@@ -136,6 +136,10 @@ ioGame 是轻量级的网络游戏服务器框架，在使用 ioGame 时，无�
 
 
 
+基于 ioGame 编写的项目，通常是语法简洁的、高性能的、低延迟的。框架最低要求使用 JDK17，这样即可以让项目享受到 ZGC 带来的改进，还能享受语法上的简洁。从 JDK17 开始 GC 已经处理得越来越好了，JDK17 中的 ZGC 远低于其亚毫秒级暂停时间的目标；当开发者使用 JDK17 时，相当于在你们的项目中变相的引入了一位 JVM 调优大师，详细请看 [JDK17 垃圾回收GC性能飞跃提升](https://www.jdon.com/57736)。
+
+
+
 在部署上，支持多服单进程的方式部署（类似单体应用、在分步式开发时，调试更加方便）、也支持多服多进程多机器的方式部署。在部署方式上可以随意切换，而不需要更改代码；日常中按照单体思维开发，在生产上可以使用多进程的方式部署；当然，也可以使用单进程的方式部署。
 
 
@@ -549,8 +553,8 @@ public class DemoAction {
 ```
 #### 控制台打印说明
 
-> Debug. [(DemoAction.java:4).here]：
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;表示执行业务的是 DemoAction 类下的 here 方法，4 表示业务方法所在的代码行数。
+> Debug. [(DemoAction.java:4).here]：  
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;表示执行业务的是 DemoAction 类下的 here 方法，4 表示业务方法所在的代码行数。  
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在工具中点击控制台的 DemoAction.java:4 这条信息，就可以跳转到对应的代码中（快速导航到对应的代码）。
 >
 > userId :  
@@ -608,7 +612,7 @@ public class DemoAction {
 <details>
 <summary>游戏服务器框架内置功能详细--点我展开</summary>
 
-- [领域事件](https://www.yuque.com/iohao/game/gmfy1k) （轻量级单机最快MQ -- disruptor；可为你的系统实现类似 Spring 事件驱动模型 ApplicationEvent、业务解耦、规避并发、不阻塞主线程...等，各种浪操作）
+- [领域事件](https://www.yuque.com/iohao/game/gmfy1k) （轻量级单机最快MQ -- disruptor；可为你的系统实现类似 Guava-EventBus、Spring 事件驱动模型 ApplicationEvent、业务解耦、规避并发、不阻塞主线程... 等，各种浪操作。）
 - [任务延时器](https://www.yuque.com/iohao/game/niflk0) （将来某个时间可对任务进行执行、暂停、取消等操作，并不是类似 Quartz 的任务调度）
 - [多环境切换](https://www.yuque.com/iohao/game/ekx6ve) （不同运行环境下的配置支持）
 - [light-jprotobuf ](https://www.yuque.com/iohao/game/vpe2t6) （补足 jprotobuf 不能让多个对象在单个 .proto 源文件中生成的需求，并简化jprotobuf对源文件的注释）
