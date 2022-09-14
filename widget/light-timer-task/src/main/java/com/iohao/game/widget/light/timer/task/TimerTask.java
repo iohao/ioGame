@@ -36,7 +36,7 @@ public interface TimerTask extends ValueWithExpiryTime, Serializable {
     void execute();
 
     /**
-     * 启动定时器任务
+     * 启动任务延时器
      *
      * @return me
      */

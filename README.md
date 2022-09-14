@@ -48,6 +48,8 @@
 
 <br/>
 
+## ioGame
+
 过去、现在、将来都不会有商业版本，所有功能全部开源！
 
 只做真的完全式开源，拒绝虚假开源，售卖商业版，不搞短暂维护！
@@ -60,35 +62,38 @@
 
 <br>
 
+### 源码与示例地址
+
 在线文档:：[ioGame 网络游戏框架-文档](https://www.yuque.com/iohao/game)
 
-|                                    | gitee                                                      | github                                                      |
-| ---------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------- |
-| 源码地址                           | [ioGame 网络游戏框架-源码](https://gitee.com/iohao/iogame) | [ioGame 网络游戏框架-源码](https://github.com/iohao/iogame) |
-| 示例地址                           | [ioGame 示例集合](https://gitee.com/iohao/example-iogame)  | [ioGame 示例集合](https://github.com/iohao/example-iogame)  |
+|                                                              | gitee                                                      | github                                                      |
+| ------------------------------------------------------------ | ---------------------------------------------------------- | ----------------------------------------------------------- |
+| 源码地址                                                     | [ioGame 网络游戏框架-源码](https://gitee.com/iohao/iogame) | [ioGame 网络游戏框架-源码](https://github.com/iohao/iogame) |
+| 示例地址                                                     | [ioGame 示例集合](https://gitee.com/iohao/iogame-example)  | [ioGame 示例集合](https://github.com/iohao/iogame-example)  |
+|                                                              |                                                            |                                                             |
+| [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 介绍了 ioGame 相关的功能特性实践、部署打包等               |                                                             |
+| [技术栈推荐与其它参考文档](https://www.yuque.com/iohao/game/swt3ls) | 游戏开发的技术栈建议，大家可以参考一下。                   |                                                             |
 
-<br>
 
-------
 
-<br>
-
-|   热心市民提供的游戏前端连接示例代码    | 连接方式 |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [u3d 连接示例](https://www.yuque.com/iohao/game/syv5mm) | websocket |
-| [cocoscreator 连接示例](https://www.yuque.com/iohao/game/ua4afq) | websocket |
-
-<br>
+| 热心市民提供的游戏前端连接示例代码                           |                                  |
+| ------------------------------------------------------------ | -------------------------------- |
+| [u3d 连接示例文档](https://www.yuque.com/iohao/game/syv5mm)  | 已经与 ioGame 的综合示例联调成功 |
+| [cocosCreator 连接示例文档](https://www.yuque.com/iohao/game/ua4afq) | 已经与 ioGame 的综合示例联调成功 |
 
 ---
 
-ioGame 已经上传到中央仓库中
+
+
+### **最小依赖**
+
+ioGame 已经上传到中央仓库
 
 https://search.maven.org/search?q=a:bolt-run-one
 
 
 
-ioGame 是轻量级的网络游戏服务器框架，只需要在 pom 中引入如下就可以使用了，无需在安装任何其他产品了。
+ioGame 是轻量级的网络游戏服务器框架，你只需一个依赖即可获得整个框架，无需在安装任何其他中间件产品了。
 
 ```xml
 <dependency>

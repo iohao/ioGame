@@ -30,17 +30,13 @@ public class TimerTaskTest {
 
     @Test
     public void demoTimerTask() throws InterruptedException {
-        // 设置缓存key。
-        String cacheKey = "1";
 
         new HelloTask()
                 // 设置业务内容
                 .setSayContent("卡莉斯塔去哪儿了!!")
                 // 1秒后触发
                 .setDelayExecutionTime(1000)
-                // 如果不指定key, 会默认给个 uuid
-                .setCacheKey(cacheKey)
-                //启动定时器任务
+                //启动任务延时器
                 .task();
 
         log.info("----start");
@@ -55,7 +51,7 @@ public class TimerTaskTest {
                 .setSayContent("塔姆哪儿了!")
                 // 1秒后触发
                 .setDelayExecutionTime(1000)
-                //启动定时器任务
+                //启动任务延时器
                 .task();
 
         log.info("----start");
@@ -65,7 +61,6 @@ public class TimerTaskTest {
 
         Thread.sleep(3000);
     }
-
 
     @Test
     public void task() throws InterruptedException {
@@ -77,7 +72,7 @@ public class TimerTaskTest {
                 .task();
 
         for (int i = 0; i < 10; i++) {
-            HelloTask task = new HelloTask()
+            new HelloTask()
                     .setSayContent("卡莉斯塔去哪儿了!" + i)
                     .setDelayExecutionTime(2000)
                     .task();
@@ -89,20 +84,21 @@ public class TimerTaskTest {
 
     @Test
     public void coverTask() throws InterruptedException {
-        log.info("覆盖定时器任务");
+        log.info("覆盖任务延时器");
 
-        // key
+        // 设置缓存key。
         String cacheKey = "1";
 
         new HelloTask()
                 .setSayContent("卡莉斯塔去哪儿了!")
                 .setDelayExecutionTime(2000)
+                // 如果不指定key, 会默认给个 uuid
                 .setCacheKey(cacheKey)
                 .task();
 
         Thread.sleep(1000);
 
-        // 该定时器会覆盖上一个同值 key 的定时器
+        // 该任务延时器会覆盖上一个同值 key 的任务延时器
         new HelloTask()
                 .setSayContent("卡莉斯塔去哪儿了! ~~~~~ ")
                 .setDelayExecutionTime(2000)
@@ -116,6 +112,7 @@ public class TimerTaskTest {
     public void removeTask() throws InterruptedException {
         log.info("这个示例是取消 定时任务");
         String cacheKey = "abc";
+
         new HelloTask()
                 .setSayContent("卡莉斯塔去哪儿了!")
                 .setDelayExecutionTime(2000)
@@ -124,6 +121,7 @@ public class TimerTaskTest {
 
         Thread.sleep(1000);
         log.info("睡眠一秒后, 满足某个业务条件, 我不想执行定时任务了");
+        // 根据 key 移除任务延时器
         TimerTaskEnum.HELLO.removeTimerTask(cacheKey);
         Thread.sleep(3000);
     }

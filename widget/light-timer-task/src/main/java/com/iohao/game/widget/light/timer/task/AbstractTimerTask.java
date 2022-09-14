@@ -76,7 +76,7 @@ public abstract class AbstractTimerTask implements TimerTask {
     }
 
     /**
-     * 启动定时器任务
+     * 启动任务延时器
      *
      * @return me
      */
