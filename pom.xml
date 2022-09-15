@@ -122,7 +122,7 @@
 
         <!-- other 后期整理，需要从全局移动到局部模块中 -->
         <!-- Hutool是一个Java工具包 see https://www.hutool.cn/ https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
-        <hutool.version>5.8.5</hutool.version>
+        <hutool.version>5.8.6</hutool.version>
         <!--
         jprotobuf是针对Java程序开发一套简易类库，目的是简化java语言对protobuf类库的使用
         https://github.com/jhunters/jprotobuf/
@@ -217,13 +217,19 @@
                 <version>${reactor-bom.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-all</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-all</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>io.netty</groupId>-->
+<!--                <artifactId>netty-all</artifactId>-->
+<!--                <version>${netty.version}</version>-->
+<!--            </dependency>-->
 
             <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
             <dependency>
