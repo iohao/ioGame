@@ -48,6 +48,18 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>${netty.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-handler</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+            <version>${netty.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.fusesource.jansi/jansi -->
@@ -76,14 +88,6 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate-validator.version}</version>
-
-            <!--            <exclusions>-->
-            <!--                <exclusion>-->
-            <!--                    <groupId>jakarta.validation</groupId>-->
-            <!--                    <artifactId>jakarta.validation-api</artifactId>-->
-            <!--                </exclusion>-->
-            <!--            </exclusions>-->
-            <!--            <scope>provided</scope>-->
             <scope>test</scope>
         </dependency>
 
@@ -93,7 +97,6 @@
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
             <version>${jakarta.el.version}</version>
-            <!--            <scope>provided</scope>-->
             <scope>test</scope>
 
         </dependency>
