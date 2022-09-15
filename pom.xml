@@ -133,6 +133,9 @@
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
         <protobuf-java.version>3.21.6</protobuf-java.version>
 
+        <!-- 后期整理需要移除的 -->
+        <snakeyaml.version>1.32</snakeyaml.version>
+
     </properties>
 
     <dependencies>
