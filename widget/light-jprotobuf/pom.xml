@@ -29,10 +29,10 @@
             <version>${qdox.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.baidu</groupId>
-            <artifactId>jprotobuf</artifactId>
-            <version>${jprotobuf.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.baidu</groupId>-->
+<!--            <artifactId>jprotobuf</artifactId>-->
+<!--            <version>${jprotobuf.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 </project>

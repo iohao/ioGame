@@ -56,7 +56,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.80.Final</netty.version>
+        <netty.version>4.1.82.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.5</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
@@ -64,7 +64,7 @@
         <!--  Jansi 控制台输出彩色文字 https://www.oschina.net/p/jansi https://mvnrepository.com/artifact/org.fusesource.jansi/jansi  -->
         <jansi.version>2.4.0</jansi.version>
         <!-- Java文档解析器 https://mvnrepository.com/artifact/com.thoughtworks.qdox/qdox -->
-        <qdox.version>2.0.1</qdox.version>
+        <qdox.version>2.0.2</qdox.version>
 
         <!-- JCTools 是一款对jdk并发数据结构进行增强的并发工具 see http://jctools.github.io/JCTools/ https://mvnrepository.com/artifact/org.jctools/jctools-core -->
         <jctools-core.version>3.3.0</jctools-core.version>
@@ -93,13 +93,17 @@
         <!-- JSR-380 https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
         <jakarta.el.version>4.0.2</jakarta.el.version>
 
-        <!-- Java 实体映射工具 https://mvnrepository.com/artifact/org.mapstruct/mapstruct https://mapstruct.org/documentation/reference-guide/ -->
+        <!--
+        Java 实体映射工具
+        https://mvnrepository.com/artifact/org.mapstruct/mapstruct
+        https://mapstruct.org/documentation/reference-guide/
+        -->
         <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
 
         <!-- temp spring boot https://mvnrepository.com/artifact/org.springframework/spring-core -->
         <spring.version>5.3.22</spring.version>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
-        <springboot.version>2.7.2</springboot.version>
+        <springboot.version>2.7.3</springboot.version>
         <!--  junit https://mvnrepository.com/artifact/junit/junit  -->
         <junit.version>4.13.2</junit.version>
 
@@ -119,8 +123,15 @@
         <!-- other 后期整理，需要从全局移动到局部模块中 -->
         <!-- Hutool是一个Java工具包 see https://www.hutool.cn/ https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
         <hutool.version>5.8.5</hutool.version>
-        <!-- jprotobuf是针对Java程序开发一套简易类库，目的是简化java语言对protobuf类库的使用 https://github.com/jhunters/jprotobuf/ https://mvnrepository.com/artifact/com.baidu/jprotobuf -->
+        <!--
+        jprotobuf是针对Java程序开发一套简易类库，目的是简化java语言对protobuf类库的使用
+        https://github.com/jhunters/jprotobuf/
+        https://mvnrepository.com/artifact/com.baidu/jprotobuf
+        https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java
+        -->
         <jprotobuf.version>2.4.15</jprotobuf.version>
+        <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
+        <protobuf-java.version>3.21.6</protobuf-java.version>
 
     </properties>
 
@@ -168,8 +179,20 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- jprotobuf dependency https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf-java.version}</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -313,42 +336,42 @@
                 mvnd enforcer:display-info
                 https://maven.apache.org/enforcer/maven-enforcer-plugin/index.html
             -->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-enforcer-plugin</artifactId>-->
-<!--                <version>3.0.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>enforce-versions</id>-->
-<!--                        <goals>-->
-<!--                            <goal>enforce</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <rules>-->
-<!--                                <bannedPlugins>-->
-<!--                                    &lt;!&ndash; will only display a warning but does not fail the build. &ndash;&gt;-->
-<!--                                    <level>WARN</level>-->
-<!--                                    <excludes>-->
-<!--                                        <exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>-->
-<!--                                    </excludes>-->
-<!--                                    <message>Please consider using the maven-invoker-plugin-->
-<!--                                        (http://maven.apache.org/plugins/maven-invoker-plugin/)!-->
-<!--                                    </message>-->
-<!--                                </bannedPlugins>-->
-<!--                                <requireMavenVersion>-->
-<!--                                    <version>2.0.6</version>-->
-<!--                                </requireMavenVersion>-->
-<!--                                <requireJavaVersion>-->
-<!--                                    <version>1.5</version>-->
-<!--                                </requireJavaVersion>-->
-<!--                                <requireOS>-->
-<!--                                    <family>unix</family>-->
-<!--                                </requireOS>-->
-<!--                            </rules>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-enforcer-plugin</artifactId>-->
+            <!--                <version>3.0.0</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>enforce-versions</id>-->
+            <!--                        <goals>-->
+            <!--                            <goal>enforce</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <rules>-->
+            <!--                                <bannedPlugins>-->
+            <!--                                    &lt;!&ndash; will only display a warning but does not fail the build. &ndash;&gt;-->
+            <!--                                    <level>WARN</level>-->
+            <!--                                    <excludes>-->
+            <!--                                        <exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>-->
+            <!--                                    </excludes>-->
+            <!--                                    <message>Please consider using the maven-invoker-plugin-->
+            <!--                                        (http://maven.apache.org/plugins/maven-invoker-plugin/)!-->
+            <!--                                    </message>-->
+            <!--                                </bannedPlugins>-->
+            <!--                                <requireMavenVersion>-->
+            <!--                                    <version>2.0.6</version>-->
+            <!--                                </requireMavenVersion>-->
+            <!--                                <requireJavaVersion>-->
+            <!--                                    <version>1.5</version>-->
+            <!--                                </requireJavaVersion>-->
+            <!--                                <requireOS>-->
+            <!--                                    <family>unix</family>-->
+            <!--                                </requireOS>-->
+            <!--                            </rules>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
 
             <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
             <plugin>
