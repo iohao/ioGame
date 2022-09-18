@@ -23,11 +23,6 @@
 <p align="center">
 	<a href="https://www.yuque.com/iohao/game">https://www.yuque.com/iohao/game</a>
 </p>
-
-
-
-
-
 <p align="center">
 	<a target="_blank" href="https://www.oracle.com/java/technologies/downloads/#java17">
 		<img src="https://img.shields.io/badge/JDK-17-green.svg" alt="JDK 17" />
@@ -43,6 +38,8 @@
 	<a target="_blank" href='https://github.com/iohao/iogame'>
 		<img src="https://img.shields.io/github/stars/iohao/iogame.svg?logo=github" alt="github star"/>
 	</a>
+  <br />
+  <a href="https://www.murphysec.com/dr/O8oMcWWWVoU9hV4M9z" alt="OSCS Status"><img src="https://www.oscs1024.com/platform/badge/iohao/iogame.git.svg?size=small"/></a>
 </p>
 <hr />
 
@@ -110,6 +107,20 @@ ioGame 是轻量级的网络游戏服务器框架，你只需一个依赖即可�
 
 
 > **推荐大家看在线文档，排版相对好一些，README 上看有点乱！**
+
+
+
+### ioGame 使用趋势数据
+
+关注 ioGame 的游戏服务器开发者持续增多，2022-9 月统计数据
+
+https://www.yuque.com/iohao/game/gpxk93#TwVa8
+
+
+
+### 框架的安全质量![img](https://www.oscs1024.com/platform/badge/iohao/iogame.git.svg?size=small&x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_9%2Ctext_aW9HYW1l%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10)
+
+ioGame 已经接入 OSCS 墨菲安全扫描，框架的安全质量近乎100%，游戏开发者们可放心使用。更详细的可以到 [ioGame 框架的安全质量、性能](https://www.yuque.com/iohao/game/azpsro) 来了解。
 
 
 
