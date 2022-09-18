@@ -96,6 +96,8 @@ ioGame 是轻量级的网络游戏服务器框架，你只需一个依赖即可�
 </dependency>
 ```
 
+---
+
 
 
 ### 群号
@@ -108,6 +110,8 @@ ioGame 是轻量级的网络游戏服务器框架，你只需一个依赖即可�
 
 > **推荐大家看在线文档，排版相对好一些，README 上看有点乱！**
 
+---
+
 
 
 ### ioGame 使用趋势数据
@@ -116,11 +120,15 @@ ioGame 是轻量级的网络游戏服务器框架，你只需一个依赖即可�
 
 https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
+---
+
 
 
 ### 框架的安全质量![img](https://www.oscs1024.com/platform/badge/iohao/iogame.git.svg?size=small&x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_9%2Ctext_aW9HYW1l%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10)
 
-ioGame 已经接入 OSCS 墨菲安全扫描，框架的安全质量近乎100%，游戏开发者们可放心使用。更详细的可以到 [ioGame 框架的安全质量、性能](https://www.yuque.com/iohao/game/azpsro) 来了解。
+ioGame 已经接入 OSCS 墨菲安全扫描，框架的安全质量近乎100%，游戏开发者们可放心使用。更详细的可以到 [ioGame 框架的安全质量、代码质量、性能](https://www.yuque.com/iohao/game/azpsro) 来了解。
+
+---
 
 
 
