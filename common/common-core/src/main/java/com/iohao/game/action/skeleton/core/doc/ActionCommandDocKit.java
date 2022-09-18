@@ -51,7 +51,7 @@ public class ActionCommandDocKit {
      */
     public Map<String, JavaClassDocInfo> getJavaClassDocInfoMap(List<Class<?>> controllerList) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        final Map<String, JavaClassDocInfo> javaClassDocInfoMap = new HashMap<>();
+        final Map<String, JavaClassDocInfo> javaClassDocInfoMap = new HashMap<>(controllerList.size());
 
         for (Class<?> actionClazz : controllerList) {
 

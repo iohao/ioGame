@@ -35,11 +35,11 @@ import java.io.Serializable;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@ToString
 @Getter
 @Setter
-@FieldDefaults(level = AccessLevel.PROTECTED)
+@ToString
 @Accessors(chain = true)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public class HeadMetadata implements Serializable {
     @Serial
     private static final long serialVersionUID = -472575113683576693L;
