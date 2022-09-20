@@ -79,7 +79,9 @@ public class SimpleRunOne {
     public void startup() {
         // 启动网关
         if (this.runBrokerServer) {
-            this.brokerServer = brokerServerBuilder.build();
+            if(brokerServer==null) {
+                this.brokerServer = brokerServerBuilder.build();
+            }
             this.executorService.execute(this.brokerServer::startup);
         }
 
