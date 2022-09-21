@@ -25,11 +25,12 @@ public class JavaxValidator implements Validator {
         if (violationSet == null || violationSet.isEmpty()) {
             return null;
         }
+        StringBuffer message=new StringBuffer();
         for (ConstraintViolation<Object> violation : violationSet) {
             String propertyName = violation.getPropertyPath().toString();
-            return propertyName + " " + violation.getMessage();
+            message.append( propertyName + " " + violation.getMessage()+"\n");
         }
-        return null;
+        return message.toString();
     }
 
     @Override
