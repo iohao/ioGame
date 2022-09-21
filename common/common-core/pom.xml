@@ -19,7 +19,11 @@
             <artifactId>common-kit</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.iohao.game</groupId>
+            <artifactId>common-validation</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.iohao.game</groupId>
             <artifactId>light-jprotobuf</artifactId>
@@ -71,33 +75,33 @@
             <version>${hessian.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator.version}</version>
-            <scope>test</scope>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate.validator</groupId>-->
+<!--            <artifactId>hibernate-validator</artifactId>-->
+<!--            <version>${hibernate-validator.version}</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
-        <!-- EL实现。在Java SE环境中，您必须将实现作为依赖项添加到POM文件中-->
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
-            <version>${jakarta.el.version}</version>
-            <scope>test</scope>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.glassfish/jakarta.el &ndash;&gt;-->
+<!--        &lt;!&ndash; EL实现。在Java SE环境中，您必须将实现作为依赖项添加到POM文件中&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish</groupId>-->
+<!--            <artifactId>jakarta.el</artifactId>-->
+<!--            <version>${jakarta.el.version}</version>-->
+<!--            <scope>test</scope>-->
 
-        </dependency>
+<!--        </dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
-        <!-- 验证器Maven依赖项 -->
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>${jakarta.validation-api.version}</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api &ndash;&gt;-->
+<!--        &lt;!&ndash; 验证器Maven依赖项 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>jakarta.validation</groupId>-->
+<!--            <artifactId>jakarta.validation-api</artifactId>-->
+<!--            <version>${jakarta.validation-api.version}</version>-->
+<!--            <scope>compile</scope>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
 
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->

@@ -17,12 +17,8 @@
 package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.common.kit.CollKit;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import jakarta.validation.metadata.BeanDescriptor;
-import jakarta.validation.metadata.PropertyDescriptor;
+import com.iohao.game.common.validation.Validation;
+import com.iohao.game.common.validation.Validator;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
@@ -47,38 +43,22 @@ public class ValidatorKit {
     @Setter
     private Validator validator;
 
-    public Validator getValidator() {
+    public Validator getValidator() throws RuntimeException{
 
         if (Objects.nonNull(validator)) {
             return validator;
         }
-
-        ValidatorFactory validatorFactory = Validation
-                .buildDefaultValidatorFactory()
-//                .byDefaultProvider()
-//                .configure()
-                // true  快速失败返回模式    false 普通模式
-//                .failFast(true)
-//                .buildValidatorFactory()
-                ;
-
-        validator = validatorFactory.getValidator();
+        try {
+            validator = Validation.getValidator();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return validator;
     }
 
     public String validate(Object data) {
         // 验证参数
-        Set<ConstraintViolation<Object>> violationSet = getValidator().validate(data);
-        if (CollKit.isEmpty(violationSet)) {
-            return null;
-        }
-
-        for (ConstraintViolation<Object> violation : violationSet) {
-            String propertyName = violation.getPropertyPath().toString();
-            return propertyName + " " + violation.getMessage();
-        }
-
-        return null;
+        return getValidator().validate(data);
     }
 
     /**
@@ -110,15 +90,8 @@ public class ValidatorKit {
                 // 过滤不需要验证的参数
                 continue;
             }
-
             Class<?> paramClazz = paramInfo.paramClazz;
-
-            // 根据 class 得到 bean 描述
-            BeanDescriptor beanDescriptor = getValidator().getConstraintsForClass(paramClazz);
-            // bean 的属性上添加的验证注解信息
-            Set<PropertyDescriptor> descriptorSet = beanDescriptor.getConstrainedProperties();
-
-            if (descriptorSet.isEmpty()) {
+            if (getValidator().descriptorIsEmpty(paramClazz)) {
                 // 表示这是一个不需要验证的参数
                 continue;
             }
