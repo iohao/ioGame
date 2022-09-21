@@ -53,9 +53,20 @@ public class Cache2Kit {
      * @return 缓存管理器
      */
     public Cache<String, TimerTask> createCache() {
+        return createCacheBuilder()
+                .build();
+    }
+
+    /**
+     * 创建一个缓存管理构建器
+     *
+     * @return 缓存管理构建器
+     */
+    public Cache2kBuilder<String, TimerTask> createCacheBuilder() {
         return Cache2kBuilder.of(String.class, TimerTask.class)
                 .sharpExpiry(true)
                 .eternal(false)
+                .entryCapacity(10000)
                 // 过期时间 - 在此时间后过期
                 .expiryPolicy((key, value, loadTime, oldEntry) -> value.getCacheExpiryTime())
                 // 过期时触发的监听事件
@@ -66,8 +77,7 @@ public class Cache2Kit {
                     timerTask.execute();
                     // 移除任务
                     timerTask.cancel();
-                })
-                .build();
+                });
     }
 
     /**

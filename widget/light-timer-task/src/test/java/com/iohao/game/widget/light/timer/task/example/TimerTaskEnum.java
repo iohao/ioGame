@@ -42,7 +42,9 @@ public enum TimerTaskEnum implements TimerTaskRegion {
      *     value is {@link HelloTask}
      * </pre>
      */
-    HELLO;
+    HELLO,
+
+    STUDENT;
 
     /** 每个枚举对应一个缓存管理器 */
     @Getter
