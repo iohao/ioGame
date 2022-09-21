@@ -66,7 +66,7 @@ public class Cache2Kit {
         return Cache2kBuilder.of(String.class, TimerTask.class)
                 .sharpExpiry(true)
                 .eternal(false)
-                .entryCapacity(10000)
+                .entryCapacity(10240)
                 // 过期时间 - 在此时间后过期
                 .expiryPolicy((key, value, loadTime, oldEntry) -> value.getCacheExpiryTime())
                 // 过期时触发的监听事件
