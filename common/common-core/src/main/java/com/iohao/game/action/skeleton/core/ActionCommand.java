@@ -266,7 +266,12 @@ public final class ActionCommand {
         /** true : 开启 JSR380 验证规范 */
         boolean validator;
 
+        /** 保存 Parameter对象  */
+        Parameter parameter;
+
         ParamInfo(int index, Parameter p) {
+            // 保存Parameter对象
+            this.parameter = p;
             // 方法的参数下标
             this.index = index;
             // 方法的参数名

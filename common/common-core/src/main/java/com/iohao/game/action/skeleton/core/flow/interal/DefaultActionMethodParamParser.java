@@ -16,6 +16,7 @@
  */
 package com.iohao.game.action.skeleton.core.flow.interal;
 
+import com.iohao.game.action.skeleton.annotation.ValidatedGroup;
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.ValidatorKit;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
@@ -80,8 +81,10 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
 
             // 如果开启了验证
             if (paramInfo.isValidator()) {
+                //获取分组信息
+                Class<?>[] groups = determineValidationGroups(paramInfo);
                 // 进行 JSR380 相关的验证
-                String validateMsg = ValidatorKit.validate(params[i]);
+                String validateMsg = ValidatorKit.validate(params[i], groups);
                 // 有错误消息，表示验证不通过
                 if (Objects.nonNull(validateMsg)) {
                     response.setValidatorMsg(validateMsg);
@@ -100,5 +103,16 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
         static final DefaultActionMethodParamParser ME = new DefaultActionMethodParamParser();
+    }
+
+    /**
+     * 确定验证组
+     *
+     * @param paramInfo 参数信息
+     * @return @return 返回校验组对象的Class数组
+     */
+    private Class<?>[] determineValidationGroups(ActionCommand.ParamInfo paramInfo) {
+        final ValidatedGroup validatedAnn = paramInfo.getParameter().getAnnotation(ValidatedGroup.class);
+        return (validatedAnn != null ? validatedAnn.value() : new Class<?>[0]);
     }
 }

@@ -31,6 +31,8 @@ public interface ExampleActionCont {
         int name = 1;
         int test_void = 3;
         int jsr380 = 4;
+        int validated_group_update = 5;
+        int validated_group_create = 6;
     }
 
     interface WrapperIntActionCont {

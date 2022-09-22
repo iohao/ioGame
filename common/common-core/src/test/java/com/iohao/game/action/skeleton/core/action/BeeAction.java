@@ -18,7 +18,11 @@ package com.iohao.game.action.skeleton.core.action;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
+import com.iohao.game.action.skeleton.annotation.ValidatedGroup;
+import com.iohao.game.action.skeleton.core.action.group.Create;
+import com.iohao.game.action.skeleton.core.action.group.Update;
 import com.iohao.game.action.skeleton.core.action.pojo.BeeApple;
+import com.iohao.game.action.skeleton.core.action.pojo.BirdValid;
 import com.iohao.game.action.skeleton.core.action.pojo.DogValid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,5 +66,15 @@ public class BeeAction {
     @ActionMethod(ExampleActionCont.BeeActionCont.jsr380)
     public void jsr380(DogValid dogValid) {
         log.info("dogValid : {}", dogValid);
+    }
+
+    @ActionMethod(ExampleActionCont.BeeActionCont.validated_group_update)
+    public void validateUpdate(@ValidatedGroup(value = Update.class) BirdValid birdValid) {
+        log.info("dogValid : {}", birdValid);
+    }
+
+    @ActionMethod(ExampleActionCont.BeeActionCont.validated_group_create)
+    public void validateCreate(@ValidatedGroup(value = Create.class) BirdValid birdValid) {
+        log.info("dogValid : {}", birdValid);
     }
 }

@@ -66,14 +66,15 @@ public class ValidatorKit {
         return validator;
     }
 
-    public String validate(Object data) {
+    public String validate(Object data, Class<?>... groups) {
         // 验证参数
-        Set<ConstraintViolation<Object>> violationSet = getValidator().validate(data);
+        Set<ConstraintViolation<Object>> violationSet = getValidator().validate(data, groups);
         if (CollKit.isEmpty(violationSet)) {
             return null;
         }
 
-        for (ConstraintViolation<Object> violation : violationSet) {
+        if (!violationSet.isEmpty()) {
+            final ConstraintViolation<Object> violation = violationSet.iterator().next();
             String propertyName = violation.getPropertyPath().toString();
             return propertyName + " " + violation.getMessage();
         }
