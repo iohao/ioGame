@@ -33,7 +33,7 @@ import java.io.Serial;
  */
 @Getter
 @Setter
-public class MsgException extends Exception {
+public class MsgException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = -4977523514509693190L;
 
