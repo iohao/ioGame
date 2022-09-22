@@ -128,6 +128,12 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 ioGame 已经接入 OSCS 墨菲安全扫描，框架的安全质量近乎100%，游戏开发者们可放心使用。更详细的可以到 [ioGame 框架的安全质量、代码质量、性能](https://www.yuque.com/iohao/game/azpsro) 来了解。
 
+
+
+![ioGame-OSCS](https://foruda.gitee.com/images/1663829958058696562/0e9c7251_5475.png)
+
+
+
 ---
 
 
