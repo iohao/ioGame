@@ -38,6 +38,13 @@ public class ProfileManagerTest {
         boolean devMode = profile.getBool("devMode");
         int maxVip = profile.getInt("maxVip");
 
-        log.info("profile::: {} {} {}", jdbcDriver, devMode, maxVip);
+        int externalPort = profile.getInt("external.port");
+
+        System.out.println();
+
+        log.info("jdbcDriver : {}", jdbcDriver);
+        log.info("devMode : {}", devMode);
+        log.info("maxVip : {}", maxVip);
+        log.info("externalPort : {}", externalPort);
     }
 }

@@ -67,7 +67,7 @@ public class Profile {
      */
     public String get(String key, String defVal) {
         Object value = map.get(key);
-        return Objects.isNull(value) ? defVal : String.valueOf(value);
+        return Objects.isNull(value) ? defVal : value.toString();
     }
 
     /**
@@ -90,7 +90,11 @@ public class Profile {
     public boolean getBool(String key, boolean defVal) {
         Object value = map.get(key);
 
-        return value instanceof Boolean ? (boolean) value : defVal;
+        try {
+            return Boolean.parseBoolean(value.toString());
+        } catch (Throwable e) {
+            return defVal;
+        }
     }
 
     /**
@@ -113,7 +117,11 @@ public class Profile {
     public int getInt(String key, int defVal) {
         Object value = map.get(key);
 
-        return value instanceof Integer ? (int) value : defVal;
+        try {
+            return Integer.parseInt(value.toString());
+        } catch (Throwable e) {
+            return defVal;
+        }
     }
 
     /**
@@ -126,6 +134,7 @@ public class Profile {
             String key = o.toString();
 
             Object value = properties.get(o);
+            // 理论上在这里做数据类型解析会好一些，但现在不着急
 
             this.map.put(key, value);
         }

@@ -2,3 +2,5 @@
 devMode = true
 
 maxVip = 7
+
+external.port = 10100

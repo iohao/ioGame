@@ -46,16 +46,18 @@ public class HeadMetadata implements Serializable {
 
     /** userId */
     long userId;
-    /** 目标路由 */
-    int cmd;
-    /** 目标子路由 */
-    int subCmd;
+
     /**
      * 合并两个参数,分别存放在 [高16 和 低16]
      * <pre>
+     *     cmd 目标路由
+     *     subCmd 目标子路由
+     *
      *     例如 cmd = 600; subCmd = 700;
      *     merge 的结果: 39322300
      *     那么merge对应的二进制是: 0000 0010 0101 1000 0000 0010 1011 1100
+     *
+     *     see {@link CmdInfo}
      * </pre>
      */
     int cmdMerge;
@@ -131,22 +133,25 @@ public class HeadMetadata implements Serializable {
     String channelId;
 
     public HeadMetadata setCmdInfo(CmdInfo cmdInfo) {
-        this.cmd = cmdInfo.getCmd();
-        this.subCmd = cmdInfo.getSubCmd();
         this.cmdMerge = cmdInfo.getCmdMerge();
 
         return this;
     }
 
     public CmdInfo getCmdInfo() {
-        return CmdInfoFlyweightFactory.me().getCmdInfo(this.cmd, this.subCmd);
+        return CmdInfoFlyweightFactory.me().getCmdInfo(this.cmdMerge);
     }
 
     public HeadMetadata setCmdMerge(int cmdMerge) {
         this.cmdMerge = cmdMerge;
-        this.cmd = CmdKit.getCmd(cmdMerge);
-        this.subCmd = CmdKit.getSubCmd(cmdMerge);
-
         return this;
+    }
+
+    public int getCmd() {
+        return CmdKit.getCmd(cmdMerge);
+    }
+
+    public int getSubCmd() {
+        return CmdKit.getSubCmd(cmdMerge);
     }
 }
