@@ -12,8 +12,6 @@
 
     <artifactId>light-redis-lock</artifactId>
 
-
-
     <dependencies>
         <dependency>
             <groupId>org.redisson</groupId>

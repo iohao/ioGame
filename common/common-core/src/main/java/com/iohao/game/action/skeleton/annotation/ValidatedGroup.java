@@ -24,10 +24,14 @@ import java.lang.annotation.*;
  * @author fangwei
  * @date 2022-09-20
  */
-@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER})
 public @interface ValidatedGroup {
-
+    /**
+     * 确定验证组，校验组对象的 Class
+     *
+     * @return 校验组对象的 Class 数组
+     */
     Class<?>[] value() default {};
 }
