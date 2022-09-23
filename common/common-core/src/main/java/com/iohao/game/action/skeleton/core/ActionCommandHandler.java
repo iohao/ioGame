@@ -48,9 +48,10 @@ public final class ActionCommandHandler implements Handler {
         RequestMessage request = flowContext.getRequest();
         HeadMetadata headMetadata = request.getHeadMetadata();
 
+        int cmdMerge = headMetadata.getCmdMerge();
         // 通过路由获取处理请求的 action
-        var cmd = headMetadata.getCmd();
-        var subCmd = headMetadata.getSubCmd();
+        var cmd = CmdKit.getCmd(cmdMerge);
+        var subCmd = CmdKit.getSubCmd(cmdMerge);
 
         /*
          * 这里不做任何null判断了. 使用者们自行注意

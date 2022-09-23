@@ -18,7 +18,6 @@ package com.iohao.game.action.skeleton.protocol;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdInfoFlyweightFactory;
-import com.iohao.game.action.skeleton.core.CmdKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +39,7 @@ import java.io.Serializable;
 @ToString
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PROTECTED)
-public class HeadMetadata implements Serializable {
+public final class HeadMetadata implements Serializable {
     @Serial
     private static final long serialVersionUID = -472575113683576693L;
 
@@ -134,10 +133,21 @@ public class HeadMetadata implements Serializable {
 
     public HeadMetadata setCmdInfo(CmdInfo cmdInfo) {
         this.cmdMerge = cmdInfo.getCmdMerge();
-
         return this;
     }
 
+    /**
+     * 得到 cmdInfo 命令路由信息
+     * <pre>
+     *     如果只是为了获取 cmd 与 subCmd，下面的方式效率会更高
+     *     cmd = CmdKit.getCmd(cmdMerge);
+     *     subCmd = CmdKit.getSubCmd(cmdMerge);
+     *
+     *     但实际上更推荐使用 CmdInfo，这样使得代码书写简洁，也更容易理解，毕竟代码是给人看的。
+     * </pre>
+     *
+     * @return cmdInfo
+     */
     public CmdInfo getCmdInfo() {
         return CmdInfoFlyweightFactory.me().getCmdInfo(this.cmdMerge);
     }
@@ -145,13 +155,5 @@ public class HeadMetadata implements Serializable {
     public HeadMetadata setCmdMerge(int cmdMerge) {
         this.cmdMerge = cmdMerge;
         return this;
-    }
-
-    public int getCmd() {
-        return CmdKit.getCmd(cmdMerge);
-    }
-
-    public int getSubCmd() {
-        return CmdKit.getSubCmd(cmdMerge);
     }
 }

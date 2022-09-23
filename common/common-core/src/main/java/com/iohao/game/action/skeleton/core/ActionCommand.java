@@ -145,7 +145,8 @@ public final class ActionCommand {
 
     /**
      * {@link ActionCommand} 命令的构建器
-     * 因为 {@link ActionCommand} 遇到多个构造器参数, 这里考虑用构建器.
+     * <p>
+     * 因为 {@link ActionCommand} 的参数较复杂, 所以这里考虑用构建器。
      */
     @Accessors(chain = true)
     @Setter
@@ -266,7 +267,7 @@ public final class ActionCommand {
         /** true : 开启 JSR380 验证规范 */
         boolean validator;
 
-        /** 保存 Parameter对象  */
+        /** 保存 Parameter对象 */
         Parameter parameter;
 
         ParamInfo(int index, Parameter p) {

@@ -128,9 +128,6 @@ public final class ActionCommandInfoBuilder {
                 // 方法参数信息
                 paramInfo(method, builder);
 
-                // JSR
-                ValidatorKit.buildValidator(this.setting, builder);
-
                 /*
                  * 路由key，根据这个路由可以找到对应的 command（命令对象）
                  * 将映射类的方法，保存在 command 中。每个command封装成一个命令对象。
@@ -184,7 +181,21 @@ public final class ActionCommandInfoBuilder {
             // 方法的参数对象
             Parameter parameter = parameters[i];
             // 构建参数信息
-            paramInfos[i] = new ActionCommand.ParamInfo(i, parameter);
+            var paramInfo = new ActionCommand.ParamInfo(i, parameter);
+            paramInfos[i] = paramInfo;
+
+            /*
+             * 下面是 JSR380 相关的逻辑
+             *
+             * 1 没开启 JSR380 验证， 不做处理
+             * 2 过滤不需要验证的参数
+             */
+            if (!this.setting.validator || paramInfo.isExtension()) {
+                continue;
+            }
+
+            paramInfo.validator = ValidatorKit.isValidator(parameter.getType());
+
         }
     }
 
