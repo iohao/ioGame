@@ -41,7 +41,7 @@ public class ValidatorKit {
     @Setter
     private Validator validator;
 
-    public Validator getValidator() throws RuntimeException{
+    public Validator getValidator() throws RuntimeException {
 
         if (Objects.nonNull(validator)) {
             return validator;
@@ -56,46 +56,20 @@ public class ValidatorKit {
 
     public String validate(Object data, Class<?>... groups) {
         // 验证参数
-        return getValidator().validate(data,groups);
+        return getValidator().validate(data, groups);
     }
 
     /**
-     * 业务方法参数验证
-     * <pre>
-     *     提前查看参数是否需要验证
-     *     如果需要验证的，做个标记
-     * </pre>
+     * 参数类型是否需要验证
      *
-     * @param setting setting
-     * @param builder builder
+     * @param paramClazz 参数类型
+     * @return true 这是一个需要验证的参数
      */
-    void buildValidator(BarSkeletonSetting setting, ActionCommand.Builder builder) {
-        if (!setting.validator) {
-            // 没开启 JSR380 验证， 不做处理
-            return;
+    boolean isValidator(Class<?> paramClazz) {
+        if (getValidator().descriptorIsEmpty(paramClazz)) {
+            // 表示这个 class 是一个不需要验证的参数
+            return false;
         }
-
-        ActionCommand.ParamInfo[] paramInfos = builder.paramInfos;
-
-        if (Objects.isNull(paramInfos) || paramInfos.length == 0) {
-            // 方法上没有参数，不做处理
-            return;
-        }
-
-        for (ActionCommand.ParamInfo paramInfo : paramInfos) {
-
-            if (paramInfo.isExtension()) {
-                // 过滤不需要验证的参数
-                continue;
-            }
-            Class<?> paramClazz = paramInfo.paramClazz;
-            if (getValidator().descriptorIsEmpty(paramClazz)) {
-                // 表示这是一个不需要验证的参数
-                continue;
-            }
-
-            // true 这是一个需要验证的参数
-            paramInfo.validator = true;
-        }
+        return true;
     }
 }
