@@ -16,14 +16,12 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.validation.Validation;
 import com.iohao.game.common.validation.Validator;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
 import java.util.Objects;
-import java.util.Set;
 
 
 /**
@@ -56,9 +54,9 @@ public class ValidatorKit {
         return validator;
     }
 
-    public String validate(Object data) {
+    public String validate(Object data, Class<?>... groups) {
         // 验证参数
-        return getValidator().validate(data);
+        return getValidator().validate(data,groups);
     }
 
     /**

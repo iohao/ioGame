@@ -68,6 +68,9 @@ public class SimpleHelper {
      *          逻辑服
      *
      *      包括游戏业务文档的生成
+     *
+     *      tcp 连接示例文档
+     *      https://www.yuque.com/iohao/game/ywe7uc
      * </pre>
      *
      * @param externalPort 游戏对外服端口

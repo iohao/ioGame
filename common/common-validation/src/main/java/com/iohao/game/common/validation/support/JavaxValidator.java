@@ -1,5 +1,6 @@
 package com.iohao.game.common.validation.support;
 
+import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.validation.Validator;
 
 import javax.validation.ConstraintViolation;
@@ -20,17 +21,17 @@ public class JavaxValidator implements Validator {
     }
 
     @Override
-    public String validate(Object data) {
-        Set<ConstraintViolation<Object>> violationSet = validator.validate(data);
-        if (violationSet == null || violationSet.isEmpty()) {
+    public String validate(Object data,Class<?>... groups) {
+        Set<ConstraintViolation<Object>> violationSet = validator.validate(data,groups);
+        if (CollKit.isEmpty(violationSet)) {
             return null;
         }
-        StringBuffer message=new StringBuffer();
-        for (ConstraintViolation<Object> violation : violationSet) {
+        if (!violationSet.isEmpty()) {
+            final javax.validation.ConstraintViolation<Object> violation = violationSet.iterator().next();
             String propertyName = violation.getPropertyPath().toString();
-            message.append( propertyName + " " + violation.getMessage()+"\n");
+            return propertyName + " " + violation.getMessage();
         }
-        return message.toString();
+        return null;
     }
 
     @Override

@@ -45,7 +45,7 @@ public final class CmdInfoFlyweightFactory {
      */
     public CmdInfo getCmdInfo(int cmd, int subCmd) {
         int cmdMerge = CmdKit.merge(cmd, subCmd);
-        return getCmdInfo(cmd, subCmd, cmdMerge);
+        return getCmdInfo(cmdMerge);
     }
 
     /**
@@ -55,16 +55,14 @@ public final class CmdInfoFlyweightFactory {
      * @return 路由信息
      */
     public CmdInfo getCmdInfo(int cmdMerge) {
-        int cmd = CmdKit.getCmd(cmdMerge);
-        int subCmd = CmdKit.getSubCmd(cmdMerge);
-        return getCmdInfo(cmd, subCmd, cmdMerge);
-    }
 
-    private CmdInfo getCmdInfo(int cmd, int subCmd, int cmdMerge) {
         CmdInfo cmdInfo = cmdInfoMap.get(cmdMerge);
 
         // 无锁化
         if (Objects.isNull(cmdInfo)) {
+            int cmd = CmdKit.getCmd(cmdMerge);
+            int subCmd = CmdKit.getSubCmd(cmdMerge);
+
             cmdInfo = new CmdInfo(cmd, subCmd);
             cmdInfo = cmdInfoMap.putIfAbsent(cmdMerge, cmdInfo);
             if (Objects.isNull(cmdInfo)) {
