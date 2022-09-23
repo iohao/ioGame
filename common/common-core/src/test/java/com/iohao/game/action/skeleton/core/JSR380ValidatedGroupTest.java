@@ -30,7 +30,7 @@ import org.junit.Test;
  * @date 2022-09-20
  */
 @Slf4j
-public class ValidatedGroupTest {
+public class JSR380ValidatedGroupTest {
     BarSkeleton barSkeleton;
 
     @Before

@@ -18,6 +18,7 @@ package com.iohao.game.action.skeleton.core;
 
 import com.esotericsoftware.reflectasm.ConstructorAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
+import com.iohao.game.action.skeleton.annotation.ValidatedGroup;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParser;
@@ -212,10 +213,14 @@ public final class ActionCommand {
      */
     @Getter
     public static final class ParamInfo implements MethodParamResultInfo {
+        /** JSR380 空验证组 */
+        static final Class<?>[] EMPTY_GROUPS = new Class<?>[0];
         /** 参数名 */
         final String name;
         /** 参数下标 */
         final int index;
+        /** 保存 Parameter 对象 */
+        final Parameter parameter;
         /** 参数类型 */
         final Class<?> paramClazz;
         /**
@@ -266,9 +271,8 @@ public final class ActionCommand {
 
         /** true : 开启 JSR380 验证规范 */
         boolean validator;
-
-        /** 保存 Parameter对象 */
-        Parameter parameter;
+        /** JSR380 验证组 */
+        Class<?>[] validatorGroups;
 
         ParamInfo(int index, Parameter p) {
             // 保存Parameter对象
@@ -298,6 +302,9 @@ public final class ActionCommand {
             MethodParser methodParser = MethodParsers.me().getMethodParser(this);
             this.actualClazz = methodParser.getActualClazz(this);
             this.customMethodParser = methodParser.isCustomMethodParser();
+
+            // JSR380 相关
+            this.determineValidationGroups();
         }
 
         public String toStringShort() {
@@ -316,6 +323,14 @@ public final class ActionCommand {
          */
         public boolean isExtension() {
             return FlowContext.class.equals(paramClazz);
+        }
+
+        /**
+         * 确定验证组，校验组对象的 Class 数组
+         */
+        private void determineValidationGroups() {
+            final ValidatedGroup validatedAnn = this.parameter.getAnnotation(ValidatedGroup.class);
+            this.validatorGroups = validatedAnn != null ? validatedAnn.value() : EMPTY_GROUPS;
         }
     }
 
