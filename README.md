@@ -92,7 +92,7 @@ ioGame 是轻量级的网络游戏服务器框架，你只需一个依赖即可�
 <dependency>
     <groupId>com.iohao.game</groupId>
     <artifactId>bolt-run-one</artifactId>
-    <version>17.1.18</version>
+    <version>17.1.20</version>
 </dependency>
 ```
 

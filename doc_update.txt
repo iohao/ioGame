@@ -1,5 +1,29 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-09-26
+v17.1.20
+（#I5SLRA、#I5S8QC、#I5SG8T、#I5RXMY、#I5SS3C）
+
+#I5SLRA
+移除 HeadMetadata 类的 cmd、subCmd 属性，进一步减少传输，因为 cmd、subCmd 属性数据可以通过 cmdMerge 计算出来；
+
+假设你的游戏请求量可以达到每秒 100W 次时，至少可为服务器每秒节省大约 8 * 1000000 / 1024 / 1024 = 7.63 MB 的传输量；
+当请通讯方式是 请求/响应 类型时，每秒节省大约 7.63 * 2 = 15.26 MB;
+
+#I5S8QC
+light-timer-task，将任务延时器的任务数量默认值 2_000 --> 10_000
+
+#I5SG8T
+将 MsgException 修改为运行时异常；下面两个 action 的业务逻辑处理是等价的，其中一个显示的声明了 throws。
+https://www.yuque.com/iohao/game/avlo99#fTn4A
+
+#I5RXMY
+JSR380 新增参数分组校验，分组校验在 web 开发中很常见，现在 ioGame 也支持这一特性了。
+https://www.yuque.com/iohao/game/ghng6g#DMPBH
+
+#I5SS3C
+修复：light-profile getInt getBool 无法获取数据
+
 2022-09-08
 v17.1.18
 （#I5PU5R、#I5PFGP、#I5NDEG、#I5Q1AO、#I5Q89K）
