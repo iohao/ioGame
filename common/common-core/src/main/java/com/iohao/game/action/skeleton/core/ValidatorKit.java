@@ -46,11 +46,13 @@ public class ValidatorKit {
         if (Objects.nonNull(validator)) {
             return validator;
         }
+
         try {
             validator = Validation.getValidator();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         return validator;
     }
 
@@ -66,10 +68,6 @@ public class ValidatorKit {
      * @return true 这是一个需要验证的参数
      */
     boolean isValidator(Class<?> paramClazz) {
-        if (getValidator().descriptorIsEmpty(paramClazz)) {
-            // 表示这个 class 是一个不需要验证的参数
-            return false;
-        }
-        return true;
+        return getValidator().isValidator(paramClazz);
     }
 }

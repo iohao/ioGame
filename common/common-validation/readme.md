@@ -41,6 +41,16 @@ Java、SpringBoot中均有SPI的实现，SPI的思路能比较好的解决该问
  ```
  com.iohao.game.common.validation.support.JakartaValidator
  ```
+
+或者使用注解：
+``` java
+@EnableValidation("com.iohao.game.common.validation.support.JakartaValidator")
+@SpringBootApplication
+public class JakartaServerApplication {
+......
+}
+```
+
  > 依赖jakarta.validation时，该步骤为非必须操作
 
 3. 对应实体类中的依赖更改为`jakarta.validation` 相关
@@ -93,6 +103,14 @@ public class LoginReq implements Serializable {
  ```
  com.iohao.game.common.validation.support.JavaxValidator
  ```
+或者使用注解：
+``` java
+@EnableValidation("com.iohao.game.common.validation.support.JavaxValidator")
+@SpringBootApplication
+public class JavaXServerApplication {
+......
+}
+```
 > 依赖javax.validation时，该步骤为必须操作
 
 3. 对应实体类中的依赖更改为`javax.validation` 相关

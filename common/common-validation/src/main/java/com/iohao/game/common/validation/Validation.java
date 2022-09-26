@@ -1,22 +1,39 @@
+/*
+ * # iohao.com . 渔民小镇
+ * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License..
+ */
+
 package com.iohao.game.common.validation;
 
-import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.io.resource.ResourceUtil;
 import com.iohao.game.common.kit.ClassScanner;
-import com.iohao.game.common.validation.support.JakartaValidator;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+/**
+ * 数据校验器管理
+ *
+ * @author shenjk
+ * @date 2022-09-26
+ */
 @Slf4j
 @UtilityClass
 public class Validation {
@@ -26,31 +43,60 @@ public class Validation {
 
     private Validator validator;
 
+    /**
+     * 获取当前配置的数据校验器
+     *
+     * @return 数据校验器
+     **/
     public Validator getValidator() throws Exception {
         if (validator != null) {
             return validator;
         }
+        final String className = getValidatorClassName();
+        final String packageName = getValidatorPackage(className);
+
+        ClassScanner classScanner = new ClassScanner(packageName, clazz -> clazz.getName().equals(className));
+        List<Class<?>> classList = classScanner.listScan();
+        if (classList == null || classList.isEmpty()) {
+            throw new Exception("缺少类" + className);
+        }
+        
+        Class<?> clazz = classList.get(0);
+        validator = (Validator) clazz.getConstructor().newInstance();
+        return validator;
+    }
+
+    /**
+     * 获取数据校验器的类名(fullName)
+     *
+     * @return 校验器的类名
+     */
+    private String getValidatorClassName() {
         String className = null;
         try {
             className = ResourceUtil.readStr(fileName, StandardCharsets.UTF_8);
         } catch (Exception e) {
             log.info("读取" + fileName + "失败");
         }
+
         if (StringUtils.isBlank(className)) {
             className = defaultValidator;
         }
         className = StringUtils.trim(className);
+        return className;
+    }
+
+    /**
+     * 获取数据校验器的package
+     *
+     * @return packageName;
+     */
+    private String getValidatorPackage(String className) {
         List<String> segments = Arrays.stream(className.split("\\.")).toList();
 
-        String packageName =segments.stream().limit(segments.size()-1).collect(Collectors.joining("/"));
-        String finalClassName = className;
-        ClassScanner classScanner = new ClassScanner(packageName, clazz -> clazz.getName().equals(finalClassName));
-        List<Class<?>> classList = classScanner.listScan();
-        if (classList == null || classList.isEmpty()) {
-            throw new Exception("缺少类" + className);
-        }
-        Class<?> clazz = classList.get(0);
-        validator = (Validator) clazz.getConstructor().newInstance();
-        return validator;
+        String packageName = segments.stream()
+                .limit(segments.size() - 1)
+                .collect(Collectors.joining("/"));
+        return packageName;
     }
 }

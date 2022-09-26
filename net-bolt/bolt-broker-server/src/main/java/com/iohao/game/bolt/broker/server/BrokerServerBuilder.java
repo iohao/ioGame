@@ -33,6 +33,8 @@ import com.iohao.game.bolt.broker.server.balanced.region.DefaultBrokerClientRegi
 import com.iohao.game.bolt.broker.server.processor.*;
 import com.iohao.game.bolt.broker.server.processor.connection.CloseConnectionEventBrokerProcessor;
 import com.iohao.game.bolt.broker.server.processor.connection.ConnectionEventBrokerProcessor;
+import com.iohao.game.common.kit.ArrayKit;
+import com.iohao.game.common.kit.CollKit;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -56,12 +58,18 @@ import java.util.function.Supplier;
 @Accessors(fluent = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerServerBuilder {
-    /** broker （游戏网关） */
+    /**
+     * broker （游戏网关）
+     */
     final BrokerServer brokerServer = new BrokerServer();
-    /** 用户处理器 */
+    /**
+     * 用户处理器
+     */
     final List<Supplier<UserProcessor<?>>> processorList = new ArrayList<>();
 
-    /** bolt 连接器 */
+    /**
+     * bolt 连接器
+     */
     final Map<ConnectionEventType, Supplier<ConnectionEventProcessor>> connectionEventProcessorMap = new NonBlockingHashMap<>();
 
     /**
@@ -75,16 +83,24 @@ public class BrokerServerBuilder {
      */
     @Setter
     String brokerId;
-    /** broker 端口（游戏网关端口） */
+    /**
+     * broker 端口（游戏网关端口）
+     */
     @Setter
     int port = BrokerGlobalConfig.brokerPort;
-    /** broker （游戏网关）的启动模式，默认单机模式 */
+    /**
+     * broker （游戏网关）的启动模式，默认单机模式
+     */
     @Setter
     BrokerRunModeEnum brokerRunMode = BrokerRunModeEnum.STANDALONE;
-    /** 集群的管理 构建器，如果不需要集群，可以不设置 */
+    /**
+     * 集群的管理 构建器，如果不需要集群，可以不设置
+     */
     BrokerClusterManagerBuilder brokerClusterManagerBuilder;
 
-    /** BrokerClientRegion 工厂 */
+    /**
+     * BrokerClientRegion 工厂
+     */
     @Setter
     BrokerClientRegionFactory brokerClientRegionFactory = DefaultBrokerClientRegion::new;
 
@@ -159,6 +175,20 @@ public class BrokerServerBuilder {
      */
     public BrokerServerBuilder registerUserProcessor(Supplier<UserProcessor<?>> processorSupplier) {
         this.processorList.add(processorSupplier);
+        return this;
+    }
+
+    /**
+     * 移除处理器
+     * 因为在 defaultProcessor()方法中注册比较多的默认处理器，当对其中某个处理器功能增强后，没有办法直接注册，只能通过反射移除，再注册；
+     * 添加此方法的目的就是方便移除默认的处理器
+     *
+     * @param clazz 待移除的处理器类
+     */
+    public BrokerServerBuilder removeUserProcessor(Class<? extends UserProcessor>... clazz) {
+        if (clazz != null) {
+            this.processorList.removeIf(c -> Arrays.stream(clazz).anyMatch(x -> x.equals(c.get().getClass())));
+        }
         return this;
     }
 
