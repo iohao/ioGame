@@ -35,6 +35,7 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 命令模式
@@ -268,11 +269,10 @@ public final class ActionCommand {
         final Class<?> actualClazz;
 
         final boolean customMethodParser;
-
+        /** JSR380 验证组 */
+        final Class<?>[] validatorGroups;
         /** true : 开启 JSR380 验证规范 */
         boolean validator;
-        /** JSR380 验证组 */
-        Class<?>[] validatorGroups;
 
         ParamInfo(int index, Parameter p) {
             // 保存Parameter对象
@@ -303,8 +303,9 @@ public final class ActionCommand {
             this.actualClazz = methodParser.getActualClazz(this);
             this.customMethodParser = methodParser.isCustomMethodParser();
 
-            // JSR380 相关
-            this.determineValidationGroups();
+            // JSR380 相关，确定验证组，校验组对象的 Class 数组
+            var validatedAnn = this.parameter.getAnnotation(ValidatedGroup.class);
+            this.validatorGroups = Objects.isNull(validatedAnn) ? EMPTY_GROUPS : validatedAnn.value();
         }
 
         public String toStringShort() {
@@ -323,14 +324,6 @@ public final class ActionCommand {
          */
         public boolean isExtension() {
             return FlowContext.class.equals(paramClazz);
-        }
-
-        /**
-         * 确定验证组，校验组对象的 Class 数组
-         */
-        private void determineValidationGroups() {
-            final ValidatedGroup validatedAnn = this.parameter.getAnnotation(ValidatedGroup.class);
-            this.validatorGroups = validatedAnn != null ? validatedAnn.value() : EMPTY_GROUPS;
         }
     }
 

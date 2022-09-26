@@ -5,14 +5,12 @@
     <parent>
         <artifactId>iogame</artifactId>
         <groupId>com.iohao.game</groupId>
-        <version>17.1.18</version>
+        <version>17.1.20</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>light-redis-lock</artifactId>
-
-
 
     <dependencies>
         <dependency>

@@ -8,22 +8,9 @@
     <parent>
         <artifactId>iogame</artifactId>
         <groupId>com.iohao.game</groupId>
-        <version>17.1.18</version>
+        <version>17.1.20</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <!-- Import dependency management from Spring Boot -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -35,6 +22,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <version>${springboot.version}</version>
+
             <exclusions>
                 <exclusion>
                     <groupId>org.yaml</groupId>
@@ -53,6 +42,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${springboot.version}</version>
         </dependency>
 
         <dependency>

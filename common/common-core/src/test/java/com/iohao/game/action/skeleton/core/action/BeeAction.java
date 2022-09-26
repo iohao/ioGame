@@ -41,7 +41,6 @@ public class BeeAction {
      */
     @ActionMethod(ExampleActionCont.BeeActionCont.hello)
     public BeeApple hello(BeeApple beeApple) {
-        // 响应给客户端的数据 string 类型. 框架可根据返回参数类型将返回结果装到响应体中
         BeeApple that = new BeeApple();
         that.setContent(beeApple.content + "，I'm hello");
         return that;
@@ -50,7 +49,6 @@ public class BeeAction {
     @ActionMethod(ExampleActionCont.BeeActionCont.name)
     public BeeApple name(BeeApple beeApple) {
         log.debug("beeApple: {}", beeApple);
-        // 响应给客户端的数据 string 类型. 框架可根据返回参数类型将返回结果装到响应体中
         BeeApple that = new BeeApple();
         that.setContent(beeApple.content + "，I'm name");
         return that;
@@ -58,7 +56,6 @@ public class BeeAction {
 
     @ActionMethod(ExampleActionCont.BeeActionCont.test_void)
     public void thatVoid(BeeApple beeApple) {
-        // 响应给客户端的数据 string 类型. 框架可根据返回参数类型将返回结果装到响应体中
         BeeApple that = new BeeApple();
         that.setContent(beeApple.content + "，I'm thatVoid");
     }
