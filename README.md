@@ -2,7 +2,7 @@
   ioGame
 </h2>
 <p align="center">
-	<strong>国内首个基于蚂蚁金服 SOFABolt 的 java 网络游戏服务器框架；无锁异步化、事件驱动的架构设计；</strong>
+	<strong>国内首个基于蚂蚁金服 SOFABolt 的 java 网络游戏服务器框架；无锁异步化、事件驱动的架构设计</strong>
 	<br>
 	<strong>通过 ioGame 可以很容易的搭建出一个集群无中心节点、有状态多进程的分步式游戏服务器</strong>
   <br>
@@ -12,13 +12,15 @@
 	<br>
 	<strong>近原生的快、业务框架平均每秒可以执行 1152 万次业务逻辑</strong>
 	<br>
-	<strong>业务开发中的神级特性：业务代码访问定位与跳转</strong>
+	<strong>业务开发中自带神级特性：业务代码访问定位与跳转</strong>
   <br>
-	<strong>各个逻辑服之间可以相互的跨进程通信</strong>
+	<strong>各个逻辑服之间可以相互的进行跨进程通信</strong>
   <br>
-  <strong>与同类型的多个游戏逻辑服通信</strong>
+  <strong>可同时与同类型多个游戏逻辑服通信</strong>
   <br>
-	<strong>对 webMVC 开发者友好</strong>
+  <strong>支持玩家动态绑定逻辑服节点</strong>
+  <br>
+	<strong>对webMVC开发者友好</strong>
   <br>
 	<strong>部署多样性</strong>
 </p>
