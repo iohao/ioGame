@@ -16,6 +16,8 @@
   <br>
 	<strong>各个逻辑服之间可以相互的跨进程通信</strong>
   <br>
+  <strong>与同类型的多个游戏逻辑服通信</strong>
+  <br>
 	<strong>对 webMVC 开发者友好</strong>
   <br>
 	<strong>部署多样性</strong>
