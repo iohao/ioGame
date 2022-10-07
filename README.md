@@ -2,28 +2,31 @@
   ioGame
 </h2>
 <p align="center">
-	<strong>国内首个基于蚂蚁金服 SOFABolt 的 java 网络游戏服务器框架；无锁异步化、事件驱动的架构设计</strong>
-	<br>
-	<strong>通过 ioGame 可以很容易的搭建出一个集群无中心节点、有状态多进程的分步式游戏服务器</strong>
+  <strong>国内首个基于蚂蚁金服 SOFABolt 的 java 网络游戏服务器框架；无锁异步化、事件驱动的架构设计</strong>
   <br>
-	<strong>无中间件依赖、代码即文档、JSR380、断言 + 异常机制 = 更少的维护与开发成本</strong>
-	<br>
-	<strong>轻量级、启动快、更节约、更简单、开箱即用、无配置文件、超高性能</strong>
-	<br>
-	<strong>近原生的快、业务框架平均每秒可以执行 1152 万次业务逻辑</strong>
-	<br>
-	<strong>业务开发中自带神级特性：业务代码访问定位与跳转</strong>
+  <strong>通过 ioGame 可以很容易的搭建出一个集群无中心节点、有状态多进程的分步式游戏服务器</strong>
   <br>
-	<strong>各个逻辑服之间可以相互的进行跨进程通信</strong>
+  <strong>无中间件依赖、代码即文档、JSR380、断言 + 异常机制 = 更少的维护成本、开发成本</strong>
+  <br>
+  <strong>同样的一套业务代码无需变更，可以同时支持多种协议：websocket、socket</strong>
+  <br>
+  <strong>轻量级、启动快、更节约、更简单、开箱即用、无配置文件、超高性能</strong>
+  <br>
+  <strong>近原生的快、业务框架平均每秒可以执行 1152 万次业务逻辑</strong>
+  <br>
+  <strong>在业务开发中自带神级特性：业务代码访问定位与跳转</strong>
+  <br>
+  <strong>架构部署多样性：即可相互独立，又可相互融合</strong>
+  <br>
+  <strong>各个逻辑服之间可以相互的进行跨进程通信</strong>
   <br>
   <strong>可同时与同类型多个游戏逻辑服通信</strong>
   <br>
   <strong>支持玩家动态绑定逻辑服节点</strong>
   <br>
-	<strong>对webMVC开发者友好</strong>
-  <br>
-	<strong>部署多样性</strong>
+  <strong>对webMVC开发者友好</strong>
 </p>
+
 <p align="center">
 	<a href="https://www.yuque.com/iohao/game">https://www.yuque.com/iohao/game</a>
 </p>
