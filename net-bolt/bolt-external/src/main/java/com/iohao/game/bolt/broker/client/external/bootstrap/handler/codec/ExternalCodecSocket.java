@@ -46,7 +46,8 @@ public class ExternalCodecSocket extends MessageToMessageCodec<ByteBuf, External
         // 编码器 - ExternalMessage ---> 字节数组
         byte[] bytes = ProtoKit.toBytes(msg);
 
-        ByteBuf buffer = ctx.alloc().buffer();
+        // 使用默认 buffer 。如果没有做任何配置，通常默认实现为池化的 direct （直接内存，也称为堆外内存）
+        ByteBuf buffer = ctx.alloc().buffer(bytes.length + 4);
         // 消息长度
         buffer.writeInt(bytes.length);
         // 消息

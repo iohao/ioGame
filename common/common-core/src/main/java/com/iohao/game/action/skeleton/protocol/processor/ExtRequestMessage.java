@@ -17,7 +17,6 @@
 package com.iohao.game.action.skeleton.protocol.processor;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
@@ -27,7 +26,6 @@ import java.io.Serial;
  * @author 渔民小镇
  * @date 2022-05-30
  */
-@Data
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExtRequestMessage extends ExtMessage {

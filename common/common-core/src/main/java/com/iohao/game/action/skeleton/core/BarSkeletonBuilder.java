@@ -92,15 +92,10 @@ public final class BarSkeletonBuilder {
     BarSkeletonBuilder() {
     }
 
-    private void before() {
-    }
-
     /**
      * 构建骨架, 提供了一些默认配置
      */
     public BarSkeleton build() {
-
-        this.before();
 
         // 参数设置
         var barSkeleton = this.createBarSkeleton()
@@ -129,9 +124,6 @@ public final class BarSkeletonBuilder {
                 // 业务框架 flow 上下文 工厂
                 .setFlowContextFactory(this.flowContextFactory)
                 ;
-
-        // 保存业务数据的编解码器
-        DataCodecKit.dataCodec = this.dataCodec;
 
         // 构建推送相关的文档信息
         this.actionSendDocs.buildActionSendDoc(this.actionSendClazzList);

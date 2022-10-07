@@ -193,13 +193,6 @@ class PrintActionKit {
     }
 
     private void checkReturnType(final Class<?> returnTypeClazz) {
-        // list 之后将不被支持，这里是临时的代码。
-//                if (List.class.isAssignableFrom(returnTypeClazz)) {
-//                    returnInfoTemplate = returnInfoTemplate + "<@|RED {actualTypeArgumentClazz}|@>";
-//                    params.put("actualTypeArgumentClazz", actionMethodReturnInfo.getActualTypeArgumentClazz());
-//                    params.put("actualTypeArgumentClazzShort", actionMethodReturnInfo.getActualTypeArgumentClazz().getSimpleName());
-//                }
-
         if (Set.class.isAssignableFrom(returnTypeClazz) || Map.class.isAssignableFrom(returnTypeClazz)) {
             // 参数的不支持不写逻辑了，这里告诉一下就行了。看之后的需要在考虑是否支持吧
             throw new RuntimeException("action 返回值和参数不支持 set、map 和 基础类型!");

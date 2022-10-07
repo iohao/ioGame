@@ -16,10 +16,9 @@
  */
 package com.iohao.game.bolt.broker.client.external.bootstrap.handler.codec;
 
-import com.iohao.game.common.kit.ProtoKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
+import com.iohao.game.common.kit.ProtoKit;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
@@ -47,7 +46,9 @@ public class ExternalCodecWebsocket extends MessageToMessageCodec<BinaryWebSocke
 
         // 编码器 - ExternalMessage ---> 字节数组
         byte[] bytes = ProtoKit.toBytes(msg);
-        ByteBuf byteBuf = Unpooled.wrappedBuffer(bytes);
+        // 使用默认 buffer 。如果没有做任何配置，通常默认实现为池化的 direct （直接内存，也称为堆外内存）
+        ByteBuf byteBuf = ctx.alloc().buffer(bytes.length);
+        byteBuf.writeBytes(bytes);
 
         BinaryWebSocketFrame socketFrame = new BinaryWebSocketFrame(byteBuf);
         out.add(socketFrame);

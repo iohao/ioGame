@@ -94,11 +94,7 @@ public class ValidatorKit {
         // bean 的属性上添加的验证注解信息
         Set<PropertyDescriptor> descriptorSet = beanDescriptor.getConstrainedProperties();
 
-        if (descriptorSet.isEmpty()) {
-            // 表示这个 class 是一个不需要验证的参数
-            return false;
-        }
-
-        return true;
+        // 表示这个 class 是一个不需要验证的参数
+        return !descriptorSet.isEmpty();
     }
 }
