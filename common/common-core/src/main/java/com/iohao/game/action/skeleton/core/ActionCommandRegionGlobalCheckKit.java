@@ -44,14 +44,8 @@ import java.util.*;
 public class ActionCommandRegionGlobalCheckKit {
 
     Map<String, ActionCommandRegions> map = new HashMap<>();
-    /** 开启全局检查路由 */
-    public boolean check = true;
 
     public void putActionCommandRegions(String key, ActionCommandRegions actionCommandRegions) {
-
-        if (!check) {
-            return;
-        }
 
         if (map.containsKey(key)) {
             return;
@@ -67,9 +61,6 @@ public class ActionCommandRegionGlobalCheckKit {
      * 这个检测只能用来意思一下的提示
      */
     public void checkGlobalExistSubCmd() {
-        if (!check) {
-            return;
-        }
 
         Map<Integer, ActionCommand> cmdMap = new HashMap<>(100);
 

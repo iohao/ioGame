@@ -17,13 +17,13 @@
 package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
+import com.iohao.game.action.skeleton.core.flow.codec.ProtoDataCodec;
 import lombok.experimental.UtilityClass;
 
 /**
  * 业务框架对业务数据的编解码器
  * <pre>
- *     会在构建业务框架时赋值 {@link DataCodecKit#dataCodec}
+ *     会在构建业务框架时赋值  DataCodecKit#dataCodec
  *     see {@link BarSkeletonBuilder#build()}
  * </pre>
  *
@@ -33,8 +33,6 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class DataCodecKit {
-    /** 业务数据的编解码器 */
-    public DataCodec dataCodec;
 
     /**
      * 将业务参数编码成字节数组
@@ -43,7 +41,7 @@ public class DataCodecKit {
      * @return bytes
      */
     public byte[] encode(Object data) {
-        return dataCodec.encode(data);
+        return ProtoDataCodec.me().encode(data);
     }
 
     /**
@@ -55,7 +53,7 @@ public class DataCodecKit {
      * @return 业务参数
      */
     public <T> T decode(byte[] data, Class<T> paramClazz) {
-        return dataCodec.decode(data, paramClazz);
+        return ProtoDataCodec.me().decode(data, paramClazz);
     }
 
 }
