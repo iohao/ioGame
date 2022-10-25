@@ -61,7 +61,9 @@ public class UserIdSettingKit {
         SettingUserIdMessage userIdMessage = new SettingUserIdMessage()
                 .setUserId(userId)
                 .setUserChannelId(userChannelId)
-                .setHeadMetadata(headMetadata);
+                .setHeadMetadata(headMetadata)
+                .setStartTime(System.currentTimeMillis());
+
 
         if (log.isDebugEnabled()) {
             log.debug("1 逻辑服 {}", userIdMessage);
@@ -82,8 +84,14 @@ public class UserIdSettingKit {
                 return false;
             }
 
+            if (log.isDebugEnabled()) {
+                log.info("~~~~~ consumer time ~~~~~ {}"
+                        , settingUserIdMessageResponse.getEndTime() - userIdMessage.getStartTime());
+            }
+
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);
+            return false;
         }
 
         headMetadata.setUserId(userId);

@@ -63,6 +63,7 @@ public class ExternalBrokerClientStartup extends AbstractBrokerClientStartup {
         Supplier<UserProcessor<?>> broadcastOrderMessageProcessorSupplier = BroadcastOrderMessageExternalProcessor::new;
         // 注册 用户id变更处理
         Supplier<UserProcessor<?>> settingUserIdMessageProcessorSupplier = SettingUserIdMessageExternalProcessor::new;
+//        Supplier<UserProcessor<?>> settingUserIdMessageProcessorSupplier = SettingUserIdMessageExternalSyncProcessor::new;
         // 注册 接收网关消息处理
         Supplier<UserProcessor<?>> responseMessageProcessorSupplier = ResponseMessageExternalProcessor::new;
         // 注册 用户绑定逻辑服

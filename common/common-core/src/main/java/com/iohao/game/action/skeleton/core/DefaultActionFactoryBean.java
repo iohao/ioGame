@@ -16,8 +16,6 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.action.skeleton.ext.spring.ActionFactoryBeanForSpring;
-
 /**
  * action 工厂对象 <BR>
  *
@@ -29,9 +27,8 @@ public final class DefaultActionFactoryBean<T> implements ActionFactoryBean<T> {
     @SuppressWarnings("unchecked")
     public T getBean(ActionCommand actionCommand) {
 
-        if (actionCommand.deliveryContainer && ActionFactoryBeanForSpring.me().isSpring()) {
-            ActionFactoryBeanForSpring beanForSpring = ActionFactoryBeanForSpring.me();
-            return (T) beanForSpring.getBean(actionCommand);
+        if (actionCommand.deliveryContainer) {
+            return DependencyInjectionPart.me().getBean(actionCommand);
         }
 
         if (actionCommand.isCreateSingleActionCommandController()) {

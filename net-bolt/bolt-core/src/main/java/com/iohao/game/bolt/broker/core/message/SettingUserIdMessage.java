@@ -40,4 +40,6 @@ public class SettingUserIdMessage implements Serializable {
     String userChannelId;
 
     HeadMetadata headMetadata;
+
+    long startTime;
 }

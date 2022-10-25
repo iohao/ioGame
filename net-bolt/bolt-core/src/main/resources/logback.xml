@@ -10,34 +10,16 @@
     <!--日志文件的保存路径,首先查找系统属性-Dlog.dir,如果存在就使用其；否则，在当前目录下创建名为logs目录做日志存放的目录 -->
     <property name="log.base" value="${log.dir:-logs}/${log.moduleName}"/>
     <property name="log.max.size" value="100MB"/> <!-- 日志文件大小,超过这个大小将被压缩 -->
+
     <!-- 彩色日志 -->
-    <!-- 彩色日志依赖的渲染类 -->
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
-    <conversionRule conversionWord="wex"
-                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
-    <conversionRule conversionWord="wEx"
-                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
-
-    <!-- 彩色日志格式 -->
-    <property name="CONSOLE_LOG_PATTERN"
-              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr([%8.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}} "/>
-
-    <property name="CONSOLE_LOG_PATTERN_X"
-              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr([%8.15t]){faint} %yellow(at %class.%method) \\(%file:%line\\) %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
-
-    <property name="CONSOLE_LOG_PATTERN_XX"
-              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%8.15t]){faint} %yellow(at %class.%method) \\(%file:%line\\) %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
-
-    <!-- 时间, 日志级别, 线程名 %clr([%8.15t]) -->
-    <property name="CONSOLE_LOG_PATTERN_XXX"
-              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%8.15t]){faint} %cyan(%clr(%-40.40logger{50}.%method)){cyan}\\(%file:%line\\) %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="log.pattern" value="%cyan(%d{HH:mm:ss.SSS}) %green([%thread]) %highlight(%-5level) %cyan(%-40.40logger{50}.%method) %cyan(\\(%file:%line\\)) - %msg%n" />
 
     <!--控制台输出 -->
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
             <!--            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{50}) - %highlight(%msg) %n</pattern>-->
-            <pattern>${CONSOLE_LOG_PATTERN_XXX}</pattern>
+            <pattern>${log.pattern}</pattern>
             <charset>utf8</charset>
         </encoder>
     </appender>
@@ -115,11 +97,10 @@
     </appender>
 
     <!-- 为某个包下的所有类的指定Appender 这里也可以指定类名称例如：com.aa.bb.ClassName -->
-    <logger name="com.iohao" additivity="false">
+    <logger name="com.iohao.game" additivity="false">
         <level value="${log.root.level}"/>
         <appender-ref ref="stdout"/>
-        <!-- 即com.iohao 包下级别为 ${log.root.level}的才会使用file.async来打印 -->
-        <appender-ref ref="file.async"/>
+        <appender-ref ref="file.async"/><!-- 即com.iohao.game包下级别为 ${log.root.level}的才会使用file.async来打印 -->
         <appender-ref ref="file.error"/>
     </logger>
 

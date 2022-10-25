@@ -17,6 +17,7 @@
 package com.iohao.game.bolt.broker.core.message;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -28,6 +29,7 @@ import java.io.Serializable;
  * @date 2022-01-19
  */
 @Data
+@Accessors(chain = true)
 public class SettingUserIdMessageResponse implements Serializable {
     @Serial
     private static final long serialVersionUID = -3776596417948970990L;
@@ -35,4 +37,6 @@ public class SettingUserIdMessageResponse implements Serializable {
     boolean success;
     /** 变更后的 userId */
     long userId;
+
+    long endTime;
 }

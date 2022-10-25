@@ -18,10 +18,12 @@ package com.iohao.game.action.skeleton.ext.spring;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.ActionFactoryBean;
+import com.iohao.game.action.skeleton.core.DependencyInjectionPart;
 import lombok.Getter;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
@@ -54,9 +56,22 @@ public class ActionFactoryBeanForSpring<T> implements ActionFactoryBean<T>, Appl
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Objects.requireNonNull(applicationContext);
+
+        initDependencyInjectionPart();
+
         this.spring = true;
 
         this.applicationContext = applicationContext;
+    }
+
+    private void initDependencyInjectionPart() {
+        DependencyInjectionPart dependencyInjectionPart = DependencyInjectionPart.me();
+
+        dependencyInjectionPart.setInjection(true);
+
+        dependencyInjectionPart.setAnnotationClass(Component.class);
+
+        dependencyInjectionPart.setActionFactoryBean(this);
     }
 
     private ActionFactoryBeanForSpring() {

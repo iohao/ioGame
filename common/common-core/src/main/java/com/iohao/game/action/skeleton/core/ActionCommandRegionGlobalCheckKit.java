@@ -71,11 +71,6 @@ public class ActionCommandRegionGlobalCheckKit {
                 .flatMap(ActionCommandRegions::streamActionCommandRegion)
                 .toList();
 
-        log.info("actionCommandRegionList.size() : {} {}",
-                map.keySet(),
-                actionCommandRegionList.size());
-
-
         for (ActionCommandRegion actionCommandRegion : actionCommandRegionList) {
             // 命令域下的路由 action
             for (ActionCommand actionCommand : actionCommandRegion.values()) {

@@ -255,6 +255,7 @@ public class BrokerServerBuilder {
 
         // 处理 - 改变用户 id -- external server
         Supplier<UserProcessor<?>> changeUserIdMessageSupplier = ChangeUserIdMessageBrokerProcessor::new;
+//        Supplier<UserProcessor<?>> changeUserIdMessageSupplier = ChangeUserIdMessageBrokerSyncProcessor::new;
 
         // 处理 - （响应真实用户的请求）把逻辑服的响应转发到对外服
         Supplier<UserProcessor<?>> responseMessageSupplier = ResponseMessageBrokerProcessor::new;

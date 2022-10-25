@@ -25,12 +25,10 @@ import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDocKit;
 import com.iohao.game.action.skeleton.core.doc.JavaClassDocInfo;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
-import com.iohao.game.action.skeleton.ext.spring.ActionFactoryBeanForSpring;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -150,8 +148,8 @@ public final class ActionCommandInfoBuilder {
 
     private boolean deliveryContainer(Class<?> controllerClazz) {
 
-        if (ActionFactoryBeanForSpring.me().isSpring()) {
-            return controllerClazz.getAnnotation(Component.class) != null;
+        if (DependencyInjectionPart.me().isInjection()) {
+            return DependencyInjectionPart.me().deliveryContainer(controllerClazz);
         }
 
         return false;
