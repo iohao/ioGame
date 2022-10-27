@@ -18,6 +18,7 @@ package com.iohao.game.bolt.broker.core.client;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.core.DevConfig;
 import com.iohao.game.action.skeleton.core.commumication.BroadcastContext;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
@@ -98,6 +99,11 @@ class BroadcastDebug {
             }
 
             returnData = DataCodecKit.decode(responseMessage.getData(), aClass);
+
+            // 保存 cmd 路由对应的响应数据类型 class 信息
+            int cmdMerge = responseMessage.getHeadMetadata().getCmdMerge();
+            DevConfig.me().getCmdDataClassMap().putIfAbsent(cmdMerge, aClass);
+
         } catch (ClassNotFoundException e) {
             log.error(e.getMessage(), e);
         }

@@ -19,14 +19,14 @@ package com.iohao.game.action.skeleton.core.doc;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.system.SystemUtil;
-import com.iohao.game.action.skeleton.core.ActionCommand;
-import com.iohao.game.action.skeleton.core.ActionCommandRegions;
-import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.*;
 import com.iohao.game.common.kit.StrKit;
 import lombok.Setter;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * 游戏文档生成
@@ -50,27 +50,6 @@ public class BarSkeletonDoc {
         this.buildDoc(docPath);
     }
 
-    private ActionSendDocsRegion createActionSendDocsRegion() {
-        ActionSendDocsRegion actionSendDocsRegion = new ActionSendDocsRegion();
-
-        skeletonList.stream()
-                .map(BarSkeleton::getActionSendDocs)
-                .forEach(actionSendDocsRegion::addActionSendDocs);
-
-        return actionSendDocsRegion;
-
-    }
-
-    private ErrorCodeDocsRegion createErrorCodeDocsRegion() {
-        ErrorCodeDocsRegion region = new ErrorCodeDocsRegion();
-        skeletonList.stream()
-                .map(BarSkeleton::getErrorCodeDocs)
-                .forEach(region::addErrorCodeDocs);
-
-        return region;
-    }
-
-
     public void buildDoc(String docPath) {
 
         Objects.requireNonNull(docPath);
@@ -79,6 +58,8 @@ public class BarSkeletonDoc {
             throw new RuntimeException("file is Directory ");
 
         }
+
+        cmdDataClassRegionDevInfo();
 
         ActionSendDocsRegion actionSendDocsRegion = this.createActionSendDocsRegion();
 
@@ -132,7 +113,7 @@ public class BarSkeletonDoc {
         String gameDocInfo = """
                 ==================== 游戏文档格式说明 ====================
                 https://www.yuque.com/iohao/game/irth38#cJLdC
-                
+                                
                 """;
 
         docContentList.add(gameDocInfo);
@@ -187,6 +168,45 @@ public class BarSkeletonDoc {
         }
     }
 
+
+    private ActionSendDocsRegion createActionSendDocsRegion() {
+        ActionSendDocsRegion actionSendDocsRegion = new ActionSendDocsRegion();
+
+        skeletonList.stream()
+                .map(BarSkeleton::getActionSendDocs)
+                .forEach(actionSendDocsRegion::addActionSendDocs);
+
+        return actionSendDocsRegion;
+    }
+
+    private ErrorCodeDocsRegion createErrorCodeDocsRegion() {
+        ErrorCodeDocsRegion region = new ErrorCodeDocsRegion();
+        skeletonList.stream()
+                .map(BarSkeleton::getErrorCodeDocs)
+                .forEach(region::addErrorCodeDocs);
+
+        return region;
+    }
+
+    private void cmdDataClassRegionDevInfo() {
+        // 这个方法主要是保存一下 cmd 路由对应的响应数据类型信息
+        skeletonList.parallelStream()
+                // 得到业务框架的 ActionCommandRegions
+                .map(BarSkeleton::getActionCommandRegions)
+                // 将 map.values 合并成一个 list，即将 ActionCommandRegions 中的 regionMap 的 value 转为 stream
+                .flatMap((Function<ActionCommandRegions, Stream<ActionCommandRegion>>) actionCommandRegions -> actionCommandRegions.getRegionMap().values().parallelStream())
+                // 将 map.values 合并成一个 list，即将 ActionCommandRegion 中的 subActionCommandMap 的 value 转为 stream
+                .flatMap((Function<ActionCommandRegion, Stream<ActionCommand>>) actionCommandRegion -> actionCommandRegion.values().parallelStream())
+                .forEach(actionCommand -> {
+                    // 路由
+                    CmdInfo cmdInfo = actionCommand.getCmdInfo();
+                    // action 的返回值
+                    ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = actionCommand.getActionMethodReturnInfo();
+                    Class<?> dataClass = actionMethodReturnInfo.getActualTypeArgumentClazz();
+                    // cmd 路由对应的响应数据类型信息
+                    DevConfig.me().getCmdDataClassMap().putIfAbsent(cmdInfo.getCmdMerge(), dataClass);
+                });
+    }
 
     private BarSkeletonDoc() {
 

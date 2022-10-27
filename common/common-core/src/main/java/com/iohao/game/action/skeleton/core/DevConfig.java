@@ -17,6 +17,9 @@
 package com.iohao.game.action.skeleton.core;
 
 import lombok.Getter;
+import org.jctools.maps.NonBlockingHashMap;
+
+import java.util.Map;
 
 /**
  * 开发时相关的配置类
@@ -24,14 +27,30 @@ import lombok.Getter;
  * @author 渔民小镇
  * @date 2022-05-19
  */
+@Getter
 public class DevConfig {
     /**
      * true 打印广播日志，默认不打印
      *
      * @see {@link BarSkeletonBuilderParamConfig#createBuilder()}
      */
-    @Getter
     boolean broadcastLog;
+
+    /**
+     * cmd 路由对应的响应数据类型信息
+     * <pre>
+     *     key : cmdMerge
+     *     value : 路由对应的 class 信息
+     *
+     *     开发阶段的数据辅助信息，目前主要提供给"模拟客户端" 时使用的。
+     *
+     *     此 map 中，保存了：
+     *     1 action 的返回值类信息；
+     *     2 广播（推送）时的类信息；
+     *
+     * </pre>
+     */
+    Map<Integer, Class<?>> cmdDataClassMap = new NonBlockingHashMap<>();
 
     private DevConfig() {
 

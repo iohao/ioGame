@@ -50,6 +50,7 @@ public class ActionCommandRegions {
      *     value : subCmd region
      * </pre>
      */
+    @Getter
     final Map<Integer, ActionCommandRegion> regionMap = new NonBlockingHashMap<>();
 
     /**
