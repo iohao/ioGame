@@ -53,20 +53,17 @@ public class ValidationProcessor extends AbstractProcessor {
      */
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if (!roundEnv.processingOver() && annotations.size() > 0 && !created) {
+        if (!roundEnv.processingOver() && !annotations.isEmpty() && !created) {
             created = true;
 
-            EnableValidation enableValidation = getEnableValidation(annotations, roundEnv);
+            EnableValidation enableValidation = getEnableValidation(roundEnv);
             if (enableValidation == null) {
                 return true;
             }
 
             String className = enableValidation.value();
             // 生成META-INF/ioGame/com.iohao.game.common.validation.Validator 配置文件
-            createMetaInf(processingEnv,
-                    "ioGame/com.iohao.game.common.validation.Validator",
-                    className
-            );
+            createMetaInf(processingEnv, className);
         }
 
         return true;
@@ -75,15 +72,13 @@ public class ValidationProcessor extends AbstractProcessor {
     /**
      * 获取EnableValidation注解对象
      *
-     * @param annotations
-     * @param roundEnv
+     * @param roundEnv roundEnv
      */
-    private static EnableValidation getEnableValidation(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    private static EnableValidation getEnableValidation(RoundEnvironment roundEnv) {
         Set<? extends Element> rootElements = roundEnv.getElementsAnnotatedWith(EnableValidation.class);
-        if (rootElements != null && rootElements.size() > 0) {
+        if (rootElements != null && !rootElements.isEmpty()) {
             Element element = rootElements.stream().findFirst().get();
-            EnableValidation annotation = element.getAnnotation(EnableValidation.class);
-            return annotation;
+            return element.getAnnotation(EnableValidation.class);
         }
 
         return null;
@@ -93,13 +88,16 @@ public class ValidationProcessor extends AbstractProcessor {
     /**
      * 生成 META-INF 下的配置文件
      *
-     * @param processingEnv
-     * @param metaPath
-     * @param content
+     * @param processingEnv processingEnv
+     * @param content       content
      */
-    private static void createMetaInf(ProcessingEnvironment processingEnv, String metaPath, String content) {
+    private static void createMetaInf(ProcessingEnvironment processingEnv, String content) {
         try {
-            FileObject f = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "META-INF/" + metaPath);
+
+            FileObject f = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT,
+                    "",
+                    "META-INF/ioGame/com.iohao.game.common.validation.Validator");
+
             try (Writer w = f.openWriter()) {
                 PrintWriter pw = new PrintWriter(w);
                 pw.println(content);

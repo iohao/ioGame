@@ -26,6 +26,8 @@ import org.apache.commons.lang.StringUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -41,7 +43,9 @@ public class Validation {
     final String fileName = "META-INF/ioGame/com.iohao.game.common.validation.Validator";
     final String defaultValidator = "com.iohao.game.common.validation.support.JakartaValidator";
 
-    private Validator validator;
+    private volatile Validator validator;
+
+    Lock lock = new ReentrantLock();
 
     /**
      * 获取当前配置的数据校验器
@@ -52,17 +56,39 @@ public class Validation {
         if (validator != null) {
             return validator;
         }
-        final String className = getValidatorClassName();
-        final String packageName = getValidatorPackage(className);
 
-        ClassScanner classScanner = new ClassScanner(packageName, clazz -> clazz.getName().equals(className));
-        List<Class<?>> classList = classScanner.listScan();
-        if (classList == null || classList.isEmpty()) {
-            throw new Exception("缺少类" + className);
+        /*
+         * 实际上不加锁也不影响，因为业务框架有个初始化的过程，
+         * 在业务框架初始化时，会用到 validator 变量，
+         * 也就是说在项目启动的过程中，validator 的初始化已经做好了；
+         *
+         * 这里加锁也是为了让验证模块，在其他系统中可以单独的使用，即不依赖 ioGame 也可以安全的使用；
+         */
+
+        lock.lock();
+
+        try {
+
+            if (validator != null) {
+                return validator;
+            }
+
+            final String className = getValidatorClassName();
+            final String packageName = getValidatorPackage(className);
+
+            ClassScanner classScanner = new ClassScanner(packageName, clazz -> clazz.getName().equals(className));
+            List<Class<?>> classList = classScanner.listScan();
+            if (classList.isEmpty()) {
+                throw new Exception("缺少类: " + className);
+            }
+
+            Class<?> clazz = classList.get(0);
+            validator = (Validator) clazz.getConstructor().newInstance();
+
+        } finally {
+            lock.unlock();
         }
-        
-        Class<?> clazz = classList.get(0);
-        validator = (Validator) clazz.getConstructor().newInstance();
+
         return validator;
     }
 
@@ -73,17 +99,18 @@ public class Validation {
      */
     private String getValidatorClassName() {
         String className = null;
+
         try {
             className = ResourceUtil.readStr(fileName, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            log.info("读取" + fileName + "失败");
+            log.info("读取 {} 失败，将使用默认类 {} 来处理", fileName, defaultValidator);
         }
 
         if (StringUtils.isBlank(className)) {
             className = defaultValidator;
         }
-        className = StringUtils.trim(className);
-        return className;
+
+        return StringUtils.trim(className);
     }
 
     /**
@@ -94,9 +121,8 @@ public class Validation {
     private String getValidatorPackage(String className) {
         List<String> segments = Arrays.stream(className.split("\\.")).toList();
 
-        String packageName = segments.stream()
+        return segments.stream()
                 .limit(segments.size() - 1)
                 .collect(Collectors.joining("/"));
-        return packageName;
     }
 }
