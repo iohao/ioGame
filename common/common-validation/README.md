@@ -137,6 +137,10 @@ public class LoginReq implements Serializable {
 
 # pom 设置
 
+如果使用 javax 的验证，需要在 pom 中加入如下代码；
+
+> 使用默认的 jakarta 则不需要在 pom 加入下面这段配置；
+
 ```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>

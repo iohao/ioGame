@@ -61,7 +61,6 @@ public class SimpleRunOne {
     List<AbstractBrokerClientStartup> logicServerList;
 
     /** broker 游戏网关 */
-    @Setter(value = AccessLevel.PRIVATE)
     BrokerServer brokerServer;
     /** broker 游戏网关 构建器 */
     BrokerServerBuilder brokerServerBuilder = BrokerServer.newBuilder();
