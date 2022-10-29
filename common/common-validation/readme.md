@@ -132,3 +132,47 @@ public class LoginReq implements Serializable {
     String password;
 }
 ```
+
+# @EnableValidation注解的使用方法
+
+1、 配置`maven-compiler-plugin`的`annotationProcessorPaths`
+```java
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <compilerVersion>${java.version}</compilerVersion>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <!-- maven 3.6.2及之后加上编译参数，可以让我们在运行期获取方法参数名称。 -->
+                    <parameters>true</parameters>
+                    <skip>true</skip>
+                    <!-- JDK9+ with module-info.java -->
+                    <annotationProcessorPaths>
+                        <!-- 配置@EnableValidation生效 -->
+                        <path>
+                            <groupId>com.iohao.game</groupId>
+                            <artifactId>common-validation</artifactId>
+                            <version>${ioGame.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+```
+
+2、在为启动类加上@EnableValidation
+* 不填参数时，默认使用`com.iohao.game.common.validation.support.JakartaValidator`
+```java
+@EnableValidation
+public class JarApplication {
+    
+}
+```
+
+* 使用自定义的`Validator`
+```java
+@EnableValidation("com.iohao.game.common.validation.support.JavaxValidator")
+public class JarApplication {
+    
+}
+```
