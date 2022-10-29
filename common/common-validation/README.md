@@ -132,3 +132,52 @@ public class LoginReq implements Serializable {
     String password;
 }
 ```
+
+
+
+# pom 设置
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.8.1</version>
+    <configuration>
+        <compilerVersion>${java.version}</compilerVersion>
+        <source>${java.version}</source>
+        <target>${java.version}</target>
+        <!-- maven 3.6.2及之后加上编译参数，可以让我们在运行期获取方法参数名称。 -->
+        <parameters>true</parameters>
+        <skip>true</skip>
+        <!-- JDK9+ with module-info.java -->
+        <annotationProcessorPaths>
+            <!-- 实体映射工具 -->
+            <path>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${org.mapstruct.version}</version>
+            </path>
+
+            <!-- lombok 消除冗长的 Java 代码 -->
+            <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </path>
+            <!-- additional annotation processor required as of Lombok 1.18.16 -->
+            <!-- mapStruct 支持 lombok -->
+            <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-mapstruct-binding</artifactId>
+                <version>0.2.0</version>
+            </path>
+            <path>
+                <groupId>com.iohao.game</groupId>
+                <artifactId>common-validation</artifactId>
+                <version>${ioGame.version}</version>
+            </path>
+        </annotationProcessorPaths>
+    </configuration>
+</plugin>
+```
+
