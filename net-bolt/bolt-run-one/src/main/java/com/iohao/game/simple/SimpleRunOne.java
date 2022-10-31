@@ -21,6 +21,7 @@ import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.client.external.ExternalServer;
+import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalJoinEnum;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.BrokerServerBuilder;
 import com.iohao.game.common.kit.ExecutorKit;
@@ -30,6 +31,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -67,6 +69,13 @@ public class SimpleRunOne {
     /** true 在本地启动 broker （游戏网关） */
     boolean runBrokerServer = true;
 
+    List<Runnable> startupAfterRunnableList = new ArrayList<>();
+
+    public SimpleRunOne() {
+        // 生成游戏文档
+        this.startupAfterRunnableList.add(BarSkeletonDoc.me()::buildDoc);
+    }
+
     /**
      * 简单的快速启动
      * <pre>
@@ -80,7 +89,7 @@ public class SimpleRunOne {
         // 启动网关
         if (this.runBrokerServer) {
 
-            if(brokerServer==null) {
+            if (brokerServer == null) {
                 this.brokerServer = brokerServerBuilder.build();
             }
 
@@ -110,6 +119,51 @@ public class SimpleRunOne {
         return this;
     }
 
+    /**
+     * 设置一个连接类型为 websocket 的游戏对外服
+     *
+     * @param externalPort 游戏对外服端口
+     * @return this
+     */
+    public SimpleRunOne setExternalServer(int externalPort) {
+        return this.setExternalServer(ExternalJoinEnum.WEBSOCKET, externalPort);
+    }
+
+    /**
+     * 设置一个游戏对外服
+     *
+     * @param externalJoinEnum 连接类型
+     * @param externalPort     游戏对外服端口
+     * @return this
+     */
+    public SimpleRunOne setExternalServer(ExternalJoinEnum externalJoinEnum, int externalPort) {
+        this.externalServer = SimpleHelper.createExternalServer(externalJoinEnum, externalPort);
+        return this;
+    }
+
+    /**
+     * 设置一个游戏对外服
+     *
+     * @param externalServer 游戏对外服
+     * @return this
+     */
+    public SimpleRunOne setExternalServer(ExternalServer externalServer) {
+        this.externalServer = externalServer;
+        return this;
+    }
+
+    /**
+     * 添加启动后需要执行的任务
+     *
+     * @param runnable 执行的任务
+     * @return this
+     */
+    public SimpleRunOne addStartupAfterRunnable(Runnable runnable) {
+        Objects.requireNonNull(runnable);
+        this.startupAfterRunnableList.add(runnable);
+        return this;
+    }
+
     private void startupLogic() {
         this.executorService.execute(() -> {
             // 启动逻辑服
@@ -129,8 +183,12 @@ public class SimpleRunOne {
             log.error(e.getMessage(), e);
         }
 
-        // 生成游戏文档
-        this.executorService.execute(BarSkeletonDoc.me()::buildDoc);
+        this.executorService.execute(() -> {
+            for (Runnable runnable : startupAfterRunnableList) {
+                runnable.run();
+            }
+        });
     }
+
 
 }

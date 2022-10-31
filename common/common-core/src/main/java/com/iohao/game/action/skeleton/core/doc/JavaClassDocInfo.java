@@ -61,4 +61,8 @@ public class JavaClassDocInfo {
 
         return actionCommandDoc;
     }
+
+    public String getComment() {
+        return this.javaClass.getComment();
+    }
 }

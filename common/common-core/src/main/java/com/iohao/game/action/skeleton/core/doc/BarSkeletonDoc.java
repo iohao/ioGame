@@ -108,6 +108,10 @@ public class BarSkeletonDoc {
         FileUtil.writeUtf8String(docText, docPath);
     }
 
+    public List<BarSkeleton> listBarSkeleton() {
+        return new ArrayList<>(this.skeletonList);
+    }
+
     private void gameDocURLDescription(List<String> docContentList) {
         // 加上游戏文档格式说明
         String gameDocInfo = """

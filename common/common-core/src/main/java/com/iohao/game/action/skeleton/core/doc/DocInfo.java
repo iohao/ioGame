@@ -59,7 +59,7 @@ class DocInfo {
         paramMap.put("methodName", subBehavior.getActionMethodName());
         paramMap.put("methodComment", actionCommandDoc.getComment());
         paramMap.put("methodParam", "");
-        paramMap.put("returnTypeClazz", getReturnTypeClazzName(actionMethodReturnInfo));
+        paramMap.put("returnTypeClazz", actionMethodReturnInfo.getReturnTypeClazzName());
         paramMap.put("lineNumber", String.valueOf(actionCommandDoc.getLineNumber()));
 
 
@@ -69,7 +69,7 @@ class DocInfo {
                 continue;
             }
 
-            String methodParam = this.getMethodParamName(paramInfo);
+            String methodParam = paramInfo.getMethodParamClassName();
             paramMap.put("methodParam", methodParam);
         }
 
@@ -133,25 +133,5 @@ class DocInfo {
         lineList.add(separator);
 
         return String.join(separator, lineList);
-    }
-
-    private String getMethodParamName(ActionCommand.ParamInfo paramInfo) {
-
-        Class<?> actualClazz = paramInfo.getActualClazz();
-        if (paramInfo.isCustomMethodParser() || MethodParsers.me().containsKey(actualClazz)) {
-            return actualClazz.getSimpleName();
-        }
-
-        return actualClazz.getName();
-    }
-
-    private String getReturnTypeClazzName(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo) {
-
-        Class<?> actualClazz = actionMethodReturnInfo.getActualClazz();
-        if (actionMethodReturnInfo.isCustomMethodParser() || MethodParsers.me().containsKey(actualClazz)) {
-            return actualClazz.getSimpleName();
-        }
-
-        return actualClazz.getName();
     }
 }

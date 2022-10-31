@@ -16,7 +16,10 @@
  */
 package com.iohao.game.action.skeleton.core;
 
+import com.iohao.game.action.skeleton.core.doc.JavaClassDocInfo;
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -24,7 +27,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * ActionCommand 域
+ * ActionCommand 域，通常与 ActionController 是 1:1 的关系
+ *
  * <pre>
  *     类似模块的区分，这样可以避免 map 嵌 map 的结构
  *     在代码的阅读上也会清晰很多
@@ -33,9 +37,15 @@ import java.util.Map;
  * @author 渔民小镇
  * @date 2022-05-15
  */
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class ActionCommandRegion {
     final int cmd;
+    /** actionControllerClazz */
+    Class<?> actionControllerClazz;
+    /** actionControllerClazz 的源文件信息 */
+    JavaClassDocInfo javaClassDocInfo;
     /**
      * <pre>
      *     key: subCmd

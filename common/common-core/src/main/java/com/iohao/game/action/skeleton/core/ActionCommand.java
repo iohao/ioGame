@@ -325,6 +325,14 @@ public final class ActionCommand {
         public boolean isExtension() {
             return FlowContext.class.equals(paramClazz);
         }
+
+        public String getMethodParamClassName() {
+            if (this.isCustomMethodParser() || MethodParsers.me().containsKey(this.actualClazz)) {
+                return this.actualClazz.getSimpleName();
+            }
+
+            return this.actualClazz.getName();
+        }
     }
 
     /**
@@ -403,6 +411,14 @@ public final class ActionCommand {
          */
         public boolean isVoid() {
             return Void.TYPE == this.returnTypeClazz;
+        }
+
+        public String getReturnTypeClazzName() {
+            if (this.isCustomMethodParser() || MethodParsers.me().containsKey(this.actualClazz)) {
+                return this.actualClazz.getSimpleName();
+            }
+
+            return this.actualClazz.getName();
         }
     }
 }

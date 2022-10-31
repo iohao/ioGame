@@ -78,6 +78,11 @@ public final class ActionCommandInfoBuilder {
 
         Set<Class<?>> controllerSet = new HashSet<>(controllerList);
         controllerSet.stream().filter(controllerPredicate).forEach(controllerClazz -> {
+            // true 表示交付给容器来管理 如 spring 等
+            boolean deliveryContainer = this.deliveryContainer(controllerClazz);
+
+            JavaClassDocInfo javaClassDocInfo = javaClassDocInfoMap.get(controllerClazz.toString());
+
             // 方法访问器: 获取类中自己定义的方法
             var methodAccess = MethodAccess.get(controllerClazz);
             var constructorAccess = ConstructorAccess.get(controllerClazz);
@@ -86,11 +91,8 @@ public final class ActionCommandInfoBuilder {
             int cmd = controllerClazz.getAnnotation(ActionController.class).value();
             // 子路由 map
             var actionCommandRegion = this.actionCommandRegions.getActionCommandRegion(cmd);
-
-            // true 表示交付给容器来管理 如 spring 等
-            boolean deliveryContainer = this.deliveryContainer(controllerClazz);
-
-            JavaClassDocInfo javaClassDocInfo = javaClassDocInfoMap.get(controllerClazz.toString());
+            actionCommandRegion.setActionControllerClazz(controllerClazz);
+            actionCommandRegion.setJavaClassDocInfo(javaClassDocInfo);
 
             // 遍历所有方法上有 ActionMethod 注解的方法对象
             this.getMethodStream(controllerClazz).forEach(method -> {
