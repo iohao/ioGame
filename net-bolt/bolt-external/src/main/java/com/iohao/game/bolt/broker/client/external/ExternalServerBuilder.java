@@ -203,6 +203,8 @@ public final class ExternalServerBuilder {
         if (this.channelHandlerProcessors.isEmpty()) {
             registerChannelHandler("ExternalBizHandler", new ExternalBizHandler());
         }
+
+
     }
 
     private void check() throws RuntimeException {
