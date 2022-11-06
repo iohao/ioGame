@@ -31,7 +31,6 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -68,13 +67,6 @@ public class SimpleRunOne {
     BrokerServerBuilder brokerServerBuilder = BrokerServer.newBuilder();
     /** true 在本地启动 broker （游戏网关） */
     boolean runBrokerServer = true;
-
-    List<Runnable> startupAfterRunnableList = new ArrayList<>();
-
-    public SimpleRunOne() {
-        // 生成游戏文档
-        this.startupAfterRunnableList.add(BarSkeletonDoc.me()::buildDoc);
-    }
 
     /**
      * 简单的快速启动
@@ -152,18 +144,6 @@ public class SimpleRunOne {
         return this;
     }
 
-    /**
-     * 添加启动后需要执行的任务
-     *
-     * @param runnable 执行的任务
-     * @return this
-     */
-    public SimpleRunOne addStartupAfterRunnable(Runnable runnable) {
-        Objects.requireNonNull(runnable);
-        this.startupAfterRunnableList.add(runnable);
-        return this;
-    }
-
     private void startupLogic() {
         this.executorService.execute(() -> {
             // 启动逻辑服
@@ -183,12 +163,8 @@ public class SimpleRunOne {
             log.error(e.getMessage(), e);
         }
 
-        this.executorService.execute(() -> {
-            for (Runnable runnable : startupAfterRunnableList) {
-                runnable.run();
-            }
-        });
+        // 生成游戏文档
+        this.executorService.execute(BarSkeletonDoc.me()::buildDoc);
     }
-
 
 }
