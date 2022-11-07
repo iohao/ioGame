@@ -52,6 +52,10 @@ public class DevConfig {
      */
     Map<Integer, Class<?>> cmdDataClassMap = new NonBlockingHashMap<>();
 
+    public Class<?> getCmdDataClass(int cmdMerge) {
+        return this.cmdDataClassMap.get(cmdMerge);
+    }
+
     private DevConfig() {
 
     }

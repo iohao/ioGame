@@ -27,7 +27,11 @@ import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.common.processor.hook.RequestMessageClientProcessorHook;
+import com.iohao.game.common.kit.ExecutorKit;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 /**
  * 客户端请求处理器
@@ -40,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class RequestMessageClientProcessor extends AsyncUserProcessor<RequestMessage> implements BrokerClientAware {
-
+    final ExecutorService executorService = ExecutorKit.newSingleThreadExecutor("RequestMessageClientProcessor");
     BrokerClient brokerClient;
     RequestMessageClientProcessorHook requestMessageClientProcessorHook;
 
@@ -87,6 +91,11 @@ public class RequestMessageClientProcessor extends AsyncUserProcessor<RequestMes
 
         ClientProcessorHooks clientProcessorHooks = brokerClient.getClientProcessorHooks();
         this.requestMessageClientProcessorHook = clientProcessorHooks.getRequestMessageClientProcessorHook();
+    }
+
+    @Override
+    public Executor getExecutor() {
+        return this.executorService;
     }
 
     /**

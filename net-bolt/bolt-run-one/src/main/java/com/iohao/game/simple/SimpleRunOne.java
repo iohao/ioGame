@@ -21,6 +21,7 @@ import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.client.external.ExternalServer;
+import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalJoinEnum;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.BrokerServerBuilder;
 import com.iohao.game.common.kit.ExecutorKit;
@@ -80,7 +81,7 @@ public class SimpleRunOne {
         // 启动网关
         if (this.runBrokerServer) {
 
-            if(brokerServer==null) {
+            if (brokerServer == null) {
                 this.brokerServer = brokerServerBuilder.build();
             }
 
@@ -107,6 +108,39 @@ public class SimpleRunOne {
      */
     public SimpleRunOne disableBrokerServer() {
         this.runBrokerServer = false;
+        return this;
+    }
+
+    /**
+     * 设置一个连接类型为 websocket 的游戏对外服
+     *
+     * @param externalPort 游戏对外服端口
+     * @return this
+     */
+    public SimpleRunOne setExternalServer(int externalPort) {
+        return this.setExternalServer(ExternalJoinEnum.WEBSOCKET, externalPort);
+    }
+
+    /**
+     * 设置一个游戏对外服
+     *
+     * @param externalJoinEnum 连接类型
+     * @param externalPort     游戏对外服端口
+     * @return this
+     */
+    public SimpleRunOne setExternalServer(ExternalJoinEnum externalJoinEnum, int externalPort) {
+        this.externalServer = SimpleHelper.createExternalServer(externalJoinEnum, externalPort);
+        return this;
+    }
+
+    /**
+     * 设置一个游戏对外服
+     *
+     * @param externalServer 游戏对外服
+     * @return this
+     */
+    public SimpleRunOne setExternalServer(ExternalServer externalServer) {
+        this.externalServer = externalServer;
         return this;
     }
 
