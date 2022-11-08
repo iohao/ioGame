@@ -102,7 +102,7 @@ ioGame 是轻量级的网络游戏服务器框架，ioGame 没有中间件的强
 <dependency>
     <groupId>com.iohao.game</groupId>
     <artifactId>bolt-run-one</artifactId>
-    <version>17.1.21</version>
+    <version>17.1.22</version>
 </dependency>
 ```
 

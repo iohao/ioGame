@@ -1,5 +1,11 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-11-08
+v17.1.22
+#I5YM30
+提供 action 调试工具-模拟客户端的需要数据
+具体 https://www.oschina.net/news/216923/iogame-17-1-22-released
+
 2022-10-31
 v17.1.21
 （#I5YEZ5 、#I5VIGE 、#I5VHPC 、#I5U89Q 、#I5SLGJ 、#I5RXOZ 、#I5QZU7 、#I5LY33 、#I5KQT5 、#I5CYK7 、#I5BDO7 、#I5YEZU ）
