@@ -1,5 +1,37 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-11-08
+v17.1.22
+#I5YM30
+提供 action 调试工具-模拟客户端的需要数据
+具体 https://www.oschina.net/news/216923/iogame-17-1-22-released
+
+2022-10-31
+v17.1.21
+（#I5YEZ5 、#I5VIGE 、#I5VHPC 、#I5U89Q 、#I5SLGJ 、#I5RXOZ 、#I5QZU7 、#I5LY33 、#I5KQT5 、#I5CYK7 、#I5BDO7 、#I5YEZU ）
+
+#I5YEZ5
+移除游戏网关的 spring 依赖，之前使用了 spring 的日志彩色打印，改为使用 logback 提供的。
+
+#I5SLGJ
+现在 ioGame 的 JSR 校验支持 Jakarta 和 Javax 两种，基于 java SPI 实现；
+支持 Javax 是为了兼容一些老项目迁移到 ioGame 中；
+新项目推荐使用 Jakarta，通常在 ioGame 的项目中，开启 JSR380 验证规范时，默认使用的是 Jakarta；
+
+在示例目录中，单独的增加了 Jakarta 和 Javax 的使用示例。
+
+#I5RXOZ
+SimpleRunOne 中 startup 优化
+
+#I5YEZU
+框架提供 cmd 路由对应的响应数据类型信息，方便后续做"模拟客户端" 支持，这样可以做到不需要手动编写测试代码，
+也可以对业务方法 action 进行测试，这将大量减少游戏开发者的测试时间；
+
+大概意思是，开发者编写了 10 个模块，平均每个模块下有 8 个 action ，这一共是 80 个 action；
+通常我们为了测试这 80 个 action ，会需要模拟客户端，写 80 个相关的请求端来访问我们的 action。
+当使用上“模拟客户端” 将不在需要编写这些，这大量的降低的开发者的工作量；
+
+
 2022-09-26
 v17.1.20
 （#I5SLRA、#I5S8QC、#I5SG8T、#I5RXMY、#I5SS3C）
