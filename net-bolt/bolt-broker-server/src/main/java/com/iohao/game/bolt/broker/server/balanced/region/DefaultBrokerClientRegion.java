@@ -52,15 +52,14 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
     @Override
     public BrokerClientProxy getBoltClientProxy(HeadMetadata headMetadata) {
         int endPointClientId = headMetadata.getEndPointClientId();
+
         // 得到指定的逻辑服
         if (endPointClientId != 0) {
-            BrokerClientProxy brokerClientProxy = boltClientProxyMap.get(endPointClientId);
-            if (Objects.isNull(brokerClientProxy)) {
-                log.error("指定访问的逻辑服不存在: " + endPointClientId);
-                return null;
+            // 如果找到了就返回，没找到则使用继续往下找
+            BrokerClientProxy brokerClientProxy = this.boltClientProxyMap.get(endPointClientId);
+            if (Objects.nonNull(brokerClientProxy)) {
+                return brokerClientProxy;
             }
-
-            return brokerClientProxy;
         }
 
         if (Objects.isNull(this.elementSelector)) {
@@ -74,7 +73,7 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
     @Override
     public void add(BrokerClientProxy brokerClientProxy) {
         int id = brokerClientProxy.getIdHash();
-        boltClientProxyMap.put(id, brokerClientProxy);
+        this.boltClientProxyMap.put(id, brokerClientProxy);
         this.resetSelector();
     }
 
