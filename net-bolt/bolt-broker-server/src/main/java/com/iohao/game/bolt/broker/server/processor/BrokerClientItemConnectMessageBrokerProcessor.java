@@ -18,8 +18,9 @@ package com.iohao.game.bolt.broker.server.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.message.BrokerClientItemConnectMessage;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,10 +30,12 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-16
  */
 @Slf4j
-public class BrokerClientItemConnectMessageBrokerProcessor extends AsyncUserProcessor<BrokerClientItemConnectMessage> {
+@Setter
+public class BrokerClientItemConnectMessageBrokerProcessor extends AbstractAsyncUserProcessor<BrokerClientItemConnectMessage> {
+
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientItemConnectMessage request) {
-        log.info("bizCtx.getRemoteAddress() : {}", bizCtx.getRemoteAddress());
+        log.debug("bizCtx.getRemoteAddress() : {}", bizCtx.getRemoteAddress());
     }
 
     /**

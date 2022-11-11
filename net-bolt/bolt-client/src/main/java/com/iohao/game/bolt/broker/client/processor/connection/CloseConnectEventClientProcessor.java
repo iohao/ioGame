@@ -22,7 +22,7 @@ import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -48,7 +48,7 @@ public class CloseConnectEventClientProcessor implements ConnectionEventProcesso
         dicConnected.set(true);
         disConnectTimes.incrementAndGet();
 
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("网关断开 remoteAddress : {}", remoteAddress);
         }
 
@@ -56,14 +56,14 @@ public class CloseConnectEventClientProcessor implements ConnectionEventProcesso
         BrokerClient brokerClient = brokerClientItem.getBrokerClient();
         BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
 
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("brokerClientItems : {}", brokerClientManager.countActiveItem());
         }
 
         //  在集群时，需要移除与当前 broker （游戏网关）连接的 brokerClientItem
         brokerClientManager.remove(brokerClientItem);
 
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("brokerClientItems : {}", brokerClientManager.countActiveItem());
         }
     }

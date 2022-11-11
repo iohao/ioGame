@@ -20,7 +20,7 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.RpcServer;
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.common.kit.ToJson;
 import lombok.Getter;
@@ -67,7 +67,7 @@ public class BrokerClientProxy implements ToJson {
     final BrokerClientType brokerClientType;
 
     /** 消息发送超时时间 */
-    int timeoutMillis = BrokerGlobalConfig.timeoutMillis;
+    int timeoutMillis = IoGameGlobalConfig.timeoutMillis;
     List<Integer> cmdMergeList;
     @JSONField(serialize = false)
     final RpcServer rpcServer;

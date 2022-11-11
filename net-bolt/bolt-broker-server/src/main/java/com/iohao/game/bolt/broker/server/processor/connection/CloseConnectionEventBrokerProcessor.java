@@ -18,7 +18,7 @@ package com.iohao.game.bolt.broker.server.processor.connection;
 
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -50,7 +50,7 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
         dicConnected.set(true);
         disConnectTimes.incrementAndGet();
 
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("连接关闭 remoteAddress : {}", remoteAddress);
         }
 
@@ -58,7 +58,7 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
         BrokerClientProxy brokerClientProxy = balancedManager.remove(remoteAddress);
         BrokerPrintKit.print(this.brokerServer);
 
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("brokerClientProxy : {}", brokerClientProxy.toJsonPretty());
         }
     }

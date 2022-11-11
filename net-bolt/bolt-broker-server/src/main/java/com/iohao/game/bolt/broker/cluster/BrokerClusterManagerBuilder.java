@@ -16,7 +16,7 @@
  */
 package com.iohao.game.bolt.broker.cluster;
 
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.cluster.ClusterMessageListenerImpl;
 import lombok.Setter;
@@ -66,7 +66,7 @@ public class BrokerClusterManagerBuilder {
     List<String> seedAddress;
 
     /** Gossip listen port 监听端口 */
-    int gossipListenPort = BrokerGlobalConfig.gossipListenPort;
+    int gossipListenPort = IoGameGlobalConfig.gossipListenPort;
 
     BrokerClusterManagerBuilder() {
     }
@@ -122,7 +122,7 @@ public class BrokerClusterManagerBuilder {
             log.warn("因为你没有设置 种子节点信息，这里为你添加一些默认设置的种子节点");
         }
 
-        if (BrokerGlobalConfig.isBrokerClusterLog()) {
+        if (IoGameGlobalConfig.isBrokerClusterLog()) {
             log.info("当前种子节点信息: {}", this.seedAddress);
         }
     }

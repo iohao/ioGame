@@ -18,12 +18,12 @@ package com.iohao.game.bolt.broker.client.external.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.client.external.session.UserChannelId;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-01-18
  */
 @Slf4j
-public class SettingUserIdMessageExternalProcessor extends AsyncUserProcessor<SettingUserIdMessage> {
+public class SettingUserIdMessageExternalProcessor extends AbstractAsyncUserProcessor<SettingUserIdMessage> {
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, SettingUserIdMessage request) {
 
@@ -51,7 +51,7 @@ public class SettingUserIdMessageExternalProcessor extends AsyncUserProcessor<Se
 
         asyncCtx.sendResponse(response);
 
-        if (BrokerGlobalConfig.isExternalLog()) {
+        if (IoGameGlobalConfig.isExternalLog()) {
             log.debug("3 对外服设置用户id, userChannelId:{}, 真实userId:{}", userChannelId, userId);
         }
     }

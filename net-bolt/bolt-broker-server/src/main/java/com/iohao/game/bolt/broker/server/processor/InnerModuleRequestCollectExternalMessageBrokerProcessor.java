@@ -19,10 +19,10 @@ package com.iohao.game.bolt.broker.server.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalItemMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -49,7 +49,8 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InnerModuleRequestCollectExternalMessageBrokerProcessor extends AsyncUserProcessor<RequestCollectExternalMessage> implements BrokerServerAware {
+public class InnerModuleRequestCollectExternalMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestCollectExternalMessage>
+        implements BrokerServerAware {
 
     @Setter
     BrokerServer brokerServer;

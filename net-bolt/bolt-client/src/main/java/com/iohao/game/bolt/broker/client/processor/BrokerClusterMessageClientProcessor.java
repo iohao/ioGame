@@ -19,8 +19,8 @@ package com.iohao.game.bolt.broker.client.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
-import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
+import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerMessage;
@@ -41,7 +41,8 @@ import java.util.Set;
  * @date 2022-05-15
  */
 @Slf4j
-public class BrokerClusterMessageClientProcessor extends AsyncUserProcessor<BrokerClusterMessage> implements BrokerClientAware {
+public class BrokerClusterMessageClientProcessor extends AsyncUserProcessor<BrokerClusterMessage>
+        implements BrokerClientAware {
 
     @Setter
     BrokerClient brokerClient;

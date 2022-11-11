@@ -21,7 +21,7 @@ import com.iohao.game.bolt.broker.client.external.ExternalServer;
 import com.iohao.game.bolt.broker.client.external.ExternalServerBuilder;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalJoinEnum;
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -97,7 +97,7 @@ public class SimpleHelper {
                 // 连接方式
                 .externalJoinEnum(externalJoinEnum)
                 // Broker （游戏网关）的连接地址
-                .brokerAddress(new BrokerAddress("127.0.0.1", BrokerGlobalConfig.brokerPort));
+                .brokerAddress(new BrokerAddress("127.0.0.1", IoGameGlobalConfig.brokerPort));
 
         return builder.build();
     }

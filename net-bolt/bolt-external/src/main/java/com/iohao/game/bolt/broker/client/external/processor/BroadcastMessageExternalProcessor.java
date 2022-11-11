@@ -18,10 +18,10 @@ package com.iohao.game.bolt.broker.client.external.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,10 +31,10 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-01-16
  */
 @Slf4j
-public class BroadcastMessageExternalProcessor extends AsyncUserProcessor<BroadcastMessage> {
+public class BroadcastMessageExternalProcessor extends AbstractAsyncUserProcessor<BroadcastMessage> {
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BroadcastMessage message) {
-        if (BrokerGlobalConfig.isExternalLog()) {
+        if (IoGameGlobalConfig.isExternalLog()) {
             log.info("对外服接收网关的数据：{}", message);
         }
 

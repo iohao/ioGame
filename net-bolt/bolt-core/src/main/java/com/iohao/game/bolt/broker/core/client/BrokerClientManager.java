@@ -20,7 +20,7 @@ import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.ConnectionEventType;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelector;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelectorFactory;
 import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
@@ -117,7 +117,7 @@ public final class BrokerClientManager {
     }
 
     public void remove(String address) {
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("broker （游戏网关）的机器减少了 address : {}", address);
         }
 
@@ -127,7 +127,7 @@ public final class BrokerClientManager {
         // 生成负载对象
         this.resetSelector();
 
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("当前网关数量 : {}", this.boltClientMap.size());
         }
 

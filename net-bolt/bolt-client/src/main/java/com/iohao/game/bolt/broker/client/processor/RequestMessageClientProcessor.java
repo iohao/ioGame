@@ -18,20 +18,16 @@ package com.iohao.game.bolt.broker.client.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.common.processor.hook.RequestMessageClientProcessorHook;
-import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 
 /**
  * 客户端请求处理器
@@ -43,8 +39,8 @@ import java.util.concurrent.ExecutorService;
  * @date 2022-05-14
  */
 @Slf4j
-public class RequestMessageClientProcessor extends AsyncUserProcessor<RequestMessage> implements BrokerClientAware {
-    final ExecutorService executorService = ExecutorKit.newSingleThreadExecutor("RequestMessageClientProcessor");
+public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<RequestMessage>
+        implements BrokerClientAware {
     BrokerClient brokerClient;
     RequestMessageClientProcessorHook requestMessageClientProcessorHook;
 
@@ -59,7 +55,7 @@ public class RequestMessageClientProcessor extends AsyncUserProcessor<RequestMes
          */
         final BrokerClient brokerClient = this.brokerClient;
 
-        if (BrokerGlobalConfig.requestResponseLog) {
+        if (IoGameGlobalConfig.requestResponseLog) {
             log.info("逻辑服处理请求 --- {} - {}", brokerClient.getAppName(), brokerClient.getId());
         }
 
@@ -91,11 +87,6 @@ public class RequestMessageClientProcessor extends AsyncUserProcessor<RequestMes
 
         ClientProcessorHooks clientProcessorHooks = brokerClient.getClientProcessorHooks();
         this.requestMessageClientProcessorHook = clientProcessorHooks.getRequestMessageClientProcessorHook();
-    }
-
-    @Override
-    public Executor getExecutor() {
-        return this.executorService;
     }
 
     /**

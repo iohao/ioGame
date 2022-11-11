@@ -21,12 +21,12 @@ import com.alipay.remoting.BizContext;
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.RpcServer;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -47,13 +47,14 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-14
  */
 @Slf4j
-public class ExternalRequestMessageBrokerProcessor extends AsyncUserProcessor<RequestMessage> implements BrokerServerAware {
+public class ExternalRequestMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestMessage>
+        implements BrokerServerAware {
     @Setter
     BrokerServer brokerServer;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestMessage request) {
-        if (BrokerGlobalConfig.requestResponseLog) {
+        if (IoGameGlobalConfig.requestResponseLog) {
             extractedPrint(request);
         }
 

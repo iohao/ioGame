@@ -24,7 +24,8 @@ import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManagerBuilder;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.LogicBrokerClientLoadBalanced;
@@ -41,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.*;
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 /**
@@ -77,7 +79,7 @@ public class BrokerServerBuilder {
     String brokerId;
     /** broker 端口（游戏网关端口） */
     @Setter
-    int port = BrokerGlobalConfig.brokerPort;
+    int port = IoGameGlobalConfig.brokerPort;
     /** broker （游戏网关）的启动模式，默认单机模式 */
     @Setter
     BrokerRunModeEnum brokerRunMode = BrokerRunModeEnum.STANDALONE;
@@ -304,8 +306,18 @@ public class BrokerServerBuilder {
     }
 
     private void aware(Object obj) {
+        /*
+         * 目前 aware 系列由框架提供，
+         * 虽然这里可以开放给开发者来控制，但目前暂时不考虑开放
+         */
+
         if (obj instanceof BrokerServerAware aware) {
             aware.setBrokerServer(this.brokerServer);
+        }
+
+        if (obj instanceof UserProcessorExecutorAware aware) {
+            Executor executor = IoGameGlobalConfig.getExecutor(aware);
+            aware.setUserProcessorExecutor(executor);
         }
     }
 }

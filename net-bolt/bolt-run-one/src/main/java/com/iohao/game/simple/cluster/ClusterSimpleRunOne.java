@@ -21,7 +21,7 @@ import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.client.external.ExternalServer;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.common.kit.ExecutorKit;
 import lombok.AccessLevel;
@@ -189,9 +189,9 @@ public class ClusterSimpleRunOne {
         );
 
         // Gossip listen port 监听端口
-        int gossipListenPort = BrokerGlobalConfig.gossipListenPort;
+        int gossipListenPort = IoGameGlobalConfig.gossipListenPort;
         // broker 端口（游戏网关端口）
-        int port = BrokerGlobalConfig.brokerPort;
+        int port = IoGameGlobalConfig.brokerPort;
         // ---- 第1台 broker ----
         this.createBrokerServer(seedAddress, gossipListenPort, port);
 

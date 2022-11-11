@@ -17,7 +17,7 @@
 package com.iohao.game.bolt.broker.cluster;
 
 import com.alibaba.fastjson2.JSON;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerMessage;
 import com.iohao.game.common.kit.ExecutorKit;
@@ -151,7 +151,7 @@ public class BrokerClusterManager implements ClusterMessageHandler {
 
         executorService.scheduleAtFixedRate(() -> {
             Message message = Message.fromData("Greetings from Carol~~~~~");
-            if (BrokerGlobalConfig.isBrokerClusterLog()) {
+            if (IoGameGlobalConfig.isBrokerClusterLog()) {
                 log.info("message : {}", message);
             }
 
@@ -172,7 +172,7 @@ public class BrokerClusterManager implements ClusterMessageHandler {
             return;
         }
 
-        if (!BrokerGlobalConfig.isBrokerClusterLog()) {
+        if (!IoGameGlobalConfig.isBrokerClusterLog()) {
             return;
         }
 
@@ -248,7 +248,7 @@ public class BrokerClusterManager implements ClusterMessageHandler {
 
     @Override
     public void onGossip(Message gossip) {
-        if (BrokerGlobalConfig.isBrokerClusterLog()) {
+        if (IoGameGlobalConfig.isBrokerClusterLog()) {
             log.info("Message gossip : {}", gossip);
         }
     }

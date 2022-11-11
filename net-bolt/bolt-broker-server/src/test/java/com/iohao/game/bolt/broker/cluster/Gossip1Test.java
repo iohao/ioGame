@@ -1,6 +1,6 @@
 package com.iohao.game.bolt.broker.cluster;
 
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +23,7 @@ public class Gossip1Test {
         );
 
         int gossipListenPort = 30056;
-        int port = BrokerGlobalConfig.brokerPort;
+        int port = IoGameGlobalConfig.brokerPort;
 
         BrokerClusterManager brokerClusterManager = new BrokerClusterManager();
         brokerClusterManager.setGossipListenPort(gossipListenPort);

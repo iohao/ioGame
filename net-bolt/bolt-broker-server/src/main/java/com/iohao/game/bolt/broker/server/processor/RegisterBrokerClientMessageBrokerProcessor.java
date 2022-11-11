@@ -22,7 +22,7 @@ import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
@@ -39,7 +39,8 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-14
  */
 @Slf4j
-public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcessor<BrokerClientModuleMessage> implements BrokerServerAware {
+public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcessor<BrokerClientModuleMessage>
+        implements BrokerServerAware {
     @Setter
     BrokerServer brokerServer;
 
@@ -67,7 +68,7 @@ public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcess
         BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
         BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
 
-        if (BrokerGlobalConfig.isBrokerClusterLog()) {
+        if (IoGameGlobalConfig.isBrokerClusterLog()) {
             log.info("broker（游戏网关）: [{}] --  集群数量[{}] - 详细：[{}]"
                     , this.brokerServer.getPort()
                     , brokerClusterMessage.count()
@@ -83,7 +84,7 @@ public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcess
 
     private void print(BrokerClientModuleMessage brokerClientModuleMessage) {
         int port = this.brokerServer.getPort();
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("模块注册信息 --- 网关port: [{}] --- {}", port, brokerClientModuleMessage);
         }
 

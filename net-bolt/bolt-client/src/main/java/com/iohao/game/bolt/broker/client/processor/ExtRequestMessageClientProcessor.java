@@ -19,7 +19,6 @@ package com.iohao.game.bolt.broker.client.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.protocol.processor.ExtRequestMessage;
 import com.iohao.game.action.skeleton.protocol.processor.ExtResponseMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
@@ -27,6 +26,7 @@ import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.ext.ExtRegion;
 import com.iohao.game.bolt.broker.core.ext.ExtRegionContext;
 import com.iohao.game.bolt.broker.core.ext.ExtRegions;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,7 +43,8 @@ import java.util.Objects;
  * @date 2022-05-30
  */
 @Slf4j
-public class ExtRequestMessageClientProcessor extends AsyncUserProcessor<ExtRequestMessage> implements BrokerClientAware {
+public class ExtRequestMessageClientProcessor extends AbstractAsyncUserProcessor<ExtRequestMessage>
+        implements BrokerClientAware {
 
     @Setter
     BrokerClient brokerClient;

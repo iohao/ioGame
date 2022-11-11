@@ -17,7 +17,7 @@
 package com.iohao.game.bolt.broker.server.kit;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.common.kit.JsonKit;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class BrokerPrintKit {
     public void print(BrokerServer brokerServer) {
-        if (!BrokerGlobalConfig.openLog) {
+        if (!IoGameGlobalConfig.openLog) {
             return;
         }
 

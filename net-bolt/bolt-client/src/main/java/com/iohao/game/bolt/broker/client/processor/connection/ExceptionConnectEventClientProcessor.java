@@ -18,7 +18,7 @@ package com.iohao.game.bolt.broker.client.processor.connection;
 
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ExceptionConnectEventClientProcessor implements ConnectionEventProcessor {
     @Override
     public void onEvent(String remoteAddress, Connection connection) {
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("Exception remoteAddress : {}", remoteAddress);
         }
     }

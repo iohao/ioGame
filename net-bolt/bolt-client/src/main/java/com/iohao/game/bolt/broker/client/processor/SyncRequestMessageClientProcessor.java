@@ -23,9 +23,13 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
+import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.common.processor.hook.RequestMessageClientProcessorHook;
+import lombok.Setter;
+
+import java.util.concurrent.Executor;
 
 /**
  * 通常这个消息处理器是用来处理，游戏逻辑服与同类型多个游戏逻辑服通信请求的
@@ -33,10 +37,13 @@ import com.iohao.game.bolt.broker.core.common.processor.hook.RequestMessageClien
  * @author 渔民小镇
  * @date 2022-08-20
  */
-public class SyncRequestMessageClientProcessor extends SyncUserProcessor<SyncRequestMessage> implements BrokerClientAware {
+public class SyncRequestMessageClientProcessor extends SyncUserProcessor<SyncRequestMessage>
+        implements BrokerClientAware, UserProcessorExecutorAware {
 
     BrokerClient brokerClient;
     RequestMessageClientProcessorHook requestMessageClientProcessorHook;
+    @Setter
+    Executor userProcessorExecutor;
 
     @Override
     public Object handleRequest(BizContext bizCtx, SyncRequestMessage request) throws Exception {
@@ -96,5 +103,10 @@ public class SyncRequestMessageClientProcessor extends SyncUserProcessor<SyncReq
 
         ClientProcessorHooks clientProcessorHooks = brokerClient.getClientProcessorHooks();
         this.requestMessageClientProcessorHook = clientProcessorHooks.getRequestMessageClientProcessorHook();
+    }
+
+    @Override
+    public Executor getExecutor() {
+        return this.userProcessorExecutor;
     }
 }

@@ -19,7 +19,6 @@ package com.iohao.game.bolt.broker.server.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
@@ -29,7 +28,8 @@ import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectItemMessag
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -63,7 +63,8 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InnerModuleRequestCollectMessageBrokerProcessor extends AsyncUserProcessor<RequestCollectMessage> implements BrokerServerAware {
+public class InnerModuleRequestCollectMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestCollectMessage>
+        implements BrokerServerAware {
 
     @Setter
     BrokerServer brokerServer;
@@ -104,7 +105,7 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AsyncUserPr
     }
 
     private void print(ResponseCollectMessage responseCollectMessage) {
-        if (BrokerGlobalConfig.requestResponseLog) {
+        if (IoGameGlobalConfig.requestResponseLog) {
 
             if (this.brokerServer.getBrokerRunMode() != BrokerRunModeEnum.CLUSTER) {
                 return;

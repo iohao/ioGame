@@ -25,7 +25,7 @@ import com.alipay.remoting.rpc.RpcClient;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.commumication.*;
+import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
@@ -36,7 +36,8 @@ import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalM
 import com.iohao.game.action.skeleton.protocol.processor.ExtRequestMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientItemConnectMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.InnerModuleMessage;
@@ -52,6 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -86,7 +88,7 @@ public class BrokerClientItem implements CommunicationAggregationContext {
     /** ip:port */
     String address;
     /** 消息发送超时时间 */
-    int timeoutMillis = BrokerGlobalConfig.timeoutMillis;
+    int timeoutMillis = IoGameGlobalConfig.timeoutMillis;
     /** 业务框架 */
     BarSkeleton barSkeleton;
     /** broker 的 client */
@@ -245,6 +247,11 @@ public class BrokerClientItem implements CommunicationAggregationContext {
     }
 
     private void aware(Object obj) {
+        /*
+         * 目前 aware 系列由框架提供，
+         * 虽然这里可以开放给开发者来控制，但目前暂时不考虑开放
+         */
+
         if (obj instanceof BrokerClientItemAware aware) {
             aware.setBrokerClientItem(this);
         }
@@ -253,6 +260,10 @@ public class BrokerClientItem implements CommunicationAggregationContext {
             aware.setBrokerClient(brokerClient);
         }
 
+        if (obj instanceof UserProcessorExecutorAware aware) {
+            Executor executor = IoGameGlobalConfig.getExecutor(aware);
+            aware.setUserProcessorExecutor(executor);
+        }
     }
 
     private void internalOneway(Object responseObject) {
@@ -272,7 +283,7 @@ public class BrokerClientItem implements CommunicationAggregationContext {
         // 客户端服务器注册到游戏网关服
         BrokerClientModuleMessage brokerClientModuleMessage = this.brokerClient.getBrokerClientModuleMessage();
 
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("逻辑服发模块信息给 broker （游戏网关） : {}", brokerClientModuleMessage.toJsonPretty());
         }
 

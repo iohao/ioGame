@@ -18,7 +18,6 @@ package com.iohao.game.bolt.broker.client.external.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
@@ -26,7 +25,8 @@ import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMess
 import com.iohao.game.bolt.broker.client.external.session.UserChannelId;
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,12 +43,12 @@ import java.util.Objects;
  * @date 2022-01-18
  */
 @Slf4j
-public class ResponseMessageExternalProcessor extends AsyncUserProcessor<ResponseMessage> {
+public class ResponseMessageExternalProcessor extends AbstractAsyncUserProcessor<ResponseMessage> {
     final UserChannelId emptyUserChannelId = new UserChannelId("empty");
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, ResponseMessage responseMessage) {
-        if (BrokerGlobalConfig.isExternalLog()) {
+        if (IoGameGlobalConfig.isExternalLog()) {
             log.debug("接收来自网关的响应 {}", responseMessage);
         }
 

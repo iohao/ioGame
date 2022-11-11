@@ -18,23 +18,21 @@ package com.iohao.game.bolt.broker.client.external.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.protocol.processor.EndPointLogicServerMessage;
-import com.iohao.game.bolt.broker.client.external.session.UserSession;
 import com.iohao.game.bolt.broker.client.external.session.UserSessionAttr;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.MurmurHash3;
 import com.iohao.game.common.kit.StrKit;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author 渔民小镇
  * @date 2022-05-28
  */
-public class EndPointLogicServerMessageExternalProcessor extends AsyncUserProcessor<EndPointLogicServerMessage> {
+public class EndPointLogicServerMessageExternalProcessor extends AbstractAsyncUserProcessor<EndPointLogicServerMessage> {
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, EndPointLogicServerMessage message) {
 

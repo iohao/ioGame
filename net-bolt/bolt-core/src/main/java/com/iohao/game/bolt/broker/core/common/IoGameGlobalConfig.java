@@ -16,41 +16,53 @@
  */
 package com.iohao.game.bolt.broker.core.common;
 
+import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import lombok.experimental.UtilityClass;
 
+import java.util.Objects;
+import java.util.concurrent.Executor;
+
 /**
- * broker 全局默认配置
+ * ioGame 全局默认配置
  * <pre>
- *     请使用 IoGameGlobalConfig 来代替
- *
- *     BrokerGlobalConfig 有点表示网关全局配置的意思，名字不太理想
- *
- *     将在下个大版本中移除
+ *     当前大版本会兼容 BrokerGlobalConfig 配置，
+ *     下个大版本将会移除 BrokerGlobalConfig；
  * </pre>
  *
  * @author 渔民小镇
- * @date 2022-05-16
+ * @date 2022-11-11
  */
-@Deprecated
 @UtilityClass
-public class BrokerGlobalConfig {
+public class IoGameGlobalConfig {
     /** broker （游戏网关）默认端口 */
-    public int brokerPort = 10200;
+    public int brokerPort = BrokerGlobalConfig.brokerPort;
     /** bolt 消息发送超时时间 */
-    public int timeoutMillis = 3000;
+    public int timeoutMillis = BrokerGlobalConfig.timeoutMillis;
     /** 集群默认监听端口 Gossip listen port */
-    public int gossipListenPort = 30056;
+    public int gossipListenPort = BrokerGlobalConfig.gossipListenPort;
     /** true 开启日志 */
-    public boolean openLog = true;
+    public boolean openLog = BrokerGlobalConfig.openLog;
     /** true 开启请求响应相关日志 */
-    public boolean requestResponseLog = false;
+    public boolean requestResponseLog = BrokerGlobalConfig.requestResponseLog;
     /** true 开启对外服相关日志 */
-    public boolean externalLog = false;
+    public boolean externalLog = BrokerGlobalConfig.externalLog;
     /** true 开启广播相关日志 */
-    public boolean broadcastLog = false;
+    public boolean broadcastLog = BrokerGlobalConfig.broadcastLog;
 
     /** true 开启集群相关日志 */
-    public boolean brokerClusterLog = true;
+    public boolean brokerClusterLog = BrokerGlobalConfig.brokerClusterLog;
+    /** UserProcessor 构建 Executor 的策略 */
+    public UserProcessorExecutorStrategy userProcessorExecutorStrategy = new DefaultUserProcessorExecutorStrategy();
+
+    public Executor getExecutor(UserProcessorExecutorAware userProcessorExecutorAware) {
+
+        if (Objects.isNull(userProcessorExecutorStrategy)) {
+            // 不使用任何策略
+            return null;
+        }
+
+        return userProcessorExecutorStrategy.getExecutor(userProcessorExecutorAware);
+    }
 
     public boolean isExternalLog() {
         return openLog && externalLog;
@@ -59,5 +71,4 @@ public class BrokerGlobalConfig {
     public boolean isBrokerClusterLog() {
         return openLog && brokerClusterLog;
     }
-
 }

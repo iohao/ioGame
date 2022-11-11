@@ -20,7 +20,7 @@ import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.client.external.simple.ExternalBrokerClientStartup;
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import lombok.AccessLevel;
@@ -66,7 +66,7 @@ public final class ExternalServer {
         // channelFuture
         ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(ip, port)).sync();
 
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("external 启动游戏对外服 ! port: {}", port);
         }
 

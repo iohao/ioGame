@@ -18,7 +18,7 @@ package com.iohao.game.bolt.broker.client.external.bootstrap.initializer;
 
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalChannelInitializerCallback;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalJoinEnum;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -53,7 +53,7 @@ public class ExternalChannelInitializerCallbackFactory {
         // 连接方式
         ExternalChannelInitializerCallback channelInitializerCallback = supplier.get();
 
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("游戏对外服-启动方式 ==== {} ====", externalJoinEnum.getName());
         }
 
