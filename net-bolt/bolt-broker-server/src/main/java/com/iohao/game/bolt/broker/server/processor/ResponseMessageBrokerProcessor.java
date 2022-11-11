@@ -19,15 +19,15 @@ package com.iohao.game.bolt.broker.server.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
-import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.balanced.ExternalBrokerClientLoadBalanced;
+import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,13 +40,14 @@ import java.util.Objects;
  * @date 2022-05-14
  */
 @Slf4j
-public class ResponseMessageBrokerProcessor extends AsyncUserProcessor<ResponseMessage> implements BrokerServerAware {
+public class ResponseMessageBrokerProcessor extends AbstractAsyncUserProcessor<ResponseMessage>
+        implements BrokerServerAware {
     @Setter
     BrokerServer brokerServer;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, ResponseMessage responseMessage) {
-        if (BrokerGlobalConfig.requestResponseLog) {
+        if (IoGameGlobalConfig.requestResponseLog) {
             log.info("把逻辑服的响应转发到对外服 {}", responseMessage.toJsonPretty());
         }
 

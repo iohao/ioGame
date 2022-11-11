@@ -14,23 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.bolt.broker.client.processor.connection;
+package com.iohao.game.bolt.broker.core.common;
 
-import com.alipay.remoting.Connection;
-import com.alipay.remoting.ConnectionEventProcessor;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
+import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
+import lombok.AccessLevel;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.Executor;
+
 /**
+ * AsyncUserProcessor 父类
+ *
  * @author 渔民小镇
- * @date 2022-05-16
+ * @date 2022-11-10
  */
 @Slf4j
-public class ConnectFailedEventClientProcessor implements ConnectionEventProcessor {
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public abstract class AbstractAsyncUserProcessor<T> extends AsyncUserProcessor<T> implements UserProcessorExecutorAware {
+
+    Executor userProcessorExecutor;
+
     @Override
-    public void onEvent(String remoteAddress, Connection connection) {
-        if (IoGameGlobalConfig.openLog) {
-            log.info("ConnectFailed remoteAddress : {}", remoteAddress);
-        }
+    public Executor getExecutor() {
+        return userProcessorExecutor;
     }
 }

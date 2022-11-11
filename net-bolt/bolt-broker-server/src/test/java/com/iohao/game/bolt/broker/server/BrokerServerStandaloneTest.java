@@ -1,7 +1,7 @@
 package com.iohao.game.bolt.broker.server;
 
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +19,7 @@ public class BrokerServerStandaloneTest {
         // Broker Server （游戏网关服） 构建器
         BrokerServerBuilder brokerServerBuilder = BrokerServer.newBuilder()
                 // broker （游戏网关）默认端口 10200
-                .port(BrokerGlobalConfig.brokerPort)
+                .port(IoGameGlobalConfig.brokerPort)
                 ;
 
         // 构建游戏网关

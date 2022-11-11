@@ -18,8 +18,8 @@ package com.iohao.game.bolt.broker.server.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.protocol.processor.EndPointLogicServerMessage;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import lombok.Setter;
@@ -30,14 +30,15 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-28
  */
 @Slf4j
-public class EndPointLogicServerMessageBrokerProcessor extends AsyncUserProcessor<EndPointLogicServerMessage> implements BrokerServerAware {
+public class EndPointLogicServerMessageBrokerProcessor extends AbstractAsyncUserProcessor<EndPointLogicServerMessage>
+        implements BrokerServerAware {
     @Setter
     BrokerServer brokerServer;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, EndPointLogicServerMessage request) {
 
-        log.info("EndPointLogicServer {}", request);
+        log.debug("EndPointLogicServer {}", request);
 
         BrokerExternalKit.sendMessageToExternals(this.brokerServer, request);
     }

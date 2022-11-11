@@ -19,14 +19,14 @@ package com.iohao.game.bolt.broker.server.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
+import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
-import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
-import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +40,8 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-14
  */
 @Slf4j
-public class ChangeUserIdMessageBrokerProcessor extends AsyncUserProcessor<SettingUserIdMessage> implements BrokerServerAware {
+public class ChangeUserIdMessageBrokerProcessor extends AbstractAsyncUserProcessor<SettingUserIdMessage>
+        implements BrokerServerAware {
     @Setter
     BrokerServer brokerServer;
 

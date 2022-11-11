@@ -19,7 +19,7 @@ package com.iohao.game.bolt.broker.server.processor.connection;
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.exception.RemotingException;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.RequestBrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
@@ -55,7 +55,7 @@ public class ConnectionEventBrokerProcessor implements ConnectionEventProcessor,
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
-        if (BrokerGlobalConfig.openLog) {
+        if (IoGameGlobalConfig.openLog) {
             log.info("通知客户端发送模块信息 ConnectionEvent remoteAddress : {}", remoteAddress);
         }
 

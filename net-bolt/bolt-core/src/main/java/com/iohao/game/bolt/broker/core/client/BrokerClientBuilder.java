@@ -20,7 +20,7 @@ import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.ConnectionEventType;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.common.kit.NetworkKit;
@@ -95,7 +95,7 @@ public class BrokerClientBuilder {
     BrokerAddress brokerAddress;
 
     /** 消息发送超时时间 */
-    int timeoutMillis = BrokerGlobalConfig.timeoutMillis;
+    int timeoutMillis = IoGameGlobalConfig.timeoutMillis;
 
     /** bolt 业务处理器的钩子管理器 */
     ClientProcessorHooks clientProcessorHooks;

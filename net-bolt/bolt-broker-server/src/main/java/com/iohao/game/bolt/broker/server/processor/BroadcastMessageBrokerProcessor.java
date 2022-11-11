@@ -18,9 +18,9 @@ package com.iohao.game.bolt.broker.server.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import lombok.Setter;
@@ -33,15 +33,16 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-14
  */
 @Slf4j
-public class BroadcastMessageBrokerProcessor extends AsyncUserProcessor<BroadcastMessage> implements BrokerServerAware {
-    @Setter
-    BrokerServer brokerServer;
+@Setter
+public class BroadcastMessageBrokerProcessor extends AbstractAsyncUserProcessor<BroadcastMessage>
+        implements BrokerServerAware {
 
+    BrokerServer brokerServer;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BroadcastMessage broadcastMessage) {
 
-        if (BrokerGlobalConfig.broadcastLog) {
+        if (IoGameGlobalConfig.broadcastLog) {
             log.debug("Broadcast 网关 广播消息到对外服务器 {}", broadcastMessage);
         }
 

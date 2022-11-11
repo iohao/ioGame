@@ -18,10 +18,10 @@ package com.iohao.game.bolt.broker.client.external.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.protocol.processor.EndPointLogicServerMessage;
 import com.iohao.game.bolt.broker.client.external.session.UserSessionAttr;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.MurmurHash3;
 import com.iohao.game.common.kit.StrKit;
@@ -32,7 +32,7 @@ import java.util.List;
  * @author 渔民小镇
  * @date 2022-05-28
  */
-public class EndPointLogicServerMessageExternalProcessor extends AsyncUserProcessor<EndPointLogicServerMessage> {
+public class EndPointLogicServerMessageExternalProcessor extends AbstractAsyncUserProcessor<EndPointLogicServerMessage> {
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, EndPointLogicServerMessage message) {
 
@@ -46,12 +46,19 @@ public class EndPointLogicServerMessageExternalProcessor extends AsyncUserProces
         // 到对外服在转 hash32，以防之后需要这个逻辑服的id（string）
         int endPointLogicServerId = MurmurHash3.hash32(logicServerId);
 
+        // true 绑定逻辑服id，false 清除绑定的逻辑服id
+        boolean binding = message.isBinding();
+
         userList.stream()
                 .filter(UserSessions.me()::existUserSession)
                 .map(UserSessions.me()::getUserSession)
                 .forEach(userSession -> {
                     // 给用户绑定逻辑服，之后与该逻辑服有关的请求，都会分配给这个逻辑服来处理。
-                    userSession.attr(UserSessionAttr.endPointLogicServerId, endPointLogicServerId);
+                    if (binding) {
+                        userSession.attr(UserSessionAttr.endPointLogicServerId, endPointLogicServerId);
+                    } else {
+                        userSession.attr(UserSessionAttr.endPointLogicServerId, null);
+                    }
                 });
     }
 

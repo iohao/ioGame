@@ -23,7 +23,7 @@ import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.RequestBrokerClientModuleMessage;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -38,20 +38,21 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-16
  */
 @Slf4j
-public class RequestBrokerClientModuleMessageClientProcessor extends AsyncUserProcessor<RequestBrokerClientModuleMessage> implements BrokerClientItemAware {
+public class RequestBrokerClientModuleMessageClientProcessor extends AsyncUserProcessor<RequestBrokerClientModuleMessage>
+        implements BrokerClientItemAware {
     @Setter
     BrokerClientItem brokerClientItem;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestBrokerClientModuleMessage request) {
-        if (BrokerGlobalConfig.requestResponseLog) {
+        if (IoGameGlobalConfig.requestResponseLog) {
             log.info("bizCtx.getRemoteAddress() : {}", bizCtx.getRemoteAddress());
         }
 
         // 客户端服务器注册到游戏网关服
         brokerClientItem.registerToBroker();
 
-        if (BrokerGlobalConfig.requestResponseLog) {
+        if (IoGameGlobalConfig.requestResponseLog) {
             BrokerClient brokerClient = brokerClientItem.getBrokerClient();
             BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
             log.info("brokerClientItems : {}", brokerClientManager.countActiveItem());

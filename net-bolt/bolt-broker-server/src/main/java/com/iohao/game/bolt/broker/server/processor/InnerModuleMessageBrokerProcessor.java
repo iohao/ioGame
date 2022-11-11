@@ -19,12 +19,12 @@ package com.iohao.game.bolt.broker.server.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.InnerModuleMessage;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -45,7 +45,8 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-14
  */
 @Slf4j
-public class InnerModuleMessageBrokerProcessor extends AsyncUserProcessor<InnerModuleMessage> implements BrokerServerAware {
+public class InnerModuleMessageBrokerProcessor extends AbstractAsyncUserProcessor<InnerModuleMessage>
+        implements BrokerServerAware {
     @Setter
     BrokerServer brokerServer;
 
@@ -81,7 +82,7 @@ public class InnerModuleMessageBrokerProcessor extends AsyncUserProcessor<InnerM
             // 将响应数据给回请求方
             asyncCtx.sendResponse(responseMessage);
         } catch (RemotingException | InterruptedException e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
         }
     }
 

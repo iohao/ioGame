@@ -22,9 +22,10 @@ import com.alipay.remoting.config.Configs;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.commumication.*;
+import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
+import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import lombok.AccessLevel;
@@ -86,7 +87,7 @@ public class BrokerClient implements BrokerClientContext {
     BrokerClientModuleMessage brokerClientModuleMessage;
 
     /** 消息发送超时时间 */
-    int timeoutMillis = BrokerGlobalConfig.timeoutMillis;
+    int timeoutMillis = IoGameGlobalConfig.timeoutMillis;
 
     BrokerClientManager brokerClientManager;
 

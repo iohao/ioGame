@@ -194,13 +194,13 @@ public class BarSkeletonDoc {
 
     private void cmdDataClassRegionDevInfo() {
         // 这个方法主要是保存一下 cmd 路由对应的响应数据类型信息
-        skeletonList.parallelStream()
+        skeletonList.stream()
                 // 得到业务框架的 ActionCommandRegions
                 .map(BarSkeleton::getActionCommandRegions)
                 // 将 map.values 合并成一个 list，即将 ActionCommandRegions 中的 regionMap 的 value 转为 stream
-                .flatMap((Function<ActionCommandRegions, Stream<ActionCommandRegion>>) actionCommandRegions -> actionCommandRegions.getRegionMap().values().parallelStream())
+                .flatMap((Function<ActionCommandRegions, Stream<ActionCommandRegion>>) actionCommandRegions -> actionCommandRegions.getRegionMap().values().stream())
                 // 将 map.values 合并成一个 list，即将 ActionCommandRegion 中的 subActionCommandMap 的 value 转为 stream
-                .flatMap((Function<ActionCommandRegion, Stream<ActionCommand>>) actionCommandRegion -> actionCommandRegion.values().parallelStream())
+                .flatMap((Function<ActionCommandRegion, Stream<ActionCommand>>) actionCommandRegion -> actionCommandRegion.values().stream())
                 .forEach(actionCommand -> {
                     // 路由
                     CmdInfo cmdInfo = actionCommand.getCmdInfo();

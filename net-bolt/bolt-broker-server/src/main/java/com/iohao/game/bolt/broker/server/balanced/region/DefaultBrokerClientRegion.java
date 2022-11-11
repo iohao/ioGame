@@ -39,6 +39,13 @@ import java.util.*;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public class DefaultBrokerClientRegion implements BrokerClientRegion {
+    /**
+     * 模块信息代理，这里的模块指的是逻辑服信息
+     * <pre>
+     *     key : 逻辑服 id
+     *     value : 逻辑服代理
+     * </pre>
+     */
     @Getter
     final Map<Integer, BrokerClientProxy> boltClientProxyMap = new NonBlockingHashMap<>();
     final String tag;
@@ -52,15 +59,24 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
     @Override
     public BrokerClientProxy getBoltClientProxy(HeadMetadata headMetadata) {
         int endPointClientId = headMetadata.getEndPointClientId();
-        // 得到指定的逻辑服
-        if (endPointClientId != 0) {
-            BrokerClientProxy brokerClientProxy = boltClientProxyMap.get(endPointClientId);
-            if (Objects.isNull(brokerClientProxy)) {
-                log.error("指定访问的逻辑服不存在: " + endPointClientId);
-                return null;
-            }
 
-            return brokerClientProxy;
+        // 得到指定的逻辑服
+        if (endPointClientId != 0 && boltClientProxyMap.containsKey(endPointClientId)) {
+
+            /*
+             * 查看当前 endPointClientId 是否属于当前 Region
+             *
+             * 理论上需要保存一下所有"注册过"的游戏逻辑服id，
+             * 因为动态绑定逻辑服时，玩家绑定的逻辑服有可能关闭了或下线了，
+             * 这种情况应该返回 null ，这样可以通知对外服， 路由不存在，
+             * 但目前先不做这样的判断。
+             */
+
+            // 如果找到了就返回，没找到则使用继续往下找
+            BrokerClientProxy brokerClientProxy = this.boltClientProxyMap.get(endPointClientId);
+            if (Objects.nonNull(brokerClientProxy)) {
+                return brokerClientProxy;
+            }
         }
 
         if (Objects.isNull(this.elementSelector)) {
@@ -74,7 +90,7 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
     @Override
     public void add(BrokerClientProxy brokerClientProxy) {
         int id = brokerClientProxy.getIdHash();
-        boltClientProxyMap.put(id, brokerClientProxy);
+        this.boltClientProxyMap.put(id, brokerClientProxy);
         this.resetSelector();
     }
 

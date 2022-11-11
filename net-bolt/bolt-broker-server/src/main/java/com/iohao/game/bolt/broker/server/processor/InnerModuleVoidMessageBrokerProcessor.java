@@ -19,9 +19,9 @@ package com.iohao.game.bolt.broker.server.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.bolt.broker.core.message.InnerModuleVoidMessage;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -45,7 +45,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InnerModuleVoidMessageBrokerProcessor extends AsyncUserProcessor<InnerModuleVoidMessage> implements BrokerServerAware {
+public class InnerModuleVoidMessageBrokerProcessor extends AbstractAsyncUserProcessor<InnerModuleVoidMessage>
+        implements BrokerServerAware {
     @Setter
     BrokerServer brokerServer;
 
