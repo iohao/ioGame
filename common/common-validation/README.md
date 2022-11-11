@@ -51,7 +51,7 @@ public class JakartaServerApplication {
 }
 ```
 
- > 依赖jakarta.validation时，该步骤为非必须操作
+> 依赖jakarta.validation时，该步骤为非必须操作
 
 3. 对应实体类中的依赖更改为`jakarta.validation` 相关
 ``` java
@@ -84,18 +84,18 @@ public class LoginReq implements Serializable {
     <version>5.3.6.Final</version>
 </dependency>
 <dependency>
-    <groupId>javax.validation</groupId>
-    <artifactId>validation-api</artifactId>
+<groupId>javax.validation</groupId>
+<artifactId>validation-api</artifactId>
 </dependency>
 <dependency>
-    <groupId>javax.el</groupId>
-    <artifactId>javax.el-api</artifactId>
-    <version>3.0.0</version>
+<groupId>javax.el</groupId>
+<artifactId>javax.el-api</artifactId>
+<version>3.0.0</version>
 </dependency>
 <dependency>
-    <groupId>org.glassfish.web</groupId>
-    <artifactId>javax.el</artifactId>
-    <version>2.2.4</version>
+<groupId>org.glassfish.web</groupId>
+<artifactId>javax.el</artifactId>
+<version>2.2.4</version>
 </dependency>
 ```
 
