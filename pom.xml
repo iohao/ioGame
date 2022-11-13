@@ -58,7 +58,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.82.Final</netty.version>
+        <netty.version>4.1.85.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.5</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
@@ -77,7 +77,7 @@
         <!-- redis internal : https://www.oschina.net/p/redisson https://mvnrepository.com/artifact/org.redisson/redisson -->
         <redisson.version>3.17.6</redisson.version>
         <!-- json 解析器 : https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
-        <fastjson.version>2.0.14</fastjson.version>
+        <fastjson.version>2.0.18</fastjson.version>
 
         <!--  reflectasm 高性能的反射处理 https://www.oschina.net/p/reflectasm https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm  -->
         <reflectasm.version>1.11.9</reflectasm.version>
@@ -100,7 +100,7 @@
         https://mvnrepository.com/artifact/org.mapstruct/mapstruct
         https://mapstruct.org/documentation/reference-guide/
         -->
-        <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
+        <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
 
         <!-- temp spring boot https://mvnrepository.com/artifact/org.springframework/spring-core -->
         <spring.version>5.3.23</spring.version>
@@ -126,15 +126,15 @@
         https://github.com/jhunters/jprotobuf/
         https://mvnrepository.com/artifact/com.baidu/jprotobuf
         -->
-        <jprotobuf.version>2.4.15</jprotobuf.version>
+        <jprotobuf.version>2.4.17</jprotobuf.version>
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
-        <protobuf-java.version>3.21.6</protobuf-java.version>
+        <protobuf-java.version>3.21.9</protobuf-java.version>
 
         <!-- 后期整理需要移除的 -->
         <snakeyaml.version>1.32</snakeyaml.version>
         <!-- other 后期整理，需要从全局移动到局部模块中 -->
         <!-- Hutool是一个Java工具包 see https://www.hutool.cn/ https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
-        <hutool.version>5.8.7</hutool.version>
+        <hutool.version>5.8.9</hutool.version>
     </properties>
 
     <dependencies>
@@ -297,48 +297,6 @@
                 </executions>
             </plugin>
 
-            <!--
-                重复依赖检测，并解决冲突jar
-                mvnd enforcer:display-info
-                https://maven.apache.org/enforcer/maven-enforcer-plugin/index.html
-            -->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-enforcer-plugin</artifactId>-->
-            <!--                <version>3.0.0</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>enforce-versions</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>enforce</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <rules>-->
-            <!--                                <bannedPlugins>-->
-            <!--                                    &lt;!&ndash; will only display a warning but does not fail the build. &ndash;&gt;-->
-            <!--                                    <level>WARN</level>-->
-            <!--                                    <excludes>-->
-            <!--                                        <exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>-->
-            <!--                                    </excludes>-->
-            <!--                                    <message>Please consider using the maven-invoker-plugin-->
-            <!--                                        (http://maven.apache.org/plugins/maven-invoker-plugin/)!-->
-            <!--                                    </message>-->
-            <!--                                </bannedPlugins>-->
-            <!--                                <requireMavenVersion>-->
-            <!--                                    <version>2.0.6</version>-->
-            <!--                                </requireMavenVersion>-->
-            <!--                                <requireJavaVersion>-->
-            <!--                                    <version>1.5</version>-->
-            <!--                                </requireJavaVersion>-->
-            <!--                                <requireOS>-->
-            <!--                                    <family>unix</family>-->
-            <!--                                </requireOS>-->
-            <!--                            </rules>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
-
             <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -421,18 +379,6 @@
                             </dependency>
                         </dependencies>
                     </plugin>
-
-                    <!--                    <plugin>-->
-                    <!--                        <groupId>org.sonatype.plugins</groupId>-->
-                    <!--                        <artifactId>nexus-staging-maven-plugin</artifactId>-->
-                    <!--                        <version>1.6.3</version>-->
-                    <!--                        <extensions>true</extensions>-->
-                    <!--                        <configuration>-->
-                    <!--                            <serverId>snapshots</serverId>-->
-                    <!--                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
-                    <!--                            <autoReleaseAfterClose>true</autoReleaseAfterClose>-->
-                    <!--                        </configuration>-->
-                    <!--                    </plugin>-->
 
                     <!-- Javadoc -->
                     <plugin>
