@@ -31,7 +31,7 @@ import java.util.List;
  * @date 2022-03-08
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InOutManager {
+public final class InOutManager {
     /** true : 开放拦截 in */
     final boolean openIn;
     /** true : 开放拦截 out */

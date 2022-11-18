@@ -40,7 +40,7 @@ import java.util.stream.Stream;
  * @date 2022-05-15
  */
 @FieldDefaults(level = AccessLevel.PACKAGE)
-public class ActionCommandRegions {
+public final class ActionCommandRegions {
     private static final ActionCommand[][] EMPTY = new ActionCommand[0][0];
 
     /**

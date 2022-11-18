@@ -61,7 +61,7 @@ public final class BarSkeletonBuilder {
     /** 错误码 */
     final List<MsgExceptionInfo> msgExceptionInfoList = new ArrayList<>();
 
-    /** 命令执行器 */
+    /** 命令流程执行器 */
     ActionCommandFlowExecute actionCommandFlowExecute = DefaultActionCommandFlowExecute.me();
     /** action工厂 */
     @SuppressWarnings("unchecked")
@@ -185,12 +185,14 @@ public final class BarSkeletonBuilder {
     }
 
     private void extractedActionCommand(BarSkeleton barSkeleton) {
-        // 命令信息构建器
-        var actionCommandInfoBuilder = new ActionCommandInfoBuilder(setting)
+        // action 命令对象解析器
+        var actionCommandParser = new ActionCommandParser(setting)
+                // 根据 action 类列表，来构建 ActionCommand
                 .buildAction(this.actionControllerClazzList);
 
-        var actionCommandRegions = actionCommandInfoBuilder.getActionCommandRegions();
+        var actionCommandRegions = actionCommandParser.getActionCommandRegions();
 
+        // 将 ActionCommandRegions 命令域管理器，保存到业务框架中
         barSkeleton.setActionCommandRegions(actionCommandRegions);
     }
 

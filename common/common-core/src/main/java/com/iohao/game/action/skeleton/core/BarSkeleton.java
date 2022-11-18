@@ -44,7 +44,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Setter(AccessLevel.PACKAGE)
 @Getter(AccessLevel.PACKAGE)
-public class BarSkeleton {
+public final class BarSkeleton {
 
     /** handler array */
     final Handler[] handlers;

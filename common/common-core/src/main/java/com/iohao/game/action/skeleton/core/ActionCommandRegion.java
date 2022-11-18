@@ -40,7 +40,7 @@ import java.util.Map;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PACKAGE)
-public class ActionCommandRegion {
+public final class ActionCommandRegion {
     final int cmd;
     /** actionControllerClazz */
     Class<?> actionControllerClazz;
@@ -52,7 +52,7 @@ public class ActionCommandRegion {
      *     value: ActionCommand
      * </pre>
      */
-    NonBlockingHashMap<Integer, ActionCommand> subActionCommandMap = new NonBlockingHashMap<>();
+    Map<Integer, ActionCommand> subActionCommandMap = new NonBlockingHashMap<>();
 
     public ActionCommandRegion(int cmd) {
         this.cmd = cmd;

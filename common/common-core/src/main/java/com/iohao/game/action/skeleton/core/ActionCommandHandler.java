@@ -48,18 +48,16 @@ public final class ActionCommandHandler implements Handler {
         RequestMessage request = flowContext.getRequest();
         HeadMetadata headMetadata = request.getHeadMetadata();
 
+        // 得到路由信息
         int cmdMerge = headMetadata.getCmdMerge();
-        // 通过路由获取处理请求的 action
         var cmd = CmdKit.getCmd(cmdMerge);
         var subCmd = CmdKit.getSubCmd(cmdMerge);
 
-        /*
-         * 这里不做任何null判断了. 使用者们自行注意
-         * 根据客户端的请求信息,获取对应的命令对象来处理这个请求
-         */
+        // 得到业务框架
         var barSkeleton = flowContext.getBarSkeleton();
+        // 命令域 管理器
         var actionCommandRegions = barSkeleton.actionCommandRegions;
-        // 获取命令处理器
+        // 根据路由信息获取命令处理器
         var actionCommand = actionCommandRegions.getActionCommand(cmd, subCmd);
 
         flowContext.setActionCommand(actionCommand);

@@ -47,7 +47,7 @@ import java.util.function.Predicate;
 @Getter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BarSkeletonBuilderParamConfig {
+public final class BarSkeletonBuilderParamConfig {
     /** action controller class. class has @ActionController */
     final List<Class<?>> actionControllerClassList = new ArrayList<>();
     /** action send class. class has @DocActionSend */

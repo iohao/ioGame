@@ -27,7 +27,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class BarSkeletonSetting {
+public final class BarSkeletonSetting {
     /**
      * <pre>
      *     true: action 对象是 single.
@@ -91,4 +91,7 @@ public class BarSkeletonSetting {
      * </pre>
      */
     boolean validator = false;
+
+    BarSkeletonSetting() {
+    }
 }

@@ -36,7 +36,7 @@ import java.lang.annotation.Annotation;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DependencyInjectionPart {
+public final class DependencyInjectionPart {
 
     /** true 与第三方框架集成 */
     boolean injection;

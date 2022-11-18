@@ -38,24 +38,23 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * action命令对象的映射管理, 目前并没有做重复映射检测
+ * action 命令对象解析器，将 action 类下的业务方法解析为 actionCommand
  * <pre>
- *     实现方式是获取需要对外公开的 tcpActionController
- *     然后获取public void的方法,将这类型的方法封装成独立命令, 在与map进行一个简单的映射关系
+ *     解析后的 actionCommand 将存放到对应的 ActionCommandRegions 中
  * </pre>
  *
  * @author 渔民小镇
  * @date 2021-12-12
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class ActionCommandInfoBuilder {
+public final class ActionCommandParser {
     /** 命令域 管理器 */
     @Getter
     final ActionCommandRegions actionCommandRegions = new ActionCommandRegions();
 
     final BarSkeletonSetting setting;
 
-    ActionCommandInfoBuilder(BarSkeletonSetting setting) {
+    ActionCommandParser(BarSkeletonSetting setting) {
         this.setting = setting;
     }
 
@@ -69,7 +68,7 @@ public final class ActionCommandInfoBuilder {
      *
      * @param controllerList action 类列表
      */
-    ActionCommandInfoBuilder buildAction(List<Class<?>> controllerList) {
+    ActionCommandParser buildAction(List<Class<?>> controllerList) {
         // java source
         Map<String, JavaClassDocInfo> javaClassDocInfoMap = ActionCommandDocKit.getJavaClassDocInfoMap(controllerList);
 

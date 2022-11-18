@@ -28,7 +28,7 @@ import java.util.Map;
  * @date 2022-05-19
  */
 @Getter
-public class DevConfig {
+public final class DevConfig {
     /**
      * true 打印广播日志，默认不打印
      *
