@@ -43,8 +43,8 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2021-12-12
  */
-@Accessors(chain = true)
 @Setter
+@Accessors(chain = true)
 public final class BarSkeletonBuilder {
     /** BarSkeletonSetting */
     @Getter
@@ -67,7 +67,7 @@ public final class BarSkeletonBuilder {
     @SuppressWarnings("unchecked")
     ActionFactoryBean<Object> actionFactoryBean = DefaultActionFactoryBean.me();
     /** 框架执行完后, 最后需要做的事. 一般用于write数据到调用端端 */
-    ActionAfter actionAfter = new DefaultActionAfter();
+    ActionAfter actionAfter = DefaultActionAfter.me();
     /** 结果包装器 */
     ActionMethodResultWrap actionMethodResultWrap = DefaultActionMethodResultWrap.me();
     /** 异常处理 */

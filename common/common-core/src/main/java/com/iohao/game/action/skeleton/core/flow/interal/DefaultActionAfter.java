@@ -74,4 +74,17 @@ public final class DefaultActionAfter implements ActionAfter {
             return flowContext.option(FlowAttr.asyncContext);
         }
     }
+
+
+    private DefaultActionAfter() {
+    }
+
+    public static DefaultActionAfter me() {
+    	return Holder.ME;
+    }
+
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final DefaultActionAfter ME = new DefaultActionAfter();
+    }
 }

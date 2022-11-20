@@ -47,7 +47,7 @@ import java.util.stream.Stream;
  * @date 2021-12-12
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class ActionCommandParser {
+final class ActionCommandParser {
     /** 命令域 管理器 */
     @Getter
     final ActionCommandRegions actionCommandRegions = new ActionCommandRegions();
@@ -141,7 +141,7 @@ public final class ActionCommandParser {
 
         });
 
-        // 初始化 命令数组
+        // 内部将所有的 action 转换为 action 二维数组
         actionCommandRegions.initActionCommandArray(setting);
 
         return this;

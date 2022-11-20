@@ -28,7 +28,7 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import java.util.Objects;
 
 /**
- * pb 参数解析器
+ * 业务方法参数解析器
  *
  * @author 渔民小镇
  * @date 2022-01-12

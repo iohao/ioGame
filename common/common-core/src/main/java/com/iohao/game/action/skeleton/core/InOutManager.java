@@ -55,8 +55,6 @@ public final class InOutManager {
 
         this.openIn = openIn;
         this.openOut = openOut;
-
-
     }
 
     public void fuckIn(FlowContext flowContext) {
