@@ -36,11 +36,11 @@ import java.io.Serializable;
  * @author 渔民小镇
  * @date 2021-12-20
  */
-@ToString
 @Getter
 @Setter
-@FieldDefaults(level = AccessLevel.PROTECTED)
+@ToString
 @Accessors(chain = true)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract sealed class BarMessage implements Serializable, ToJson permits RequestMessage, ResponseMessage {
     @Serial
     private static final long serialVersionUID = 562068269463876111L;

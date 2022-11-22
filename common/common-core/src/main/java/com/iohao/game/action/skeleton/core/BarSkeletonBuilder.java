@@ -37,7 +37,8 @@ import java.util.Objects;
  * 骨架构建器
  * <pre>
  *     关于业务框架的构建器可以参考这里：
- *     https://www.yuque.com/iohao/game/qiiaq3
+ *
+ *     <a href="https://www.yuque.com/iohao/game/qiiaq3">文档-业务框架的构建器</a>
  * </pre>
  *
  * @author 渔民小镇
@@ -60,13 +61,14 @@ public final class BarSkeletonBuilder {
     final List<Class<?>> actionSendClazzList = new LinkedList<>();
     /** 错误码 */
     final List<MsgExceptionInfo> msgExceptionInfoList = new ArrayList<>();
-
-    /** 命令流程执行器 */
-    ActionCommandFlowExecute actionCommandFlowExecute = DefaultActionCommandFlowExecute.me();
+    /** 推送相关的文档 */
+    final ActionSendDocs actionSendDocs = new ActionSendDocs();
+    /** 错误码相关的文档 */
+    final ErrorCodeDocs errorCodeDocs = new ErrorCodeDocs();
     /** action工厂 */
     @SuppressWarnings("unchecked")
     ActionFactoryBean<Object> actionFactoryBean = DefaultActionFactoryBean.me();
-    /** 框架执行完后, 最后需要做的事. 一般用于write数据到调用端端 */
+    /** action 执行完后，最后需要做的事。 一般用于将数据发送到 Broker（游戏网关） */
     ActionAfter actionAfter = DefaultActionAfter.me();
     /** 结果包装器 */
     ActionMethodResultWrap actionMethodResultWrap = DefaultActionMethodResultWrap.me();
@@ -78,14 +80,8 @@ public final class BarSkeletonBuilder {
     ActionMethodParamParser actionMethodParamParser = DefaultActionMethodParamParser.me();
     /** 业务参数的编解码器 */
     DataCodec dataCodec = ProtoDataCodec.me();
-
     /** 响应对象的创建 */
     ResponseMessageCreate responseMessageCreate = DefaultResponseMessageCreate.me();
-    /** 推送相关的文档 */
-    ActionSendDocs actionSendDocs = new ActionSendDocs();
-    /** 错误码相关的文档 */
-    ErrorCodeDocs errorCodeDocs = new ErrorCodeDocs();
-
     /** 业务框架 flow 上下文 工厂 */
     FlowContextFactory flowContextFactory = FlowContext::new;
 
@@ -97,10 +93,13 @@ public final class BarSkeletonBuilder {
      */
     public BarSkeleton build() {
 
-        // 参数设置
-        var barSkeleton = this.createBarSkeleton()
-                // action command 命令执行器流程
-                .setActionCommandFlowExecute(this.actionCommandFlowExecute)
+        this.defaultSetting();
+
+        var handlers = new Handler[this.handlerList.size()];
+        this.handlerList.toArray(handlers);
+
+        // 业务框架参数设置
+        var barSkeleton = new BarSkeleton(handlers)
                 // action 工厂
                 .setActionFactoryBean(this.actionFactoryBean)
                 // ActionMethod Invoke 方法回调
@@ -113,7 +112,7 @@ public final class BarSkeletonBuilder {
                 .setActionMethodExceptionProcess(this.actionMethodExceptionProcess)
                 // ActionMethod 结果包装器
                 .setActionMethodResultWrap(this.actionMethodResultWrap)
-                // action after 对action最后的处理; 一般用于把结果 write 到调用端
+                // action after， action 执行完后，最后需要做的事。 一般用于将数据发送到 Broker（游戏网关）
                 .setActionAfter(this.actionAfter)
                 // 响应对象的创建
                 .setResponseMessageCreate(this.responseMessageCreate)
@@ -122,8 +121,7 @@ public final class BarSkeletonBuilder {
                 // 错误码相关的文档
                 .setErrorCodeDocs(this.errorCodeDocs)
                 // 业务框架 flow 上下文 工厂
-                .setFlowContextFactory(this.flowContextFactory)
-                ;
+                .setFlowContextFactory(this.flowContextFactory);
 
         // 构建推送相关的文档信息
         this.actionSendDocs.buildActionSendDoc(this.actionSendClazzList);
@@ -196,16 +194,10 @@ public final class BarSkeletonBuilder {
         barSkeleton.setActionCommandRegions(actionCommandRegions);
     }
 
-    private BarSkeleton createBarSkeleton() {
-
+    private void defaultSetting() {
         // 如果没有配置handler, 那么使用默认的
         if (this.handlerList.isEmpty()) {
             this.handlerList.add(new ActionCommandHandler());
         }
-
-        var handlers = new Handler[this.handlerList.size()];
-        this.handlerList.toArray(handlers);
-
-        return new BarSkeleton(handlers);
     }
 }

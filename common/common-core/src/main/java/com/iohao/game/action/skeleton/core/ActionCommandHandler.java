@@ -34,11 +34,8 @@ public final class ActionCommandHandler implements Handler {
         // 给 FlowContext 设置一些属性
         this.settingActionCommand(flowContext);
 
-        // 命令流程执行器
-        var barSkeleton = flowContext.getBarSkeleton();
-        var actionCommandFlowExecute = barSkeleton.getActionCommandFlowExecute();
-
-        actionCommandFlowExecute.execute(flowContext);
+        // actionCommand 命令流程执行器
+        DefaultActionCommandFlowExecute.me().execute(flowContext);
 
         return true;
     }

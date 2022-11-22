@@ -26,8 +26,7 @@ import com.iohao.game.action.skeleton.protocol.RequestMessage;
  * <pre>
  *     编排业务框架处理业务类的流程
  *
- *     文档
- *      https://www.yuque.com/iohao/game/gz4i3k
+ *     <a href="https://www.yuque.com/iohao/game/gz4i3k">文档-编排业务框架处理业务类的流程</a>
  * </pre>
  *
  * @author 渔民小镇

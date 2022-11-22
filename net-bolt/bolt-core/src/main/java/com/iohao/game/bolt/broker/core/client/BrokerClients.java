@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * 管理 BrokerClient
  * <pre>
- *     当然开发者也可以自己定义一个类来管理 BrokerClient，当然开发者也可以自己定义一个类来管理 BrokerClient
+ *     当然开发者也可以自己定义一个类来管理 BrokerClient
  *
  *     什么情况下需要管理 BrokerClient 呢?
  *     多服单进程时，建议这么管理。 框架是对每个逻辑服会创建一个 BrokerClient

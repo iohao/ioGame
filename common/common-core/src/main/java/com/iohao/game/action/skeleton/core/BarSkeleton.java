@@ -51,12 +51,9 @@ public final class BarSkeleton {
     /** 命令域 管理器 */
     @Getter
     ActionCommandRegions actionCommandRegions = new ActionCommandRegions();
-
     /** InOut 插件相关 */
     InOutManager inOutManager;
-    /** 命令执行器 */
-    ActionCommandFlowExecute actionCommandFlowExecute;
-    /** tcp action 对象创建工厂 */
+    /** action 对象创建工厂 */
     ActionFactoryBean<Object> actionFactoryBean;
     /** InvokeActionMethod */
     ActionMethodInvoke actionMethodInvoke;
@@ -70,7 +67,7 @@ public final class BarSkeleton {
     /** 结果包装器 */
     @Getter
     ActionMethodResultWrap actionMethodResultWrap;
-    /** 框架执行完后, 最后需要做的事. 一般用于write数据到客户端 */
+    /** action 执行完后，最后需要做的事。 一般用于将数据发送到 Broker（游戏网关） */
     ActionAfter actionAfter;
 
     /** 响应对象的创建 */
