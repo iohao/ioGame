@@ -72,7 +72,7 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
                 var param = methodParser.parseParam(request.getData(), paramInfo);
                 params[i] = param;
 
-                flowContext.option(FlowAttr.data, param);
+                flowContext.option(FlowAttr.actionBizParam, param);
 
                 // 如果开启了验证
                 if (paramInfo.isValidator()) {

@@ -38,8 +38,6 @@ public interface FlowAttr {
     FlowOption<BrokerClientContext> brokerClientContext = FlowOption.valueOf("brokerClientContext");
     /** bolt async 上下文 */
     FlowOption<AsyncContext> asyncContext = FlowOption.valueOf("asyncContext");
-    /** 请求参数的业务数据 */
-    FlowOption<Object> data = FlowOption.valueOf("data");
     /**
      * 业务参数的编解码器
      * <pre>
@@ -52,4 +50,16 @@ public interface FlowAttr {
     FlowOption<String> logicServerId = FlowOption.valueOf("logicServerId");
     /** 逻辑服 tag 类型 */
     FlowOption<String> logicServerTag = FlowOption.valueOf("logicServerTag");
+
+    /** action 中的业务参数 */
+    FlowOption<Object> actionBizParam = FlowOption.valueOf("actionBizParam");
+    /**
+     * 请求参数的业务数据
+     * <pre>
+     *     将在下个大版本中移除，请使用 FlowAttr.actionBizParam 代替。
+     *     该属性当前已经失效。
+     * </pre>
+     */
+    @Deprecated
+    FlowOption<Object> data = FlowOption.valueOf("data");
 }

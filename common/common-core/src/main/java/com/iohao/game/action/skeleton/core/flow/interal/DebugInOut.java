@@ -210,7 +210,7 @@ public final class DebugInOut implements ActionMethodInOut {
 
             paramMap.put("paramName", paramInfo.getName());
 
-            Object bizData = flowContext.option(FlowAttr.data);
+            Object bizData = flowContext.option(FlowAttr.actionBizParam);
 
             if (Objects.isNull(bizData)) {
                 bizData = "null";

@@ -1,5 +1,27 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-11-14
+v17.1.23
+#I6032U
+BrokerServerBuilder 游戏网关构建器中增加移除 UserProcessor 的方法
+
+#I60L94
+提供 UserProcessor 用户线程池设置策略。分离 IO 线程池与用户线程池，这样服务器可以在同一时间内处理更多的请求。
+
+框架提供 UserProcessorExecutorStrategy 接口，主要用于给 UserProcessor 构建 Executor 的策略，这样更具有灵活性；开发者可以根据自身业务来做定制。
+
+see IoGameGlobalConfig.userProcessorExecutorStrategy
+
+框架会在启动时，如果检测到 UserProcessor 实现了 UserProcessorExecutorAware 接口，就会触发一次。
+
+#I60R41
+修复动态绑定游戏逻辑服不能取消，不能路由到其他游戏逻辑服的问题
+
+#I60R3A
+废弃 BrokerGlobalConfig ，由 IoGameGlobalConfig 代替。
+当前大版本会兼容 BrokerGlobalConfig 配置，下个大版本将会移除 BrokerGlobalConfig；
+BrokerGlobalConfig 有点表示游戏网关全局配置的意思，名字不太理想。
+
 2022-11-08
 v17.1.22
 #I5YM30

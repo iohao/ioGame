@@ -90,6 +90,18 @@ public final class ActionCommandRegions {
     }
 
     /**
+     * 根据合并路由 cmdMerge 得到 ActionCommand
+     *
+     * @param cmdMerge 合并路由
+     * @return ActionCommand
+     */
+    public ActionCommand getActionCommand(int cmdMerge) {
+        var cmd = CmdKit.getCmd(cmdMerge);
+        var subCmd = CmdKit.getSubCmd(cmdMerge);
+        return this.getActionCommand(cmd, subCmd);
+    }
+
+    /**
      * 命令列表
      *
      * @return cmdMerge

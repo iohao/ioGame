@@ -16,10 +16,8 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.core.flow.ActionAfter;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
 
 /**
  * 默认的 action 命令流程执行器
@@ -36,9 +34,6 @@ public final class DefaultActionCommandFlowExecute implements ActionCommandFlowE
 
     @Override
     public void execute(final FlowContext flowContext) {
-        // 设置 flowContext 的一些属性
-        this.settingFlowContext(flowContext);
-
         // 业务框架
         BarSkeleton barSkeleton = flowContext.getBarSkeleton();
         // 命令对象
@@ -79,36 +74,6 @@ public final class DefaultActionCommandFlowExecute implements ActionCommandFlowE
         // 6 ---- fuck后 在调用控制器对应处理方法结束后, 执行inout的out.
         inOutManager.fuckOut(flowContext);
     }
-
-    private void settingFlowContext(FlowContext flowContext) {
-        // 请求参数
-        RequestMessage request = flowContext.getRequest();
-        // 业务框架
-        BarSkeleton barSkeleton = flowContext.getBarSkeleton();
-        // 元信息
-        HeadMetadata headMetadata = request.getHeadMetadata();
-        // 当前用户 id
-        long userId = headMetadata.getUserId();
-
-        // 创建响应对象
-        var responseMessageCreate = barSkeleton.getResponseMessageCreate();
-        // 响应
-        var responseMessage = responseMessageCreate.createResponseMessage();
-
-        request.settingCommonAttr(responseMessage);
-
-        flowContext
-                .setResponse(responseMessage)
-                .setUserId(userId);
-
-        // 参数解析器
-        var paramParser = barSkeleton.getActionMethodParamParser();
-        // 得到业务方法的参数列表 , 并验证
-        var params = paramParser.listParam(flowContext);
-        // 业务方法参数 save to flowContext
-        flowContext.setMethodParams(params);
-    }
-
 
     private DefaultActionCommandFlowExecute() {
 

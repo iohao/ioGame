@@ -28,23 +28,25 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class CmdKit {
     /**
-     * 从 merge 中获取 [高16位] 的数值
+     * 得到主路由
+     * 从 cmdMerge 中获取 [高16位] 的数值
      *
-     * @param merge 结果
+     * @param cmdMerge 合并路由 cmdMerge
      * @return [高16位] 的数值
      */
-    public int getCmd(int merge) {
-        return merge >> 16;
+    public int getCmd(int cmdMerge) {
+        return cmdMerge >> 16;
     }
 
     /**
-     * 从 merge 中获取 [低16位] 的数值
+     * 得到子路由
+     * 从 cmdMerge 中获取 [低16位] 的数值
      *
-     * @param merge 结果
+     * @param cmdMerge 合并路由 cmdMerge
      * @return [低16位] 的数值
      */
-    public int getSubCmd(int merge) {
-        return merge & 0xFFFF;
+    public int getSubCmd(int cmdMerge) {
+        return cmdMerge & 0xFFFF;
     }
 
     /**
@@ -57,8 +59,8 @@ public class CmdKit {
      *     那么 mergeCmd 对应的二进制是: [0000 0000 0000 0001] [0000 0000 0000 0001]
      * </pre>
      *
-     * @param cmd    主 cmd 存放于合并结果的高16位, 该参数不得大于 32767
-     * @param subCmd 子 存放于合并结果的低16位, 该参数不得大于 65535
+     * @param cmd    主路由存放于合并结果的高16位, 该参数不得大于 32767
+     * @param subCmd 子路由存放于合并结果的低16位, 该参数不得大于 65535
      * @return 合并的结果
      */
     public int merge(int cmd, int subCmd) {

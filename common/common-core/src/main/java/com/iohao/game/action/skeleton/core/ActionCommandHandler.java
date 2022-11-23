@@ -30,9 +30,8 @@ public final class ActionCommandHandler implements Handler {
 
     @Override
     public boolean handler(final FlowContext flowContext) {
-
-        // 给 FlowContext 设置一些属性
-        this.settingActionCommand(flowContext);
+        // 设置 flowContext 的一些属性
+        this.settingFlowContext(flowContext);
 
         // actionCommand 命令流程执行器
         DefaultActionCommandFlowExecute.me().execute(flowContext);
@@ -40,23 +39,38 @@ public final class ActionCommandHandler implements Handler {
         return true;
     }
 
-    private void settingActionCommand(final FlowContext flowContext) {
-
+    private void settingFlowContext(FlowContext flowContext) {
+        // 业务框架
+        BarSkeleton barSkeleton = flowContext.getBarSkeleton();
+        // 请求参数
         RequestMessage request = flowContext.getRequest();
+        // 元信息
         HeadMetadata headMetadata = request.getHeadMetadata();
 
         // 得到路由信息
         int cmdMerge = headMetadata.getCmdMerge();
-        var cmd = CmdKit.getCmd(cmdMerge);
-        var subCmd = CmdKit.getSubCmd(cmdMerge);
-
-        // 得到业务框架
-        var barSkeleton = flowContext.getBarSkeleton();
-        // 命令域 管理器
+        // 命令域管理器
         var actionCommandRegions = barSkeleton.actionCommandRegions;
-        // 根据路由信息获取命令处理器
-        var actionCommand = actionCommandRegions.getActionCommand(cmd, subCmd);
-
+        // 根据路由信息得到 ActionCommand
+        var actionCommand = actionCommandRegions.getActionCommand(cmdMerge);
         flowContext.setActionCommand(actionCommand);
+
+        // 响应对象创建器
+        var responseMessageCreate = barSkeleton.getResponseMessageCreate();
+        // 创建响应对象
+        var responseMessage = responseMessageCreate.createResponseMessage();
+        request.settingCommonAttr(responseMessage);
+        // 当前用户 id
+        long userId = headMetadata.getUserId();
+        flowContext
+                .setResponse(responseMessage)
+                .setUserId(userId);
+
+        // 参数解析器
+        var paramParser = barSkeleton.getActionMethodParamParser();
+        // 得到业务方法的参数列表，并验证
+        var params = paramParser.listParam(flowContext);
+        // 业务方法参数 save to flowContext
+        flowContext.setMethodParams(params);
     }
 }
