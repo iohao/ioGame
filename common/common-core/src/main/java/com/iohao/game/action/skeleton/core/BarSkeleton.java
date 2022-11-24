@@ -19,9 +19,6 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.doc.ActionSendDocs;
 import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
 import com.iohao.game.action.skeleton.core.flow.*;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -59,8 +56,6 @@ public final class BarSkeleton {
     ActionMethodInvoke actionMethodInvoke;
     /** 方法参数解析器 */
     ActionMethodParamParser actionMethodParamParser;
-    /** 业务参数的编解码器 */
-    DataCodec dataCodec;
     /** 异常处理 */
     @Getter
     ActionMethodExceptionProcess actionMethodExceptionProcess;
@@ -96,9 +91,8 @@ public final class BarSkeleton {
      * @param flowContext flowContext
      */
     public void handle(final FlowContext flowContext) {
-
+        // 将业务框架设置到 FlowContext 中
         flowContext.setBarSkeleton(this);
-        flowContext.option(FlowAttr.dataCodec, this.dataCodec);
 
         /*
          * 多次访问的变量，保存到局部变量，可以提升性能。

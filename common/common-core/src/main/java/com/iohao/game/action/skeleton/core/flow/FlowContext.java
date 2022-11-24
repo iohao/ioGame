@@ -16,10 +16,7 @@
  */
 package com.iohao.game.action.skeleton.core.flow;
 
-import com.iohao.game.action.skeleton.core.ActionCommand;
-import com.iohao.game.action.skeleton.core.BarMessageKit;
-import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.core.*;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.InvokeModuleContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
@@ -29,7 +26,6 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
-import com.iohao.game.common.kit.ProtoKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,7 +46,7 @@ import java.util.Map;
  *     扩展属性接口 {@link FlowAttr}
  *
  *     FlowContext 还支持开发者自定义，具体参考
- *     https://www.yuque.com/iohao/game/zz8xiz#sLySn
+ *     <a href="https://www.yuque.com/iohao/game/zz8xiz#sLySn">文档 - FlowContext</a>
  * </pre>
  *
  * @author 渔民小镇
@@ -106,7 +102,7 @@ public class FlowContext implements FlowOptionDynamic {
         byte[] attachmentData = this.request.getHeadMetadata().getAttachmentData();
 
         // 默认使用 pb 来序列化
-        return ProtoKit.parseProtoByte(attachmentData, clazz);
+        return DataCodecKit.decode(attachmentData, clazz);
     }
 
     /**

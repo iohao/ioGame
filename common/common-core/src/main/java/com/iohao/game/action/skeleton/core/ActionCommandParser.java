@@ -219,30 +219,16 @@ final class ActionCommandParser {
      *
      *     当前标准 action 映射规则
      *     1. 业务方法上必需添加注解 ActionMethod
-     *     2. 业务方法不能是：static、protected、private。
-     *     简单的说就是标准 action 应该是非静态的、访问权限不能是 protected、private。
+     *     2. 业务方法的访问权限必须是：public
+     *     3. 业务方法不能是：static
+     *     简单的说，标准的 action 应该是非静态的，且访问权限为 public 的。
      *
-     *     访问权限私有方法是 ioGame 业务框架中保留使用方式，
+     *     其他访问权限方法是 ioGame 业务框架中保留使用方式，
      *     比如将来有可能将声明为 private 的业务方法，即 private action ，
      *     私有 action 只能是内部逻辑服访问的。
      *     可以简单的理解为 private action 是给逻辑服之间提供访问的，
      *     这样开发者可以不需要在游戏对外服中做访问权限的控制。
      *     但这样可能会给开发者带来使用上的混淆，所以短期内不会提供这样的使用方式；
-     *
-     *
-     *     其他访问权限说明：
-     *     关于 public default 访问权限对 action 的限制说明。
-     *
-     *     首先 public action 对于每个开发者都是能看后明白的。
-     *
-     *     而 default action 权限，是个人比较喜欢的方式，因为这样的代码更简洁。
-     *     当然，这一点对于部分开发者来说，可能是难以接受的。
-     *     所以在做文档与示例时，基本都会明确是 public action 的使用方式。
-     *
-     *     至于个人为为比较喜欢 default 访问权限，
-     *     且在示例与文档中的 DTO、PB、业务数据载体等，基本都是没有在代码中做显示的权限的声明，
-     *     细心的朋友会发现，ioGame 中大部分的类是使用了 lombok 的 @FieldDefaults(level = AccessLevel.XXX) 注解的，
-     *     是因为这样可以使得代码更加的简洁，从而在阅读代码时也更加的清晰。
      * </pre>
      *
      * @param actionControllerClass 类
@@ -254,17 +240,10 @@ final class ActionCommandParser {
                 .stream(actionControllerClass.getDeclaredMethods())
                 // 得到在业务方法上添加了 ActionMethod 注解的方法对象
                 .filter(method -> Objects.nonNull(method.getAnnotation(ActionMethod.class)))
-                // 不能是静态方法的，访问权限不能是 protected private 的
-                .filter(method -> {
-                    int mod = method.getModifiers();
-
-                    if (Modifier.isStatic(mod) || Modifier.isProtected(mod) || Modifier.isPrivate(mod)) {
-                        // 将来这里可以做无效 action 警告日志，但现在不着急。
-                        return false;
-                    }
-
-                    return true;
-                });
+                // 访问权限必须是 public 的
+                .filter(method -> Modifier.isPublic(method.getModifiers()))
+                // 不能是静态方法的
+                .filter(method -> !Modifier.isStatic(method.getModifiers()));
     }
 
     private void checkParamResultInfo(ActionCommand actionCommand) {

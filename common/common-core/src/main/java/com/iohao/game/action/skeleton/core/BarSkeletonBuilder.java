@@ -21,8 +21,6 @@ import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.core.flow.*;
-import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
-import com.iohao.game.action.skeleton.core.flow.codec.ProtoDataCodec;
 import com.iohao.game.action.skeleton.core.flow.interal.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -78,8 +76,6 @@ public final class BarSkeletonBuilder {
     ActionMethodInvoke actionMethodInvoke = DefaultActionMethodInvoke.me();
     /** ActionMethod 方法参数解析器 */
     ActionMethodParamParser actionMethodParamParser = DefaultActionMethodParamParser.me();
-    /** 业务参数的编解码器 */
-    DataCodec dataCodec = ProtoDataCodec.me();
     /** 响应对象的创建 */
     ResponseMessageCreate responseMessageCreate = DefaultResponseMessageCreate.me();
     /** 业务框架 flow 上下文 工厂 */
@@ -106,8 +102,6 @@ public final class BarSkeletonBuilder {
                 .setActionMethodInvoke(this.actionMethodInvoke)
                 // ActionMethod 方法参数解析器
                 .setActionMethodParamParser(this.actionMethodParamParser)
-                // 业务参数的编解码器
-                .setDataCodec(this.dataCodec)
                 // ActionMethod 的异常处理
                 .setActionMethodExceptionProcess(this.actionMethodExceptionProcess)
                 // ActionMethod 结果包装器
@@ -132,7 +126,7 @@ public final class BarSkeletonBuilder {
         // 构建 actionMapping
         extractedActionCommand(barSkeleton);
 
-        // 日志打印
+        // 控制台打印
         PrintActionKit.print(barSkeleton, this.setting);
 
         BarSkeletonDoc.me().addSkeleton(barSkeleton);

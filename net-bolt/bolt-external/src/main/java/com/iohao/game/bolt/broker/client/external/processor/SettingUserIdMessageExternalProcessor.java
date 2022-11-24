@@ -52,7 +52,7 @@ public class SettingUserIdMessageExternalProcessor extends AbstractAsyncUserProc
         asyncCtx.sendResponse(response);
 
         if (IoGameGlobalConfig.isExternalLog()) {
-            log.debug("3 对外服设置用户id, userChannelId:{}, 真实userId:{}", userChannelId, userId);
+            log.info("3 对外服设置用户id, userChannelId:{}, 真实userId:{}", userChannelId, userId);
         }
     }
 

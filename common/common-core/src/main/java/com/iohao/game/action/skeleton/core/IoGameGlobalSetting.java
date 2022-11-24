@@ -14,30 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.action.skeleton.core.flow.codec;
+package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.common.kit.ProtoKit;
+import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
 
 /**
- * 业务参数的 proto 编解码器
+ * 业务框架全局配置
  *
  * @author 渔民小镇
- * @date 2022-05-18
+ * @date 2022-11-24
  */
-@SuppressWarnings("unchecked")
-public final class ProtoDataCodec implements DataCodec {
-    @Override
-    public byte[] encode(Object data) {
-        return ProtoKit.toBytes(data);
+public class IoGameGlobalSetting {
+
+    public void setDataCodec(DataCodec dataCodec) {
+        DataCodecKit.setDataCodec(dataCodec);
     }
 
-    @Override
-    public <T> T decode(byte[] data, Class<?> dataClass) {
-        return (T) ProtoKit.parseProtoByte(data, dataClass);
+    private IoGameGlobalSetting() {
     }
 
-    @Override
-    public String codecName() {
-        return "j-protobuf";
+    public static IoGameGlobalSetting me() {
+        return Holder.ME;
+    }
+
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final IoGameGlobalSetting ME = new IoGameGlobalSetting();
     }
 }

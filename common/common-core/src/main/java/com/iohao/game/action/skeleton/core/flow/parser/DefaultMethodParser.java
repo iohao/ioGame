@@ -17,7 +17,7 @@
 package com.iohao.game.action.skeleton.core.flow.parser;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
-import com.iohao.game.common.kit.ProtoKit;
+import com.iohao.game.action.skeleton.core.DataCodecKit;
 
 /**
  * 默认解析器
@@ -36,7 +36,7 @@ final class DefaultMethodParser implements MethodParser {
     @Override
     public Object parseParam(byte[] data, ActionCommand.ParamInfo paramInfo) {
         Class<?> actualTypeArgumentClazz = paramInfo.getActualTypeArgumentClazz();
-        return ProtoKit.parseProtoByte(data, actualTypeArgumentClazz);
+        return DataCodecKit.decode(data, actualTypeArgumentClazz);
     }
 
     @Override

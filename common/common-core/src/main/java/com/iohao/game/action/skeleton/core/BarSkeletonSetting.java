@@ -41,6 +41,8 @@ public final class BarSkeletonSetting {
     /** 子 action 的默认长度 (二级 subCmd; 子路由) */
     int subCmdMaxLen = 127;
 
+    /** false 关闭打印 */
+    boolean print = true;
     /** true action 日志打印 */
     boolean printAction = true;
     /** false action 日志打印短名称(类、参数名、返回值) */
@@ -49,20 +51,20 @@ public final class BarSkeletonSetting {
     boolean printInout = true;
     /** true handler 日志打印 */
     boolean printHandler = true;
+    /** true 编解码器日志打印 */
+    boolean printDataCodec = true;
 
     /** inOut 的 in 。 true 开启 */
     boolean openIn = true;
     /** inOut 的 out 。 true 开启 */
     boolean openOut = true;
-    /** 解析类型 */
-    ParseType parseType = ParseType.PB;
 
     /**
      * true : 业务参数开启 JSR380 验证规范
      *
      * <pre>
      *     关于启 JSR380 验证规范可以参考这里：
-     *     https://www.yuque.com/iohao/game/ghng6g
+     *     <a href="https://www.yuque.com/iohao/game/ghng6g">文档 - JSR380</a>
      * </pre>
      * <p>
      * 需要在你的项目 maven 中引入相关 pom

@@ -18,6 +18,7 @@ package com.iohao.game.action.skeleton.core;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
+import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
 import com.iohao.game.common.kit.StrKit;
 import lombok.experimental.UtilityClass;
 import org.fusesource.jansi.Ansi;
@@ -35,6 +36,11 @@ import java.util.*;
 class PrintActionKit {
 
     void print(BarSkeleton barSkeleton, BarSkeletonSetting setting) {
+
+        if (!setting.print) {
+            return;
+        }
+
         if (setting.isPrintHandler()) {
             var list = List.of(barSkeleton.getHandlers());
             PrintActionKit.printHandler(list);
@@ -45,9 +51,15 @@ class PrintActionKit {
             PrintActionKit.printInout(list);
         }
 
+        if (setting.isPrintDataCodec()) {
+            PrintActionKit.printDataCodec();
+        }
+
         if (setting.isPrintAction()) {
             PrintActionKit.printActionCommand(barSkeleton.actionCommandRegions.actionCommands, setting.printActionShort);
         }
+
+        System.out.println();
     }
 
     /**
@@ -58,7 +70,7 @@ class PrintActionKit {
     void printInout(List<ActionMethodInOut> inOuts) {
         String title = "@|CYAN ======================== InOut ========================= |@";
         System.out.println(Ansi.ansi().eraseScreen().render(title));
-        System.out.println("如果需要关闭日志, 查看 BarSkeletonBuilder#setting#printInout");
+        System.out.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printInout");
 
         for (ActionMethodInOut inOut : inOuts) {
             String info = String.format("@|BLUE %s |@", inOut.getClass());
@@ -74,7 +86,7 @@ class PrintActionKit {
 
         String title = "@|CYAN ======================== Handler ========================= |@";
         System.out.println(Ansi.ansi().eraseScreen().render(title));
-        System.out.println("如果需要关闭日志, 查看 BarSkeletonBuilder#setting#printHandler");
+        System.out.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printHandler");
 
         for (Handler handler : handlers) {
             String info = String.format("@|BLUE %s |@", handler.getClass());
@@ -82,21 +94,12 @@ class PrintActionKit {
         }
     }
 
-    /**
-     * 打印 action
-     *
-     * @param behaviors behaviors
-     */
-    void printActionCommand(ActionCommand[][] behaviors) {
-        printActionCommand(behaviors, false);
-    }
-
     void printActionCommand(ActionCommand[][] behaviors, boolean shortName) {
         String title = "@|CYAN ======================== action ========================= |@";
         System.out.println(Ansi.ansi().eraseScreen().render(title));
 
         String tip = """
-                如果需要关闭日志, 查看 BarSkeletonBuilder#setting#printAction;
+                如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printAction;
                 如需要打印（class method params return）完整的包名, 查看 BarSkeletonBuilder#setting#printActionShort;
                 """;
         System.out.print(tip);
@@ -178,8 +181,18 @@ class PrintActionKit {
                 System.out.println(Ansi.ansi().eraseScreen().render(text));
             }
         }
+    }
 
-        System.out.println();
+    void printDataCodec() {
+        DataCodec dataCodec = DataCodecKit.dataCodec;
+
+        String title = "@|CYAN ======================== 当前使用的编解码器 ========================= |@";
+        System.out.println(Ansi.ansi().eraseScreen().render(title));
+        System.out.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printDataCodec");
+
+        String info = String.format("@|BLUE %s - %s |@", dataCodec.codecName(), dataCodec.getClass().getName());
+        System.out.println(Ansi.ansi().eraseScreen().render(info));
+
     }
 
     private void shortName(Map<String, Object> params, boolean shortName) {

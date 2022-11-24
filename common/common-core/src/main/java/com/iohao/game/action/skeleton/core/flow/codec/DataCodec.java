@@ -16,16 +16,11 @@
  */
 package com.iohao.game.action.skeleton.core.flow.codec;
 
-import com.iohao.game.action.skeleton.core.flow.ActionMethodParamParser;
-import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 
 /**
  * 业务数据的编解码器
  * <pre>
- *     see {@link BarMessage#getData()}
- *     see {@link ActionMethodParamParser}
- *
  *     see {@link DataCodecKit}
  * </pre>
  *
@@ -34,9 +29,9 @@ import com.iohao.game.action.skeleton.core.DataCodecKit;
  */
 public interface DataCodec {
     /**
-     * 将业务参数编码成字节数组
+     * 将数据对象编码成字节数组
      *
-     * @param data 业务参数 (指的是请求端的请求参数)
+     * @param data 数据对象
      * @return bytes
      */
     byte[] encode(Object data);
@@ -44,10 +39,19 @@ public interface DataCodec {
     /**
      * 将字节数组解码成对象
      *
-     * @param data       业务参数 (指的是请求端的请求参数)
-     * @param paramClazz clazz
-     * @param <T>        t
+     * @param data      数据对象的字节
+     * @param dataClass 数据对象 class
+     * @param <T>       t
      * @return 业务参数
      */
-    <T> T decode(byte[] data, Class<?> paramClazz);
+    <T> T decode(byte[] data, Class<?> dataClass);
+
+    /**
+     * 编解码名
+     *
+     * @return 编解码名
+     */
+    default String codecName() {
+        return this.getClass().getSimpleName();
+    }
 }

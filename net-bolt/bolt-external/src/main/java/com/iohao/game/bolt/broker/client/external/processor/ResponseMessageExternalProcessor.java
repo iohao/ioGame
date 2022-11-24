@@ -49,7 +49,7 @@ public class ResponseMessageExternalProcessor extends AbstractAsyncUserProcessor
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, ResponseMessage responseMessage) {
         if (IoGameGlobalConfig.isExternalLog()) {
-            log.debug("接收来自网关的响应 {}", responseMessage);
+            log.info("接收来自网关的响应 {}", responseMessage);
         }
 
         ExternalMessage message = ExternalKit.convertExternalMessage(responseMessage);

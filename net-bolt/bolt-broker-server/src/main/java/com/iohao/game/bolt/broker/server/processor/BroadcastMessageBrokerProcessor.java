@@ -43,7 +43,7 @@ public class BroadcastMessageBrokerProcessor extends AbstractAsyncUserProcessor<
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BroadcastMessage broadcastMessage) {
 
         if (IoGameGlobalConfig.broadcastLog) {
-            log.debug("Broadcast 网关 广播消息到对外服务器 {}", broadcastMessage);
+            log.info("Broadcast 网关 广播消息到对外服务器 {}", broadcastMessage);
         }
 
         BrokerExternalKit.sendMessageToExternals(this.brokerServer, broadcastMessage);

@@ -20,7 +20,6 @@ import com.iohao.game.action.skeleton.core.action.ExampleActionCont;
 import com.iohao.game.action.skeleton.core.action.pojo.BeeApple;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -45,19 +44,17 @@ public class BarSkeletonTest {
         RequestMessage requestMessage = new RequestMessage();
         requestMessage.setHeadMetadata(headMetadata);
 
-
         // 模拟请求数据 （一般由前端传入）
         BeeApple beeApple = new BeeApple();
         beeApple.setContent("hello 塔姆!");
         beeApple.setId(101);
         // 把模拟请求的数据,放入请求对象中
-        DataCodec dataCodec = barSkeleton.getDataCodec();
-        byte[] data = dataCodec.encode(beeApple);
+
+        byte[] data = DataCodecKit.encode(beeApple);
         requestMessage.setData(data);
 
         var flowContext = new FlowContext()
                 .setRequest(requestMessage);
-
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
@@ -89,8 +86,7 @@ public class BarSkeletonTest {
         beeApple.setContent("hello 塔姆!");
         beeApple.setId(1010);
         // 把模拟请求的数据,放入请求对象中
-        DataCodec dataCodec = barSkeleton.getDataCodec();
-        byte[] data = dataCodec.encode(beeApple);
+        byte[] data = DataCodecKit.encode(beeApple);
         requestMessage.setData(data);
 
         var flowContext = new FlowContext()

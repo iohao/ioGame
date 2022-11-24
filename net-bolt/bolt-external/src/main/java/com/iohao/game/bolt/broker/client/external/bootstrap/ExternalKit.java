@@ -33,7 +33,6 @@ import com.iohao.game.bolt.broker.client.external.session.UserSessions;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
-import com.iohao.game.common.kit.ProtoKit;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.experimental.UtilityClass;
@@ -152,7 +151,7 @@ public class ExternalKit {
         byte[] data = null;
 
         if (object != null) {
-            data = ProtoKit.toBytes(object);
+            data = DataCodecKit.encode(object);
         }
 
         return ExternalKit.createExternalMessage(cmd, subCmd, data);

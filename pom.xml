@@ -75,9 +75,9 @@
         <lombok.version>1.18.24</lombok.version>
 
         <!-- redis internal : https://www.oschina.net/p/redisson https://mvnrepository.com/artifact/org.redisson/redisson -->
-        <redisson.version>3.17.6</redisson.version>
+        <redisson.version>3.17.7</redisson.version>
         <!-- json 解析器 : https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
-        <fastjson.version>2.0.18</fastjson.version>
+        <fastjson.version>2.0.19</fastjson.version>
 
         <!--  reflectasm 高性能的反射处理 https://www.oschina.net/p/reflectasm https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm  -->
         <reflectasm.version>1.11.9</reflectasm.version>
@@ -126,7 +126,7 @@
         https://github.com/jhunters/jprotobuf/
         https://mvnrepository.com/artifact/com.baidu/jprotobuf
         -->
-        <jprotobuf.version>2.4.17</jprotobuf.version>
+        <jprotobuf.version>2.4.18</jprotobuf.version>
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
         <protobuf-java.version>3.21.9</protobuf-java.version>
 

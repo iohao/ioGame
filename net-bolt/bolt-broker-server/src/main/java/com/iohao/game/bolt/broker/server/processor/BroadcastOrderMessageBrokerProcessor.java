@@ -49,7 +49,7 @@ public class BroadcastOrderMessageBrokerProcessor extends AsyncUserProcessor<Bro
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BroadcastOrderMessage broadcastOrderMessage) {
         if (IoGameGlobalConfig.broadcastLog) {
-            log.debug("Broadcast 网关 顺序的 广播消息到对外服务器 {}", broadcastOrderMessage);
+            log.info("Broadcast 网关 顺序的 广播消息到对外服务器 {}", broadcastOrderMessage);
         }
 
         BrokerExternalKit.sendMessageToExternals(this.brokerServer, broadcastOrderMessage);

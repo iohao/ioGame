@@ -18,9 +18,7 @@ package com.iohao.game.action.skeleton.core.flow.attr;
 
 import com.alipay.remoting.AsyncContext;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
-import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.BarSkeleton;
 
 /**
  * flow 上下文的一些扩展属性
@@ -38,14 +36,7 @@ public interface FlowAttr {
     FlowOption<BrokerClientContext> brokerClientContext = FlowOption.valueOf("brokerClientContext");
     /** bolt async 上下文 */
     FlowOption<AsyncContext> asyncContext = FlowOption.valueOf("asyncContext");
-    /**
-     * 业务参数的编解码器
-     * <pre>
-     *     在业务框架开始处理前，框架会赋值
-     *     see {@link BarSkeleton#handle(FlowContext)}
-     * </pre>
-     */
-    FlowOption<DataCodec> dataCodec = FlowOption.valueOf("dataCodec");
+
     /** 逻辑服 id */
     FlowOption<String> logicServerId = FlowOption.valueOf("logicServerId");
     /** 逻辑服 tag 类型 */

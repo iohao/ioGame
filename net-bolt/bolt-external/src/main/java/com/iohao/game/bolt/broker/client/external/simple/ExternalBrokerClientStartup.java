@@ -18,6 +18,7 @@ package com.iohao.game.bolt.broker.client.external.simple;
 
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.client.external.processor.*;
 import com.iohao.game.bolt.broker.client.processor.BrokerClusterMessageClientProcessor;
@@ -43,9 +44,9 @@ public class ExternalBrokerClientStartup extends AbstractBrokerClientStartup {
     @Override
     public BarSkeleton createBarSkeleton() {
         // 对外服不需要业务框架，这里给个空的
-        return BarSkeleton
-                .newBuilder()
-                .build();
+        BarSkeletonBuilder builder = BarSkeleton.newBuilder();
+        builder.getSetting().setPrint(false);
+        return builder.build();
     }
 
     @Override

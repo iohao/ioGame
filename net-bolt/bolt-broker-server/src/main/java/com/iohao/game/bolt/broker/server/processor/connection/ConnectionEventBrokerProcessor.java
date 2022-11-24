@@ -27,6 +27,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,7 +60,7 @@ public class ConnectionEventBrokerProcessor implements ConnectionEventProcessor,
             log.info("通知客户端发送模块信息 ConnectionEvent remoteAddress : {}", remoteAddress);
         }
 
-        Assert.assertNotNull(remoteAddress);
+        Objects.requireNonNull(remoteAddress);
         doCheckConnection(conn);
         this.remoteAddress = remoteAddress;
         this.connection = conn;
