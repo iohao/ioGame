@@ -150,7 +150,7 @@ public final class BarSkeletonBuilderParamConfig {
     }
 
     /**
-     * 扫描 action 推送类所在包
+     * 扫描 action 推送类所在包，用于推送文档的生成
      * <pre>
      *     内部会扫描当前 action 推送类的路径和子包路径下的所有类
      *     类需要是 @DocActionSends 注解的
