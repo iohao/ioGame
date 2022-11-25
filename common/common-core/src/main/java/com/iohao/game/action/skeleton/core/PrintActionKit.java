@@ -18,7 +18,7 @@ package com.iohao.game.action.skeleton.core;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
-import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
+import com.iohao.game.action.skeleton.core.codec.DataCodec;
 import com.iohao.game.common.kit.StrKit;
 import lombok.experimental.UtilityClass;
 import org.fusesource.jansi.Ansi;

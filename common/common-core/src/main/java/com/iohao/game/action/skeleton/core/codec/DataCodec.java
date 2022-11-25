@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.action.skeleton.core.flow.codec;
+package com.iohao.game.action.skeleton.core.codec;
 
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 

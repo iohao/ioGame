@@ -14,30 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.action.skeleton.core.flow.codec;
+package com.iohao.game.action.skeleton.core.codec;
 
-import com.iohao.game.common.kit.ProtoKit;
+import com.alibaba.fastjson2.JSON;
 
 /**
- * 业务参数的 proto 编解码器
+ * json 使用的 fastjson2
  *
  * @author 渔民小镇
- * @date 2022-05-18
+ * @date 2022-11-24
  */
-@SuppressWarnings("unchecked")
-public final class ProtoDataCodec implements DataCodec {
+public final class JsonDataCodec implements DataCodec {
     @Override
     public byte[] encode(Object data) {
-        return ProtoKit.toBytes(data);
+        return JSON.toJSONBytes(data);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T decode(byte[] data, Class<?> dataClass) {
-        return (T) ProtoKit.parseProtoByte(data, dataClass);
+        return (T) JSON.parseObject(data, dataClass);
     }
 
     @Override
     public String codecName() {
-        return "j-protobuf";
+        return "fastjson2";
     }
 }

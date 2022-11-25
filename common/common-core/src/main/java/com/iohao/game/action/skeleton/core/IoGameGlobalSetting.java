@@ -16,7 +16,7 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
+import com.iohao.game.action.skeleton.core.codec.DataCodec;
 
 /**
  * 业务框架全局配置
@@ -26,6 +26,10 @@ import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
  */
 public class IoGameGlobalSetting {
 
+    /**
+     * 设置
+     * @param dataCodec
+     */
     public void setDataCodec(DataCodec dataCodec) {
         DataCodecKit.setDataCodec(dataCodec);
     }

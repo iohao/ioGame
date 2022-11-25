@@ -16,8 +16,8 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.action.skeleton.core.flow.codec.DataCodec;
-import com.iohao.game.action.skeleton.core.flow.codec.ProtoDataCodec;
+import com.iohao.game.action.skeleton.core.codec.DataCodec;
+import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import lombok.experimental.UtilityClass;
 
 /**
