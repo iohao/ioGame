@@ -100,7 +100,7 @@ public final class BarSkeletonBuilderParamConfig {
      * <pre>
      *     因为名字的原因，会给开发者带来理解上的混乱，因此将方法标记为过时的，
      *     请使用 {@link BarSkeletonBuilderParamConfig#scanActionPackage(Class)} 方法代替，
-     *     将在下个版本中移除
+     *     将在下个大版本中移除
      * </pre>
      *
      * @param actionControllerClass actionControllerClass
@@ -137,7 +137,7 @@ public final class BarSkeletonBuilderParamConfig {
      * <pre>
      *     因为名字的原因，会给开发者带来理解上的混乱，因此将方法标记为过时的，
      *     请使用 {@link BarSkeletonBuilderParamConfig#scanActionSendPackage(Class)} 方法代替，
-     *     将在下个版本中移除
+     *     将在下个大版本中移除
      * </pre>
      *
      * @param actionSendClass actionSendClass
