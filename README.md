@@ -380,7 +380,7 @@ Result "com.iohao.game.example.benchmark.BarSkeletonBenchmark.handle1":
 
 **游戏网关集群**
 
-broker （游戏网关）可以**集群**的方式部署，集群无中心节点、自带负载均衡。ioGame 本身就包含服务注册，你不需要外接一个服务注册中心，如 Eureka，ZooKeeper 等（变相的节约服务器成本）。
+broker （游戏网关）支持**集群**的方式部署，集群的使用是简单的，集群无中心节点、自带负载均衡。ioGame 本身就包含服务注册，你不需要外接一个服务注册中心，如 Eureka，ZooKeeper 等（变相的节约服务器成本）。
 
 
 
