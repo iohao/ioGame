@@ -8,9 +8,11 @@
   <br>
   <strong>无中间件依赖、代码即文档、JSR380、断言 + 异常机制 = 更少的维护成本、开发成本</strong>
   <br>
-  <strong>同样的一套业务代码无需变更，可以同时支持多种协议：websocket、socket</strong>
+  <strong>同样的一套业务代码无需变更，可以支持多种协议：protobuf、json，并且可扩展</strong>
   <br>
-  <strong>轻量级、启动快、更节约、更简单、开箱即用、无配置文件、超高性能</strong>
+  <strong>同样一套业务代码无需变更，可以支持多种通信协议：websocket、socket</strong>
+  <br>
+  <strong>轻量级、启动快、更节约、简单、开箱即用、无配置文件、超高性能</strong>
   <br>
   <strong>近原生的快、业务框架平均每秒可以执行 1152 万次业务逻辑</strong>
   <br>
@@ -28,6 +30,7 @@
   <br>
   <strong>无 spring 强依赖</strong>
 </p>
+
 
 
 <p align="center">
@@ -268,6 +271,14 @@ ioGame 是轻量级的网络游戏服务器框架，在使用 ioGame 时，只�
 
 
 即使之前没有游戏编程的经验，也能参与到游戏编程中。如果你之前具备一些游戏开发或者 webMVC 相关的知识，则会更容易上手游戏服务器的开发。
+
+
+
+ioGame 可以做到同样的一套业务代码，无需开发者做代码的变更，就能同时支持多种通信协议：websocket、socket。简单点说，就是一个游戏服务端的项目，具有同时对接 socket 和 websocket 游戏客户端的能力。
+
+
+
+ioGame 可以做到同样的一套业务代码，无需开发者做代码的变更，就能[支持多种协议的切换](https://www.yuque.com/iohao/game/uq2zrltrc7to27bt)，如：protobuf、json。协议的切换是简单的，只需要一行代码。简单点说，如果开发者的项目之前使用的是 json 数据来传输的，以后想改用 protobuf 来传输，是不需要改变业务方法的。框架除了内置支持的 protobuf、json 协议外，开发者还可以对协议进行扩展。
 
 
 
