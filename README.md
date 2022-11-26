@@ -150,7 +150,7 @@ ioGame 依然遵循过去、现在、将来都不会有商业版本，所有功�
 
 ### **最小依赖**
 
-ioGame 已经上传到中央仓库
+ioGame 已经上传到中央仓库，如果无法下载最新的，请暂时注释阿里云代理。
 
 https://search.maven.org/search?q=a:bolt-run-one
 
