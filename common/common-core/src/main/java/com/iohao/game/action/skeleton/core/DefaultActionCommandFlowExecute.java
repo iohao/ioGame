@@ -36,8 +36,6 @@ public final class DefaultActionCommandFlowExecute implements ActionCommandFlowE
     public void execute(final FlowContext flowContext) {
         // 业务框架
         BarSkeleton barSkeleton = flowContext.getBarSkeleton();
-        // 命令对象
-        ActionCommand actionCommand = flowContext.getActionCommand();
         // inout manager
         InOutManager inOutManager = barSkeleton.inOutManager;
 
@@ -47,6 +45,9 @@ public final class DefaultActionCommandFlowExecute implements ActionCommandFlowE
         // true 表示没有错误码 。如果在这里有错误码，一般是业务参数验证得到的错误 （即开启了业务框架的验证）
         boolean notError = !flowContext.getResponse().hasError();
         if (notError) {
+            // action
+            ActionCommand actionCommand = flowContext.getActionCommand();
+
             // 2 ---- ActionController 工厂
             var factoryBean = barSkeleton.getActionFactoryBean();
             var controller = factoryBean.getBean(actionCommand);

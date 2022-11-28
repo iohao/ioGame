@@ -64,7 +64,7 @@ import java.util.Objects;
 public final class ActionCommand {
     /** cmdInfo */
     final CmdInfo cmdInfo;
-    /** 构造方法器 */
+    /** 构造方法访问器 */
     final ConstructorAccess<?> actionControllerConstructorAccess;
     /** 一个single控制器对象 */
     final Object actionController;

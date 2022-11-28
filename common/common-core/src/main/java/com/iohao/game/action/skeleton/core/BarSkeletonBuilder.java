@@ -51,7 +51,7 @@ public final class BarSkeletonBuilder {
 
     /** handler 列表 */
     final List<Handler> handlerList = new LinkedList<>();
-    /** inout 列表 */
+    /** ActionCommand 执行前与执行后的逻辑钩子类 */
     final List<ActionMethodInOut> inOutList = new LinkedList<>();
     /** action class */
     final List<Class<?>> actionControllerClazzList = new LinkedList<>();
@@ -89,8 +89,10 @@ public final class BarSkeletonBuilder {
      */
     public BarSkeleton build() {
 
+        // 设置一些默认值
         this.defaultSetting();
 
+        // 业务框架处理器
         var handlers = new Handler[this.handlerList.size()];
         this.handlerList.toArray(handlers);
 
@@ -121,10 +123,10 @@ public final class BarSkeletonBuilder {
         this.actionSendDocs.buildActionSendDoc(this.actionSendClazzList);
 
         // inout
-        extractedInOut(barSkeleton);
+        this.extractedInOut(barSkeleton);
 
         // 构建 actionMapping
-        extractedActionCommand(barSkeleton);
+        this.extractedActionCommand(barSkeleton);
 
         // 控制台打印
         PrintActionKit.print(barSkeleton, this.setting);

@@ -39,8 +39,8 @@ public final class DefaultActionMethodInvoke implements ActionMethodInvoke {
         // 方法访问器
         var actionMethodAccess = actionCommand.getActionMethodAccess();
 
-        // 方法声明了异常的处理方式
         try {
+            // 调用开发者在 action 类中编写的业务方法，即 action
             return actionMethodAccess.invoke(controller, actionMethodIndex, params);
         } catch (Throwable e) {
             // true 业务方法有异常
