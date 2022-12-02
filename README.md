@@ -127,22 +127,33 @@ ioGame 依然遵循过去、现在、将来都不会有商业版本，所有功�
 
 <br>
 
-### 源码与示例地址
+### 源码、示例、效率
 
-|                                                              | gitee                                                      | github                                                      |
-| ------------------------------------------------------------ | ---------------------------------------------------------- | ----------------------------------------------------------- |
-| 源码地址                                                     | [ioGame 网络游戏框架-源码](https://gitee.com/iohao/iogame) | [ioGame 网络游戏框架-源码](https://github.com/iohao/iogame) |
-| 示例地址                                                     | [ioGame 示例集合](https://gitee.com/iohao/iogame-example)  | [ioGame 示例集合](https://github.com/iohao/iogame-example)  |
-|                                                              |                                                            |                                                             |
-| [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、ks8）等介绍      |                                                             |
-| [技术栈推荐与其它参考文档](https://www.yuque.com/iohao/game/swt3ls) | 游戏开发的技术栈建议，大家可以参考一下。                   |                                                             |
+|          | github                                                      | gitee                                                      |
+| -------- | ----------------------------------------------------------- | ---------------------------------------------------------- |
+| 源码地址 | [ioGame 网络游戏框架-源码](https://github.com/iohao/iogame) | [ioGame 网络游戏框架-源码](https://gitee.com/iohao/iogame) |
+| 示例地址 | [ioGame 示例集合](https://github.com/iohao/iogame-example)  | [ioGame 示例集合](https://gitee.com/iohao/iogame-example)  |
 
 
 
-| 热心市民提供的游戏前端连接示例代码                           |                                  |
+**游戏前端示例**
+
+|                                                              |                                  |
 | ------------------------------------------------------------ | -------------------------------- |
 | [u3d 连接示例文档](https://www.yuque.com/iohao/game/syv5mm)  | 已经与 ioGame 的综合示例联调成功 |
 | [cocosCreator 连接示例文档](https://www.yuque.com/iohao/game/ua4afq) | 已经与 ioGame 的综合示例联调成功 |
+
+**效率**
+
+|                                                              |                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [idea-ioGame-插件](https://www.yuque.com/iohao/game/aw9a0eic6auwing1) | 通过该 idea 插件，可以进一步提高生产力，减少工作量。         |
+| [ioGame 快速理解篇](https://www.yuque.com/iohao/game/le48p1go9gkdqgih) | 快速掌握 ioGame 的概念                                       |
+| [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、ks8）等介绍        |
+| [技术栈推荐与其它参考文档](https://www.yuque.com/iohao/game/swt3ls) | 游戏开发的技术栈建议，大家可以参考一下。                     |
+| [更多游戏服务器框架推荐](https://www.yuque.com/iohao/game/ytrfic) | 如果 ioGame 不能很好的满足你的需要，请别担心，这里还有更多的 java 游戏服务器框架推荐给你。 |
+
+
 
 ---
 

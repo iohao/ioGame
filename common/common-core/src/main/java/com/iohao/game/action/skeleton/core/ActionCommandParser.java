@@ -218,10 +218,12 @@ final class ActionCommandParser {
      *     术语解释：在 action 类中提供的业务方法通常称为 action
      *
      *     当前标准 action 映射规则
-     *     1. 业务方法上必需添加注解 ActionMethod
+     *     1. 业务方法上添加注解 ActionMethod
      *     2. 业务方法的访问权限必须是：public
      *     3. 业务方法不能是：static
-     *     简单的说，标准的 action 应该是非静态的，且访问权限为 public 的。
+     *     4. 业务方法需要是在 action 类中声明的方法
+     *     简单的说，标准的 action 是非静态的，且访问权限为 public 的方法。
+     *     术语说明：在 action 类中提供的业务方法通常称为 action。
      *
      *     其他访问权限方法是 ioGame 业务框架中保留使用方式，
      *     比如将来有可能将声明为 private 的业务方法，即 private action ，
