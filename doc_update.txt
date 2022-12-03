@@ -1,5 +1,32 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-11-29
+v17.1.25 https://www.yuque.com/iohao/game/ab15oe#VghQ6
+
+ActionCommandInfoBuilder 改名为 ActionCommandParser 命令解析器
+将业务框架中的部分类设置为 final 权限
+废弃动态属性 FlowAttr.data ，由 FlowAttr.actionBizParam 代替
+
+#I63L7V BarSkeletonBuilderParamConfig 类的方法名变更
+addActionController 标记为废弃，请使用 scanActionPackage。
+addActionSend 标记为废弃，请使用 scanActionSendPackage。
+
+因为 addActionController 、addActionSend 的方法名，会给部分开发者带来混淆。这导致部分开发者在使用时 addActionController 方法时，会多次添加 action 类。实际上只需要随意配置一个 action 类就可以了，即使有一万个action。
+
+#I63L89 标准 action 规则
+1. 业务方法上添加注解 ActionMethod
+2. 业务方法的访问权限必须是：public
+3. 业务方法不能是：static
+4. 业务方法需要是在 action 类中声明的方法
+简单的说，标准的 action 是非静态的，且访问权限为 public 的方法。
+术语说明：在 action 类中提供的业务方法通常称为 action
+
+#I6307A 支持多种协议：protobuf、json，并支持可扩展
+现在 ioGame 支持同样的一套业务代码，无需开发者做代码的变更，就能支持多种协议的切换，如：protobuf、json。协议的切换是简单的，只需要一行代码。
+
+简单点说，如果开发者的项目之前使用的是 json 数据来传输的，以后想改用 protobuf 来传输，是不需要改变业务方法的。框架除了内置支持的 protobuf、json 协议外，开发者还可以对协议进行扩展。
+
+
 2022-11-14
 v17.1.23
 #I6032U
