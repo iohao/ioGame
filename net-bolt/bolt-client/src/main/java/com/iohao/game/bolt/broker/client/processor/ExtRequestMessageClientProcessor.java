@@ -18,15 +18,14 @@ package com.iohao.game.bolt.broker.client.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.exception.RemotingException;
 import com.iohao.game.action.skeleton.protocol.processor.ExtRequestMessage;
 import com.iohao.game.action.skeleton.protocol.processor.ExtResponseMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.ext.ExtRegion;
 import com.iohao.game.bolt.broker.core.ext.ExtRegionContext;
 import com.iohao.game.bolt.broker.core.ext.ExtRegions;
-import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,8 +61,7 @@ public class ExtRequestMessageClientProcessor extends AbstractAsyncUserProcessor
             return;
         }
 
-        ExtRegionContext extRegionContext = new ExtRegionContext();
-        extRegionContext
+        ExtRegionContext extRegionContext = new ExtRegionContext()
                 .setBrokerClient(this.brokerClient)
                 .setRequest(request);
 
@@ -74,13 +72,11 @@ public class ExtRequestMessageClientProcessor extends AbstractAsyncUserProcessor
         }
 
         // 响应数据给来源端
-        responseMessage
-                .setSourceClientId(sourceClientId)
-        ;
+        responseMessage.setSourceClientId(sourceClientId);
 
         try {
             brokerClient.oneway(responseMessage);
-        } catch (RemotingException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
 

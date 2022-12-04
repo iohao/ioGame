@@ -19,8 +19,10 @@ package com.iohao.game.bolt.broker.client.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.bolt.broker.client.action.skeleton.BoltChannelContext;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
@@ -72,12 +74,13 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
                 .setRequest(request);
 
         // 动态属性添加
-        flowContext.option(FlowAttr.asyncContext, asyncCtx);
+        ChannelContext channelContext = new BoltChannelContext(asyncCtx);
+        flowContext.option(FlowAttr.channelContext, channelContext);
         flowContext.option(FlowAttr.brokerClientContext, brokerClient);
         flowContext.option(FlowAttr.logicServerId, brokerClient.getId());
         flowContext.option(FlowAttr.logicServerTag, brokerClient.getTag());
 
-
+        // 执行业务框架
         this.requestMessageClientProcessorHook.processLogic(barSkeleton, flowContext);
     }
 

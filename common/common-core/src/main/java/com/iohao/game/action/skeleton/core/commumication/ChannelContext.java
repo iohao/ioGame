@@ -16,37 +16,21 @@
  */
 package com.iohao.game.action.skeleton.core.commumication;
 
-import com.iohao.game.action.skeleton.protocol.processor.ExtRequestMessage;
-
 /**
- * 通讯方式之一 用于各服务器之前的 processor 通信
+ * 通信通道接口
  * <pre>
- *     各服务器指的是
- *          对外服、游戏网关、游戏逻辑服
- *
- *      用于 bolt 扩展 processor，这个种扩展方式是自由度是最大的
- *      但需要开发者自己编写 AsyncUserProcessor 来处理这种消息
- *
- *      实际内部是调用的是 RpcClient#oneway(Url, Object) 方法，所以这个接口是用来区分通讯类型
+ *     用于对 bolt AsyncContext、netty Channel 的包装，这样可以使得业务框架与网络通信框架解耦。
+ *     为将来 ioGame 实现绳量级架构的使用做准备，也为将来实现一套更符合游戏的网络通信框架做预留准备。
  * </pre>
  *
  * @author 渔民小镇
- * @date 2022-05-28
+ * @date 2022-12-04
  */
-public interface ProcessorContext {
+public interface ChannelContext {
     /**
-     * oneway 异步调用
+     * 发送响应给请求端
      *
-     * @param message message
+     * @param responseObject 响应对象
      */
-    void invokeOneway(Object message);
-
-    /**
-     * oneway 异步调用
-     *
-     * @param message message
-     */
-    void invokeOneway(ExtRequestMessage message);
-
-
+    void sendResponse(Object responseObject);
 }

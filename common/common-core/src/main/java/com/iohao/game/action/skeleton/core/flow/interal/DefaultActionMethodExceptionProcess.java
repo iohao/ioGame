@@ -41,18 +41,4 @@ public final class DefaultActionMethodExceptionProcess implements ActionMethodEx
 
         return new MsgException(ActionErrorEnum.systemOtherErrCode);
     }
-
-
-    private DefaultActionMethodExceptionProcess() {
-
-    }
-
-    public static DefaultActionMethodExceptionProcess me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final DefaultActionMethodExceptionProcess ME = new DefaultActionMethodExceptionProcess();
-    }
 }

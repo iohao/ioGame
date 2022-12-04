@@ -75,18 +75,4 @@ public final class DefaultActionMethodResultWrap implements ActionMethodResultWr
         // 业务方法返回值
         responseMessage.setData(methodResult);
     }
-
-
-    private DefaultActionMethodResultWrap() {
-
-    }
-
-    public static DefaultActionMethodResultWrap me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final DefaultActionMethodResultWrap ME = new DefaultActionMethodResultWrap();
-    }
 }

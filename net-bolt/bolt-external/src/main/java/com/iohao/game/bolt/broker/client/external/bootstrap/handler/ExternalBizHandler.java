@@ -68,7 +68,7 @@ public class ExternalBizHandler extends SimpleChannelInboundHandler<ExternalMess
         try {
             // 由内部逻辑服转发用户请求到游戏网关，在由网关转到具体的业务逻辑服
             ExternalKit.requestGateway(ctx, requestMessage);
-        } catch (RemotingException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }

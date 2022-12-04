@@ -16,14 +16,13 @@
  */
 package com.iohao.game.action.skeleton.core.flow.interal;
 
-import com.alipay.remoting.AsyncContext;
-import com.alipay.remoting.rpc.RpcCommandType;
 import com.iohao.game.action.skeleton.core.ActionCommand;
+import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
+import com.iohao.game.action.skeleton.core.flow.ActionAfter;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.action.skeleton.core.flow.ActionAfter;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
@@ -36,19 +35,22 @@ import java.util.Objects;
  */
 @Slf4j
 public final class DefaultActionAfter implements ActionAfter {
+    /** rpc oneway request */
+    static final byte REQUEST_ONEWAY = (byte) 0x02;
+
     @Override
     public void execute(final FlowContext flowContext) {
         final ResponseMessage response = flowContext.getResponse();
 
-        AsyncContext asyncCtx = getAsyncContext(flowContext);
+        ChannelContext channelContext = getChannelContext(flowContext);
 
-        if (Objects.isNull(asyncCtx)) {
+        if (Objects.isNull(channelContext)) {
             return;
         }
 
         // 有错误就响应给调用方
         if (response.hasError()) {
-            asyncCtx.sendResponse(response);
+            channelContext.sendResponse(response);
             return;
         }
 
@@ -59,32 +61,19 @@ public final class DefaultActionAfter implements ActionAfter {
         }
 
         // 将数据回传给调用方
-        asyncCtx.sendResponse(response);
+        channelContext.sendResponse(response);
     }
 
-    private AsyncContext getAsyncContext(FlowContext flowContext) {
+    private ChannelContext getChannelContext(FlowContext flowContext) {
         ResponseMessage response = flowContext.getResponse();
         HeadMetadata headMetadata = response.getHeadMetadata();
 
         byte rpcCommandType = headMetadata.getRpcCommandType();
 
-        if (rpcCommandType == RpcCommandType.REQUEST_ONEWAY) {
+        if (rpcCommandType == REQUEST_ONEWAY) {
             return flowContext.option(FlowAttr.brokerClientContext);
         } else {
-            return flowContext.option(FlowAttr.asyncContext);
+            return flowContext.option(FlowAttr.channelContext);
         }
-    }
-
-
-    private DefaultActionAfter() {
-    }
-
-    public static DefaultActionAfter me() {
-    	return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final DefaultActionAfter ME = new DefaultActionAfter();
     }
 }

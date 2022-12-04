@@ -37,18 +37,4 @@ public final class DefaultActionFactoryBean<T> implements ActionFactoryBean<T> {
 
         return (T) actionCommand.getActionControllerConstructorAccess().newInstance();
     }
-
-
-    private DefaultActionFactoryBean() {
-
-    }
-
-    public static DefaultActionFactoryBean me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final DefaultActionFactoryBean ME = new DefaultActionFactoryBean();
-    }
 }

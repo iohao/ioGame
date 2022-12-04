@@ -96,13 +96,4 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
             response.setResponseStatus(ActionErrorEnum.validateErrCode.getCode());
         }
     }
-
-    public static DefaultActionMethodParamParser me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final DefaultActionMethodParamParser ME = new DefaultActionMethodParamParser();
-    }
 }

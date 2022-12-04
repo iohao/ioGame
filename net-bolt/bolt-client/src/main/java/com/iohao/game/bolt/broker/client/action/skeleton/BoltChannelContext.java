@@ -6,28 +6,26 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License..
+ * limitations under the License.
  */
-package com.iohao.game.action.skeleton.core.flow.interal;
+package com.iohao.game.bolt.broker.client.action.skeleton;
 
-import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.action.skeleton.core.flow.ResponseMessageCreate;
+import com.alipay.remoting.AsyncContext;
+import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 
 /**
- * 创建响应对象
- *
  * @author 渔民小镇
- * @date 2022-01-16
+ * @date 2022-12-04
  */
-public final class DefaultResponseMessageCreate implements ResponseMessageCreate {
+public record BoltChannelContext(AsyncContext asyncContext) implements ChannelContext {
     @Override
-    public ResponseMessage createResponseMessage() {
-        return new ResponseMessage();
+    public void sendResponse(Object responseObject) {
+        this.asyncContext.sendResponse(responseObject);
     }
 }

@@ -16,10 +16,8 @@
  */
 package com.iohao.game.widget.light.protobuf;
 
-import cn.hutool.system.SystemUtil;
 import com.iohao.game.widget.light.protobuf.pojo.TempProtoFile;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 
 /**
  * @author 渔民小镇
@@ -29,10 +27,6 @@ import org.junit.Test;
 public class ProtoJavaTest {
 
     public void name() {
-
-        if (!SystemUtil.getOsInfo().isMac()) {
-            return;
-        }
 
         // 源码目录
         String protoSourcePath = "/Users/join/gitme/iogame/widget/light-jprotobuf/src/test/java/com/iohao/game/widget/light/protobuf/pojo";

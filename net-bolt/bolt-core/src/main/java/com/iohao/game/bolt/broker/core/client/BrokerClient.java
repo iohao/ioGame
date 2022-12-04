@@ -141,7 +141,7 @@ public class BrokerClient implements BrokerClientContext {
     }
 
     @Override
-    public void oneway(final Object request) throws RemotingException {
+    public void oneway(final Object request) throws Exception {
         BrokerClientItem nextClient = next();
         nextClient.oneway(request);
     }

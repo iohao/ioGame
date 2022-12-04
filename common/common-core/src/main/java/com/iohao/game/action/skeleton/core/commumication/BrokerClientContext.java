@@ -16,9 +16,6 @@
  */
 package com.iohao.game.action.skeleton.core.commumication;
 
-import com.alipay.remoting.AsyncContext;
-import com.alipay.remoting.exception.RemotingException;
-
 /**
  * 当前服务器上下文
  * <pre>
@@ -31,15 +28,15 @@ import com.alipay.remoting.exception.RemotingException;
  * @author 渔民小镇
  * @date 2021-12-20
  */
-public interface BrokerClientContext extends AsyncContext {
+public interface BrokerClientContext extends ChannelContext {
 
     /**
      * 发送消息到游戏网关
      *
      * @param request 消息
-     * @throws RemotingException e
+     * @throws Exception e
      */
-    void oneway(final Object request) throws RemotingException;
+    void oneway(final Object request) throws Exception;
 
     /**
      * 框架网络通讯聚合接口

@@ -65,19 +65,19 @@ public final class BarSkeletonBuilder {
     final ErrorCodeDocs errorCodeDocs = new ErrorCodeDocs();
     /** action工厂 */
     @SuppressWarnings("unchecked")
-    ActionFactoryBean<Object> actionFactoryBean = DefaultActionFactoryBean.me();
+    ActionFactoryBean<Object> actionFactoryBean = new DefaultActionFactoryBean<>();
     /** action 执行完后，最后需要做的事。 一般用于将数据发送到 Broker（游戏网关） */
-    ActionAfter actionAfter = DefaultActionAfter.me();
+    ActionAfter actionAfter = new DefaultActionAfter();
     /** 结果包装器 */
-    ActionMethodResultWrap actionMethodResultWrap = DefaultActionMethodResultWrap.me();
+    ActionMethodResultWrap actionMethodResultWrap = new DefaultActionMethodResultWrap();
     /** 异常处理 */
-    ActionMethodExceptionProcess actionMethodExceptionProcess = DefaultActionMethodExceptionProcess.me();
+    ActionMethodExceptionProcess actionMethodExceptionProcess = new DefaultActionMethodExceptionProcess();
     /** InvokeActionMethod */
-    ActionMethodInvoke actionMethodInvoke = DefaultActionMethodInvoke.me();
+    ActionMethodInvoke actionMethodInvoke = new DefaultActionMethodInvoke();
     /** ActionMethod 方法参数解析器 */
-    ActionMethodParamParser actionMethodParamParser = DefaultActionMethodParamParser.me();
+    ActionMethodParamParser actionMethodParamParser = new DefaultActionMethodParamParser();
     /** 响应对象的创建 */
-    ResponseMessageCreate responseMessageCreate = DefaultResponseMessageCreate.me();
+    ResponseMessageCreate responseMessageCreate = new DefaultResponseMessageCreate();
     /** 业务框架 flow 上下文 工厂 */
     FlowContextFactory flowContextFactory = FlowContext::new;
 
