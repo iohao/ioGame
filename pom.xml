@@ -46,7 +46,7 @@
         <module>widget-game/light-game-room</module>
 
         <!-- 扩展服 - 监控相关 -->
-        <module>broker-starter-ext/broker-starter-monitor-logic</module>
+<!--        <module>broker-starter-ext/broker-starter-monitor-logic</module>-->
 
     </modules>
 

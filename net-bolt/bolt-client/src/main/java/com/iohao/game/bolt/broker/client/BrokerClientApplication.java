@@ -18,10 +18,8 @@ package com.iohao.game.bolt.broker.client;
 
 import com.iohao.game.action.skeleton.core.ActionCommandRegionGlobalCheckKit;
 import com.iohao.game.action.skeleton.core.ActionCommandRegions;
-import com.iohao.game.bolt.broker.boot.monitor.ext.MonitorExtRegion;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientBuilder;
-import com.iohao.game.bolt.broker.core.ext.ExtRegions;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -68,7 +66,7 @@ public class BrokerClientApplication {
      * 实验性功能，将来可能移除的。
      */
     private void experiment(BrokerClientBuilder builder) {
-        ExtRegions.me().add(new MonitorExtRegion());
+        // ExtRegions.me().add(new MonitorExtRegion());
 
         ActionCommandRegions actionCommandRegions = builder.barSkeleton().getActionCommandRegions();
         String tag = builder.tag();

@@ -20,7 +20,6 @@ import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.ConnectionEventType;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.bolt.broker.boot.monitor.ext.MonitorExtRegion;
 import com.iohao.game.bolt.broker.client.processor.*;
 import com.iohao.game.bolt.broker.client.processor.connection.CloseConnectEventClientProcessor;
 import com.iohao.game.bolt.broker.client.processor.connection.ConnectEventClientProcessor;
@@ -28,7 +27,6 @@ import com.iohao.game.bolt.broker.client.processor.connection.ConnectFailedEvent
 import com.iohao.game.bolt.broker.client.processor.connection.ExceptionConnectEventClientProcessor;
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
 import com.iohao.game.bolt.broker.core.client.BrokerClientBuilder;
-import com.iohao.game.bolt.broker.core.ext.ExtRegions;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -140,6 +138,6 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
      * 实验性功能，将来可能移除的。
      */
     private void experiment() {
-        ExtRegions.me().add(new MonitorExtRegion());
+//        ExtRegions.me().add(new MonitorExtRegion());
     }
 }
