@@ -21,11 +21,8 @@ import cn.hutool.system.SystemUtil;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalChannelInitializerCallback;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalJoinEnum;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ServerBootstrapEventLoopGroupOption;
-import com.iohao.game.bolt.broker.client.external.bootstrap.handler.ExternalBizHandler;
 import com.iohao.game.bolt.broker.client.external.bootstrap.heart.IdleProcessSetting;
-import com.iohao.game.bolt.broker.client.external.bootstrap.initializer.ExternalChannelInitializerCallbackFactory;
-import com.iohao.game.bolt.broker.client.external.bootstrap.initializer.ExternalChannelInitializerCallbackOption;
-import com.iohao.game.bolt.broker.client.external.bootstrap.initializer.ServerBootstrapSetting;
+import com.iohao.game.bolt.broker.client.external.bootstrap.initializer.*;
 import com.iohao.game.bolt.broker.client.external.bootstrap.option.ServerBootstrapEventLoopGroupOptionForLinux;
 import com.iohao.game.bolt.broker.client.external.bootstrap.option.ServerBootstrapEventLoopGroupOptionForMac;
 import com.iohao.game.bolt.broker.client.external.bootstrap.option.ServerBootstrapEventLoopGroupOptionForOther;
@@ -62,7 +59,14 @@ public final class ExternalServerBuilder {
 
     /** 服务器 */
     final ServerBootstrap bootstrap = new ServerBootstrap();
-    /** 自定义 - 编排业务 */
+    /**
+     * 自定义 - 编排业务
+     * <pre>
+     *     将在下个大版本中移除
+     *     请使用 {@link ExternalServerBuilder#channelPipelineHook(ChannelPipelineHook)} 代替
+     * </pre>
+     */
+    @Deprecated
     final Map<String, ChannelHandler> channelHandlerProcessors = new LinkedHashMap<>(4);
     /** 构建选项 */
     final ExternalChannelInitializerCallbackOption option = new ExternalChannelInitializerCallbackOption();
@@ -90,6 +94,8 @@ public final class ExternalServerBuilder {
      * </pre>
      */
     ServerBootstrapSetting serverBootstrapSetting;
+    /** 自定义 - 编排业务钩子方法 */
+    ChannelPipelineHook channelPipelineHook;
 
     ExternalServerBuilder(int port) {
         this.port = port;
@@ -126,11 +132,16 @@ public final class ExternalServerBuilder {
 
     /**
      * 注册业务 handler
+     * <pre>
+     *     将在下个大版本中移除
+     *     请使用 {@link ExternalServerBuilder#channelPipelineHook(ChannelPipelineHook)} 代替
+     * </pre>
      *
      * @param name      name
      * @param processor handler
      * @return me
      */
+    @Deprecated
     public ExternalServerBuilder registerChannelHandler(String name, ChannelHandler processor) {
         this.channelHandlerProcessors.put(name, processor);
         return this;
@@ -167,7 +178,12 @@ public final class ExternalServerBuilder {
     }
 
     private ExternalChannelInitializerCallback createExternalChannelInitializerCallback() {
+        /*
+         * 这两句代码都是对 netty 的业务编排，channelHandlerProcessors 已经标记为过期，这里只是做个兼容。
+         * 两者只能选其一，建议使用 channelPipelineHook 来做编排，因为 hook 在使用上灵活性相对高一些。
+         */
         this.option.setChannelHandlerProcessors(this.channelHandlerProcessors);
+        this.option.setChannelPipelineHook(this.channelPipelineHook);
 
         // 自定义 - 编排业务，Channel 初始化的业务编排 (自定义业务编排)
         ExternalChannelInitializerCallback channelInitializerCallback = ExternalChannelInitializerCallbackFactory.me()
@@ -199,9 +215,14 @@ public final class ExternalServerBuilder {
     }
 
     private void defaultSetting() {
-        // 如果没有 handler 默认给一个 业务处理器
+        /*
+         * 如果没有 ChannelHandler，使用默认的钩子接口。
+         *
+         * 注意 this.channelHandlerProcessors 成员将在下个大版本中移除，这里是做个兼容。
+         * 通过 ChannelPipelineHook 钩子接口可以使得代码相对清晰，同时也更具灵活性。
+         */
         if (this.channelHandlerProcessors.isEmpty()) {
-            registerChannelHandler("ExternalBizHandler", new ExternalBizHandler());
+            this.channelPipelineHook = new DefaultChannelPipelineHook();
         }
     }
 
@@ -216,6 +237,16 @@ public final class ExternalServerBuilder {
 
         if (Objects.isNull(this.externalBoltBrokerClientStartup)) {
             throw new RuntimeException("必须设置一个内部逻辑服（ExternalBoltBrokerClientConfig），与broker（游戏网关）通信！");
+        }
+
+        if (Objects.nonNull(this.channelPipelineHook) && !channelHandlerProcessors.isEmpty()) {
+            String msg = """
+                    channelPipelineHook 与 channelHandlerProcessors 两者只能选其一。
+                    建议使用 channelPipelineHook 来做自定义 - 编排业务。
+                    因为 channelHandlerProcessors 将在下个大版本中移除。
+                    """;
+
+            throw new RuntimeException(msg);
         }
     }
 
