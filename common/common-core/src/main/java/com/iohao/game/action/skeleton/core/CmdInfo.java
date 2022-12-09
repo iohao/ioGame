@@ -29,7 +29,7 @@ import lombok.Getter;
  *     2 {@link CmdInfo#getCmdInfo(int, int)} 静态方法来完成
  *
  *     其他参考：
- *     https://www.yuque.com/iohao/game/soxp4u
+ *     <a href="https://www.yuque.com/iohao/game/soxp4u">文档 - 路由信息</a>
  * </pre>
  *
  * @author 渔民小镇
@@ -54,15 +54,11 @@ public final class CmdInfo {
      */
     final int cmdMerge;
 
-    final String info;
-
     CmdInfo(int cmd, int subCmd) {
         // -------------- 路由相关 --------------
         this.cmd = cmd;
         this.subCmd = subCmd;
         this.cmdMerge = CmdKit.merge(cmd, subCmd);
-
-        this.info = CmdKit.mergeToString(this.cmdMerge);
     }
 
     /**
@@ -81,6 +77,6 @@ public final class CmdInfo {
 
     @Override
     public String toString() {
-        return info;
+        return CmdKit.mergeToString(this.cmdMerge);
     }
 }

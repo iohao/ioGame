@@ -36,10 +36,10 @@ import java.util.Map;
  * @date 2022-12-09
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class ActionCommandDocParser {
+final class ActionCommandDocParser {
     final ActionCommandParser actionCommandParser;
 
-    Map<Integer, ActionCommandDoc> actionCommandDocMap = new NonBlockingHashMap<>();
+    final Map<Integer, ActionCommandDoc> actionCommandDocMap = new NonBlockingHashMap<>();
 
     ActionCommandDocParser(ActionCommandParser actionCommandParser, List<Class<?>> controllerList) {
         this.actionCommandParser = actionCommandParser;
@@ -82,6 +82,7 @@ class ActionCommandDocParser {
     }
 
     private ActionCommandDoc getActionCommandDoc(JavaClassDocInfo javaClassDocInfo, Method method) {
+
         if (javaClassDocInfo != null) {
             return javaClassDocInfo.createActionCommandDoc(method);
         }

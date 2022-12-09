@@ -16,7 +16,6 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.common.kit.StrKit;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -70,7 +69,8 @@ public class CmdKit {
     public String mergeToString(int cmdMerge) {
         int cmd = getCmd(cmdMerge);
         int subCmd = getSubCmd(cmdMerge);
-        String template = "[cmd:{} - subCmd:{} - cmdMerge:{}]";
-        return StrKit.format(template, cmd, subCmd, cmdMerge);
+        String template = "[cmd:%d - subCmd:%d - cmdMerge:%d]";
+
+        return String.format(template, cmd, subCmd, cmdMerge);
     }
 }
