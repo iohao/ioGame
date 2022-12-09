@@ -19,9 +19,9 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 
 /**
- * ActionController 工厂
+ * action 类对象创建工厂
  * <pre>
- *     负责创建 用户定义的 Action 业务方法
+ *     负责创建 action 类的实例化对象
  *
  *     对于 action 的解释可以参考这里:
  *     https://www.yuque.com/iohao/game/sqcevl
@@ -33,16 +33,13 @@ import com.iohao.game.action.skeleton.annotation.ActionController;
  */
 public interface ActionFactoryBean<T> {
     /**
-     * 获取 tcp ActionController 对象
+     * 获取 action 类的对象
      * <pre>
-     * ActionController 对象.
-     *     可以是任意java对象
-     *     只要添加注解 {@link ActionController}
-     *     都属于tcp ActionController 对象
+     *     添加了 {@link ActionController} 注解的类，是一个 action 类
      * </pre>
      *
      * @param actionCommand actionCommand
-     * @return ActionController 对象
+     * @return action 类的实例化对象
      */
     T getBean(ActionCommand actionCommand);
 }

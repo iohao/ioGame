@@ -23,7 +23,6 @@ import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParser;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
-import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,7 +32,6 @@ import lombok.experimental.FieldDefaults;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,7 +68,7 @@ public final class ActionCommand {
     final Object actionController;
     /** 方法所在 class */
     final Class<?> actionControllerClazz;
-    /** 默认:true ，action 对象是 single. 如果设置为 false, 每次创建新的 action 对象. */
+    /** 默认:true ，action 对象是 single. 如果设置为 false, 每次创建新的 action 类的对象. */
     final boolean createSingleActionCommandController;
 
     /** 方法对象 */
@@ -93,21 +91,18 @@ public final class ActionCommand {
 
     final ActionCommandDoc actionCommandDoc;
 
-    /** 打印信息 */
-    final String toStringInfo;
-
     /** true 表示交付给容器来管理 如 spring 等 */
     boolean deliveryContainer;
 
-    private ActionCommand(Builder builder, BarSkeletonSetting barSkeletonSetting) {
+    private ActionCommand(Builder builder) {
         // -------------- 路由相关 --------------
         this.cmdInfo = CmdInfoFlyweightFactory.me().getCmdInfo(builder.cmd, builder.subCmd);
 
         // -------------- 控制器相关 --------------
         this.actionControllerClazz = builder.actionControllerClazz;
         this.actionControllerConstructorAccess = builder.actionControllerConstructorAccess;
-        this.actionController = this.actionControllerConstructorAccess.newInstance();
-        this.createSingleActionCommandController = barSkeletonSetting.createSingleActionCommandController;
+        this.actionController = builder.actionController;
+        this.createSingleActionCommandController = builder.createSingleActionCommandController;
 
         // -------------- 控制器-方法相关 --------------
         this.actionMethod = builder.actionMethod;
@@ -124,23 +119,6 @@ public final class ActionCommand {
         this.actionCommandDoc = builder.actionCommandDoc;
 
         this.deliveryContainer = builder.deliveryContainer;
-
-        this.toStringInfo = info();
-    }
-
-    public Object getActionController() {
-        return actionController;
-    }
-
-    private String info() {
-        String template = "ActionCommand(parameters={},clazz={}, methodName={}, hasThrowException={}, methodHasParam={})";
-        return StrKit.format(template
-                , Arrays.deepToString(paramInfos)
-                , actionControllerClazz
-                , actionMethodName
-                , throwException
-                , methodHasParam
-        );
     }
 
     /**
@@ -176,9 +154,13 @@ public final class ActionCommand {
         ActionCommandDoc actionCommandDoc;
         /** true 表示交付给容器来管理 如 spring 等 */
         boolean deliveryContainer;
+        /** 默认:true ，action 对象是 single. 如果设置为 false, 每次创建新的 action 类的对象. */
+        boolean createSingleActionCommandController;
+        /** 一个single控制器对象 */
+        Object actionController;
 
-        ActionCommand build(BarSkeletonSetting barSkeletonSetting) {
-            return new ActionCommand(this, barSkeletonSetting);
+        ActionCommand build() {
+            return new ActionCommand(this);
         }
     }
 

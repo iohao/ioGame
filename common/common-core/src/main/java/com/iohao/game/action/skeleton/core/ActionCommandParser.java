@@ -22,8 +22,6 @@ import com.esotericsoftware.reflectasm.MethodAccess;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
-import com.iohao.game.action.skeleton.core.doc.ActionCommandDocKit;
-import com.iohao.game.action.skeleton.core.doc.JavaClassDocInfo;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
@@ -34,7 +32,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -69,18 +66,13 @@ final class ActionCommandParser {
      * @param controllerList action 类的 class 列表
      */
     ActionCommandParser buildAction(List<Class<?>> controllerList) {
-        // java source
-        Map<String, JavaClassDocInfo> javaClassDocInfoMap = ActionCommandDocKit.getJavaClassDocInfoMap(controllerList);
 
-        // 条件: 类上配置了 ActionController 注解
-        Predicate<Class<?>> controllerPredicate = controllerClazz -> Objects.nonNull(controllerClazz.getAnnotation(ActionController.class));
+        var doc = new ActionCommandDocParser(this, controllerList);
 
-        Set<Class<?>> controllerSet = new HashSet<>(controllerList);
-        controllerSet.stream().filter(controllerPredicate).forEach(controllerClazz -> {
+        // action 类的 stream
+        this.getActionControllerStream(controllerList).forEach(controllerClazz -> {
             // true 表示交付给容器来管理 如 spring 等
             boolean deliveryContainer = this.deliveryContainer(controllerClazz);
-
-            JavaClassDocInfo javaClassDocInfo = javaClassDocInfoMap.get(controllerClazz.toString());
 
             // 方法访问器: 获取类中自己定义的方法
             var methodAccess = MethodAccess.get(controllerClazz);
@@ -90,13 +82,11 @@ final class ActionCommandParser {
             int cmd = controllerClazz.getAnnotation(ActionController.class).value();
             // 子路由 map
             var actionCommandRegion = this.actionCommandRegions.getActionCommandRegion(cmd);
-            actionCommandRegion.setActionControllerClazz(controllerClazz);
-            actionCommandRegion.setJavaClassDocInfo(javaClassDocInfo);
+            // action 类的实例化对象
+            var actionClassInstance = constructorAccess.newInstance();
 
             // 遍历所有方法上有 ActionMethod 注解的方法对象
             this.getMethodStream(controllerClazz).forEach(method -> {
-
-                ActionCommandDoc actionCommandDoc = getActionCommandDoc(javaClassDocInfo, method);
 
                 // 目标子路由 (方法上的路由)
                 int subCmd = method.getAnnotation(ActionMethod.class).value();
@@ -106,6 +96,8 @@ final class ActionCommandParser {
                 int methodIndex = methodAccess.getIndex(methodName);
                 // 方法返回值类型
                 Class<?> returnType = methodAccess.getReturnTypes()[methodIndex];
+                // source doc
+                ActionCommandDoc actionCommandDoc = doc.getActionCommandDoc(cmd, subCmd);
 
                 // 新建一个命令构建器
                 var builder = new ActionCommand.Builder()
@@ -119,7 +111,9 @@ final class ActionCommandParser {
                         .setActionMethodAccess(methodAccess)
                         .setReturnTypeClazz(returnType)
                         .setActionCommandDoc(actionCommandDoc)
-                        .setDeliveryContainer(deliveryContainer);
+                        .setDeliveryContainer(deliveryContainer)
+                        .setCreateSingleActionCommandController(this.setting.createSingleActionCommandController)
+                        .setActionController(actionClassInstance);
 
                 // 检测路由是否重复
                 checkExistSubCmd(controllerClazz, subCmd, actionCommandRegion);
@@ -128,10 +122,10 @@ final class ActionCommandParser {
                 paramInfo(method, builder);
 
                 /*
-                 * 路由key，根据这个路由可以找到对应的 command（命令对象）
-                 * 将映射类的方法，保存在 command 中。每个command封装成一个命令对象。
+                 * 路由 key，根据这个路由可以找到对应的 command（命令对象）
+                 * 将映射类的方法，保存在 command 中，每个 command 封装成一个命令对象。
                  */
-                var command = builder.build(this.setting);
+                var command = builder.build();
 
                 checkParamResultInfo(command);
 
@@ -147,6 +141,51 @@ final class ActionCommandParser {
         return this;
     }
 
+    Stream<Class<?>> getActionControllerStream(List<Class<?>> controllerList) {
+        Set<Class<?>> controllerSet = new HashSet<>(controllerList);
+        // action 类的 stream
+        return controllerSet.stream()
+                // 条件: 类上配置了 ActionController 注解
+                .filter(clazz -> Objects.nonNull(clazz.getAnnotation(ActionController.class)));
+    }
+
+    /**
+     * 得到 action 类中标准 action 的 method stream
+     * <pre>
+     *     返回方法上带有 ActionMethod 的方法对象
+     *     术语解释：在 action 类中提供的业务方法通常称为 action
+     *
+     *     当前标准 action 映射规则
+     *     1. 业务方法上添加注解 ActionMethod
+     *     2. 业务方法的访问权限必须是：public
+     *     3. 业务方法不能是：static
+     *     4. 业务方法需要是在 action 类中声明的方法
+     *     简单的说，标准的 action 是非静态的，且访问权限为 public 的方法。
+     *     术语说明：在 action 类中提供的业务方法通常称为 action。
+     *
+     *     其他访问权限方法是 ioGame 业务框架中保留使用方式，
+     *     比如将来有可能将声明为 private 的业务方法，即 private action ，
+     *     私有 action 只能是内部逻辑服访问的。
+     *     可以简单的理解为 private action 是给逻辑服之间提供访问的，
+     *     这样开发者可以不需要在游戏对外服中做访问权限的控制。
+     *     但这样可能会给开发者带来使用上的混淆，所以短期内不会提供这样的使用方式；
+     * </pre>
+     *
+     * @param actionControllerClass 类
+     * @return 标准 action 方法对象 Stream
+     */
+    Stream<Method> getMethodStream(Class<?> actionControllerClass) {
+        return Arrays
+                // 得到 action 类的所有方法
+                .stream(actionControllerClass.getDeclaredMethods())
+                // 得到在业务方法上添加了 ActionMethod 注解的方法对象
+                .filter(method -> Objects.nonNull(method.getAnnotation(ActionMethod.class)))
+                // 访问权限必须是 public 的
+                .filter(method -> Modifier.isPublic(method.getModifiers()))
+                // 不能是静态方法的
+                .filter(method -> !Modifier.isStatic(method.getModifiers()));
+    }
+
     private boolean deliveryContainer(Class<?> controllerClazz) {
 
         if (DependencyInjectionPart.me().isInjection()) {
@@ -155,15 +194,6 @@ final class ActionCommandParser {
 
         return false;
     }
-
-    private ActionCommandDoc getActionCommandDoc(JavaClassDocInfo javaClassDocInfo, Method method) {
-        if (javaClassDocInfo != null) {
-            return javaClassDocInfo.createActionCommandDoc(method);
-        }
-
-        return new ActionCommandDoc();
-    }
-
 
     private void paramInfo(Method method, ActionCommand.Builder builder) {
 
@@ -209,43 +239,6 @@ final class ActionCommandParser {
 
             throw new RuntimeException(message);
         }
-    }
-
-    /**
-     * 得到 action 类中标准 action 的 method stream
-     * <pre>
-     *     返回方法上带有 ActionMethod 的方法对象
-     *     术语解释：在 action 类中提供的业务方法通常称为 action
-     *
-     *     当前标准 action 映射规则
-     *     1. 业务方法上添加注解 ActionMethod
-     *     2. 业务方法的访问权限必须是：public
-     *     3. 业务方法不能是：static
-     *     4. 业务方法需要是在 action 类中声明的方法
-     *     简单的说，标准的 action 是非静态的，且访问权限为 public 的方法。
-     *     术语说明：在 action 类中提供的业务方法通常称为 action。
-     *
-     *     其他访问权限方法是 ioGame 业务框架中保留使用方式，
-     *     比如将来有可能将声明为 private 的业务方法，即 private action ，
-     *     私有 action 只能是内部逻辑服访问的。
-     *     可以简单的理解为 private action 是给逻辑服之间提供访问的，
-     *     这样开发者可以不需要在游戏对外服中做访问权限的控制。
-     *     但这样可能会给开发者带来使用上的混淆，所以短期内不会提供这样的使用方式；
-     * </pre>
-     *
-     * @param actionControllerClass 类
-     * @return 标准 action 方法对象 Stream
-     */
-    private Stream<Method> getMethodStream(Class<?> actionControllerClass) {
-        return Arrays
-                // 得到 action 类的所有方法
-                .stream(actionControllerClass.getDeclaredMethods())
-                // 得到在业务方法上添加了 ActionMethod 注解的方法对象
-                .filter(method -> Objects.nonNull(method.getAnnotation(ActionMethod.class)))
-                // 访问权限必须是 public 的
-                .filter(method -> Modifier.isPublic(method.getModifiers()))
-                // 不能是静态方法的
-                .filter(method -> !Modifier.isStatic(method.getModifiers()));
     }
 
     private void checkParamResultInfo(ActionCommand actionCommand) {
