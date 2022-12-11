@@ -44,6 +44,7 @@
 
         <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
         <module>widget-game/light-game-room</module>
+        <module>common-net/common-net-core</module>
 
         <!-- 扩展服 - 监控相关 -->
 <!--        <module>broker-starter-ext/broker-starter-monitor-logic</module>-->

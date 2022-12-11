@@ -24,13 +24,9 @@ import com.iohao.game.bolt.broker.client.external.ext.ExternalBizRegion;
 import com.iohao.game.bolt.broker.client.external.ext.ExternalBizRegionContext;
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
-import com.iohao.game.bolt.broker.client.kit.ExternalBizCodeCont;
+import com.iohao.game.core.common.client.ExternalBizCodeCont;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
@@ -43,9 +39,6 @@ import java.io.Serializable;
  * @author 渔民小镇
  * @date 2022-07-27
  */
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ForcedOfflineExternalBizRegion implements ExternalBizRegion {
 
     @Override
@@ -85,18 +78,5 @@ public class ForcedOfflineExternalBizRegion implements ExternalBizRegion {
             // 回调 UserSessions 中移除对应的玩家
             UserSessions.me().removeUserSession(userSession);
         });
-    }
-
-    private ForcedOfflineExternalBizRegion() {
-
-    }
-
-    public static ForcedOfflineExternalBizRegion me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final ForcedOfflineExternalBizRegion ME = new ForcedOfflineExternalBizRegion();
     }
 }

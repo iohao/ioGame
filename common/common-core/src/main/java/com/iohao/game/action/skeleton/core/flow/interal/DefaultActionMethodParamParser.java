@@ -66,7 +66,7 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
 
             if (Objects.nonNull(request.getData())) {
 
-                // 得到方法参数解析器，把字节解析成 pb 对象
+                // 得到方法参数解析器，把字节解析成对象
                 var methodParser = MethodParsers.me().getMethodParser(paramClazz);
                 // 业务参数
                 var param = methodParser.parseParam(request.getData(), paramInfo);

@@ -97,6 +97,18 @@ public class UserSession {
             int endPointLogicServerId = SafeKit.getInt(attr, 0);
             headMetadata.setEndPointClientId(endPointLogicServerId);
         }
+
+        /*
+         * 这里做个兼容。如果开发者没有额外扩展元信息的，才进入这里的逻辑。
+         * 也就是说，如果开发者在其他地方给 headMetadata 的附加数据设置了值的，框架就不管了。
+         */
+        if (Objects.isNull(headMetadata.getAttachmentData())) {
+            byte[] attachment = this.attr(UserSessionAttr.attachment);
+
+            if (Objects.nonNull(attachment)) {
+                headMetadata.setAttachmentData(attachment);
+            }
+        }
     }
 
     /**

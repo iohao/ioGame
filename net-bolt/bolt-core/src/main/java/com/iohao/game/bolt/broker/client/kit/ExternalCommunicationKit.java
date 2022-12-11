@@ -17,6 +17,8 @@
 package com.iohao.game.bolt.broker.client.kit;
 
 import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
+import com.iohao.game.core.common.client.Attachment;
+import com.iohao.game.core.common.client.ExternalBizCodeCont;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -59,5 +61,29 @@ public class ExternalCommunicationKit {
                 .getInvokeExternalModuleContext()
                 // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （ForcedOfflineExternalBizRegion）
                 .invokeExternalModuleCollectMessage(ExternalBizCodeCont.forcedOffline, userId);
+    }
+
+    /**
+     * 设置元信息到游戏对外服
+     * <pre>
+     *     之后所有 action 的 FlowContext 中会携带上这个元信息对象，
+     *     不建议在元信息保存过多的信息，因为会每次传递。
+     * </pre>
+     *
+     * @param attachment 元信息
+     */
+    public void setAttachment(Attachment attachment) {
+        // 不做 null 判断，只做个 userId 的检测
+        long userId = attachment.getUserId();
+
+        if (userId <= 0) {
+            throw new RuntimeException("userId error");
+        }
+
+        BrokerClientHelper.me()
+                // 【游戏逻辑服】与【游戏对外服】通讯上下文
+                .getInvokeExternalModuleContext()
+                // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （AttachmentDataExternalBizRegion）
+                .invokeExternalModuleCollectMessage(ExternalBizCodeCont.attachment, attachment);
     }
 }

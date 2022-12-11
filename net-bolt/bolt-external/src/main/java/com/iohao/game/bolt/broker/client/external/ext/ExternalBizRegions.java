@@ -16,6 +16,7 @@
  */
 package com.iohao.game.bolt.broker.client.external.ext;
 
+import com.iohao.game.bolt.broker.client.external.ext.impl.AttachmentExternalBizRegion;
 import com.iohao.game.bolt.broker.client.external.ext.impl.ExistUserExternalBizRegion;
 import com.iohao.game.bolt.broker.client.external.ext.impl.ForcedOfflineExternalBizRegion;
 import lombok.AccessLevel;
@@ -61,8 +62,9 @@ public class ExternalBizRegions {
 
     private ExternalBizRegions() {
         // 框架默认提供的业务类
-        this.add(ExistUserExternalBizRegion.me());
-        this.add(ForcedOfflineExternalBizRegion.me());
+        this.add(new ExistUserExternalBizRegion());
+        this.add(new ForcedOfflineExternalBizRegion());
+        this.add(new AttachmentExternalBizRegion());
     }
 
     public static ExternalBizRegions me() {

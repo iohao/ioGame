@@ -41,4 +41,6 @@ public interface UserSessionAttr {
      * </pre>
      */
     AttributeKey<Integer> endPointLogicServerId = AttributeKey.valueOf("endPointLogicServerId");
+    /** 元信息 */
+    AttributeKey<byte[]> attachment = AttributeKey.valueOf("attachment");
 }

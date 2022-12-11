@@ -26,6 +26,8 @@ import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
+
 /**
  * 结果包装器
  *
@@ -73,6 +75,8 @@ public final class DefaultActionMethodResultWrap implements ActionMethodResultWr
         flowContext.setMethodResult(methodResult);
 
         // 业务方法返回值
-        responseMessage.setData(methodResult);
+        if (Objects.nonNull(methodResult)) {
+            responseMessage.setData(methodResult);
+        }
     }
 }

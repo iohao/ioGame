@@ -199,6 +199,7 @@ public class ExternalKit {
 
         // 由内部逻辑服转发用户请求到游戏网关，在由网关转到具体的业务逻辑服
         BrokerClientContext brokerClient = ExternalHelper.me().getBrokerClient();
+
         try {
             brokerClient.oneway(requestMessage);
         } catch (Exception e) {
