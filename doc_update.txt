@@ -1,5 +1,37 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-12-14 - v17.1.27
+https://www.yuque.com/iohao/game/ab15oe#KR00k
+
+命令解析器与源码文档逻辑分离。
+优化命令对象，减少 action 类的实例化对象
+
+#30 简化元附加信息的使用 使用文档
+
+在处理 action 时，我们可以通过 FlowContext.userId 可以很方便得到当前用户（玩家）id。
+
+如果开发者想在处理 action 时，携带上一些自定义的信息时，可以通过元附加信息特性来完成。比如保存当前玩家的英雄角色 id，或者玩家的昵称，又或者是你的项目的 userId 是 string 或其他类型则可以通过元信息这一特性来兼容。
+
+简单的说，就是你想在 FlowContext 中获取一些用户（玩家）特有的信息数据时，可以通过这个特性来实现。
+
+
+2022-12-06 - v17.1.26
+https://www.yuque.com/iohao/game/ab15oe#Qzog2
+
+#27
+业务框架与网络通信框架解耦
+新增 ChannelContext 通信通道接口，用于对 bolt AsyncContext、netty Channel 的包装，这样可以使得业务框架与网络通信框架解耦，为将来 ioGame 实现绳量级架构的使用做准备。
+
+移除 FlowAttr.asyncContext 动态属性，由 FlowAttr.channelContext 代替。
+业务框架模块移除网络相关的依赖 bolt、netty 等。
+
+#28
+游戏对外服 netty 编排业务钩子接口
+新增 ChannelPipelineHook netty 业务编排的处理器钩子接口，用于游戏对外服。
+
+ExternalServerBuilder 新增 channelPipelineHook 属性 ，用于自定义 netty 业务编排的处理器设置。
+废弃标记 ExternalServerBuilder.channelHandlerProcessors 属性及其相关地方为过期，由 ChannelPipelineHook 来代替，使用示例如下。
+
 2022-11-29
 v17.1.25 https://www.yuque.com/iohao/game/ab15oe#VghQ6
 
