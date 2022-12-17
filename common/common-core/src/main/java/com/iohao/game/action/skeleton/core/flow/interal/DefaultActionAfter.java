@@ -25,8 +25,6 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Objects;
-
 /**
  * 默认的ActionAfter
  *
@@ -43,10 +41,6 @@ public final class DefaultActionAfter implements ActionAfter {
         final ResponseMessage response = flowContext.getResponse();
 
         ChannelContext channelContext = getChannelContext(flowContext);
-
-        if (Objects.isNull(channelContext)) {
-            return;
-        }
 
         // 有错误就响应给调用方
         if (response.hasError()) {

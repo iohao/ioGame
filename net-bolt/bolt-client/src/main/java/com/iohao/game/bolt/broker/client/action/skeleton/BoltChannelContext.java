@@ -18,12 +18,13 @@ package com.iohao.game.bolt.broker.client.action.skeleton;
 
 import com.alipay.remoting.AsyncContext;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
+import lombok.NonNull;
 
 /**
  * @author 渔民小镇
  * @date 2022-12-04
  */
-public record BoltChannelContext(AsyncContext asyncContext) implements ChannelContext {
+public record BoltChannelContext(@NonNull AsyncContext asyncContext) implements ChannelContext {
     @Override
     public void sendResponse(Object responseObject) {
         this.asyncContext.sendResponse(responseObject);

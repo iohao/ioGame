@@ -26,8 +26,6 @@ import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Objects;
-
 /**
  * 结果包装器
  *
@@ -67,16 +65,12 @@ public final class DefaultActionMethodResultWrap implements ActionMethodResultWr
             return;
         }
 
+        // 得到 action 返回值的解析器，将解析后的结果保存到 flowContext 中
         MethodParser paramParser = MethodParsers.me().getMethodParser(actionMethodReturnInfo);
-
-        // 根据返回值类型
         Object methodResult = paramParser.parseResult(actionMethodReturnInfo, result);
-        // 重新赋值一下 methodResult 到 flowContext 中，方便在 DebugInOut 中的打印
         flowContext.setMethodResult(methodResult);
 
-        // 业务方法返回值
-        if (Objects.nonNull(methodResult)) {
-            responseMessage.setData(methodResult);
-        }
+        // 将 action （业务方法返回值），保存到响应对象中
+        responseMessage.setData(methodResult);
     }
 }
