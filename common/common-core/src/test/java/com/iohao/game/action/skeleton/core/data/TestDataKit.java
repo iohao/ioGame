@@ -35,7 +35,9 @@ public class TestDataKit {
 
     public BarSkeleton newBarSkeleton() {
         BarSkeletonBuilder builder = createBuilder();
+        builder.setActionAfter(flowContext -> {
 
+        });
         return builder.build();
     }
 

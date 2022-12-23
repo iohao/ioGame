@@ -136,7 +136,7 @@
         <snakeyaml.version>1.32</snakeyaml.version>
         <!-- other 后期整理，需要从全局移动到局部模块中 -->
         <!-- Hutool是一个Java工具包 see https://www.hutool.cn/ https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
-        <hutool.version>5.8.9</hutool.version>
+        <hutool.version>5.8.10</hutool.version>
     </properties>
 
     <dependencies>

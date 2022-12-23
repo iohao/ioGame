@@ -16,6 +16,7 @@
  */
 package com.iohao.game.action.skeleton.core;
 
+import com.iohao.game.action.skeleton.IoGameVersion;
 import com.iohao.game.action.skeleton.core.codec.DataCodec;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.common.kit.ArrayKit;
@@ -82,6 +83,7 @@ class PrintActionKit {
     void printHandler(List<Handler> handlers) {
         String iohaoTitle = "@|CYAN ======================== 业务框架 iohao ========================= |@";
         System.out.println(Ansi.ansi().eraseScreen().render(iohaoTitle));
+        System.out.println(IoGameVersion.VERSION);
         String colorStr = "@|BLACK BLACK|@ @|RED RED|@ @|GREEN GREEN|@ @|YELLOW YELLOW|@ @|BLUE BLUE|@ @|MAGENTA MAGENTA|@ @|CYAN CYAN|@ @|WHITE WHITE|@ @|DEFAULT DEFAULT|@";
         System.out.println(Ansi.ansi().eraseScreen().render(colorStr));
 
