@@ -16,8 +16,7 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.system.SystemUtil;
+import com.iohao.game.common.kit.io.FileKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -50,9 +49,9 @@ public class CopyrightTest {
                 """;
 
 
-        String currentDir = SystemUtil.getUserInfo().getCurrentDir();
+        String currentDir = System.getProperty("user.dir");
 
-        List<File> fileList = FileUtil.loopFiles(currentDir, pathname -> {
+        List<File> fileList = FileKit.loopFiles(currentDir, pathname -> {
 
             if (!pathname.isFile()) {
                 return false;

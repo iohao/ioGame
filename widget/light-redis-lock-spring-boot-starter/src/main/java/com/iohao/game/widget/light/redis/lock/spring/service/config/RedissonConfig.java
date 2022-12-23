@@ -1,6 +1,5 @@
 package com.iohao.game.widget.light.redis.lock.spring.service.config;
 
-import cn.hutool.core.util.StrUtil;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -30,7 +29,7 @@ public class RedissonConfig {
         Config config = null;
         try {
             String redissonConfigName = distibutedLockProperties.getRedissonConfigName();
-            if (StrUtil.isBlankIfStr(redissonConfigName)) {
+            if (Objects.isNull(redissonConfigName) || redissonConfigName.isEmpty() || redissonConfigName.isBlank()) {
                 throw new Exception("没有可用的redisson配置源");
             }
 

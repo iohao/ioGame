@@ -28,7 +28,7 @@ import org.junit.Test;
 @Slf4j
 public class BarSkeletonTest {
 
-//    @Test
+    @Test
     public void newBuilder() {
         // 构建业务框架
         BarSkeleton barSkeleton = TestDataKit.newBarSkeleton();

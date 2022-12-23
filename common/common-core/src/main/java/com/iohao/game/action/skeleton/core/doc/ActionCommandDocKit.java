@@ -16,8 +16,8 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import cn.hutool.core.io.FileUtil;
 import com.iohao.game.common.kit.ClassScanner;
+import com.iohao.game.common.kit.io.FileKit;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import lombok.experimental.UtilityClass;
@@ -66,7 +66,7 @@ public class ActionCommandDocKit {
                     String srcPath = path.replace("target/classes", "src/main/java");
 
                     File file = new File(srcPath);
-                    if (!FileUtil.exist(file)) {
+                    if (!FileKit.exist(file)) {
                         continue;
                     }
 

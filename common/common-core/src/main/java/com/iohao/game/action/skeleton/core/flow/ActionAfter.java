@@ -17,11 +17,7 @@
 package com.iohao.game.action.skeleton.core.flow;
 
 /**
- * ActionAfter 最后的处理
- * <pre>
- *     处理完每个action后会执行这个接口实现类(前提是你配置了)
- *     因为不知道各个NIO框架是如何写出数据到客户端的, 所以把这个问题交给用户自行处理
- * </pre>
+ * ActionAfter 最后的处理，通常用于将数据发送给请求端
  *
  * @author 渔民小镇
  * @date 2021-12-12

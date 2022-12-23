@@ -14,38 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.common.kit;
+package com.iohao.game.common.kit.io;
 
+import cn.hutool.core.io.resource.ResourceUtil;
 import lombok.experimental.UtilityClass;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.nio.charset.Charset;
 
 /**
  * @author 渔民小镇
- * @date 2022-07-14
+ * @date 2022-12-23
  */
 @UtilityClass
-public class RandomKit {
-    /**
-     * 获得指定范围内的随机数 [0,limit)
-     *
-     * @param limit 限制随机数的范围，不包括这个数
-     * @return 随机数
-     * @see Random#nextInt(int)
-     */
-    public int randomInt(int limit) {
-        return ThreadLocalRandom.current().nextInt(limit);
-    }
+public class ResourceKit {
 
     /**
-     * 获得指定范围内的随机数
+     * 读取Classpath下的资源为字符串
      *
-     * @param min 最小数（包含）
-     * @param max 最大数（不包含）
-     * @return 随机数
+     * @param resource 可以是绝对路径，也可以是相对路径（相对ClassPath）
+     * @param charset  编码
+     * @return 资源内容
+     * @since 3.1.1
      */
-    public static int randomInt(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max);
+    public static String readStr(String resource, Charset charset) {
+        return ResourceUtil.readStr(resource, charset);
     }
 }

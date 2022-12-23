@@ -17,8 +17,8 @@
 
 package com.iohao.game.common.validation;
 
-import cn.hutool.core.io.resource.ResourceUtil;
 import com.iohao.game.common.kit.ClassScanner;
+import com.iohao.game.common.kit.io.ResourceKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -101,7 +101,7 @@ public class Validation {
         String className = null;
 
         try {
-            className = ResourceUtil.readStr(fileName, StandardCharsets.UTF_8);
+            className = ResourceKit.readStr(fileName, StandardCharsets.UTF_8);
         } catch (Exception e) {
             log.info("读取 {} 失败，将使用默认类 {} 来处理", fileName, defaultValidator);
         }

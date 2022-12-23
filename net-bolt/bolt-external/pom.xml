@@ -13,7 +13,6 @@
     <artifactId>bolt-external</artifactId>
 
 
-
     <dependencies>
         <dependency>
             <groupId>com.iohao.game</groupId>
@@ -27,12 +26,12 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-<!--        <dependency>-->
-<!--            <groupId>com.google.guava</groupId>-->
-<!--            <artifactId>guava</artifactId>-->
-<!--            <version>${guava.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-system</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -14,38 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.common.kit;
+package com.iohao.game.common.kit.bean;
 
+import cn.hutool.core.bean.BeanUtil;
 import lombok.experimental.UtilityClass;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Map;
 
 /**
  * @author 渔民小镇
- * @date 2022-07-14
+ * @date 2022-12-23
  */
 @UtilityClass
-public class RandomKit {
+public class BeanKit {
     /**
-     * 获得指定范围内的随机数 [0,limit)
+     * 将bean的部分属性转换成map<br>
+     * 可选拷贝哪些属性值，默认是不忽略值为{@code null}的值的。
      *
-     * @param limit 限制随机数的范围，不包括这个数
-     * @return 随机数
-     * @see Random#nextInt(int)
+     * @param bean       bean
+     * @param properties 需要拷贝的属性值，{@code null}或空表示拷贝所有值
+     * @return Map
+     * @since 5.8.0
      */
-    public int randomInt(int limit) {
-        return ThreadLocalRandom.current().nextInt(limit);
-    }
-
-    /**
-     * 获得指定范围内的随机数
-     *
-     * @param min 最小数（包含）
-     * @param max 最大数（不包含）
-     * @return 随机数
-     */
-    public static int randomInt(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max);
+    public static Map<String, Object> beanToMap(Object bean, String... properties) {
+        return BeanUtil.beanToMap(bean, properties);
     }
 }

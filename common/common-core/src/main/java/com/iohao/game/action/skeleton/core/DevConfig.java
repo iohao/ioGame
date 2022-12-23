@@ -52,28 +52,8 @@ public final class DevConfig {
      */
     Map<Integer, Class<?>> cmdDataClassMap = new NonBlockingHashMap<>();
 
-    /**
-     * cmd 路由对应的入参数据类型信息
-     * <pre>
-     *     key : cmdMerge
-     *     value : 路由入参对应的 class 信息
-     *
-     *     开发阶段的数据辅助信息，目前主要提供给"模拟客户端" 时使用的。
-     *
-     *     此 map 中，保存了：
-     *     1 action 的返回值类信息；
-     *     2 入参时的类信息；
-     *
-     * </pre>
-     */
-    Map<Integer, Class<?>> actionInputClassMap = new NonBlockingHashMap<>();
-
     public Class<?> getCmdDataClass(int cmdMerge) {
         return this.cmdDataClassMap.get(cmdMerge);
-    }
-
-    public Class<?> getActionInputClass(int cmdMerge) {
-        return this.actionInputClassMap.get(cmdMerge);
     }
 
     private DevConfig() {
