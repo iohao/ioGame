@@ -42,11 +42,11 @@ public class IoGameGlobalConfig {
     public int gossipListenPort = BrokerGlobalConfig.gossipListenPort;
     /** true 开启日志 */
     public boolean openLog = BrokerGlobalConfig.openLog;
-    /** true 开启请求响应相关日志 */
+    /** true 开启请求响应相关日志，默认为 false */
     public boolean requestResponseLog = BrokerGlobalConfig.requestResponseLog;
-    /** true 开启对外服相关日志 */
+    /** true 开启对外服相关日志，默认为 false */
     public boolean externalLog = BrokerGlobalConfig.externalLog;
-    /** true 开启广播相关日志 */
+    /** true 开启广播相关日志，默认为 false */
     public boolean broadcastLog = BrokerGlobalConfig.broadcastLog;
 
     /** true 开启集群相关日志 */

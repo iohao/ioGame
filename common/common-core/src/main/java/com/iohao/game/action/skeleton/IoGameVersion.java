@@ -14,19 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.bolt.broker.client.action.skeleton;
-
-import com.alipay.remoting.AsyncContext;
-import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
-import lombok.NonNull;
+package com.iohao.game.action.skeleton;
 
 /**
  * @author 渔民小镇
- * @date 2022-12-04
+ * @date 2022-12-23
  */
-public record BoltChannelContext(@NonNull AsyncContext asyncContext) implements ChannelContext {
-    @Override
-    public void sendResponse(Object responseObject) {
-        this.asyncContext.sendResponse(responseObject);
+public final class IoGameVersion {
+    public static final String VERSION;
+
+    static {
+        String internalVersion = "<version>17.1.27</version>";
+
+        VERSION = internalVersion
+                .replace("<version>", "")
+                .replace("</version>", "")
+        ;
     }
 }

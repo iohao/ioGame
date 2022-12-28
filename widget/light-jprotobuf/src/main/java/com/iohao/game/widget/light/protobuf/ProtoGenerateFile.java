@@ -16,13 +16,15 @@
  */
 package com.iohao.game.widget.light.protobuf;
 
-import cn.hutool.core.io.FileUtil;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.io.FileKit;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -46,7 +48,7 @@ public class ProtoGenerateFile {
         Objects.requireNonNull(protoPackagePath);
         Objects.requireNonNull(generateFolder);
 
-        FileUtil.mkdir(this.generateFolder);
+        FileKit.mkdir(this.generateFolder);
     }
 
     public void generate() {
@@ -72,7 +74,7 @@ public class ProtoGenerateFile {
                     , fileName
             );
 
-            FileUtil.writeUtf8String(protoString, protoFilePath);
+            FileKit.writeUtf8String(protoString, protoFilePath);
         };
 
         regionMap.values().forEach(javaRegionConsumer);

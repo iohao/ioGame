@@ -29,6 +29,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 消息基类
@@ -71,7 +72,9 @@ public abstract sealed class BarMessage implements Serializable, ToJson permits 
 
     public BarMessage setData(Object data) {
         // 保存一下业务数据的 class
-        this.dataClass = data.getClass().getName();
+        if (Objects.nonNull(data)) {
+            this.dataClass = data.getClass().getName();
+        }
 
         byte[] bytes = DataCodecKit.encode(data);
         return this.setData(bytes);

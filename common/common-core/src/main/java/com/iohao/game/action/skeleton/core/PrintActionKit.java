@@ -16,14 +16,16 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import cn.hutool.core.util.ArrayUtil;
-import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
+import com.iohao.game.action.skeleton.IoGameVersion;
 import com.iohao.game.action.skeleton.core.codec.DataCodec;
+import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
+import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.StrKit;
 import lombok.experimental.UtilityClass;
 import org.fusesource.jansi.Ansi;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 打印 action
@@ -81,6 +83,7 @@ class PrintActionKit {
     void printHandler(List<Handler> handlers) {
         String iohaoTitle = "@|CYAN ======================== 业务框架 iohao ========================= |@";
         System.out.println(Ansi.ansi().eraseScreen().render(iohaoTitle));
+        System.out.println(IoGameVersion.VERSION);
         String colorStr = "@|BLACK BLACK|@ @|RED RED|@ @|GREEN GREEN|@ @|YELLOW YELLOW|@ @|BLUE BLUE|@ @|MAGENTA MAGENTA|@ @|CYAN CYAN|@ @|WHITE WHITE|@ @|DEFAULT DEFAULT|@";
         System.out.println(Ansi.ansi().eraseScreen().render(colorStr));
 
@@ -122,14 +125,12 @@ class PrintActionKit {
                 String paramInfo = "";
                 String paramInfoShort = "";
 
-                if (ArrayUtil.isNotEmpty(paramInfos)) {
-                    var infos = Arrays.stream(paramInfos)
+                if (ArrayKit.notEmpty(paramInfos)) {
+                    paramInfoShort = Arrays.stream(paramInfos)
                             .map(ActionCommand.ParamInfo::toStringShort)
-                            .toArray();
+                            .collect(Collectors.joining(", "));
 
-                    paramInfoShort = ArrayUtil.join(infos, ", ");
-
-                    paramInfo = ArrayUtil.join(paramInfos, ", ");
+                    paramInfo = ArrayKit.join(paramInfos, ", ");
                 }
 
                 Map<String, Object> params = new HashMap<>();

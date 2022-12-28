@@ -16,7 +16,6 @@
  */
 package com.iohao.game.bolt.broker.client.external.bootstrap.handler;
 
-import com.alipay.remoting.exception.RemotingException;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;

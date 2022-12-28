@@ -16,13 +16,13 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.system.SystemUtil;
 import com.iohao.game.action.skeleton.core.*;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.bean.BeanKit;
+import com.iohao.game.common.kit.io.FileKit;
 import lombok.Setter;
 
+import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -46,7 +46,8 @@ public class BarSkeletonDoc {
 
     public void buildDoc() {
         // 路径为当前项目
-        String docPath = SystemUtil.getUserInfo().getCurrentDir() + docFileName;
+        String docPath = System.getProperty("user.idr") + File.separator + docFileName;
+
         this.buildDoc(docPath);
     }
 
@@ -54,7 +55,7 @@ public class BarSkeletonDoc {
 
         Objects.requireNonNull(docPath);
 
-        if (FileUtil.isDirectory(docPath)) {
+        if (FileKit.isDirectory(docPath)) {
             throw new RuntimeException("file is Directory ");
 
         }
@@ -105,7 +106,7 @@ public class BarSkeletonDoc {
         extractedErrorCode(docContentList);
 
         String docText = String.join("", docContentList);
-        FileUtil.writeUtf8String(docText, docPath);
+        FileKit.writeUtf8String(docText, docPath);
     }
 
     public List<BarSkeleton> listBarSkeleton() {
@@ -156,7 +157,7 @@ public class BarSkeletonDoc {
 
         for (ActionSendDoc actionSendDoc : actionSendDocList) {
 
-            Map<String, Object> stringObjectMap = BeanUtil.beanToMap(actionSendDoc);
+            Map<String, Object> stringObjectMap = BeanKit.beanToMap(actionSendDoc);
             stringObjectMap.put("dataClass", actionSendDoc.getDataClass().getName());
 
             String template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass}";

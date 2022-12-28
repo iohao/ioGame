@@ -21,6 +21,7 @@ import lombok.experimental.UtilityClass;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 数组相关工具
@@ -85,5 +86,19 @@ public class ArrayKit {
         List<Integer> list = toList(cards);
         list = list.subList(0, size);
         return list;
+    }
+
+    public String join(Object[] array, CharSequence delimiter) {
+        return Arrays.stream(array)
+                .map(Object::toString)
+                .collect(Collectors.joining(delimiter));
+    }
+
+    public boolean notEmpty(Object[] array) {
+        return array != null && array.length != 0;
+    }
+
+    public boolean isEmpty(Object[] array) {
+        return array == null || array.length == 0;
     }
 }

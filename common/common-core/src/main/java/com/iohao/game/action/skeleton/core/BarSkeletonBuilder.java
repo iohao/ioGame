@@ -193,7 +193,7 @@ public final class BarSkeletonBuilder {
     private void defaultSetting() {
         // 如果没有配置 handler，那么使用默认的
         if (this.handlerList.isEmpty()) {
-            this.handlerList.add(new ActionCommandHandler());
+            this.handlerList.add(new ActionCommandTryHandler());
         }
     }
 }

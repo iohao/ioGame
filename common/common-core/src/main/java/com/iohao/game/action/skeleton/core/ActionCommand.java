@@ -211,7 +211,6 @@ public final class ActionCommand {
          *     原计划想用 Collection ，这样可以兼容 Set 之类的；但似乎这样有一点争议，先暂支持 List 把
          * </pre>
          */
-        @Getter
         final Class<?> actualTypeArgumentClazz;
         /** true 是 list 类型 */
         final boolean list;
@@ -247,7 +246,7 @@ public final class ActionCommand {
          * </pre>
          */
         final Class<?> actualClazz;
-
+        final boolean extension;
         final boolean customMethodParser;
         /** JSR380 验证组 */
         final Class<?>[] validatorGroups;
@@ -286,6 +285,8 @@ public final class ActionCommand {
             // JSR380 相关，确定验证组，校验组对象的 Class 数组
             var validatedAnn = this.parameter.getAnnotation(ValidatedGroup.class);
             this.validatorGroups = Objects.isNull(validatedAnn) ? EMPTY_GROUPS : validatedAnn.value();
+
+            this.extension = FlowContext.class.isAssignableFrom(paramClazz);
         }
 
         public String toStringShort() {
@@ -303,7 +304,7 @@ public final class ActionCommand {
          * @return true 是扩展属性
          */
         public boolean isExtension() {
-            return FlowContext.class.equals(paramClazz);
+            return extension;
         }
 
         public String getMethodParamClassName() {

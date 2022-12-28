@@ -16,8 +16,8 @@
  */
 package com.iohao.game.common.kit;
 
-import cn.hutool.core.collection.ConcurrentHashSet;
 import lombok.extern.slf4j.Slf4j;
+import org.jctools.maps.NonBlockingHashSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class ClassScanner {
     /** 需要扫描的包名 */
     final String packagePath;
     /** 存放扫描过的 clazz */
-    final Set<Class<?>> clazzSet = new ConcurrentHashSet<>();
+    final Set<Class<?>> clazzSet = new NonBlockingHashSet<>();
     /** true 保留符合条件的class */
     final Predicate<Class<?>> predicateFilter;
 

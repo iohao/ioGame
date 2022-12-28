@@ -16,10 +16,11 @@
  */
 package com.iohao.game.common.kit;
 
-import cn.hutool.core.thread.ThreadFactoryBuilder;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 线程执行器工具
@@ -158,10 +159,19 @@ public class ExecutorKit {
      * @param daemon     置是否守护线程
      * @return 线程工厂
      */
-    public ThreadFactory createThreadFactory(String namePrefix, boolean daemon) {
-        return ThreadFactoryBuilder.create()
-                .setNamePrefix(namePrefix)
-                .setDaemon(daemon)
-                .build();
+    public ThreadFactory createThreadFactory(@NonNull String namePrefix, boolean daemon) {
+        final AtomicLong threadNumber = new AtomicLong();
+
+        return runnable -> {
+
+            String threadName = namePrefix + threadNumber.getAndIncrement();
+
+            Thread thread = new Thread(runnable, threadName);
+
+            thread.setDaemon(daemon);
+
+            return thread;
+        };
+
     }
 }

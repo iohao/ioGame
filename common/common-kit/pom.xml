@@ -21,19 +21,6 @@
             <version>${hutool.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-<!--        <dependency>-->
-<!--            <groupId>com.google.guava</groupId>-->
-<!--            <artifactId>guava</artifactId>-->
-<!--            <version>${guava.version}</version>-->
-<!--        </dependency>-->
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-system</artifactId>
-            <version>${hutool.version}</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm -->
         <dependency>
             <groupId>com.esotericsoftware</groupId>

@@ -26,7 +26,7 @@ import com.iohao.game.action.skeleton.protocol.RequestMessage;
  * @author 渔民小镇
  * @date 2021-12-12
  */
-public final class ActionCommandHandler implements Handler {
+sealed class ActionCommandHandler implements Handler permits ActionCommandTryHandler {
 
     @Override
     public boolean handler(final FlowContext flowContext) {
@@ -39,7 +39,7 @@ public final class ActionCommandHandler implements Handler {
         return true;
     }
 
-    private void settingFlowContext(FlowContext flowContext) {
+    protected void settingFlowContext(FlowContext flowContext) {
         // 业务框架
         BarSkeleton barSkeleton = flowContext.getBarSkeleton();
         // 请求参数

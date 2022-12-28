@@ -17,6 +17,7 @@
 package com.iohao.game.common.kit;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.util.Map;
@@ -36,7 +37,7 @@ public class StrKit {
      * @param map      参数值对
      * @return 格式化后的文本
      */
-    public static String format(CharSequence template, Map<?, ?> map) {
+    public String format(@NonNull CharSequence template, @NonNull Map<?, ?> map) {
         return StrUtil.format(template, map);
     }
 
@@ -53,7 +54,7 @@ public class StrKit {
      * @param params   参数值
      * @return 格式化后的文本，如果模板为null，返回"null"
      */
-    public static String format(CharSequence template, Object... params) {
+    public String format(@NonNull CharSequence template, Object... params) {
         return StrUtil.format(template, params);
     }
 
@@ -80,8 +81,8 @@ public class StrKit {
      * @param str 被检测的字符串
      * @return 是否为空
      */
-    public static boolean isEmpty(CharSequence str) {
-        return str == null || str.length() == 0;
+    public boolean isEmpty(String str) {
+        return str == null || str.isEmpty() || str.isBlank();
     }
 
 
@@ -104,9 +105,8 @@ public class StrKit {
      *
      * @param str 被检测的字符串
      * @return 是否为非空
-     * @see #isEmpty(CharSequence)
      */
-    public static boolean isNotEmpty(CharSequence str) {
+    public boolean isNotEmpty(String str) {
         return !isEmpty(str);
     }
 }

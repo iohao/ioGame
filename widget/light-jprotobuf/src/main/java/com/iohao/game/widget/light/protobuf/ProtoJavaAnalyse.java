@@ -16,11 +16,11 @@
  */
 package com.iohao.game.widget.light.protobuf;
 
-import cn.hutool.core.io.FileUtil;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.esotericsoftware.reflectasm.FieldAccess;
 import com.iohao.game.common.kit.ClassScanner;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.io.FileKit;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -74,7 +74,7 @@ public class ProtoJavaAnalyse {
 
     private void javaProjectBuilder(String protoSourcePath) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        javaProjectBuilder.addSourceTree(FileUtil.file(protoSourcePath));
+        javaProjectBuilder.addSourceTree(FileKit.file(protoSourcePath));
 
         Collection<JavaClass> javaClassCollection = javaProjectBuilder.getClasses();
         for (JavaClass javaClass : javaClassCollection) {
