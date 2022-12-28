@@ -65,6 +65,4 @@ public class ExternalCodecWebsocket extends MessageToMessageCodec<BinaryWebSocke
         // 【对外服】 接收 游戏客户端的消息
         out.add(message);
     }
-
-
 }

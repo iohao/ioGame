@@ -20,7 +20,7 @@ package com.iohao.game.action.skeleton;
  * @author 渔民小镇
  * @date 2022-12-23
  */
-public class IoGameVersion {
+public final class IoGameVersion {
     public static final String VERSION;
 
     static {

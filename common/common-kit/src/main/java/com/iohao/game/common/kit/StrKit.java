@@ -16,6 +16,7 @@
  */
 package com.iohao.game.common.kit;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -36,8 +37,8 @@ public class StrKit {
      * @param map      参数值对
      * @return 格式化后的文本
      */
-    public String format(@NonNull CharSequence template, @NonNull Map<String, Object> map) {
-        return InternalStringFormat.format(template.toString(), map);
+    public String format(@NonNull CharSequence template, @NonNull Map<?, ?> map) {
+        return StrUtil.format(template, map);
     }
 
     /**
@@ -54,7 +55,7 @@ public class StrKit {
      * @return 格式化后的文本，如果模板为null，返回"null"
      */
     public String format(@NonNull CharSequence template, Object... params) {
-        return InternalStringFormat.format(template.toString(), params);
+        return StrUtil.format(template, params);
     }
 
     /**
