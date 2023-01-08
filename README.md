@@ -220,6 +220,12 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 所以，还在犹豫要不要使用 ioGame 的开发者们，更应该讨论的是“为什么这些开发者会选择使用 ioGame”，而不是 ioGame 有没有人在使用的问题。
 
+
+
+![](https://user-images.githubusercontent.com/26356013/211194151-a6c47738-804b-4e18-a43f-0742d92fd82b.png)
+
+
+
 ---
 
 
