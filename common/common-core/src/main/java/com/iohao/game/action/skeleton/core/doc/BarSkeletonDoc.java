@@ -46,7 +46,7 @@ public class BarSkeletonDoc {
 
     public void buildDoc() {
         // 路径为当前项目
-        String docPath = System.getProperty("user.idr") + File.separator + docFileName;
+        String docPath = System.getProperty("user.dir") + File.separator + docFileName;
 
         this.buildDoc(docPath);
     }
