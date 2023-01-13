@@ -1,5 +1,17 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2022-12-29 - v17.1.28
+https://www.yuque.com/iohao/game/ab15oe#Y38Hx
+
+增加版本标识
+增加版本标识，并在 DebugInOut 插件中显示的打印。
+
+业务框架处理器
+增加 ActionCommandTryHandler 并作为默认的业务框架处理器。
+业务框架默认是在 bolt 线程运行，如果有异常会被 bolt 捕获到日志文件中。由于控制台没有显示的打印异常信息，开发者如果对 bolt 不熟悉，是不知道有该日志文件的。当出现异常时，将会浪费开发人员的时间来排查问题，为了避免这种情况，业务框架先做捕获，并打印到控制台中，在向上抛 ex。
+
+bolt 日志文件相关 https://www.yuque.com/iohao/game/derl0laiu2v0k104#likQv
+
 2022-12-14 - v17.1.27
 https://www.yuque.com/iohao/game/ab15oe#KR00k
 
