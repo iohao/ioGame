@@ -40,15 +40,20 @@ public class BarSkeletonDoc {
     @Setter
     String docFileName = "doc_game.txt";
 
+    @Setter
+    String docPath;
+
     public void addSkeleton(BarSkeleton barSkeleton) {
         skeletonList.add(barSkeleton);
     }
 
     public void buildDoc() {
         // 路径为当前项目
-        String docPath = System.getProperty("user.idr") + File.separator + docFileName;
+        if (Objects.isNull(this.docPath)) {
+            this.docPath = System.getProperty("user.dir") + File.separator + docFileName;
+        }
 
-        this.buildDoc(docPath);
+        this.buildDoc(this.docPath);
     }
 
     public void buildDoc(String docPath) {
