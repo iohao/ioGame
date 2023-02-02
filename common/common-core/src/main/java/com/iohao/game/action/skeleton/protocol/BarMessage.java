@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,8 @@
  */
 package com.iohao.game.action.skeleton.protocol;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
-import com.iohao.game.common.kit.ToJson;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,7 +40,7 @@ import java.util.Objects;
 @ToString
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PROTECTED)
-public abstract sealed class BarMessage implements Serializable, ToJson permits RequestMessage, ResponseMessage {
+public abstract sealed class BarMessage implements Serializable permits RequestMessage, ResponseMessage {
     @Serial
     private static final long serialVersionUID = 562068269463876111L;
 
@@ -57,12 +55,11 @@ public abstract sealed class BarMessage implements Serializable, ToJson permits 
     /**
      * 业务数据的 class 信息
      * <pre>
-     *     https://gitee.com/iohao/iogame/issues/I5G0FC
+     *     <a href="https://gitee.com/iohao/iogame/issues/I5G0FC">...</a>
      * </pre>
      */
     String dataClass;
     /** 实际请求的业务参数 byte[] */
-    @JSONField(serialize = false)
     byte[] data;
 
     public BarMessage setData(byte[] data) {

@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
  */
 package com.iohao.game.bolt.broker.client.external;
 
-import cn.hutool.system.OsInfo;
-import cn.hutool.system.SystemUtil;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalChannelInitializerCallback;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalJoinEnum;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ServerBootstrapEventLoopGroupOption;
@@ -29,11 +27,11 @@ import com.iohao.game.bolt.broker.client.external.bootstrap.option.ServerBootstr
 import com.iohao.game.bolt.broker.client.external.config.ExternalGlobalConfig;
 import com.iohao.game.bolt.broker.client.external.simple.ExternalBrokerClientStartup;
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
+import com.iohao.game.common.kit.system.OsInfo;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelHandler;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 import java.util.Arrays;
@@ -52,7 +50,6 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-01-09
  */
-@Slf4j
 @Setter
 @Accessors(fluent = true)
 public final class ExternalServerBuilder {
@@ -199,13 +196,13 @@ public final class ExternalServerBuilder {
     }
 
     private ServerBootstrapEventLoopGroupOption createServerBootstrapEventLoopGroupOption() {
-        OsInfo osInfo = SystemUtil.getOsInfo();
+        OsInfo osInfo = OsInfo.me();
 
         // 根据系统内核来优化
         if (osInfo.isLinux()) {
             // linux
             return new ServerBootstrapEventLoopGroupOptionForLinux();
-        } else if (osInfo.isMac() || osInfo.isMacOsX()) {
+        } else if (osInfo.isMac()) {
             // mac
             return new ServerBootstrapEventLoopGroupOptionForMac();
         }

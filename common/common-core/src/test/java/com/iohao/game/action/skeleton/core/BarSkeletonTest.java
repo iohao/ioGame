@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,14 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.action.skeleton.core.action.ExampleActionCont;
+import com.iohao.game.action.skeleton.core.action.ExampleActionCmd;
 import com.iohao.game.action.skeleton.core.action.pojo.BeeApple;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-@Slf4j
 public class BarSkeletonTest {
 
     @Test
@@ -35,7 +33,7 @@ public class BarSkeletonTest {
 
         // 模拟路由信息
         CmdInfo cmdInfo = CmdInfoFlyweightFactory.me()
-                .getCmdInfo(ExampleActionCont.BeeActionCont.cmd, ExampleActionCont.BeeActionCont.hello);
+                .getCmdInfo(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.hello);
 
         // 模拟请求
         HeadMetadata headMetadata = new HeadMetadata();
@@ -72,7 +70,7 @@ public class BarSkeletonTest {
 
         // 模拟路由信息
         CmdInfo cmdInfo = CmdInfoFlyweightFactory.me()
-                .getCmdInfo(ExampleActionCont.BeeActionCont.cmd, ExampleActionCont.BeeActionCont.test_void);
+                .getCmdInfo(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.test_void);
 
         // 模拟请求
         HeadMetadata headMetadata = new HeadMetadata();

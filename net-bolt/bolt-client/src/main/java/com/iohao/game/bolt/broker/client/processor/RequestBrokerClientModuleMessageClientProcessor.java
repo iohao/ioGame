@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,16 @@ package com.iohao.game.bolt.broker.client.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.RequestBrokerClientModuleMessage;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 /**
  * 收到网关请求模块信息
@@ -37,14 +39,16 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-05-16
  */
-@Slf4j
 public class RequestBrokerClientModuleMessageClientProcessor extends AsyncUserProcessor<RequestBrokerClientModuleMessage>
         implements BrokerClientItemAware {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
+
     @Setter
     BrokerClientItem brokerClientItem;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestBrokerClientModuleMessage request) {
+
         if (IoGameGlobalConfig.requestResponseLog) {
             log.info("bizCtx.getRemoteAddress() : {}", bizCtx.getRemoteAddress());
         }
@@ -57,6 +61,8 @@ public class RequestBrokerClientModuleMessageClientProcessor extends AsyncUserPr
             BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
             log.info("brokerClientItems : {}", brokerClientManager.countActiveItem());
         }
+
+        IoGameBanner.me().countDown();
     }
 
     /**

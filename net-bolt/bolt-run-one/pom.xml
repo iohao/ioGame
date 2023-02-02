@@ -12,8 +12,6 @@
 
     <artifactId>bolt-run-one</artifactId>
 
-
-
     <dependencies>
         <dependency>
             <groupId>com.iohao.game</groupId>
@@ -26,12 +24,7 @@
             <artifactId>bolt-broker-server</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <!-- 这个不是必须的， 这里使用了 springboot 的控制台色彩相关日志 -->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter</artifactId>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
+
     </dependencies>
 
 </project>

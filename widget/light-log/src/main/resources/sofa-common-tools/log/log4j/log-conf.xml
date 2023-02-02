@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "http://toolkit.alibaba-inc.com/dtd/log4j/log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="CONFIG-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="${logging.path}/ioGame/config-digest.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="${file.encoding}"/>
+        <param name="threshold" value="info"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p %-5t - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="COMMON-DEFAULT-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="${logging.path}/ioGame/common-default.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="${file.encoding}"/>
+        <param name="threshold" value="${logging.level.sofa-common-tools}"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p %-5t - %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="com.alipay.sofa.common.config.digest" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="CONFIG-APPENDER"/>
+    </logger>
+
+    <root>
+        <level value="${logging.level.sofa-common-tools}"/>
+        <appender-ref ref="COMMON-DEFAULT-APPENDER"/>
+    </root>
+</log4j:configuration>

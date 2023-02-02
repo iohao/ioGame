@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegionFactory;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.Collection;
@@ -33,7 +32,6 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
 public class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
 
     /**
@@ -110,14 +108,14 @@ public class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
     }
 
     private BrokerClientRegion getBoltClientRegionByTag(String tag) {
-        BrokerClientRegion brokerClientRegion = tagBoltClientRegionMap.get(tag);
+        BrokerClientRegion brokerClientRegion = this.tagBoltClientRegionMap.get(tag);
 
         // 无锁化
         if (Objects.isNull(brokerClientRegion)) {
-            brokerClientRegion = brokerClientRegionFactory.createBrokerClientRegion(tag);
-            brokerClientRegion = tagBoltClientRegionMap.putIfAbsent(tag, brokerClientRegion);
+            brokerClientRegion = this.brokerClientRegionFactory.createBrokerClientRegion(tag);
+            brokerClientRegion = this.tagBoltClientRegionMap.putIfAbsent(tag, brokerClientRegion);
             if (Objects.isNull(brokerClientRegion)) {
-                brokerClientRegion = tagBoltClientRegionMap.get(tag);
+                brokerClientRegion = this.tagBoltClientRegionMap.get(tag);
             }
         }
 

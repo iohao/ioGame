@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ import java.util.Map;
  * @author 渔民小镇
  * @date 2022-05-12
  */
-@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BalancedManager {
     /** 逻辑服 负载均衡 */
@@ -83,7 +81,7 @@ public class BalancedManager {
         String address = brokerClientModuleMessage.getAddress();
 
         // broker client
-        RpcServer rpcServer = brokerServer.getRpcServer();
+        RpcServer rpcServer = this.brokerServer.getRpcServer();
         BrokerClientProxy brokerClientProxy = new BrokerClientProxy(brokerClientModuleMessage, rpcServer);
 
         loadBalanced.register(brokerClientProxy);
@@ -91,7 +89,7 @@ public class BalancedManager {
         brokerClientProxy.setCmdMergeList(null);
         brokerClientModuleMessage.setCmdMergeList(null);
 
-        refMap.put(address, brokerClientProxy);
+        this.refMap.put(address, brokerClientProxy);
     }
 
     public BrokerClientProxy remove(String address) {

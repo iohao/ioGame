@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.iohao.game.common.kit;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -45,7 +46,14 @@ public class RandomKit {
      * @param max 最大数（不包含）
      * @return 随机数
      */
-    public static int randomInt(int min, int max) {
+    public int randomInt(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max);
+    }
+
+    public <T> T randomEle(List<T> list) {
+        // 不做 null 判断了
+        int size = list.size();
+        int randomInt = RandomKit.randomInt(size);
+        return list.get(randomInt);
     }
 }

@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 默认的ActionAfter
@@ -31,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2021-12-20
  */
-@Slf4j
 public final class DefaultActionAfter implements ActionAfter {
     /** rpc oneway request */
     static final byte REQUEST_ONEWAY = (byte) 0x02;

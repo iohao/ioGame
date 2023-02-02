@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ import com.iohao.game.bolt.broker.client.external.ext.ExternalBizRegion;
 import com.iohao.game.bolt.broker.client.external.ext.ExternalBizRegionContext;
 import com.iohao.game.bolt.broker.client.external.ext.ExternalBizRegions;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
-import lombok.extern.slf4j.Slf4j;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import org.slf4j.Logger;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -37,8 +38,8 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-07-27
  */
-@Slf4j
 public class RequestCollectExternalMessageExternalProcessor extends AbstractAsyncUserProcessor<RequestCollectExternalMessage> {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestCollectExternalMessage request) {
@@ -60,16 +61,13 @@ public class RequestCollectExternalMessageExternalProcessor extends AbstractAsyn
             return;
         }
 
-
         ResponseCollectExternalItemMessage itemMessage = new ResponseCollectExternalItemMessage();
 
         try {
-
             ExternalBizRegionContext context = new ExternalBizRegionContext();
             context.setRequestCollectExternalMessage(request);
             Serializable data = externalBizRegion.request(context);
             itemMessage.setData(data);
-
         } catch (Throwable e) {
             if (e instanceof MsgException msgException) {
                 itemMessage.setError(msgException);

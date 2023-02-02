@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParser;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 结果包装器
@@ -32,8 +31,8 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-01-12
  */
-@Slf4j
 public final class DefaultActionMethodResultWrap implements ActionMethodResultWrap {
+
     @Override
     public void wrap(final FlowContext flowContext) {
         final ResponseMessage responseMessage = flowContext.getResponse();

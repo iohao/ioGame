@@ -1,5 +1,7 @@
 package com.iohao.game.bolt.broker.cluster;
 
+import org.junit.Test;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -8,11 +10,9 @@ import java.util.concurrent.TimeUnit;
  * @date 2022-05-16
  */
 public class Gossip2Test {
-    public static void main(String[] args) throws Exception {
-        new Gossip2Test().a();
-    }
 
-    private void a() throws Exception {
+    @Test
+    public void test() throws Exception {
 
         // 种子节点
         List<String> seedAddress = List.of(

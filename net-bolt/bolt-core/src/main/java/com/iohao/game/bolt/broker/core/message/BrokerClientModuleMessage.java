@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.iohao.game.bolt.broker.core.message;
 
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
 import com.iohao.game.common.kit.MurmurHash3;
-import com.iohao.game.common.kit.ToJson;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +42,7 @@ import java.util.Objects;
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrokerClientModuleMessage implements Serializable, ToJson {
+public class BrokerClientModuleMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = -1570849960266785141L;
     /** 服务器唯一标识 */
@@ -78,13 +77,13 @@ public class BrokerClientModuleMessage implements Serializable, ToJson {
 
     @Override
     public String toString() {
-        return "BrokerClientMessage{" +
+        return "BrokerClientModuleMessage{" +
                 "name='" + name + '\'' +
                 ", tag='" + tag + '\'' +
-                ", brokerClientType=" + brokerClientType +
-                ", address='" + address + '\'' +
-                ", cmdMergeSize=" + (Objects.isNull(cmdMergeList) ? 0 : cmdMergeList.size()) +
                 ", id='" + id + '\'' +
+                ", idHash=" + idHash +
+                ", address='" + address + '\'' +
+                ", brokerClientType=" + brokerClientType +
                 '}';
     }
 

@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,13 @@ import com.iohao.game.action.skeleton.protocol.wrapper.IntPb;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongListPb;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongPb;
 import lombok.AccessLevel;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * 关于业务框架中，action 参数相关的包装类
@@ -46,9 +48,17 @@ public final class MethodParsers {
      * </pre>
      */
     final Map<Class<?>, MethodParser> methodParserMap = new HashMap<>();
+    final Map<Class<?>, Supplier<?>> paramSupplierMap = new HashMap<>();
+    /** action 业务方法参数的默认解析器 */
+    @Setter
+    MethodParser methodParser = DefaultMethodParser.me();
 
-    public void mapping(Class<?> baseTypeParamClass, MethodParser methodParamParser) {
-        methodParserMap.put(baseTypeParamClass, methodParamParser);
+    public void mappingParamSupplier(Class<?> paramClass, Supplier<?> supplier) {
+        this.paramSupplierMap.put(paramClass, supplier);
+    }
+
+    public void mapping(Class<?> paramClass, MethodParser methodParamParser) {
+        this.methodParserMap.put(paramClass, methodParamParser);
     }
 
     public MethodParser getMethodParser(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo) {
@@ -74,7 +84,27 @@ public final class MethodParsers {
     }
 
     public MethodParser getMethodParser(Class<?> paramClazz) {
-        return methodParserMap.getOrDefault(paramClazz, DefaultMethodParser.me());
+        return this.methodParserMap.getOrDefault(paramClazz, this.methodParser);
+    }
+
+    Object newObject(Class<?> paramClass) {
+        if (this.paramSupplierMap.containsKey(paramClass)) {
+            return this.paramSupplierMap.get(paramClass).get();
+        }
+
+        return null;
+    }
+
+    private void mapping(Class<?> paramClass, MethodParser methodParamParser, Supplier<?> supplier) {
+        mapping(paramClass, methodParamParser);
+
+        /*
+         * 使用原生 pb 如果值为 0，在 jprotobuf 中会出现 nul 的情况，为了避免这个问题
+         * 如果业务参数为 null，当解析到对应的类型时，则使用 Supplier 来创建对象
+         *
+         * 具体使用可参考 DefaultMethodParser
+         */
+        mappingParamSupplier(paramClass, supplier);
     }
 
     private MethodParsers() {
@@ -89,10 +119,11 @@ public final class MethodParsers {
          * 这里注册是为了顺便使用 containsKey 方法，因为生成文档的时候要用到短名字
          * 当然也可以使用 instanceof 来做这些，但似乎没有这种方式优雅
          */
-        this.mapping(IntPb.class, DefaultMethodParser.me());
-        this.mapping(IntListPb.class, DefaultMethodParser.me());
-        this.mapping(LongListPb.class, DefaultMethodParser.me());
-        this.mapping(LongPb.class, DefaultMethodParser.me());
+        this.mapping(IntPb.class, DefaultMethodParser.me(), IntPb::new);
+        this.mapping(IntListPb.class, DefaultMethodParser.me(), IntListPb::new);
+
+        this.mapping(LongPb.class, DefaultMethodParser.me(), LongPb::new);
+        this.mapping(LongListPb.class, DefaultMethodParser.me(), LongListPb::new);
     }
 
     public static MethodParsers me() {

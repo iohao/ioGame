@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,32 +19,33 @@ package com.iohao.game.action.skeleton.core.action;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongPb;
-import lombok.extern.slf4j.Slf4j;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.iohao.game.action.skeleton.core.action.ExampleActionCont.WrapperLongActionCont;
+import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.WrapperLongActionCmd;
 
 /**
  * @author 渔民小镇
  * @date 2022-06-26
  */
-@Slf4j
-@ActionController(WrapperLongActionCont.cmd)
+@ActionController(WrapperLongActionCmd.cmd)
 public class WrapperLongAction {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
-    @ActionMethod(WrapperLongActionCont.longPb2Void)
+    @ActionMethod(WrapperLongActionCmd.longPb2Void)
     public void longPb2Void(LongPb longPb) {
         log.info("longPb : {}", longPb);
     }
 
-    @ActionMethod(WrapperLongActionCont.longPb2Long)
+    @ActionMethod(WrapperLongActionCmd.longPb2Long)
     public long longPb2Long(LongPb longPb) {
         return longPb.longValue + 1;
     }
 
-    @ActionMethod(WrapperLongActionCont.longPb2LongPb)
+    @ActionMethod(WrapperLongActionCmd.longPb2LongPb)
     public LongPb longPb2LongPb(LongPb intPb) {
 
         LongPb newLongPb = new LongPb();
@@ -53,7 +54,7 @@ public class WrapperLongAction {
         return newLongPb;
     }
 
-    @ActionMethod(WrapperLongActionCont.longPb2LongList)
+    @ActionMethod(WrapperLongActionCmd.longPb2LongList)
     public List<Long> longPb2LongList(LongPb intPb) {
 
         List<Long> intList = new ArrayList<>();
@@ -68,17 +69,17 @@ public class WrapperLongAction {
      *
      * @param longValue intPb
      */
-    @ActionMethod(WrapperLongActionCont.long2Void)
+    @ActionMethod(WrapperLongActionCmd.long2Void)
     public void long2Void(long longValue) {
         log.info("longValue : {}", longValue);
     }
 
-    @ActionMethod(WrapperLongActionCont.long2Long)
+    @ActionMethod(WrapperLongActionCmd.long2Long)
     public long long2Long(long longValue) {
         return longValue + 1;
     }
 
-    @ActionMethod(WrapperLongActionCont.long2LongPb)
+    @ActionMethod(WrapperLongActionCmd.long2LongPb)
     public LongPb long2LongPb(long longValue) {
 
         LongPb newIntPb = new LongPb();
@@ -87,7 +88,7 @@ public class WrapperLongAction {
         return newIntPb;
     }
 
-    @ActionMethod(WrapperLongActionCont.long2LongList)
+    @ActionMethod(WrapperLongActionCmd.long2LongList)
     public List<Long> long2LongList(long longValue) {
 
         List<Long> intList = new ArrayList<>();
@@ -102,17 +103,17 @@ public class WrapperLongAction {
      *
      * @param longPb intPb
      */
-    @ActionMethod(WrapperLongActionCont.longer2Void)
+    @ActionMethod(WrapperLongActionCmd.longer2Void)
     public void longer2Void(LongPb longPb) {
         log.info("longPb : {}", longPb);
     }
 
-    @ActionMethod(WrapperLongActionCont.longer2Long)
+    @ActionMethod(WrapperLongActionCmd.longer2Long)
     public long longer2Long(long longValue) {
         return longValue + 1;
     }
 
-    @ActionMethod(WrapperLongActionCont.longer2LongPb)
+    @ActionMethod(WrapperLongActionCmd.longer2LongPb)
     public LongPb longer2LongPb(Long longValue) {
 
         LongPb newIntPb = new LongPb();
@@ -121,7 +122,7 @@ public class WrapperLongAction {
         return newIntPb;
     }
 
-    @ActionMethod(WrapperLongActionCont.longer2LongList)
+    @ActionMethod(WrapperLongActionCmd.longer2LongList)
     public List<Long> longer2LongList(Long longValue) {
 
         List<Long> intList = new ArrayList<>();

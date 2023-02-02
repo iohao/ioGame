@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@ import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
+import org.slf4j.Logger;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,8 +34,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
 public class CloseConnectEventClientProcessor implements ConnectionEventProcessor, BrokerClientItemAware {
+    static final Logger log = IoGameLoggerFactory.getLoggerConnection();
 
     private final AtomicBoolean dicConnected = new AtomicBoolean();
     private final AtomicInteger disConnectTimes = new AtomicInteger();
@@ -44,28 +44,23 @@ public class CloseConnectEventClientProcessor implements ConnectionEventProcesso
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
-        Assert.assertNotNull(conn);
+        
+        Objects.requireNonNull(conn);
         dicConnected.set(true);
         disConnectTimes.incrementAndGet();
 
-        if (IoGameGlobalConfig.openLog) {
-            log.info("网关断开 remoteAddress : {}", remoteAddress);
-        }
+        log.debug("网关断开 remoteAddress : {}", remoteAddress);
 
         //  这里要断开与 broker （游戏网关）的连接
         BrokerClient brokerClient = brokerClientItem.getBrokerClient();
         BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
 
-        if (IoGameGlobalConfig.openLog) {
-            log.info("brokerClientItems : {}", brokerClientManager.countActiveItem());
-        }
+        log.debug("brokerClientItems : {}", brokerClientManager.countActiveItem());
 
         //  在集群时，需要移除与当前 broker （游戏网关）连接的 brokerClientItem
         brokerClientManager.remove(brokerClientItem);
 
-        if (IoGameGlobalConfig.openLog) {
-            log.info("brokerClientItems : {}", brokerClientManager.countActiveItem());
-        }
+        log.debug("brokerClientItems : {}", brokerClientManager.countActiveItem());
     }
 
     public boolean isDisConnected() {

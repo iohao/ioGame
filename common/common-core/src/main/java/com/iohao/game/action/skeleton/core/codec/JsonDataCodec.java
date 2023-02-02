@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,14 @@
  */
 package com.iohao.game.action.skeleton.core.codec;
 
+
 import com.alibaba.fastjson2.JSON;
 
 /**
  * json 使用的 fastjson2
+ * <pre>
+ *     注意：如果使用该类，需要在你的项目中引入 fastjson2 的依赖
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2022-11-24

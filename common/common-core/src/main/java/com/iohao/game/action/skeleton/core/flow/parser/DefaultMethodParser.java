@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package com.iohao.game.action.skeleton.core.flow.parser;
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 
+import java.util.Objects;
+
 /**
  * 默认解析器
  *
@@ -26,8 +28,7 @@ import com.iohao.game.action.skeleton.core.DataCodecKit;
  * @date 2022-06-26
  */
 
-final class DefaultMethodParser implements MethodParser {
-
+class DefaultMethodParser implements MethodParser {
     @Override
     public Class<?> getActualClazz(ActionCommand.MethodParamResultInfo methodParamResultInfo) {
         return methodParamResultInfo.getActualTypeArgumentClazz();
@@ -36,6 +37,15 @@ final class DefaultMethodParser implements MethodParser {
     @Override
     public Object parseParam(byte[] data, ActionCommand.ParamInfo paramInfo) {
         Class<?> actualTypeArgumentClazz = paramInfo.getActualTypeArgumentClazz();
+
+        if (Objects.isNull(data)) {
+            // 如果配置了 action 参数类型的 Supplier，则通过 Supplier 来创建对象
+            var o = MethodParsers.me().newObject(actualTypeArgumentClazz);
+            if (Objects.nonNull(o)) {
+                return o;
+            }
+        }
+
         return DataCodecKit.decode(data, actualTypeArgumentClazz);
     }
 

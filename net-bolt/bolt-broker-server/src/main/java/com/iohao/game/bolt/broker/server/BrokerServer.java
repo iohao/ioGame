@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,17 @@
 package com.iohao.game.bolt.broker.server;
 
 import com.alipay.remoting.rpc.RpcServer;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 /**
  * Broker Server （游戏网关服）
@@ -36,13 +38,12 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
 @Getter
 @Setter(AccessLevel.PACKAGE)
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerServer {
-
+    private static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     final BalancedManager balancedManager = new BalancedManager(this);
 
     /**
@@ -71,12 +72,15 @@ public class BrokerServer {
         this.rpcServer = new RpcServer(this.port, true);
     }
 
-
     public void startup() {
+
         // 启动 bolt rpc
         this.rpcServer.startup();
 
-        log.info("bolt-broker （游戏网关）port: [{}] 启动模式: [{}] ", this.port, this.brokerRunMode);
+        log.info("启动游戏网关 port: [{}] 启动模式: [{}] ", this.port, this.brokerRunMode);
+
+        IoGameBanner.render();
+        IoGameBanner.me().countDown();
     }
 
     public void shutdown() {

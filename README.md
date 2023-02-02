@@ -2,11 +2,11 @@
   ioGame
 </h2>
 <p align="center">
-  <strong>国内首个基于蚂蚁金服 SOFABolt 的 java 网络游戏服务器框架；无锁异步化、事件驱动的架构设计</strong>
+  <strong>通过 ioGame 可以很容易的搭建出一个集群无中心节点、集群自动化、多进程的分步式游戏服务器</strong>
   <br>
-  <strong>通过 ioGame 可以很容易的搭建出一个集群无中心节点、有状态多进程的分步式游戏服务器</strong>
+  <strong>无锁异步化、事件驱动的架构设计；首个基于蚂蚁金服 SOFABolt 的 java 网络游戏服务器框架</strong>
   <br>
-  <strong>无中间件依赖、代码即文档、JSR380、断言 + 异常机制 = 更少的维护成本、开发成本</strong>
+  <strong>无中间件强依赖、代码即文档、JSR380、断言 + 异常机制 = 更少的维护成本、开发成本</strong>
   <br>
   <strong>同样的一套业务代码无需变更，可以支持多种协议：protobuf、json，并且可扩展</strong>
   <br>
@@ -30,8 +30,6 @@
   <br>
   <strong>无 spring 强依赖</strong>
 </p>
-
-
 
 <p align="center">
 	<a href="https://www.yuque.com/iohao/game">https://www.yuque.com/iohao/game</a>
@@ -162,9 +160,7 @@ ioGame 依然遵循过去、现在、将来都不会有商业版本，所有功�
 
 ### **最小依赖**
 
-ioGame 已经上传到中央仓库，如果无法下载最新的，请暂时注释阿里云代理。
-
-https://search.maven.org/search?q=a:bolt-run-one
+ioGame 已经上传到中央仓库，如果无法下载最新的框架源码，建议开发者的 maven 仓库代理使用原生的或腾讯云的代理，目前不推荐阿里云的代理。[腾讯云代理设置可参考这里](https://www.yuque.com/iohao/game/swt3ls#Amq4K)。
 
 
 
@@ -223,6 +219,22 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 
 ![](https://user-images.githubusercontent.com/26356013/211194151-a6c47738-804b-4e18-a43f-0742d92fd82b.png)
+
+---
+
+
+
+### 启动展示
+
+ioGame 在内存占用、启动速度、打包等方面也是优秀的。
+
+- 内存方面：内存占用小。
+- 启动速度方面：应用通常会在 0.x 秒内完成启动。
+- 打包方面：打 jar 包后大约 15MB ，详细请看 [快速从零编写服务器完整示例](https://www.yuque.com/iohao/game/zm6qg2#LF8Qh)。
+
+
+
+![](https://user-images.githubusercontent.com/26356013/215700352-1dbab29d-672d-4d68-bf50-2441e49bd87d.png)
 
 
 
@@ -320,8 +332,6 @@ ioGame 的星球是纯原创性的内容，不是知识点资料收集类型的�
 
 
 
-
-
 ## 愿景
 
 **让网络游戏服务器的编程变得轻松简单！**  
@@ -338,7 +348,11 @@ ioGame 是轻量级的网络游戏服务器框架，在使用 ioGame 时，只�
 
 
 
-通过 ioGame 你可以很容易的搭建出一个稳定、高性能、集群无中心节点、分步式、自带负载均衡、跨进程通信、避免类爆炸设计的网络游戏服务器。游戏框架借助于蚂蚁金服 [sofa-bolt](https://www.sofastack.tech/projects/sofa-bolt/overview/) 通信框架来提供通信方面的稳定与高性能。
+通过 ioGame 你可以很容易的搭建出一个稳定、高性能、自带负载均衡、避免类爆炸设计、可跨进程跨机器通信、集群无中心节点、集群自动化、有状态多进程的分步式网络游戏服务器。游戏框架借助于蚂蚁金服 [sofa-bolt](https://www.sofastack.tech/projects/sofa-bolt/overview/) 通信框架来提供通信方面的稳定与高性能。
+
+
+
+ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar 包后大约 **15MB**，应用通常会在 **0.x 秒**内完成启动，内存占用小。详细请看 [快速从零编写服务器完整示例](https://www.yuque.com/iohao/game/zm6qg2#LF8Qh)。
 
 
 
@@ -445,8 +459,9 @@ Result "com.iohao.game.example.benchmark.BarSkeletonBenchmark.handle1":
 ![img](https://oscimg.oschina.net/oscnet/up-2a383c8fd7b13161b4e5bf210bdf9980771.png)
 
 <p align="center" style="color:red">
-通过 ioGame 你可以很容易的搭建出一个集群无中心节点、分步式的网络游戏服务器！
+通过 ioGame 你可以很容易的搭建出一个集群无中心节点、集群自动化、分步式的网络游戏服务器！
 </p>
+
 
 
 
@@ -460,7 +475,7 @@ Result "com.iohao.game.example.benchmark.BarSkeletonBenchmark.handle1":
 
 **游戏网关集群**
 
-broker （游戏网关）支持**集群**的方式部署，集群的使用是简单的，集群无中心节点、自带负载均衡。ioGame 本身就包含服务注册，你不需要外接一个服务注册中心，如 Eureka，ZooKeeper 等（变相的节约服务器成本）。
+broker （游戏网关）支持**集群**的方式部署，集群的使用是简单的，**集群无中心节点、集群自动化、自带负载均衡**。ioGame 本身就包含服务注册，你不需要外接一个服务注册中心，如 Eureka，ZooKeeper 等（变相的节约服务器成本）。
 
 
 
@@ -490,7 +505,7 @@ broker （游戏网关）支持**集群**的方式部署，集群的使用是简
 
 
 
-架构由三部分组成：1.游戏对外服、2.Broker（游戏网关）、3.游戏逻辑服；**三者既是相互独立的，又是可以相互融合的**（相互独立、相互融合；话虽简单，实际实现却不简单）。如：
+架构由三部分组成：1.游戏对外服、2.Broker（游戏网关）、3.游戏逻辑服；**三者既可相互独立，又可相互融合**，如：
 
 - 游戏对外服、Broker（游戏网关）、游戏逻辑服这三部分，在一个进程中；【单体应用；在开发分步式时，调试更加方便】
 - 游戏对外服、Broker（游戏网关）、游戏逻辑服这三部分，在多个进程中；【分布式】

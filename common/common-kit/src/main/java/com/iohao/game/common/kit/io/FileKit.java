@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,10 @@
  */
 package com.iohao.game.common.kit.io;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
+import com.iohao.game.common.kit.hutool.AdapterHuUtils;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.util.List;
 
 /**
  * @author 渔民小镇
@@ -38,7 +35,7 @@ public class FileKit {
      * @return 创建的目录
      */
     public File mkdir(String dirPath) {
-        return FileUtil.mkdir(dirPath);
+        return AdapterHuUtils.mkdir(dirPath);
     }
 
     /**
@@ -48,7 +45,7 @@ public class FileKit {
      * @return File
      */
     public File file(String path) {
-        return FileUtil.file(path);
+        return AdapterHuUtils.file(path);
     }
 
 
@@ -58,10 +55,9 @@ public class FileKit {
      * @param content 写入的内容
      * @param path    文件路径
      * @return 写入的文件
-     * @throws IORuntimeException IO异常
      */
-    public File writeUtf8String(String content, String path) throws IORuntimeException {
-        return FileUtil.writeUtf8String(content, path);
+    public File writeUtf8String(String content, String path) {
+        return AdapterHuUtils.writeUtf8String(content, path);
     }
 
     /**
@@ -71,7 +67,7 @@ public class FileKit {
      * @return 如果为目录true
      */
     public boolean isDirectory(String path) {
-        return FileUtil.isDirectory(path);
+        return AdapterHuUtils.isDirectory(path);
     }
 
     /**
@@ -81,20 +77,6 @@ public class FileKit {
      * @return 如果存在返回true
      */
     public static boolean exist(File file) {
-        return (null != file) && file.exists();
-    }
-
-
-    /**
-     * 递归遍历目录以及子目录中的所有文件<br>
-     * 如果提供file为文件，直接返回过滤结果
-     *
-     * @param path       当前遍历文件或目录的路径
-     * @param fileFilter 文件过滤规则对象，选择要保留的文件，只对文件有效，不过滤目录
-     * @return 文件列表
-     * @since 3.2.0
-     */
-    public static List<File> loopFiles(String path, FileFilter fileFilter) {
-        return FileUtil.loopFiles(path, fileFilter);
+        return AdapterHuUtils.exist(file);
     }
 }

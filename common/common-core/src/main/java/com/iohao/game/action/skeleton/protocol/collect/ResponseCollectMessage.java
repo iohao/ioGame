@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.iohao.game.action.skeleton.protocol.collect;
 
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
-import com.iohao.game.common.kit.ToJson;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,7 +47,7 @@ import java.util.List;
 @ToString
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResponseCollectMessage implements Serializable, ToJson {
+public class ResponseCollectMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = -2510491415150451094L;
 

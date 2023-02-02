@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,11 @@ import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 渔民小镇
  * @date 2022-05-28
  */
-@Slf4j
 public class EndPointLogicServerMessageBrokerProcessor extends AbstractAsyncUserProcessor<EndPointLogicServerMessage>
         implements BrokerServerAware {
     @Setter
@@ -37,8 +35,6 @@ public class EndPointLogicServerMessageBrokerProcessor extends AbstractAsyncUser
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, EndPointLogicServerMessage request) {
-
-        log.debug("EndPointLogicServer {}", request);
 
         BrokerExternalKit.sendMessageToExternals(this.brokerServer, request);
     }

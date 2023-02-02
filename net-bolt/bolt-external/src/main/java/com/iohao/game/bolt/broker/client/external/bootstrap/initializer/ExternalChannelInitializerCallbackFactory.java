@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package com.iohao.game.bolt.broker.client.external.bootstrap.initializer;
 
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalChannelInitializerCallback;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalJoinEnum;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -31,9 +29,7 @@ import java.util.function.Supplier;
  * @author 渔民小镇
  * @date 2022-03-13
  */
-@Slf4j
 public class ExternalChannelInitializerCallbackFactory {
-
     private final EnumMap<ExternalJoinEnum, Supplier<ExternalChannelInitializerCallback>> map = new EnumMap<>(ExternalJoinEnum.class);
 
     /**
@@ -52,10 +48,6 @@ public class ExternalChannelInitializerCallbackFactory {
 
         // 连接方式
         ExternalChannelInitializerCallback channelInitializerCallback = supplier.get();
-
-        if (IoGameGlobalConfig.openLog) {
-            log.info("游戏对外服-启动方式 ==== {} ====", externalJoinEnum.getName());
-        }
 
         return channelInitializerCallback;
     }

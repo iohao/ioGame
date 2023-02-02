@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,19 @@
  */
 package com.iohao.game.bolt.broker.client.external;
 
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.client.BrokerClientApplication;
+import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalJoinEnum;
 import com.iohao.game.bolt.broker.client.external.simple.ExternalBrokerClientStartup;
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;
@@ -36,9 +39,10 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-01-09
  */
-@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class ExternalServer {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
+
     /** netty 服务器，与真实用户对接 */
     final ServerBootstrap bootstrap;
     /** ip */
@@ -46,6 +50,7 @@ public final class ExternalServer {
     /** 对外服端口 */
     final int port;
     final ExternalBrokerClientStartup externalBoltBrokerClientStartup;
+    final ExternalJoinEnum externalJoinEnum;
     /** 设置 broker （游戏网关）连接地址 */
     BrokerAddress brokerAddress;
 
@@ -55,6 +60,7 @@ public final class ExternalServer {
         this.bootstrap = builder.bootstrap;
         this.externalBoltBrokerClientStartup = builder.externalBoltBrokerClientStartup;
         this.brokerAddress = builder.brokerAddress;
+        this.externalJoinEnum = builder.externalJoinEnum;
     }
 
     /**
@@ -67,8 +73,10 @@ public final class ExternalServer {
         ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(ip, port)).sync();
 
         if (IoGameGlobalConfig.openLog) {
-            log.info("external 启动游戏对外服 ! port: {}", port);
+            log.info("启动游戏对外服 port: [{}] 连接方式: [{}] ", port, externalJoinEnum.getName());
         }
+
+        IoGameBanner.render();
 
         channelFuture.channel().closeFuture().sync();
     }
@@ -93,6 +101,7 @@ public final class ExternalServer {
      * 启动对外服
      */
     public void startup() {
+
         // 启动内部逻辑服, 用于连接 broker （游戏网关）服务器
         this.startupExternalBoltBrokerClient();
 
@@ -112,15 +121,4 @@ public final class ExternalServer {
         return new ExternalServerBuilder(port);
     }
 
-    public static void main(String[] args) {
-        int port = 22022;
-
-        ExternalServerBuilder builder = ExternalServer.newBuilder(port);
-
-        ExternalServer externalServer = builder.build();
-
-        externalServer.startup();
-        System.out.println("OK!");
-
-    }
 }

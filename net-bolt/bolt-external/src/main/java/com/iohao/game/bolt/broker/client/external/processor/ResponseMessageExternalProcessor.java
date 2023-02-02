@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,11 @@ import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMess
 import com.iohao.game.bolt.broker.client.external.session.UserChannelId;
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import io.netty.channel.Channel;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.Objects;
 
@@ -42,8 +43,9 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-01-18
  */
-@Slf4j
 public class ResponseMessageExternalProcessor extends AbstractAsyncUserProcessor<ResponseMessage> {
+    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
+
     final UserChannelId emptyUserChannelId = new UserChannelId("empty");
 
     @Override

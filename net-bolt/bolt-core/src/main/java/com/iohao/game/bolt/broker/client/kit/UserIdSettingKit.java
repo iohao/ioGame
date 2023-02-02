@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,15 @@ package com.iohao.game.bolt.broker.client.kit;
 
 import com.alipay.remoting.exception.RemotingException;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.Objects;
 
@@ -39,9 +40,10 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-01-19
  */
-@Slf4j
 @UtilityClass
 public class UserIdSettingKit {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
+
     /**
      * 设置用户的 userId
      * <pre>
@@ -85,7 +87,7 @@ public class UserIdSettingKit {
             }
 
             if (log.isDebugEnabled()) {
-                log.info("~~~~~ consumer time ~~~~~ {}"
+                log.debug("~~~~~ consumer time ~~~~~ {}"
                         , settingUserIdMessageResponse.getEndTime() - userIdMessage.getStartTime());
             }
 

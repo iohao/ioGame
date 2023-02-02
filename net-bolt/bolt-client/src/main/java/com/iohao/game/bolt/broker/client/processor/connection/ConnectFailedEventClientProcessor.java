@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,16 @@ package com.iohao.game.bolt.broker.client.processor.connection;
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
-import lombok.extern.slf4j.Slf4j;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * @author 渔民小镇
  * @date 2022-05-16
  */
-@Slf4j
 public class ConnectFailedEventClientProcessor implements ConnectionEventProcessor {
+    static final Logger log = IoGameLoggerFactory.getLoggerConnection();
+
     @Override
     public void onEvent(String remoteAddress, Connection connection) {
         if (IoGameGlobalConfig.openLog) {

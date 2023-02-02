@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,12 @@ import com.iohao.game.action.skeleton.core.action.group.Update;
 import com.iohao.game.action.skeleton.core.action.pojo.BeeApple;
 import com.iohao.game.action.skeleton.core.action.pojo.BirdValid;
 import com.iohao.game.action.skeleton.core.action.pojo.DogValid;
-import lombok.extern.slf4j.Slf4j;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import org.slf4j.Logger;
 
-@Slf4j
-@ActionController(ExampleActionCont.BeeActionCont.cmd)
+@ActionController(ExampleActionCmd.BeeActionCmd.cmd)
 public class BeeAction {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
     /**
      * <pre>
@@ -39,14 +40,14 @@ public class BeeAction {
      * @param beeApple a
      * @return 返回具体信息
      */
-    @ActionMethod(ExampleActionCont.BeeActionCont.hello)
+    @ActionMethod(ExampleActionCmd.BeeActionCmd.hello)
     public BeeApple hello(BeeApple beeApple) {
         BeeApple that = new BeeApple();
         that.setContent(beeApple.content + "，I'm hello");
         return that;
     }
 
-    @ActionMethod(ExampleActionCont.BeeActionCont.name)
+    @ActionMethod(ExampleActionCmd.BeeActionCmd.name)
     public BeeApple name(BeeApple beeApple) {
         log.debug("beeApple: {}", beeApple);
         BeeApple that = new BeeApple();
@@ -54,23 +55,23 @@ public class BeeAction {
         return that;
     }
 
-    @ActionMethod(ExampleActionCont.BeeActionCont.test_void)
+    @ActionMethod(ExampleActionCmd.BeeActionCmd.test_void)
     public void thatVoid(BeeApple beeApple) {
         BeeApple that = new BeeApple();
         that.setContent(beeApple.content + "，I'm thatVoid");
     }
 
-    @ActionMethod(ExampleActionCont.BeeActionCont.jsr380)
+    @ActionMethod(ExampleActionCmd.BeeActionCmd.jsr380)
     public void jsr380(DogValid dogValid) {
         log.info("dogValid : {}", dogValid);
     }
 
-    @ActionMethod(ExampleActionCont.BeeActionCont.validated_group_update)
+    @ActionMethod(ExampleActionCmd.BeeActionCmd.validated_group_update)
     public void validateUpdate(@ValidatedGroup(value = Update.class) BirdValid birdValid) {
         log.info("dogValid : {}", birdValid);
     }
 
-    @ActionMethod(ExampleActionCont.BeeActionCont.validated_group_create)
+    @ActionMethod(ExampleActionCmd.BeeActionCmd.validated_group_create)
     public void validateCreate(@ValidatedGroup(value = Create.class) BirdValid birdValid) {
         log.info("dogValid : {}", birdValid);
     }

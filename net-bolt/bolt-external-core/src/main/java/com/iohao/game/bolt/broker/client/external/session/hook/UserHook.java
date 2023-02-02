@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import com.iohao.game.bolt.broker.client.kit.UserIdSettingKit;
 /**
  * UserHook 钩子接口，上线时、下线时会触发
  * <pre>
- *     参考 用户连接登录编写 文档
- *     https://www.yuque.com/iohao/game/tywkqv
+ *     参考
+ *     <a href="https://www.yuque.com/iohao/game/tywkqv">用户连接登录编写文档</a>
  * </pre>
  *
  * <pre>

@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import lombok.experimental.UtilityClass;
 
@@ -64,5 +65,39 @@ public class BarMessageKit {
         }
 
         return syncRequestMessage;
+    }
+
+    /**
+     * 创建响应对象
+     *
+     * @param cmdInfo 路由地址
+     * @return ResponseMessage
+     */
+    public ResponseMessage createResponseMessage(CmdInfo cmdInfo) {
+
+        ResponseMessage responseMessage = new ResponseMessage();
+        // 元信息 路由地址
+        responseMessage.setHeadMetadata(new HeadMetadata().setCmdInfo(cmdInfo));
+
+        return responseMessage;
+    }
+
+    /**
+     * 创建响应对象
+     *
+     * @param cmdInfo 路由地址
+     * @param bizData 业务数据
+     * @return ResponseMessage
+     */
+    public ResponseMessage createResponseMessage(CmdInfo cmdInfo, Object bizData) {
+
+        Objects.requireNonNull(bizData);
+
+        ResponseMessage responseMessage = createResponseMessage(cmdInfo);
+        // 业务数据
+        responseMessage.setData(bizData);
+
+        return responseMessage;
+
     }
 }

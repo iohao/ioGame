@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -34,8 +34,9 @@ import com.iohao.game.bolt.broker.server.balanced.ExternalBrokerClientLoadBalanc
 import com.iohao.game.bolt.broker.server.balanced.LogicBrokerClientLoadBalanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 /**
  * 对外服务器消息处理
@@ -46,9 +47,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
 public class ExternalRequestMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestMessage>
         implements BrokerServerAware {
+    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
+
     @Setter
     BrokerServer brokerServer;
 
@@ -91,7 +93,7 @@ public class ExternalRequestMessageBrokerProcessor extends AbstractAsyncUserProc
 
     private void extractedPrint(RequestMessage request) {
 
-        log.info("游戏网关把对外服 请求 转发到逻辑服 : {}", request.toJsonPretty());
+        log.info("游戏网关把对外服 请求 转发到逻辑服 : {}", request);
 
         BalancedManager balancedManager = brokerServer.getBalancedManager();
         ExternalBrokerClientLoadBalanced externalLoadBalanced = balancedManager.getExternalLoadBalanced();

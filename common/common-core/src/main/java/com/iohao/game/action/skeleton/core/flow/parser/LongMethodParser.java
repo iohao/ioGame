@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,9 @@ import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongListPb;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongPb;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author 渔民小镇
@@ -37,8 +39,17 @@ final class LongMethodParser implements MethodParser {
     @Override
     public Object parseParam(byte[] data, ActionCommand.ParamInfo paramInfo) {
         if (paramInfo.isList()) {
+
+            if (Objects.isNull(data)) {
+                return new ArrayList<Long>();
+            }
+
             LongListPb longListPb = DataCodecKit.decode(data, LongListPb.class);
             return longListPb.longValues;
+        }
+
+        if (Objects.isNull(data)) {
+            return 0L;
         }
 
         LongPb longPb = DataCodecKit.decode(data, LongPb.class);
@@ -46,6 +57,7 @@ final class LongMethodParser implements MethodParser {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
         if (actionMethodReturnInfo.isList()) {
             LongListPb longListPb = new LongListPb();
@@ -63,7 +75,6 @@ final class LongMethodParser implements MethodParser {
         return longPb;
 
     }
-
 
     private LongMethodParser() {
 

@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.iohao.game.bolt.broker.client;
 
 import com.iohao.game.action.skeleton.core.ActionCommandRegionGlobalCheckKit;
 import com.iohao.game.action.skeleton.core.ActionCommandRegions;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientBuilder;
 import lombok.experimental.UtilityClass;
@@ -44,6 +45,8 @@ public class BrokerClientApplication {
         BrokerClient brokerClient = start(brokerClientBuilder);
 
         brokerClientStartup.startupSuccess(brokerClient);
+
+        IoGameBanner.render();
 
         return brokerClient;
     }

@@ -8,8 +8,8 @@
     <artifactId>iogame</artifactId>
     <version>17.1.29</version>
     <name>ioGame</name>
-    <description>ioGame网络游戏服务器框架</description>
-    <url>https://www.yuque.com/iohao/game</url>
+    <description>ioGame 网络游戏服务器框架</description>
+    <url>http://game.iohao.com</url>
 
     <modules>
         <!-- 网络游戏框架 - 业务框架 -->
@@ -41,13 +41,14 @@
         <module>widget/light-redis-lock</module>
         <!-- 小部件 ： 基于redis实现的分布式锁 for springBootStarter -->
         <module>widget/light-redis-lock-spring-boot-starter</module>
+        <!-- 小部件 : 日志 -->
+        <module>widget/light-log</module>
+        <module>widget/other-tool</module>
 
         <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
         <module>widget-game/light-game-room</module>
         <module>common-net/common-net-core</module>
 
-        <!-- 扩展服 - 监控相关 -->
-<!--        <module>broker-starter-ext/broker-starter-monitor-logic</module>-->
 
     </modules>
 
@@ -55,16 +56,15 @@
     <properties>
         <!-- jdk 版本 -->
         <java.version>17</java.version>
-
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.86.Final</netty.version>
+        <netty.version>4.1.87.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.6</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
         <hessian.version>4.0.66</hessian.version>
-        <!--  Jansi 控制台输出彩色文字 https://www.oschina.net/p/jansi https://mvnrepository.com/artifact/org.fusesource.jansi/jansi  -->
+        <!--  Jansi 控制台输出彩色文字 https://mvnrepository.com/artifact/org.fusesource.jansi/jansi  -->
         <jansi.version>2.4.0</jansi.version>
         <!-- Java文档解析器 https://mvnrepository.com/artifact/com.thoughtworks.qdox/qdox -->
         <qdox.version>2.0.2</qdox.version>
@@ -72,15 +72,15 @@
         <!-- JCTools 是一款对jdk并发数据结构进行增强的并发工具 see http://jctools.github.io/JCTools/ https://mvnrepository.com/artifact/org.jctools/jctools-core -->
         <jctools-core.version>3.3.0</jctools-core.version>
 
-        <!-- lombok 消除冗长的 Java 代码 https://www.oschina.net/p/lombok https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <!-- lombok 消除冗长的 Java 代码 https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <lombok.version>1.18.24</lombok.version>
 
-        <!-- redis internal : https://www.oschina.net/p/redisson https://mvnrepository.com/artifact/org.redisson/redisson -->
+        <!-- redis internal : https://mvnrepository.com/artifact/org.redisson/redisson -->
         <redisson.version>3.17.7</redisson.version>
         <!-- json 解析器 : https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
-        <fastjson.version>2.0.21</fastjson.version>
+        <fastjson.version>2.0.23</fastjson.version>
 
-        <!--  reflectasm 高性能的反射处理 https://www.oschina.net/p/reflectasm https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm  -->
+        <!--  reflectasm 高性能的反射处理 https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm  -->
         <reflectasm.version>1.11.9</reflectasm.version>
 
         <!-- ==============轻量小部件============== -->
@@ -114,14 +114,6 @@
         <slf4j-api.version>1.7.36</slf4j-api.version>
         <!-- slf4j https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <logback.version>1.2.11</logback.version>
-<!--        <logback.version>1.4.5</logback.version>-->
-        <!-- OSHI 是一个免费的基于 JNA（本机）的 Java 操作系统和硬件信息库。 -->
-        <!-- https://mvnrepository.com/artifact/com.github.oshi/oshi-core -->
-        <oshi-core.version>6.3.1</oshi-core.version>
-        <jna.version>5.12.1</jna.version>
-
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <guava.version>31.1-jre</guava.version>
 
         <!--
         jprotobuf是针对Java程序开发一套简易类库，目的是简化java语言对protobuf类库的使用
@@ -130,13 +122,10 @@
         -->
         <jprotobuf.version>2.4.18</jprotobuf.version>
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
-        <protobuf-java.version>3.21.9</protobuf-java.version>
+        <protobuf-java.version>3.21.12</protobuf-java.version>
 
         <!-- 后期整理需要移除的 -->
         <snakeyaml.version>1.32</snakeyaml.version>
-        <!-- other 后期整理，需要从全局移动到局部模块中 -->
-        <!-- Hutool是一个Java工具包 see https://www.hutool.cn/ https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
-        <hutool.version>5.8.10</hutool.version>
     </properties>
 
     <dependencies>
@@ -159,7 +148,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -167,7 +156,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <!--

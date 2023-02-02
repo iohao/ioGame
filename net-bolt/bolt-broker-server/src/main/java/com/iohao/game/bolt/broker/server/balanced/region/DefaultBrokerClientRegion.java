@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,12 @@ import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 负载均衡，相同业务模块（逻辑服）的信息域
@@ -36,7 +38,6 @@ import java.util.*;
  * @author 渔民小镇
  * @date 2022-05-16
  */
-@Slf4j
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public class DefaultBrokerClientRegion implements BrokerClientRegion {
     /**
@@ -61,7 +62,7 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
         int endPointClientId = headMetadata.getEndPointClientId();
 
         // 得到指定的逻辑服
-        if (endPointClientId != 0 && boltClientProxyMap.containsKey(endPointClientId)) {
+        if (endPointClientId != 0 && this.boltClientProxyMap.containsKey(endPointClientId)) {
 
             /*
              * 查看当前 endPointClientId 是否属于当前 Region
@@ -113,6 +114,6 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
     private void resetSelector() {
         // 随机选择器
         List<BrokerClientProxy> list = new ArrayList<>(boltClientProxyMap.values());
-        elementSelector = new RandomElementSelector<>(list);
+        this.elementSelector = new RandomElementSelector<>(list);
     }
 }

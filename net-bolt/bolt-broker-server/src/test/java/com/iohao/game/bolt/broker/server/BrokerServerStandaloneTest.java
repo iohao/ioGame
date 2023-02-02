@@ -15,12 +15,12 @@ import java.util.concurrent.TimeUnit;
  * @date 2022-05-16
  */
 public class BrokerServerStandaloneTest {
-    public static void main(String[] args) throws Exception {
+    //    @Test
+    public void test() throws Exception {
         // Broker Server （游戏网关服） 构建器
         BrokerServerBuilder brokerServerBuilder = BrokerServer.newBuilder()
                 // broker （游戏网关）默认端口 10200
-                .port(IoGameGlobalConfig.brokerPort)
-                ;
+                .port(IoGameGlobalConfig.brokerPort);
 
         // 构建游戏网关
         BrokerServer brokerServer = brokerServerBuilder.build();

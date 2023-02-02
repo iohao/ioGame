@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@
  */
 package com.iohao.game.bolt.broker.cluster;
 
-import com.alibaba.fastjson2.JSON;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.bolt.broker.core.kit.HessianKit;
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerMessage;
 import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.NetworkKit;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import io.scalecube.cluster.Cluster;
 import io.scalecube.cluster.ClusterImpl;
 import io.scalecube.cluster.ClusterMessageHandler;
@@ -35,8 +37,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
+import org.slf4j.Logger;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
@@ -58,10 +60,10 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
-@Slf4j
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerClusterManager implements ClusterMessageHandler {
+    static final Logger log = IoGameLoggerFactory.getLoggerCluster();
     /** 集群名 每个节点的名字必须一样 */
     final String clusterName = "io_game_cluster";
     /** broker （游戏网关）唯一 id */
@@ -101,14 +103,14 @@ public class BrokerClusterManager implements ClusterMessageHandler {
     BrokerClusterManager() {
     }
 
-    public void start() throws Exception {
+    public void start() {
 
         final String localIp = NetworkKit.LOCAL_IP;
 
         // 种子节点地址
         List<Address> seedMemberAddress = this.listSeedMemberAddress();
 
-        clusterMono = new ClusterImpl()
+        this.clusterMono = new ClusterImpl()
                 .config(clusterConfig -> clusterConfig
                         .memberAlias("Gateway Broker")
                         .externalHost(localIp)
@@ -155,7 +157,7 @@ public class BrokerClusterManager implements ClusterMessageHandler {
                 log.info("message : {}", message);
             }
 
-            clusterMono.subscribe(cluster -> {
+            this.clusterMono.subscribe(cluster -> {
                 Collection<Member> members = cluster.otherMembers();
                 Flux.fromIterable(members)
                         .flatMap(member -> cluster.send(member, message))
@@ -176,12 +178,12 @@ public class BrokerClusterManager implements ClusterMessageHandler {
             return;
         }
 
-        if (!openScheduledLog.get()) {
-            openScheduledLog.set(true);
+        if (!this.openScheduledLog.get()) {
+            this.openScheduledLog.set(true);
             ExecutorKit.newSingleScheduled(BrokerClusterManager.class.getName()).scheduleAtFixedRate(() -> {
                 BrokerClusterMessage brokerClusterMessage = getBrokerClusterMessage();
-                int port = localBroker.getPort();
-                log.info("broker（游戏网关）: [{}] --  集群数量[{}] - 详细：[{}]"
+                int port = this.localBroker.getPort();
+                log.debug("broker（游戏网关）: [{}] --  集群数量[{}] - 详细：[{}]"
                         , port
                         , brokerClusterMessage.count()
                         , brokerClusterMessage);
@@ -190,12 +192,12 @@ public class BrokerClusterManager implements ClusterMessageHandler {
 
         BrokerClusterMessage brokerClusterMessage = getBrokerClusterMessage();
 
-        clusterMessageListener.inform(brokerClusterMessage);
+        this.clusterMessageListener.inform(brokerClusterMessage);
     }
 
     public BrokerClusterMessage getBrokerClusterMessage() {
         // 得到网关列表
-        var brokerMessageList = brokers.values().stream().map(broker -> {
+        var brokerMessageList = this.brokers.values().stream().map(broker -> {
             BrokerMessage item = new BrokerMessage();
             item.setAddress(broker.getBrokerAddress());
             item.setId(broker.getId());
@@ -220,14 +222,15 @@ public class BrokerClusterManager implements ClusterMessageHandler {
         if (event.isAdded()) {
             this.makeCall(event.member()).subscribe(response -> {
                 // 收到消息回复后, 这个对象是新加入的 broker 节点。see: this.makeCall method
-                Broker responseBroker = JSON.parseObject(response, Broker.class);
+                Broker responseBroker = HessianKit.deserialize(response, Broker.class);
+                log.info("onMembershipEvent {}", responseBroker);
+                IoGameBanner.render();
 
                 broker
                         .setId(responseBroker.getId())
                         .setPort(responseBroker.getPort())
                         .setBrokerAddress(responseBroker.getBrokerAddress())
                 ;
-
 
                 this.brokers.put(address, broker);
 
@@ -243,7 +246,7 @@ public class BrokerClusterManager implements ClusterMessageHandler {
             this.inform();
         }
 
-        brokersEmitterProcessor.tryEmitNext(brokers.values());
+        this.brokersEmitterProcessor.tryEmitNext(this.brokers.values());
     }
 
     @Override
@@ -258,13 +261,13 @@ public class BrokerClusterManager implements ClusterMessageHandler {
         // see : this.makeCall
         if (message.header("added") != null) {
 
-            String json = this.localBroker.toJson();
-            log.debug("json : {}", json);
+            byte[] serialize = HessianKit.serialize(this.localBroker);
+            log.info("onMessage {}", this.localBroker);
 
             // 消息回复
             Message replyMessage = Message.builder()
                     .correlationId(message.correlationId())
-                    .data(json)
+                    .data(serialize)
                     .build();
 
             // 接收到消息，给发送方回传一个消息
@@ -275,7 +278,9 @@ public class BrokerClusterManager implements ClusterMessageHandler {
         }
     }
 
-    private Mono<String> makeCall(Member member) {
+    private Mono<byte[]> makeCall(Member member) {
+        IoGameBanner.render();
+
         String uuid = UUID.randomUUID().toString();
         Message message = Message.builder()
                 .correlationId(uuid)

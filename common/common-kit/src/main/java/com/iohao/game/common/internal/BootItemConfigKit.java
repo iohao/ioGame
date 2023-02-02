@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ package com.iohao.game.common.internal;
 
 
 import com.iohao.game.common.kit.ClassScanner;
-import lombok.extern.slf4j.Slf4j;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -29,8 +30,9 @@ import java.util.function.Predicate;
  * @author 渔民小镇
  * @date 2021-12-20
  */
-@Slf4j
 public class BootItemConfigKit {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
+
     /**
      * 加载配置
      * <pre>

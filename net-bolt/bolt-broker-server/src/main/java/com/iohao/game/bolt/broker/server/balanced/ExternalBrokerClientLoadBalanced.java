@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package com.iohao.game.bolt.broker.server.balanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.Collections;
@@ -33,7 +32,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExternalBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
     /**
@@ -51,7 +49,7 @@ public class ExternalBrokerClientLoadBalanced implements BrokerClientLoadBalance
     public void register(BrokerClientProxy brokerClientProxy) {
 
         int externalId = brokerClientProxy.getIdHash();
-        map.put(externalId, brokerClientProxy);
+        this.map.put(externalId, brokerClientProxy);
 
         this.resetSelector();
     }
@@ -61,7 +59,7 @@ public class ExternalBrokerClientLoadBalanced implements BrokerClientLoadBalance
 
         int externalId = brokerClientProxy.getIdHash();
 
-        map.remove(externalId);
+        this.map.remove(externalId);
 
         this.resetSelector();
     }
@@ -85,6 +83,6 @@ public class ExternalBrokerClientLoadBalanced implements BrokerClientLoadBalance
     }
 
     private void resetSelector() {
-        list = new CopyOnWriteArrayList<>(map.values());
+        this.list = new CopyOnWriteArrayList<>(map.values());
     }
 }

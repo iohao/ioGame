@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -207,8 +207,8 @@ public final class ActionCommand {
         /**
          * List 泛型的类型，也称为方法返回值类型
          * <pre>
-         *     如果不是方法的返回值不是 List 类型，这个值会取自 paramClazz 成员属性
-         *     原计划想用 Collection ，这样可以兼容 Set 之类的；但似乎这样有一点争议，先暂支持 List 把
+         *     如果方法的返回值不是 List 类型，这个值会取自 paramClazz 成员属性
+         *     原计划想用 Collection ，这样可以兼容 Set 之类的；但似乎这样有一点争议，先暂支持 List
          * </pre>
          */
         final Class<?> actualTypeArgumentClazz;
@@ -268,7 +268,6 @@ public final class ActionCommand {
              * 因为这可能会给开发者造成一些困惑，现在方法支持 list 但只是为了支持基础类型相关的 list
              * 开发者会不会把这个 list 的泛型类型用在协议上，如: List<StudentPb> 这种；
              */
-
             if (List.class.isAssignableFrom(this.paramClazz)) {
                 ParameterizedType genericReturnType = (ParameterizedType) p.getParameterizedType();
                 this.actualTypeArgumentClazz = (Class<?>) genericReturnType.getActualTypeArguments()[0];

@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
  */
 package com.iohao.game.action.skeleton.core.commumication;
 
+import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 
 import java.util.Collection;
@@ -66,7 +66,7 @@ public interface BroadcastOrderContext {
      * @param bizData 业务数据
      */
     default void broadcastOrder(CmdInfo cmdInfo, Object bizData) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrder(responseMessage);
     }
 
@@ -78,7 +78,7 @@ public interface BroadcastOrderContext {
      * @param userIdList 指定用户列表
      */
     default void broadcastOrder(CmdInfo cmdInfo, Object bizData, Collection<Long> userIdList) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrder(responseMessage, userIdList);
     }
 
@@ -90,24 +90,7 @@ public interface BroadcastOrderContext {
      * @param userId  userId
      */
     default void broadcastOrder(CmdInfo cmdInfo, Object bizData, long userId) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrder(responseMessage, userId);
-    }
-
-    /**
-     * 创建响应对象
-     *
-     * @param cmdInfo 路由地址
-     * @param bizData 业务数据
-     * @return ResponseMessage
-     */
-    private ResponseMessage createResponseMessage(CmdInfo cmdInfo, Object bizData) {
-        // 元信息
-        HeadMetadata headMetadata = new HeadMetadata();
-        headMetadata.setCmdInfo(cmdInfo);
-
-        return (ResponseMessage) new ResponseMessage()
-                .setHeadMetadata(headMetadata)
-                .setData(bizData);
     }
 }

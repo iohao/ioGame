@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
@@ -29,8 +30,9 @@ import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 /**
  * 模块注册
@@ -38,9 +40,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
 public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcessor<BrokerClientModuleMessage>
         implements BrokerServerAware {
+    private static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
+
     @Setter
     BrokerServer brokerServer;
 
@@ -69,7 +72,7 @@ public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcess
         BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
 
         if (IoGameGlobalConfig.isBrokerClusterLog()) {
-            log.info("broker（游戏网关）: [{}] --  集群数量[{}] - 详细：[{}]"
+            log.info("游戏网关端口: [{}] --  集群数量[{}] - 详细：[{}]"
                     , this.brokerServer.getPort()
                     , brokerClusterMessage.count()
                     , brokerClusterMessage);
@@ -83,12 +86,14 @@ public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcess
     }
 
     private void print(BrokerClientModuleMessage brokerClientModuleMessage) {
+
         int port = this.brokerServer.getPort();
         if (IoGameGlobalConfig.openLog) {
             log.info("模块注册信息 --- 网关port: [{}] --- {}", port, brokerClientModuleMessage);
         }
 
         BrokerPrintKit.print(this.brokerServer);
+
     }
 
     /**

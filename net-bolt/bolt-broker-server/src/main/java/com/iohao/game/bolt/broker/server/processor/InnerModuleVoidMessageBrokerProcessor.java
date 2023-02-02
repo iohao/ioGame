@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,18 @@ import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.bolt.broker.core.message.InnerModuleVoidMessage;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
+import com.iohao.game.bolt.broker.core.message.InnerModuleVoidMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 /**
  * 模块之间的请求处理
@@ -43,10 +44,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-06-07
  */
-@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InnerModuleVoidMessageBrokerProcessor extends AbstractAsyncUserProcessor<InnerModuleVoidMessage>
         implements BrokerServerAware {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
+
     @Setter
     BrokerServer brokerServer;
 

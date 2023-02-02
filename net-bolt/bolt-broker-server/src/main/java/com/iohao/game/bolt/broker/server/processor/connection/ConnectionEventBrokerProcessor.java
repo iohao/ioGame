@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,14 @@ package com.iohao.game.bolt.broker.server.processor.connection;
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.exception.RemotingException;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.RequestBrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import lombok.AccessLevel;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
+import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
 
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -41,13 +42,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConnectionEventBrokerProcessor implements ConnectionEventProcessor, BrokerServerAware {
-    private final AtomicInteger connectTimes = new AtomicInteger();
-    private final AtomicBoolean connected = new AtomicBoolean();
-    private Connection connection;
-    private String remoteAddress;
-    private final CountDownLatch latch = new CountDownLatch(1);
+    static final Logger log = IoGameLoggerFactory.getLoggerConnection();
+
+    final AtomicInteger connectTimes = new AtomicInteger();
+    final AtomicBoolean connected = new AtomicBoolean();
+    Connection connection;
+    String remoteAddress;
+    final CountDownLatch latch = new CountDownLatch(1);
 
     @Setter
     BrokerServer brokerServer;
@@ -56,9 +59,6 @@ public class ConnectionEventBrokerProcessor implements ConnectionEventProcessor,
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
-        if (IoGameGlobalConfig.openLog) {
-            log.info("通知客户端发送模块信息 ConnectionEvent remoteAddress : {}", remoteAddress);
-        }
 
         Objects.requireNonNull(remoteAddress);
         doCheckConnection(conn);
@@ -83,12 +83,11 @@ public class ConnectionEventBrokerProcessor implements ConnectionEventProcessor,
      * @param conn
      */
     private void doCheckConnection(Connection conn) {
-        Assert.assertNotNull(conn);
-        Assert.assertNotNull(conn.getPoolKeys());
-        Assert.assertTrue(conn.getPoolKeys().size() > 0);
-        Assert.assertNotNull(conn.getChannel());
-        Assert.assertNotNull(conn.getUrl());
-        Assert.assertNotNull(conn.getChannel().attr(Connection.CONNECTION).get());
+        Objects.requireNonNull(conn);
+        Objects.requireNonNull(conn.getPoolKeys());
+        Objects.requireNonNull(conn.getChannel());
+        Objects.requireNonNull(conn.getUrl());
+        Objects.requireNonNull(conn.getChannel().attr(Connection.CONNECTION).get());
     }
 
     public boolean isConnected() throws InterruptedException {

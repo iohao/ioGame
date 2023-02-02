@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,22 +64,17 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
                 continue;
             }
 
-            if (Objects.nonNull(request.getData())) {
+            // 得到方法参数解析器，把字节解析成 action 业务参数
+            var methodParser = MethodParsers.me().getMethodParser(paramClazz);
+            var param = methodParser.parseParam(request.getData(), paramInfo);
+            params[i] = param;
 
-                // 得到方法参数解析器，把字节解析成对象
-                var methodParser = MethodParsers.me().getMethodParser(paramClazz);
-                // 业务参数
-                var param = methodParser.parseParam(request.getData(), paramInfo);
-                params[i] = param;
+            flowContext.option(FlowAttr.actionBizParam, param);
 
-                flowContext.option(FlowAttr.actionBizParam, param);
-
-                // 如果开启了验证
-                if (paramInfo.isValidator()) {
-                    extractedValidator(response, paramInfo, param);
-                }
+            // 如果开启了验证
+            if (paramInfo.isValidator()) {
+                extractedValidator(response, paramInfo, param);
             }
-
         }
 
         return params;

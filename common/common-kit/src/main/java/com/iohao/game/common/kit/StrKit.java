@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 package com.iohao.game.common.kit;
 
-import cn.hutool.core.util.StrUtil;
+import com.iohao.game.common.kit.hutool.AdapterHuUtils;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -29,33 +29,12 @@ import java.util.Map;
 @UtilityClass
 public class StrKit {
 
-    /**
-     * 格式化文本，使用 {varName} 占位<br>
-     * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
-     *
-     * @param template 文本模板，被替换的部分用 {key} 表示
-     * @param map      参数值对
-     * @return 格式化后的文本
-     */
     public String format(@NonNull CharSequence template, @NonNull Map<?, ?> map) {
-        return StrUtil.format(template, map);
+        return AdapterHuUtils.format(template, map);
     }
 
-    /**
-     * 格式化文本, {} 表示占位符<br>
-     * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
-     * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
-     * 例：<br>
-     * 通常使用：format("this is {} for {}", "a", "b") =》 this is a for b<br>
-     * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is {} for a<br>
-     * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
-     *
-     * @param template 文本模板，被替换的部分用 {} 表示，如果模板为null，返回"null"
-     * @param params   参数值
-     * @return 格式化后的文本，如果模板为null，返回"null"
-     */
     public String format(@NonNull CharSequence template, Object... params) {
-        return StrUtil.format(template, params);
+        return AdapterHuUtils.format(template, params);
     }
 
     /**
@@ -85,6 +64,10 @@ public class StrKit {
         return str == null || str.isEmpty() || str.isBlank();
     }
 
+    public boolean isEmpty(CharSequence str) {
+        return str == null || str.length() == 0;
+    }
+
 
     /**
      * <p>字符串是否为非空白，非空白的定义如下： </p>
@@ -108,5 +91,24 @@ public class StrKit {
      */
     public boolean isNotEmpty(String str) {
         return !isEmpty(str);
+    }
+
+    public boolean isBlank(CharSequence cs) {
+        int strLen;
+        if (cs == null || (strLen = cs.length()) == 0) {
+            return true;
+        }
+
+        for (int i = 0; i < strLen; i++) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isNotBlank(CharSequence cs) {
+        return !isBlank(cs);
     }
 }

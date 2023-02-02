@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,11 @@ import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessageCmdCode;
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 /**
  * 默认的心跳事件回调，只做简单打印
@@ -36,8 +37,9 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-03-14
  */
-@Slf4j
 public class IdleHookDefault implements IdleHook {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
+
     @Override
     public boolean callback(ChannelHandlerContext ctx, IdleStateEvent event, UserSession userSession) {
         IdleState state = event.state();

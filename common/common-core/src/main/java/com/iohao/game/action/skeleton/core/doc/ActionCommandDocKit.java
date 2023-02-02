@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@ package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.common.kit.ClassScanner;
 import com.iohao.game.common.kit.io.FileKit;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,9 +36,9 @@ import java.util.Map;
  * @author 渔民小镇
  * @date 2022-01-28
  */
-@Slf4j
 @UtilityClass
 public class ActionCommandDocKit {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
     /**
      * java class doc map

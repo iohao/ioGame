@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,9 @@ import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.client.action.skeleton.BoltChannelContext;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.common.processor.hook.RequestMessageClientProcessorHook;
-import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 客户端请求处理器
@@ -40,9 +38,9 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
 public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<RequestMessage>
         implements BrokerClientAware {
+
     BrokerClient brokerClient;
     RequestMessageClientProcessorHook requestMessageClientProcessorHook;
 
@@ -56,10 +54,6 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
          * 可以参考 HashMap 的 putVal 方法相关
          */
         final BrokerClient brokerClient = this.brokerClient;
-
-        if (IoGameGlobalConfig.requestResponseLog) {
-            log.info("逻辑服处理请求 --- {} - {}", brokerClient.getAppName(), brokerClient.getId());
-        }
 
         // 得到逻辑服对应的业务框架
         BarSkeleton barSkeleton = brokerClient.getBarSkeleton();

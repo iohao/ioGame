@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.iohao.game.bolt.broker.client.external.session;
 
 import com.iohao.game.bolt.broker.client.external.session.hook.UserHook;
 import com.iohao.game.bolt.broker.client.external.session.hook.UserHookDefault;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
@@ -26,9 +27,9 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 import org.jctools.maps.NonBlockingHashMapLong;
+import org.slf4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
@@ -46,9 +47,10 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-01-11
  */
-@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserSessions {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
+
     final ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     /**

@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,9 @@ import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntListPb;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntPb;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author 渔民小镇
@@ -36,9 +38,19 @@ final class IntMethodParser implements MethodParser {
 
     @Override
     public Object parseParam(byte[] data, ActionCommand.ParamInfo paramInfo) {
+
         if (paramInfo.isList()) {
+
+            if (Objects.isNull(data)) {
+                return new ArrayList<Integer>();
+            }
+
             IntListPb intListPb = DataCodecKit.decode(data, IntListPb.class);
             return intListPb.intValues;
+        }
+
+        if (Objects.isNull(data)) {
+            return 0;
         }
 
         IntPb intPb = DataCodecKit.decode(data, IntPb.class);

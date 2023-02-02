@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.*;
@@ -54,7 +53,6 @@ import java.util.function.Supplier;
  * @author 渔民小镇
  * @date 2022-05-15
  */
-@Slf4j
 @Accessors(fluent = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerServerBuilder {
@@ -236,10 +234,10 @@ public class BrokerServerBuilder {
         Objects.requireNonNull(this.brokerClusterManagerBuilder, "开启集群模式 brokerClusterManagerBuilder 必须不为 null!");
 
         // ==========到这里表示是集群模式==========
-        BrokerClusterManager brokerClusterManager = brokerClusterManagerBuilder.build(this.brokerServer);
+        BrokerClusterManager brokerClusterManager = this.brokerClusterManagerBuilder.build(this.brokerServer);
 
         // 设置集群管理器
-        brokerServer.setBrokerClusterManager(brokerClusterManager);
+        this.brokerServer.setBrokerClusterManager(brokerClusterManager);
     }
 
     private void checked() {

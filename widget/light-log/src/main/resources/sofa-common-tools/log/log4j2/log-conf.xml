@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+    <Properties>
+        <Property name="CONFIG_LOG_LEVEL">${sys:logging.level.sofa-common-tools}</Property>
+        <Property name="CONFIG_LOG_PATH">${sys:logging.path}</Property>
+        <Property name="CONFIG_FILE_ENCODING">${sys:file.encoding}</Property>
+    </Properties>
+
+    <appenders>
+        <RollingFile name="DIGEST-APPENDER" fileName="${CONFIG_LOG_PATH}/sofa-common/config-digest.log" append="true"
+                     filePattern="${CONFIG_LOG_PATH}/sofa-config/config-digest.log.%d{yyyy-MM-dd}">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout charset="${CONFIG_FILE_ENCODING}">
+                <pattern>%d %-5p %-5t - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="SOFA-APPENDER" fileName="${CONFIG_LOG_PATH}/sofa-config/common-default.log" append="true"
+                     filePattern="${CONFIG_LOG_PATH}/sofa-config/common-default.log.%d{yyyy-MM-dd}">
+            <ThresholdFilter level="${CONFIG_LOG_LEVEL}" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout charset="${CONFIG_FILE_ENCODING}">
+                <pattern>%d %-5p %-5t - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+    </appenders>
+
+    <loggers>
+        <logger name="com.alipay.sofa.common.config.digest" level="info" additivity="false">
+            <appender-ref ref="DIGEST-APPENDER"/>
+        </logger>
+
+        <root level="${CONFIG_LOG_LEVEL}" additivity="false">
+            <appender-ref ref="SOFA-APPENDER"/>
+        </root>
+    </loggers>
+</configuration>

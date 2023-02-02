@@ -13,7 +13,6 @@
     <artifactId>light-domain-event</artifactId>
 
 
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.lmax/disruptor -->
         <dependency>
@@ -26,9 +25,8 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-core</artifactId>
-            <version>${hutool.version}</version>
+            <version>5.8.11</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

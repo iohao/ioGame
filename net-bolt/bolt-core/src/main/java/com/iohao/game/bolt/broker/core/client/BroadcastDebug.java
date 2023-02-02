@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,32 @@
  */
 package com.iohao.game.bolt.broker.core.client;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.DevConfig;
 import com.iohao.game.action.skeleton.core.commumication.BroadcastContext;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastOrderMessage;
+import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.CollKit;
-import com.iohao.game.common.kit.JsonKit;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
+import org.slf4j.Logger;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 渔民小镇
  * @date 2022-05-19
  */
-@Slf4j
 @UtilityClass
 class BroadcastDebug {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
+
     final Map<String, Class<?>> classMap = new NonBlockingHashMap<>();
 
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
@@ -83,47 +82,67 @@ class BroadcastDebug {
     }
 
     private Object getReturnData(ResponseMessage responseMessage) {
-        Object returnData = null;
+
+        byte[] data = responseMessage.getData();
+        String dataClass = responseMessage.getDataClass();
+
+        if (ArrayKit.isEmpty(data) || Objects.isNull(dataClass)) {
+            return "null or []";
+        }
+
+        Class<?> aClass = null;
 
         try {
-            String dataClass = responseMessage.getDataClass();
-
-            Class<?> aClass = classMap.get(dataClass);
-            // 无锁化
-            if (aClass == null) {
-                aClass = Class.forName(dataClass);
-                aClass = classMap.putIfAbsent(dataClass, aClass);
-                if (aClass == null) {
-                    aClass = classMap.get(dataClass);
-                }
+            aClass = getDataClass(dataClass);
+            if (Objects.isNull(aClass)) {
+                return "null";
             }
-
-            returnData = DataCodecKit.decode(responseMessage.getData(), aClass);
-
-            // 保存 cmd 路由对应的响应数据类型 class 信息
-            int cmdMerge = responseMessage.getHeadMetadata().getCmdMerge();
-            DevConfig.me().getCmdDataClassMap().putIfAbsent(cmdMerge, aClass);
-
         } catch (ClassNotFoundException e) {
             log.error(e.getMessage(), e);
         }
 
+        Object returnData = DataCodecKit.decode(responseMessage.getData(), aClass);
+
+        // 保存 cmd 路由对应的响应数据类型 class 信息
+        int cmdMerge = responseMessage.getHeadMetadata().getCmdMerge();
+        DevConfig.me().getCmdDataClassMap().putIfAbsent(cmdMerge, aClass);
+
         return returnData;
     }
 
-    private String getUserIds(BroadcastMessage broadcastMessage) {
-        String userIds = "";
-        Collection<Long> userIdList = broadcastMessage.getUserIdList();
+    private Class<?> getDataClass(String dataClass) throws ClassNotFoundException {
+        Class<?> aClass = classMap.get(dataClass);
 
-        if (broadcastMessage.isBroadcastAll()) {
-            userIds = "全服广播";
-        } else if (CollKit.notEmpty(userIdList)) {
-            userIds = userIdList.toString();
-        } else if (broadcastMessage.getResponseMessage().getHeadMetadata().getUserId() != 0) {
-            userIds = String.valueOf(broadcastMessage.getResponseMessage().getHeadMetadata().getUserId());
+        // 无锁化
+        if (aClass == null) {
+            aClass = Class.forName(dataClass);
+            aClass = classMap.putIfAbsent(dataClass, aClass);
+            if (aClass == null) {
+                aClass = classMap.get(dataClass);
+            }
         }
 
-        return userIds;
+        return aClass;
+    }
+
+    private String getUserIds(BroadcastMessage broadcastMessage) {
+
+        if (broadcastMessage.isBroadcastAll()) {
+            return "全服广播";
+        }
+
+        var userIdList = broadcastMessage.getUserIdList();
+        if (CollKit.notEmpty(userIdList)) {
+            return userIdList.toString();
+        }
+
+        long userId = broadcastMessage.getResponseMessage().getHeadMetadata().getUserId();
+
+        if (userId != 0) {
+            return String.valueOf(userId);
+        }
+
+        return "";
     }
 
     private int lookBusinessCodeInTrace(StackTraceElement[] traces) {
@@ -148,14 +167,14 @@ class BroadcastDebug {
         String methodName = traceElement.getMethodName();
         int line = traceElement.getLineNumber();
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("className", className);
-        jsonObject.put("methodName", methodName);
-        jsonObject.put("line", line);
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("className", className);
+//        jsonObject.put("methodName", methodName);
+//        jsonObject.put("line", line);
 
-        String jsonPretty = JsonKit.toJsonPretty(jsonObject);
-        log.info("jsonPretty : {}", jsonPretty);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
-        System.out.println("~~~~~~~~~~~~~~~~~~");
+//        String jsonPretty = JsonKit.toJsonPretty(jsonObject);
+//        log.info("jsonPretty : {}", jsonPretty);
+//        System.out.println("~~~~~~~~~~~~~~~~~~");
+//        System.out.println("~~~~~~~~~~~~~~~~~~");
     }
 }

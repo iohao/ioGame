@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,6 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolConfig;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 
 /**
  * ChannelPipeline 初始化 for Websocket
@@ -112,7 +110,6 @@ public class ExternalChannelInitializerCallbackWebsocket extends ChannelInitiali
     @Override
     public ServerBootstrapSetting createServerBootstrapSetting() {
         return serverBootstrap -> serverBootstrap
-                .handler(new LoggingHandler(LogLevel.INFO))
                 // 客户端保持活动连接
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 /*

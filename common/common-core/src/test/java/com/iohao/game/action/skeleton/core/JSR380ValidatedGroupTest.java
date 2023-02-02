@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.action.skeleton.core.action.ExampleActionCont;
+import com.iohao.game.action.skeleton.core.action.ExampleActionCmd;
 import com.iohao.game.action.skeleton.core.action.pojo.BirdValid;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +28,6 @@ import org.junit.Test;
  * @author fangwei
  * @date 2022-09-20
  */
-@Slf4j
 public class JSR380ValidatedGroupTest {
     BarSkeleton barSkeleton;
 
@@ -45,7 +43,7 @@ public class JSR380ValidatedGroupTest {
     public void updateGroupTest() {
         BirdValid birdValid = new BirdValid();
 
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(ExampleActionCont.BeeActionCont.cmd, ExampleActionCont.BeeActionCont.validated_group_update);
+        CmdInfo cmdInfo = CmdInfo.getCmdInfo(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.validated_group_update);
 
         RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
         requestMessage.setData(birdValid);
@@ -60,7 +58,7 @@ public class JSR380ValidatedGroupTest {
     public void createGroupTest() {
         BirdValid birdValid = new BirdValid();
 
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(ExampleActionCont.BeeActionCont.cmd, ExampleActionCont.BeeActionCont.validated_group_create);
+        CmdInfo cmdInfo = CmdInfo.getCmdInfo(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.validated_group_create);
 
         RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
         requestMessage.setData(birdValid);

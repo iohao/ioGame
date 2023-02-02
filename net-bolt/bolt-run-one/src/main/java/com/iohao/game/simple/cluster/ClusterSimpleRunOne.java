@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,19 @@ package com.iohao.game.simple.cluster;
 
 import com.iohao.game.action.skeleton.core.ActionCommandRegionGlobalCheckKit;
 import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.client.external.ExternalServer;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,11 +69,12 @@ import java.util.concurrent.TimeUnit;
  * @author 渔民小镇
  * @date 2022-05-15
  */
-@Slf4j
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ClusterSimpleRunOne {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
+
     final ExecutorService executorService = ExecutorKit.newCacheThreadPool(ClusterSimpleRunOne.class.toString());
 
     /** 对外服 */
@@ -98,6 +101,7 @@ public class ClusterSimpleRunOne {
      * </pre>
      */
     public void startup() {
+        banner();
 
         // 启动网关集群（3个节点）
         if (this.runBrokerServerCluster) {
@@ -135,18 +139,17 @@ public class ClusterSimpleRunOne {
     }
 
     private void startupLogic() {
-        executorService.execute(() -> {
-            // 启动逻辑服
-            if (Objects.nonNull(this.logicServerList)) {
-                logicServerList.forEach(BrokerClientApplication::start);
-                log.info("启动逻辑服 : {}", this.logicServerList);
+        if (Objects.nonNull(this.logicServerList)) {
+            // 启动游戏逻辑服
+            for (AbstractBrokerClientStartup clientStartup : logicServerList) {
+                this.executorService.execute(() -> BrokerClientApplication.start(clientStartup));
             }
+        }
 
+        if (Objects.nonNull(this.externalServer)) {
             // 启动游戏对外服
-            if (Objects.nonNull(this.externalServer)) {
-                externalServer.startup();
-            }
-        });
+            this.executorService.execute(() -> this.externalServer.startup());
+        }
 
         try {
             TimeUnit.MILLISECONDS.sleep(500);
@@ -215,5 +218,25 @@ public class ClusterSimpleRunOne {
 
         // 启动游戏网关
         executorService.execute(brokerServer::startup);
+    }
+
+    private void banner() {
+
+        int num = 0;
+
+        if (Objects.nonNull(this.logicServerList)) {
+            num += this.logicServerList.size();
+        }
+
+        if (Objects.nonNull(this.externalServer)) {
+            num++;
+        }
+
+        if (this.runBrokerServerCluster) {
+            num += 3;
+        }
+
+        IoGameBanner.me().initCountDownLatch(num);
+        IoGameBanner.render();
     }
 }

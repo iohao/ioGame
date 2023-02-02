@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,35 +71,35 @@ class PrintActionKit {
      */
     void printInout(List<ActionMethodInOut> inOuts) {
         String title = "@|CYAN ======================== InOut ========================= |@";
-        System.out.println(Ansi.ansi().eraseScreen().render(title));
+        System.out.println(Ansi.ansi().render(title));
         System.out.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printInout");
 
         for (ActionMethodInOut inOut : inOuts) {
             String info = String.format("@|BLUE %s |@", inOut.getClass());
-            System.out.println(Ansi.ansi().eraseScreen().render(info));
+            System.out.println(Ansi.ansi().render(info));
         }
     }
 
     void printHandler(List<Handler> handlers) {
         String iohaoTitle = "@|CYAN ======================== 业务框架 iohao ========================= |@";
-        System.out.println(Ansi.ansi().eraseScreen().render(iohaoTitle));
+        System.out.println(Ansi.ansi().render(iohaoTitle));
         System.out.println(IoGameVersion.VERSION);
         String colorStr = "@|BLACK BLACK|@ @|RED RED|@ @|GREEN GREEN|@ @|YELLOW YELLOW|@ @|BLUE BLUE|@ @|MAGENTA MAGENTA|@ @|CYAN CYAN|@ @|WHITE WHITE|@ @|DEFAULT DEFAULT|@";
-        System.out.println(Ansi.ansi().eraseScreen().render(colorStr));
+        System.out.println(Ansi.ansi().render(colorStr));
 
         String title = "@|CYAN ======================== Handler ========================= |@";
-        System.out.println(Ansi.ansi().eraseScreen().render(title));
+        System.out.println(Ansi.ansi().render(title));
         System.out.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printHandler");
 
         for (Handler handler : handlers) {
             String info = String.format("@|BLUE %s |@", handler.getClass());
-            System.out.println(Ansi.ansi().eraseScreen().render(info));
+            System.out.println(Ansi.ansi().render(info));
         }
     }
 
     void printActionCommand(ActionCommand[][] behaviors, boolean shortName) {
         String title = "@|CYAN ======================== action ========================= |@";
-        System.out.println(Ansi.ansi().eraseScreen().render(title));
+        System.out.println(Ansi.ansi().render(title));
 
         String tip = """
                 如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printAction;
@@ -179,7 +179,7 @@ class PrintActionKit {
 
                 String lineTemplate = "{routeCell} {actionCell} {actionNameCell}.{methodNameCell}({paramInfoCell}) {throwCell} --- return {returnValueCell}  ~~~ see.({actionSimpleName}.java:{lineNumber})";
                 String text = StrKit.format(lineTemplate, params);
-                System.out.println(Ansi.ansi().eraseScreen().render(text));
+                System.out.println(Ansi.ansi().render(text));
             }
         }
     }
@@ -188,11 +188,11 @@ class PrintActionKit {
         DataCodec dataCodec = DataCodecKit.dataCodec;
 
         String title = "@|CYAN ======================== 当前使用的编解码器 ========================= |@";
-        System.out.println(Ansi.ansi().eraseScreen().render(title));
+        System.out.println(Ansi.ansi().render(title));
         System.out.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printDataCodec");
 
         String info = String.format("@|BLUE %s - %s |@", dataCodec.codecName(), dataCodec.getClass().getName());
-        System.out.println(Ansi.ansi().eraseScreen().render(info));
+        System.out.println(Ansi.ansi().render(info));
 
     }
 

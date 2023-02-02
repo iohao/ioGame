@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,11 @@
  */
 package com.iohao.game.bolt.broker.server.balanced.region;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.RpcServer;
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
-import com.iohao.game.common.kit.ToJson;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -43,7 +41,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @SuppressWarnings("unchecked")
-public class BrokerClientProxy implements ToJson {
+public class BrokerClientProxy {
     /** 逻辑服唯一标识 */
     final String id;
     final int idHash;
@@ -69,7 +67,6 @@ public class BrokerClientProxy implements ToJson {
     /** 消息发送超时时间 */
     int timeoutMillis = IoGameGlobalConfig.timeoutMillis;
     List<Integer> cmdMergeList;
-    @JSONField(serialize = false)
     final RpcServer rpcServer;
 
     public BrokerClientProxy(BrokerClientModuleMessage brokerClientModuleMessage, RpcServer rpcServer) {

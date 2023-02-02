@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.action.skeleton.core.*;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.common.kit.bean.BeanKit;
 import com.iohao.game.common.kit.io.FileKit;
 import lombok.Setter;
 
@@ -162,14 +161,18 @@ public class BarSkeletonDoc {
 
         for (ActionSendDoc actionSendDoc : actionSendDocList) {
 
-            Map<String, Object> stringObjectMap = BeanKit.beanToMap(actionSendDoc);
-            stringObjectMap.put("dataClass", actionSendDoc.getDataClass().getName());
-
             String template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass}";
 
             if (StrKit.isNotEmpty(actionSendDoc.getDescription())) {
                 template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} ({description})";
             }
+
+            var stringObjectMap = new HashMap<>();
+            stringObjectMap.put("cmd", actionSendDoc.getCmd());
+            stringObjectMap.put("subCmd", actionSendDoc.getSubCmd());
+            stringObjectMap.put("dataClass", actionSendDoc.getDataClass().getName());
+            stringObjectMap.put("description", actionSendDoc.getDescription());
+
 
             String format = StrKit.format(template, stringObjectMap);
 

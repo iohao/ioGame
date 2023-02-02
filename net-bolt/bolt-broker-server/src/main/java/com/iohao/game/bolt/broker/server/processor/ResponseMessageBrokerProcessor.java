@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,16 @@ import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.ExternalBrokerClientLoadBalanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.Objects;
 
@@ -39,16 +40,17 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
 public class ResponseMessageBrokerProcessor extends AbstractAsyncUserProcessor<ResponseMessage>
         implements BrokerServerAware {
+    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
+
     @Setter
     BrokerServer brokerServer;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, ResponseMessage responseMessage) {
         if (IoGameGlobalConfig.requestResponseLog) {
-            log.info("把逻辑服的响应转发到对外服 {}", responseMessage.toJsonPretty());
+            log.info("把逻辑服的响应转发到对外服 {}", responseMessage);
         }
 
         HeadMetadata headMetadata = responseMessage.getHeadMetadata();

@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ package com.iohao.game.common.validation;
 
 import com.iohao.game.common.kit.ClassScanner;
 import com.iohao.game.common.kit.io.ResourceKit;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -36,9 +37,9 @@ import java.util.stream.Collectors;
  * @author shenjk
  * @date 2022-09-26
  */
-@Slf4j
 @UtilityClass
 public class Validation {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
 
     final String fileName = "META-INF/ioGame/com.iohao.game.common.validation.Validator";
     final String defaultValidator = "com.iohao.game.common.validation.support.JakartaValidator";

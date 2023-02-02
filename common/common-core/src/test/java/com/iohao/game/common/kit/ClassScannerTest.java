@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,19 @@
 package com.iohao.game.common.kit;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
-import lombok.extern.slf4j.Slf4j;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
+import org.junit.Test;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-@Slf4j
 public class ClassScannerTest {
+    Logger log = IoGameLoggerFactory.getLogger("Stdout");
 
-//    @Test
+    //    @Test
     public void scan() {
         Predicate<Class<?>> predicateFilter = (clazz) -> {
             ActionController annotation = clazz.getAnnotation(ActionController.class);
@@ -41,7 +45,22 @@ public class ClassScannerTest {
         for (Class<?> clazz : classList) {
             log.info("clazz: {}", clazz);
         }
+    }
 
+    @Test
+    public void test() {
+        log.info("hello ioGame {}", "miss");
+        String title = "!~ @|CYAN ======================== action ========================= |@ ~!";
+//        AnsiConsole.systemInstall();
+        System.out.println("Hello World");
+        AnsiConsole.out().println("Hello World");
+        AnsiConsole.out().println(title);
+
+        System.out.println(Ansi.ansi().eraseScreen().render(title));
+
+        Ansi render = Ansi.ansi().eraseScreen().render(title);
+        System.out.println(render.eraseScreen().reset());
 
     }
+
 }

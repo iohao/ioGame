@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,11 @@ import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
+import org.slf4j.Logger;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,8 +36,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-@Slf4j
 public class CloseConnectionEventBrokerProcessor implements ConnectionEventProcessor, BrokerServerAware {
+    static final Logger log = IoGameLoggerFactory.getLoggerConnection();
 
     private final AtomicInteger disConnectTimes = new AtomicInteger();
     private final AtomicBoolean dicConnected = new AtomicBoolean();
@@ -46,7 +47,7 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
 
-        Assert.assertNotNull(conn);
+        Objects.requireNonNull(conn);
         dicConnected.set(true);
         disConnectTimes.incrementAndGet();
 
@@ -59,7 +60,7 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
         BrokerPrintKit.print(this.brokerServer);
 
         if (IoGameGlobalConfig.openLog) {
-            log.info("brokerClientProxy : {}", brokerClientProxy.toJsonPretty());
+            log.info("brokerClientProxy : {}", brokerClientProxy);
         }
     }
 

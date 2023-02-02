@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
  */
 package com.iohao.game.bolt.broker.cluster;
 
-import com.iohao.game.common.kit.ToJson;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * broker （游戏网关）
@@ -31,7 +33,9 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Accessors(chain = true)
-public class Broker implements ToJson {
+public class Broker implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -221407958089075449L;
     /**
      * 服务器唯一标识
      * <pre>

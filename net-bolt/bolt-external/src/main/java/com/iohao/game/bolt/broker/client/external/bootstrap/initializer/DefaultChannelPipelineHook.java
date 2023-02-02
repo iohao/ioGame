@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,11 @@ package com.iohao.game.bolt.broker.client.external.bootstrap.initializer;
 
 import com.iohao.game.bolt.broker.client.external.bootstrap.handler.ExternalBizHandler;
 import io.netty.channel.ChannelPipeline;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 /**
  * @author 渔民小镇
  * @date 2022-12-05
  */
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DefaultChannelPipelineHook implements ChannelPipelineHook {
 
     @Override

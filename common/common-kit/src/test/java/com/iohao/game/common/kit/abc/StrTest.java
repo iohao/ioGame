@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@
 package com.iohao.game.common.kit.abc;
 
 import com.iohao.game.common.kit.StrKit;
-import lombok.extern.slf4j.Slf4j;
+import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import org.junit.Test;
+import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,9 +28,11 @@ import java.util.Map;
  * @author 渔民小镇
  * @date 2022-12-23
  */
-@Slf4j
 public class StrTest {
-    public static void main(String[] args) throws IOException {
+    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
+
+    @Test
+    public void test() {
         log.info("args : hello");
 
         String template = """

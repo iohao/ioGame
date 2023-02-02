@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.iohao.game.action.skeleton.annotation.DocActionSend;
 import com.iohao.game.action.skeleton.annotation.DocActionSends;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.*;
@@ -30,7 +29,6 @@ import java.util.function.Predicate;
  * @author 渔民小镇
  * @date 2022-02-01
  */
-@Slf4j
 public class ActionSendDocs {
 
     @Getter

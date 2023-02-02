@@ -1,6 +1,6 @@
 /*
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2022 double joker （262610965@qq.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.common.kit.StrKit;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 全局重复路由检测工具
@@ -39,7 +39,6 @@ import java.util.*;
  * @author 渔民小镇
  * @date 2022-07-31
  */
-@Slf4j
 @UtilityClass
 public class ActionCommandRegionGlobalCheckKit {
 
