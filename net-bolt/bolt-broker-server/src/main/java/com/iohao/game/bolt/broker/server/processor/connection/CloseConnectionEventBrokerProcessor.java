@@ -51,16 +51,12 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
         dicConnected.set(true);
         disConnectTimes.incrementAndGet();
 
-        if (IoGameGlobalConfig.openLog) {
-            log.info("连接关闭 remoteAddress : {}", remoteAddress);
-        }
-
         BalancedManager balancedManager = this.brokerServer.getBalancedManager();
         BrokerClientProxy brokerClientProxy = balancedManager.remove(remoteAddress);
         BrokerPrintKit.print(this.brokerServer);
 
         if (IoGameGlobalConfig.openLog) {
-            log.info("brokerClientProxy : {}", brokerClientProxy);
+            log.info("连接关闭 remoteAddress 【{}】 brokerClientProxy : 【{}】", remoteAddress, brokerClientProxy);
         }
     }
 

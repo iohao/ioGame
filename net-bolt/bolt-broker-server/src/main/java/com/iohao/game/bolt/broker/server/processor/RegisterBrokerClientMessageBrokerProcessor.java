@@ -20,7 +20,6 @@ import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
-import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
@@ -65,7 +64,6 @@ public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcess
         print(brokerClientModuleMessage);
     }
 
-
     private void sendClusterMessage(BizContext bizCtx) {
 
         BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
@@ -93,7 +91,6 @@ public class RegisterBrokerClientMessageBrokerProcessor extends AsyncUserProcess
         }
 
         BrokerPrintKit.print(this.brokerServer);
-
     }
 
     /**
