@@ -18,7 +18,7 @@
   <br>
   <strong>在业务开发中自带神级特性：业务代码访问定位与跳转</strong>
   <br>
-  <strong>架构部署多样性：即可相互独立，又可相互融合</strong>
+  <strong>架构部署多样性：既可相互独立，又可相互融合</strong>
   <br>
   <strong>各个逻辑服之间可以相互的进行跨进程通信</strong>
   <br>
@@ -125,6 +125,26 @@ ioGame 依然遵循过去、现在、将来都不会有商业版本，所有功�
 
 <br>
 
+---
+
+
+
+### 启动展示
+
+ioGame 在内存占用、启动速度、打包等方面也是优秀的。
+
+- 内存方面：内存占用小。
+- 启动速度方面：应用通常会在 **0.x 秒**内完成启动。
+- 打包方面：打 jar 包后大约 **15MB** ，详细请看 [快速从零编写服务器完整示例](https://www.yuque.com/iohao/game/zm6qg2#LF8Qh)。
+
+
+
+![](https://user-images.githubusercontent.com/26356013/215700352-1dbab29d-672d-4d68-bf50-2441e49bd87d.png)
+
+---
+
+
+
 ### 源码、示例、效率
 
 |          | github                                                      | gitee                                                      |
@@ -134,13 +154,17 @@ ioGame 依然遵循过去、现在、将来都不会有商业版本，所有功�
 
 
 
-**游戏前端示例**
+**示例**
 
-| 地址                                                         | 描述                             |
-| ------------------------------------------------------------ | -------------------------------- |
-| [u3d 连接示例文档](https://www.yuque.com/iohao/game/syv5mm)  | 已经与 ioGame 的综合示例联调成功 |
-| [cocosCreator 连接示例文档](https://www.yuque.com/iohao/game/ua4afq) | 已经与 ioGame 的综合示例联调成功 |
-| [UE5 连接示例文档](https://www.yuque.com/iohao/game/rus213)  | 已经与 ioGame 的综合示例联调成功 |
+| 地址                                                         | 描述                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------- |
+| [u3d 连接示例文档](https://www.yuque.com/iohao/game/syv5mm)  | 已经与 ioGame 的综合示例联调成功                        |
+| [cocosCreator 连接示例文档](https://www.yuque.com/iohao/game/ua4afq) | 已经与 ioGame 的综合示例联调成功                        |
+| [UE5 连接示例文档](https://www.yuque.com/iohao/game/rus213)  | 已经与 ioGame 的综合示例联调成功                        |
+| [websocket.js 连接示例文档](https://www.yuque.com/iohao/game/knqxehz2pl1sal5s) | websocket.js 连接的一个示例，使用 json 协议来传输交互。 |
+| [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、ks8）等介绍   |
+
+
 
 **效率**
 
@@ -148,7 +172,6 @@ ioGame 依然遵循过去、现在、将来都不会有商业版本，所有功�
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [idea-ioGame-插件](https://www.yuque.com/iohao/game/aw9a0eic6auwing1) | 通过该 idea 插件，可以进一步提高生产力，减少工作量。         |
 | [ioGame 快速理解篇](https://www.yuque.com/iohao/game/le48p1go9gkdqgih) | 快速掌握 ioGame 的概念                                       |
-| [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、ks8）等介绍        |
 | [技术栈推荐与其它参考文档](https://www.yuque.com/iohao/game/swt3ls) | 游戏开发的技术栈建议，大家可以参考一下。                     |
 | [更多游戏服务器框架推荐](https://www.yuque.com/iohao/game/ytrfic) | 如果 ioGame 不能很好的满足你的需要，请别担心，这里还有更多的 java 游戏服务器框架推荐给你。 |
 
@@ -220,22 +243,6 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 ![](https://user-images.githubusercontent.com/26356013/211194151-a6c47738-804b-4e18-a43f-0742d92fd82b.png)
 
----
-
-
-
-### 启动展示
-
-ioGame 在内存占用、启动速度、打包等方面也是优秀的。
-
-- 内存方面：内存占用小。
-- 启动速度方面：应用通常会在 0.x 秒内完成启动。
-- 打包方面：打 jar 包后大约 15MB ，详细请看 [快速从零编写服务器完整示例](https://www.yuque.com/iohao/game/zm6qg2#LF8Qh)。
-
-
-
-![](https://user-images.githubusercontent.com/26356013/215700352-1dbab29d-672d-4d68-bf50-2441e49bd87d.png)
-
 
 
 ---
@@ -254,7 +261,10 @@ ioGame 已经接入 OSCS 墨菲安全扫描，框架的安全质量近乎100%，
 
 ---
 
+
+
 ## 实践产品的计划
+
 <details>
 <summary>实践产品的计划 -- 点我展开</summary>
 
@@ -424,7 +434,7 @@ Bolt 名字取自迪士尼动画-闪电狗，是一个基于 Netty 最佳实践�
 
 
 
-业务框架对于每个 action （即业务的处理类） 都是通过 [asm](https://www.oschina.net/p/reflectasm) 与 Singleton、Flyweight 、Command 等设计模式结合，对 action 的获取上通过 array 来得到，是一种近原生的方式。
+业务框架对于每个 action （即业务的处理类） 都是通过 [asm](https://github.com/EsotericSoftware/reflectasm) 与 Singleton、Flyweight 、Command 等设计模式结合，对 action 的获取上通过 array 来得到，是一种近原生的方式。
 
 
 
@@ -723,7 +733,7 @@ ioGame 支持 3 种类型的通讯方式，分别是**单次请求处理、推�
 
 ### 协议文件
 
-协议文件是对业务数据的描述载体，用于游戏前端与游戏服务器的数据交互。Protocol Buffers 是Google公司开发的一种数据描述语言，也简称 [PB](https://www.oschina.net/p/protocol+buffers) 。当然协议文件描述还可以是 json、xml或者任意自定义的，因为最后传输时会转换为二进制，但游戏开发中 PB 是目前的最佳。
+协议文件是对业务数据的描述载体，用于游戏前端与游戏服务器的数据交互。Protocol Buffers 是Google公司开发的一种数据描述语言，也简称 [PB](https://github.com/protocolbuffers/protobuf) 。当然协议文件描述还可以是 json、xml或者任意自定义的，因为最后传输时会转换为二进制，但游戏开发中 PB 是目前的最佳。
 
 
 
@@ -733,6 +743,7 @@ ioGame 支持 3 种类型的通讯方式，分别是**单次请求处理、推�
 
 - [u3d 连接示例](https://www.yuque.com/iohao/game/syv5mm)
 - [cocosCreator 连接示例](https://www.yuque.com/iohao/game/ua4afq)
+- [UE5 连接示例](https://www.yuque.com/iohao/game/rus213)
 
 
 
@@ -746,7 +757,7 @@ ioGame 支持 3 种类型的通讯方式，分别是**单次请求处理、推�
 
 #### Proto 协议文件定义
 
-首先我们自定义一个协议文件，这个协议文件作为我们的业务载体描述。这个协议是纯java代码编写的，使用的是 jprotobuf，jprotobuf 是对 [google protobuf](https://www.oschina.net/p/protocol+buffers) 的简化使用，性能同等。
+首先我们自定义一个协议文件，这个协议文件作为我们的业务载体描述。这个协议是纯 java 代码编写的，使用的是 jprotobuf，jprotobuf 是对 [google protobuf](https://github.com/protocolbuffers/protobuf) 的简化使用，性能同等。
 
 
 
@@ -949,7 +960,7 @@ ioGame游戏框架由 [网络通信框架] 和 [业务框架] 组成。所以我
 
 **2.调用开发者编写的业务代码（action）**
 
-业务框架对于每个 action （即业务的处理类） 都是通过 [asm](https://www.oschina.net/p/reflectasm) 与 Singleton、Flyweight 、Command 等设计模式结合，对 action 的获取上通过 array 来得到，是一种近原生的方式。
+业务框架对于每个 action （即业务的处理类） 都是通过 [asm](https://github.com/EsotericSoftware/reflectasm) 与 Singleton、Flyweight 、Command 等设计模式结合，对 action 的获取上通过 array 来得到，是一种近原生的方式。
 
 <br>
 
@@ -1239,11 +1250,11 @@ action 有这么几个组成部分：方法名、方法参数、方法体、方�
 
 ## 坦克游戏示例
 
-ioGame 源码内提供了一个基于 [FXGL](https://www.oschina.net/p/fxgl) 游戏引擎的游戏示例 （[坦克射击](https://www.yuque.com/iohao/game/gqossg) 启动文档），FXGL 是纯 java 开发的一个游戏引擎，可以在项目中直接运行。通过示例，可以快速的掌握网络游戏编程！
+ioGame 源码内提供了一个基于 [FXGL](https://github.com/AlmasB/FXGL) 游戏引擎的游戏示例 （[坦克射击](https://www.yuque.com/iohao/game/gqossg) 启动文档），FXGL 是纯 java 开发的一个游戏引擎，可以在项目中直接运行。通过示例，可以快速的掌握网络游戏编程！
 
 
 
-运行 TankApp.java 文件就可以启动游戏了。原计划用 U3D 来做游戏示例的，但想到大伙还得安装 [u3d](https://unity.cn/) 的环境，就用  [FXGL](https://www.oschina.net/p/fxgl) 来做游戏示例了。
+运行 TankApp.java 文件就可以启动游戏了。原计划用 U3D 来做游戏示例的，但想到大伙还得安装 [u3d](https://unity.cn/) 的环境，就用  [FXGL](https://github.com/AlmasB/FXGL) 来做游戏示例了。
 
 ![img](https://oscimg.oschina.net/oscnet/up-5ae3d9516142c4e3aecd73c62d495104bed.png)
 

@@ -1,5 +1,38 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2023-02-03 - v17.1.31
+https://www.yuque.com/iohao/game/ab15oe#dPVPB
+
+#37 缩小打包后的包体大小，ioGame 打 jar 包后大约 15MB，演示查看 快速从零编写服务器完整示例。
+
+#36 增加 Banner 打印版本、内存占用、启动耗时等信息。
+ioGame 在内存占用、启动速度、打包等方面也是优秀的。
+- 内存方面：内存占用小。
+- 启动速度方面：应用通常会在 0.x 秒内完成启动。
+- 打包方面：打 jar 包后大约 15MB ，详细请看 快速从零编写服务器完整示例。
+
+#34 日志模块增加
+用于将框架日志单独存放，与开发者项目的日志分离。
+日志支持 log4j2、logback
+
+#I6BE6J
+MethodParsers 增加 action 参数解析器的默认设置
+
+#I6C0UF
+业务参数自动装箱、拆箱基础类型增强
+
+#I6B76X
+修复广播的数据为空时，广播虽然是成功的，但是打印广播日志报错的问题
+
+移除一些第三方库
+为缩小打包，将 hutool 依赖移除、将 fastjson2 依赖配置中的 scope 改为 provided；如有使用到相关的，需要开发者自行引入。
+移除项目中 json 相关的类文件 ToJson。
+
+
+2023-01-14 - v17.1.29
+https://www.yuque.com/iohao/game/ab15oe#pqHj1
+修复文档生成时的路径问题
+
 2022-12-29 - v17.1.28
 https://www.yuque.com/iohao/game/ab15oe#Y38Hx
 
