@@ -39,3 +39,16 @@ message LongListPb {
   // longList
   repeated sint64 longValues = 1;
 }
+
+// string 包装类
+message StringPb {
+  // string 值
+  string stringValue = 1;
+}
+
+// string list 包装类
+message StringListPb {
+  // stringList
+  repeated string stringValues = 1;
+}
+

@@ -17,10 +17,7 @@
 package com.iohao.game.action.skeleton.core.flow.parser;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
-import com.iohao.game.action.skeleton.protocol.wrapper.IntListPb;
-import com.iohao.game.action.skeleton.protocol.wrapper.IntPb;
-import com.iohao.game.action.skeleton.protocol.wrapper.LongListPb;
-import com.iohao.game.action.skeleton.protocol.wrapper.LongPb;
+import com.iohao.game.action.skeleton.protocol.wrapper.*;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -114,6 +111,8 @@ public final class MethodParsers {
         // 表示在 action 参数中，遇见 long 类型的参数，用 LongMethodParamParser 来解析
         this.mapping(long.class, LongMethodParser.me());
         this.mapping(Long.class, LongMethodParser.me());
+        // 表示在 action 参数中，遇见 string 类型的参数，用 StringMethodParser 来解析
+        this.mapping(String.class, StringMethodParser.me());
 
         /*
          * 这里注册是为了顺便使用 containsKey 方法，因为生成文档的时候要用到短名字
@@ -124,6 +123,9 @@ public final class MethodParsers {
 
         this.mapping(LongPb.class, DefaultMethodParser.me(), LongPb::new);
         this.mapping(LongListPb.class, DefaultMethodParser.me(), LongListPb::new);
+
+        this.mapping(StringPb.class, DefaultMethodParser.me(), StringPb::new);
+        this.mapping(StringListPb.class, DefaultMethodParser.me(), StringListPb::new);
     }
 
     public static MethodParsers me() {

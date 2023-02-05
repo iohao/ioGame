@@ -14,22 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.action.skeleton.protocol.temp;
+package com.iohao.game.action.skeleton.protocol.wrapper;
 
+import com.baidu.bjf.remoting.protobuf.FieldType;
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import lombok.AccessLevel;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 /**
- * 临时测试用
+ * string list 包装类
  *
  * @author 渔民小镇
- * @date 2022-07-13
+ * @date 2023-02-05
  */
-@ProtobufClass
 @ToString
+@ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
-public class BarHelloPb {
-    int amount;
+public class StringListPb {
+    /** string list */
+    @Protobuf(fieldType = FieldType.STRING, order = 1)
+    List<String> stringValues;
 }
