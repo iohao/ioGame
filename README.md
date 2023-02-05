@@ -427,7 +427,7 @@ Bolt 名字取自迪士尼动画-闪电狗，是一个基于 Netty 最佳实践�
 
 
 
-业务框架对于每个 action （即业务的处理类） 都是通过 [asm](https://www.oschina.net/p/reflectasm) 与 Singleton、Flyweight 、Command 等设计模式结合，对 action 的获取上通过 array 来得到，是一种近原生的方式。
+业务框架对于每个 action （即业务的处理类） 都是通过 [asm](https://github.com/EsotericSoftware/reflectasm) 与 Singleton、Flyweight 、Command 等设计模式结合，对 action 的获取上通过 array 来得到，是一种近原生的方式。
 
 
 
@@ -726,7 +726,7 @@ ioGame 支持 3 种类型的通讯方式，分别是**单次请求处理、推�
 
 ### 协议文件
 
-协议文件是对业务数据的描述载体，用于游戏前端与游戏服务器的数据交互。Protocol Buffers 是Google公司开发的一种数据描述语言，也简称 [PB](https://www.oschina.net/p/protocol+buffers) 。当然协议文件描述还可以是 json、xml或者任意自定义的，因为最后传输时会转换为二进制，但游戏开发中 PB 是目前的最佳。
+协议文件是对业务数据的描述载体，用于游戏前端与游戏服务器的数据交互。Protocol Buffers 是Google公司开发的一种数据描述语言，也简称 [PB](https://github.com/protocolbuffers/protobuf) 。当然协议文件描述还可以是 json、xml或者任意自定义的，因为最后传输时会转换为二进制，但游戏开发中 PB 是目前的最佳。
 
 
 
@@ -750,7 +750,7 @@ ioGame 支持 3 种类型的通讯方式，分别是**单次请求处理、推�
 
 #### Proto 协议文件定义
 
-首先我们自定义一个协议文件，这个协议文件作为我们的业务载体描述。这个协议是纯 java 代码编写的，使用的是 jprotobuf，jprotobuf 是对 [google protobuf](https://www.oschina.net/p/protocol+buffers) 的简化使用，性能同等。
+首先我们自定义一个协议文件，这个协议文件作为我们的业务载体描述。这个协议是纯 java 代码编写的，使用的是 jprotobuf，jprotobuf 是对 [google protobuf](https://github.com/protocolbuffers/protobuf) 的简化使用，性能同等。
 
 
 
@@ -953,7 +953,7 @@ ioGame游戏框架由 [网络通信框架] 和 [业务框架] 组成。所以我
 
 **2.调用开发者编写的业务代码（action）**
 
-业务框架对于每个 action （即业务的处理类） 都是通过 [asm](https://www.oschina.net/p/reflectasm) 与 Singleton、Flyweight 、Command 等设计模式结合，对 action 的获取上通过 array 来得到，是一种近原生的方式。
+业务框架对于每个 action （即业务的处理类） 都是通过 [asm](https://github.com/EsotericSoftware/reflectasm) 与 Singleton、Flyweight 、Command 等设计模式结合，对 action 的获取上通过 array 来得到，是一种近原生的方式。
 
 <br>
 
@@ -1243,11 +1243,11 @@ action 有这么几个组成部分：方法名、方法参数、方法体、方�
 
 ## 坦克游戏示例
 
-ioGame 源码内提供了一个基于 [FXGL](https://www.oschina.net/p/fxgl) 游戏引擎的游戏示例 （[坦克射击](https://www.yuque.com/iohao/game/gqossg) 启动文档），FXGL 是纯 java 开发的一个游戏引擎，可以在项目中直接运行。通过示例，可以快速的掌握网络游戏编程！
+ioGame 源码内提供了一个基于 [FXGL](https://github.com/AlmasB/FXGL) 游戏引擎的游戏示例 （[坦克射击](https://www.yuque.com/iohao/game/gqossg) 启动文档），FXGL 是纯 java 开发的一个游戏引擎，可以在项目中直接运行。通过示例，可以快速的掌握网络游戏编程！
 
 
 
-运行 TankApp.java 文件就可以启动游戏了。原计划用 U3D 来做游戏示例的，但想到大伙还得安装 [u3d](https://unity.cn/) 的环境，就用  [FXGL](https://www.oschina.net/p/fxgl) 来做游戏示例了。
+运行 TankApp.java 文件就可以启动游戏了。原计划用 U3D 来做游戏示例的，但想到大伙还得安装 [u3d](https://unity.cn/) 的环境，就用  [FXGL](https://github.com/AlmasB/FXGL) 来做游戏示例了。
 
 ![img](https://oscimg.oschina.net/oscnet/up-5ae3d9516142c4e3aecd73c62d495104bed.png)
 
