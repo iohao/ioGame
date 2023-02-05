@@ -125,6 +125,26 @@ ioGame 依然遵循过去、现在、将来都不会有商业版本，所有功�
 
 <br>
 
+---
+
+
+
+### 启动展示
+
+ioGame 在内存占用、启动速度、打包等方面也是优秀的。
+
+- 内存方面：内存占用小。
+- 启动速度方面：应用通常会在 **0.x 秒**内完成启动。
+- 打包方面：打 jar 包后大约 **15MB** ，详细请看 [快速从零编写服务器完整示例](https://www.yuque.com/iohao/game/zm6qg2#LF8Qh)。
+
+
+
+![](https://user-images.githubusercontent.com/26356013/215700352-1dbab29d-672d-4d68-bf50-2441e49bd87d.png)
+
+---
+
+
+
 ### 源码、示例、效率
 
 |          | github                                                      | gitee                                                      |
@@ -223,22 +243,6 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 ![](https://user-images.githubusercontent.com/26356013/211194151-a6c47738-804b-4e18-a43f-0742d92fd82b.png)
 
----
-
-
-
-### 启动展示
-
-ioGame 在内存占用、启动速度、打包等方面也是优秀的。
-
-- 内存方面：内存占用小。
-- 启动速度方面：应用通常会在 **0.x 秒**内完成启动。
-- 打包方面：打 jar 包后大约 **15MB** ，详细请看 [快速从零编写服务器完整示例](https://www.yuque.com/iohao/game/zm6qg2#LF8Qh)。
-
-
-
-![](https://user-images.githubusercontent.com/26356013/215700352-1dbab29d-672d-4d68-bf50-2441e49bd87d.png)
-
 
 
 ---
@@ -257,7 +261,10 @@ ioGame 已经接入 OSCS 墨菲安全扫描，框架的安全质量近乎100%，
 
 ---
 
+
+
 ## 实践产品的计划
+
 <details>
 <summary>实践产品的计划 -- 点我展开</summary>
 
