@@ -217,7 +217,7 @@ ioGame 是轻量级的网络游戏服务器框架，ioGame 没有中间件的强
 
 ### ioGame 使用趋势数据
 
-关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 2023-01 月统计数据；这里的统计信息是关于开发者关注 ioGame 框架相关的，从统计数据中可以看出，由于 ioGame 上手简单，功能强大等优点，得到了众多开发者的关注。
+关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 2023-02 月统计数据；这里的统计信息是关于开发者关注 ioGame 框架相关的，从统计数据中可以看出，由于 ioGame 上手简单，功能强大等优点，得到了众多开发者的关注。
 
 
 
@@ -241,7 +241,7 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 
 
-![](https://user-images.githubusercontent.com/26356013/211194151-a6c47738-804b-4e18-a43f-0742d92fd82b.png)
+![](https://user-images.githubusercontent.com/26356013/217443021-735285e4-4ce9-406b-b503-2a2d6f7d7bdb.png)
 
 
 
@@ -410,7 +410,7 @@ ioGame 可以很方便的与 spring 集成（5 行代码）。
 
 ------
 
-ioGame 是国内首个基于蚂蚁金服 [sofa-bolt](https://www.sofastack.tech/projects/sofa-bolt/overview/) 的网络游戏框架，游戏框架由 [**网络通信框架**] 和 [**业务框架**] 组成。
+ioGame 由 [**网络通信框架**] 和 [**业务框架**] 组成。
 
 - 网络通信框架：职责是各服务器之间的网络通信
 - 业务框架：职责是业务逻辑的处理方式和编写方式
