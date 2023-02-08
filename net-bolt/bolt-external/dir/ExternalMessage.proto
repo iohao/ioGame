@@ -52,3 +52,14 @@ message StringListPb {
   repeated string stringValues = 1;
 }
 
+// boolean 包装类
+message BooleanPb {
+  // boolean 值
+  bool booleanValue = 1;
+}
+
+// boolean list 包装类
+message BooleanListPb {
+  // booleanList
+  repeated bool booleanValues = 1;
+}

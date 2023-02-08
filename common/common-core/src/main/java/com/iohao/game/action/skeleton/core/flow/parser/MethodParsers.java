@@ -113,6 +113,9 @@ public final class MethodParsers {
         this.mapping(Long.class, LongMethodParser.me());
         // 表示在 action 参数中，遇见 string 类型的参数，用 StringMethodParser 来解析
         this.mapping(String.class, StringMethodParser.me());
+        // 表示在 action 参数中，遇见 boolean 类型的参数，用 BooleanMethodParamParser 来解析
+        this.mapping(boolean.class, BooleanMethodParser.me());
+        this.mapping(Boolean.class, BooleanMethodParser.me());
 
         /*
          * 这里注册是为了顺便使用 containsKey 方法，因为生成文档的时候要用到短名字
@@ -126,6 +129,9 @@ public final class MethodParsers {
 
         this.mapping(StringPb.class, DefaultMethodParser.me(), StringPb::new);
         this.mapping(StringListPb.class, DefaultMethodParser.me(), StringListPb::new);
+
+        this.mapping(BooleanPb.class, DefaultMethodParser.me(), BooleanPb::new);
+        this.mapping(BooleanListPb.class, DefaultMethodParser.me(), BooleanListPb::new);
     }
 
     public static MethodParsers me() {
