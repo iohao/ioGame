@@ -18,21 +18,23 @@ package com.iohao.game.action.skeleton.core.flow.parser;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.protocol.wrapper.BooleanListPb;
-import com.iohao.game.action.skeleton.protocol.wrapper.BooleanPb;
+import com.iohao.game.action.skeleton.protocol.wrapper.BoolValueList;
+import com.iohao.game.action.skeleton.protocol.wrapper.BoolValue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
+ * boolean 包装类解析器
+ *
  * @author 渔民小镇
  * @date 2023-02-07
  */
-public class BooleanMethodParser implements MethodParser {
+final class BoolMethodParser implements MethodParser {
     @Override
     public Class<?> getActualClazz(ActionCommand.MethodParamResultInfo methodParamResultInfo) {
-        return methodParamResultInfo.isList() ? BooleanListPb.class : BooleanPb.class;
+        return methodParamResultInfo.isList() ? BoolValueList.class : BoolValue.class;
     }
 
     @Override
@@ -44,16 +46,16 @@ public class BooleanMethodParser implements MethodParser {
                 return new ArrayList<Boolean>();
             }
 
-            BooleanListPb listPb = DataCodecKit.decode(data, BooleanListPb.class);
-            return listPb.booleanValues;
+            var valueList = DataCodecKit.decode(data, BoolValueList.class);
+            return valueList.values;
         }
 
         if (Objects.isNull(data)) {
             return false;
         }
 
-        BooleanPb booleanPb = DataCodecKit.decode(data, BooleanPb.class);
-        return booleanPb.booleanValue;
+        BoolValue boolValue = DataCodecKit.decode(data, BoolValue.class);
+        return boolValue.value;
     }
 
     @Override
@@ -61,9 +63,9 @@ public class BooleanMethodParser implements MethodParser {
     public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
 
         if (actionMethodReturnInfo.isList()) {
-            BooleanListPb listPb = new BooleanListPb();
-            listPb.booleanValues = (List<Boolean>) methodResult;
-            return listPb;
+            var valueList = new BoolValueList();
+            valueList.values = (List<Boolean>) methodResult;
+            return valueList;
         }
 
         /*
@@ -71,20 +73,20 @@ public class BooleanMethodParser implements MethodParser {
          * 注意这里不会检测 methodResult 是否为 null，如果担心 null 问题，
          * 可以使用 boolean，而不是使用 Boolean
          */
-        BooleanPb booleanPb = new BooleanPb();
-        booleanPb.booleanValue = (boolean) methodResult;
-        return booleanPb;
+        BoolValue boolValue = new BoolValue();
+        boolValue.value = (boolean) methodResult;
+        return boolValue;
     }
 
-    private BooleanMethodParser() {
+    private BoolMethodParser() {
     }
 
-    public static BooleanMethodParser me() {
+    public static BoolMethodParser me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final BooleanMethodParser ME = new BooleanMethodParser();
+        static final BoolMethodParser ME = new BoolMethodParser();
     }
 }

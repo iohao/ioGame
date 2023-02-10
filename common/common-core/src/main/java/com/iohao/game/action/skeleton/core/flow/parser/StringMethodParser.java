@@ -44,8 +44,8 @@ final class StringMethodParser implements MethodParser {
                 return new ArrayList<String>();
             }
 
-            StringValueList stringValueList = DataCodecKit.decode(data, StringValueList.class);
-            return stringValueList.values;
+            StringValueList valueList = DataCodecKit.decode(data, StringValueList.class);
+            return valueList.values;
         }
 
         if (Objects.isNull(data)) {
@@ -61,9 +61,9 @@ final class StringMethodParser implements MethodParser {
     public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
 
         if (actionMethodReturnInfo.isList()) {
-            StringValueList stringValueList = new StringValueList();
-            stringValueList.values = (List<String>) methodResult;
-            return stringValueList;
+            StringValueList valueList = new StringValueList();
+            valueList.values = (List<String>) methodResult;
+            return valueList;
         }
 
         StringValue stringValue = new StringValue();
@@ -72,7 +72,6 @@ final class StringMethodParser implements MethodParser {
     }
 
     private StringMethodParser() {
-
     }
 
     public static StringMethodParser me() {

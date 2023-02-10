@@ -24,7 +24,7 @@ message IntValue {
 
 // int list 包装类
 message IntValueList {
-  // intList
+  // intList、intArray
   repeated sint32 values = 1;
 }
 
@@ -36,7 +36,7 @@ message LongValue {
 
 // long list 包装类
 message LongValueList {
-  // longList
+  // longList、longArray
   repeated sint64 values = 1;
 }
 
@@ -48,11 +48,25 @@ message StringValue {
 
 // string list 包装类
 message StringValueList {
-  // stringList
+  // stringList、stringArray
   repeated string values = 1;
 }
 
+// bool 包装类
+message BoolValue {
+  // bool 值
+  bool value = 1;
+}
+
+// bool list 包装类
+message BoolValueList {
+  // boolList、boolArray
+  repeated bool values = 1;
+}
+
 // ------- 以下是废弃的 -------
+// ------- 废弃原因-1：属性名称不统一
+// ------- 废弃原因-2：命名以 pb 结尾，这会导致在使用非 pb 协议时，会产生歧义
 
 // int 包装类 -- 已经废弃的，由 IntValue 代替
 message IntPb {

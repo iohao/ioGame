@@ -23,8 +23,10 @@ import lombok.AccessLevel;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 /**
- * boolean 包装类
+ * boolean list 包装类
  *
  * @author 渔民小镇
  * @date 2023-02-07
@@ -32,8 +34,8 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
-public class BooleanPb {
-    /** bool 值 */
+public class BoolValueList {
+    /** boolList */
     @Protobuf(fieldType = FieldType.BOOL, order = 1)
-    boolean booleanValue;
+    List<Boolean> values;
 }

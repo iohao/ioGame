@@ -47,8 +47,8 @@ final class IntValueMethodParser implements MethodParser {
                 return new ArrayList<Integer>();
             }
 
-            var intValueList = DataCodecKit.decode(data, IntValueList.class);
-            return intValueList.values;
+            var valueList = DataCodecKit.decode(data, IntValueList.class);
+            return valueList.values;
         }
 
         if (Objects.isNull(data)) {
@@ -64,9 +64,9 @@ final class IntValueMethodParser implements MethodParser {
     public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
 
         if (actionMethodReturnInfo.isList()) {
-            var intValueList = new IntValueList();
-            intValueList.values = (List<Integer>) methodResult;
-            return intValueList;
+            var valueList = new IntValueList();
+            valueList.values = (List<Integer>) methodResult;
+            return valueList;
         }
 
         /*

@@ -46,8 +46,8 @@ final class LongValueMethodParser implements MethodParser {
                 return new ArrayList<Long>();
             }
 
-            var longValueList = DataCodecKit.decode(data, LongValueList.class);
-            return longValueList.values;
+            var valueList = DataCodecKit.decode(data, LongValueList.class);
+            return valueList.values;
         }
 
         if (Objects.isNull(data)) {
@@ -62,9 +62,9 @@ final class LongValueMethodParser implements MethodParser {
     @SuppressWarnings("unchecked")
     public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
         if (actionMethodReturnInfo.isList()) {
-            var longValueList = new LongValueList();
-            longValueList.values = (List<Long>) methodResult;
-            return longValueList;
+            var valueList = new LongValueList();
+            valueList.values = (List<Long>) methodResult;
+            return valueList;
         }
 
         /*

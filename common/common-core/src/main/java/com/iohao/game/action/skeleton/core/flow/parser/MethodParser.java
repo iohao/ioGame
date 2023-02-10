@@ -36,17 +36,17 @@ public interface MethodParser {
      *
      * <pre>
      *     但由于框架现在内置了一些包装类型，如：
-     *     int --> IntPb
-     *     List&lt;Integer&gt; --> IntListPb
+     *     int --> IntValue
+     *     List&lt;Integer&gt; --> IntValueList
      *
-     *     long --> LongPb
-     *     List&lt;Long&gt; --> LongListPb
+     *     long --> LongValue
+     *     List&lt;Long&gt; --> LongValueList
      *
      *     所以当开发者在 action 方法上参数声明为基础类型时；
-     *     如声明为 int 那么这个值将会是 IntPb
-     *     如声明为 long 那么这个值将会是 LongPb
+     *     如声明为 int 那么这个值将会是 IntValue
+     *     如声明为 long 那么这个值将会是 LongValue
      *
-     *     如声明为 List&lt;Integer&gt; 那么这个值将会是 IntListPb
+     *     如声明为 List&lt;Integer&gt; 那么这个值将会是 IntValueList
      *     包装类型相关的以此类推;
      *
      *     这么做的目的是为了生成文档时，不与前端产生争议，
