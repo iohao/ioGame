@@ -27,6 +27,9 @@ import java.util.List;
 
 /**
  * int list 包装类
+ * <pre>
+ *     已经废弃，请使用 {@link IntValueList} 代替
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2022-06-26
@@ -34,6 +37,7 @@ import java.util.List;
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
+@Deprecated
 public class IntListPb {
     /** intList */
     @Protobuf(fieldType = FieldType.SINT32, order = 1)

@@ -18,7 +18,7 @@ package com.iohao.game.action.skeleton.core.action;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
-import com.iohao.game.action.skeleton.protocol.wrapper.LongPb;
+import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import org.slf4j.Logger;
 
@@ -35,99 +35,90 @@ import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.Wrappe
 public class WrapperLongAction {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
-    @ActionMethod(WrapperLongActionCmd.longPb2Void)
-    public void longPb2Void(LongPb longPb) {
-        log.info("longPb : {}", longPb);
-    }
-
-    @ActionMethod(WrapperLongActionCmd.longPb2Long)
-    public long longPb2Long(LongPb longPb) {
-        return longPb.longValue + 1;
-    }
-
-    @ActionMethod(WrapperLongActionCmd.longPb2LongPb)
-    public LongPb longPb2LongPb(LongPb intPb) {
-
-        LongPb newLongPb = new LongPb();
-        newLongPb.longValue = intPb.longValue + 2;
-
-        return newLongPb;
-    }
-
-    @ActionMethod(WrapperLongActionCmd.longPb2LongList)
-    public List<Long> longPb2LongList(LongPb intPb) {
-
-        List<Long> intList = new ArrayList<>();
-        intList.add(intPb.longValue);
-        intList.add(intPb.longValue + 3);
-
-        return intList;
-    }
-
-    /**
-     * int
-     *
-     * @param longValue intPb
-     */
-    @ActionMethod(WrapperLongActionCmd.long2Void)
-    public void long2Void(long longValue) {
+    @ActionMethod(WrapperLongActionCmd.longValue2Void)
+    public void longValue(LongValue longValue) {
         log.info("longValue : {}", longValue);
     }
 
-    @ActionMethod(WrapperLongActionCmd.long2Long)
-    public long long2Long(long longValue) {
-        return longValue + 1;
+    @ActionMethod(WrapperLongActionCmd.longValue2Long)
+    public long longValue2Long(LongValue longValue) {
+        return longValue.value + 1;
     }
 
-    @ActionMethod(WrapperLongActionCmd.long2LongPb)
-    public LongPb long2LongPb(long longValue) {
+    @ActionMethod(WrapperLongActionCmd.longValue2LongValue)
+    public LongValue longValue2LongValue(LongValue longValue) {
 
-        LongPb newIntPb = new LongPb();
-        newIntPb.longValue = longValue + 2;
+        LongValue newLongValue = new LongValue();
+        newLongValue.value = longValue.value + 2;
 
-        return newIntPb;
+        return newLongValue;
+    }
+
+    @ActionMethod(WrapperLongActionCmd.longValue2LongList)
+    public List<Long> longValue2LongList(LongValue longValue) {
+
+        List<Long> list = new ArrayList<>();
+        list.add(longValue.value);
+        list.add(longValue.value + 3);
+
+        return list;
+    }
+
+
+    @ActionMethod(WrapperLongActionCmd.long2Void)
+    public void long2Void(long value) {
+        log.info("value : {}", value);
+    }
+
+    @ActionMethod(WrapperLongActionCmd.long2Long)
+    public long long2Long(long value) {
+        return value + 1;
+    }
+
+    @ActionMethod(WrapperLongActionCmd.long2LongValue)
+    public LongValue long2LongValue(long value) {
+
+        LongValue newLongValue = new LongValue();
+        newLongValue.value = value + 2;
+
+        return newLongValue;
     }
 
     @ActionMethod(WrapperLongActionCmd.long2LongList)
-    public List<Long> long2LongList(long longValue) {
+    public List<Long> long2LongList(long value) {
 
-        List<Long> intList = new ArrayList<>();
-        intList.add(longValue);
-        intList.add(longValue + 3);
+        List<Long> list = new ArrayList<>();
+        list.add(value);
+        list.add(value + 3);
 
-        return intList;
+        return list;
     }
 
-    /**
-     * integer
-     *
-     * @param longPb intPb
-     */
     @ActionMethod(WrapperLongActionCmd.longer2Void)
-    public void longer2Void(LongPb longPb) {
-        log.info("longPb : {}", longPb);
+    public void longer2Void(LongValue longValue) {
+        log.info("longValue : {}", longValue);
     }
 
     @ActionMethod(WrapperLongActionCmd.longer2Long)
-    public long longer2Long(long longValue) {
-        return longValue + 1;
+    public long longer2Long(long value) {
+        return value + 1;
     }
 
-    @ActionMethod(WrapperLongActionCmd.longer2LongPb)
-    public LongPb longer2LongPb(Long longValue) {
+    @ActionMethod(WrapperLongActionCmd.longer2LongValue)
+    public LongValue longer2LongValue(Long value) {
 
-        LongPb newIntPb = new LongPb();
-        newIntPb.longValue = longValue + 2;
+        LongValue newLongValue = new LongValue();
+        newLongValue.value = value + 2;
 
-        return newIntPb;
+        return newLongValue;
     }
 
     @ActionMethod(WrapperLongActionCmd.longer2LongList)
-    public List<Long> longer2LongList(Long longValue) {
+    public List<Long> longer2LongList(Long value) {
 
         List<Long> intList = new ArrayList<>();
-        intList.add(longValue);
-        intList.add(longValue + 3);
+        intList.add(value);
+        intList.add(value + 3);
 
         return intList;
     }

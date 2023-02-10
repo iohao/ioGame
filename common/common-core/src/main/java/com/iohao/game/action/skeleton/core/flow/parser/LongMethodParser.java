@@ -29,6 +29,7 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-06-26
  */
+@Deprecated
 final class LongMethodParser implements MethodParser {
 
     @Override

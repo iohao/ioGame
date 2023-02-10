@@ -141,9 +141,7 @@ public class ClusterSimpleRunOne {
     private void startupLogic() {
         if (Objects.nonNull(this.logicServerList)) {
             // 启动游戏逻辑服
-            for (AbstractBrokerClientStartup clientStartup : logicServerList) {
-                this.executorService.execute(() -> BrokerClientApplication.start(clientStartup));
-            }
+            this.executorService.execute(() -> this.logicServerList.forEach(BrokerClientApplication::start));
         }
 
         if (Objects.nonNull(this.externalServer)) {

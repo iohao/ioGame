@@ -17,38 +17,63 @@ message ExternalMessage {
 }
 
 // int 包装类
+message IntValue {
+  // int 值
+  sint32 value = 1;
+}
+
+// int list 包装类
+message IntValueList {
+  // intList
+  repeated sint32 values = 1;
+}
+
+// long 包装类
+message LongValue {
+  // long 值
+  sint64 value = 1;
+}
+
+// long list 包装类
+message LongValueList {
+  // longList
+  repeated sint64 values = 1;
+}
+
+// string 包装类
+message StringValue {
+  // string 值
+  string value = 1;
+}
+
+// string list 包装类
+message StringValueList {
+  // stringList
+  repeated string values = 1;
+}
+
+// ------- 以下是废弃的 -------
+
+// int 包装类 -- 已经废弃的，由 IntValue 代替
 message IntPb {
   // int 值
   sint32 intValue = 1;
 }
 
-// int list 包装类
+// int list 包装类 -- 已经废弃的，由 IntValueList 代替
 message IntListPb {
   // intList
   repeated sint32 intValues = 1;
 }
 
-// long 包装类
+// long 包装类 -- 已经废弃的，由 LongValue 代替
 message LongPb {
   // long 值
   sint64 longValue = 1;
 }
 
-// long list 包装类
+// long list 包装类 -- 已经废弃的，由 LongValueList 代替
 message LongListPb {
   // longList
   repeated sint64 longValues = 1;
 }
-
-// string 包装类
-message StringPb {
-  // string 值
-  string stringValue = 1;
-}
-
-// string list 包装类
-message StringListPb {
-  // stringList
-  repeated string stringValues = 1;
-}
-

@@ -26,9 +26,12 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 由 {@link IntValueMethodParser} 代替
+ *
  * @author 渔民小镇
  * @date 2022-06-26
  */
+@Deprecated
 final class IntMethodParser implements MethodParser {
 
     @Override

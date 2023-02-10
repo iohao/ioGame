@@ -18,69 +18,74 @@ package com.iohao.game.action.skeleton.core.flow.parser;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.protocol.wrapper.StringValueList;
-import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.LongValueList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
+ * long 包装类解析器
+ *
  * @author 渔民小镇
- * @date 2023-02-05
+ * @date 2023-02-10
  */
-final class StringMethodParser implements MethodParser {
+final class LongValueMethodParser implements MethodParser {
+
     @Override
     public Class<?> getActualClazz(ActionCommand.MethodParamResultInfo methodParamResultInfo) {
-        return methodParamResultInfo.isList() ? StringValueList.class : StringValue.class;
+        return methodParamResultInfo.isList() ? LongValueList.class : LongValue.class;
     }
 
     @Override
     public Object parseParam(byte[] data, ActionCommand.ParamInfo paramInfo) {
-
         if (paramInfo.isList()) {
 
             if (Objects.isNull(data)) {
-                return new ArrayList<String>();
+                return new ArrayList<Long>();
             }
 
-            StringValueList stringValueList = DataCodecKit.decode(data, StringValueList.class);
-            return stringValueList.values;
+            var longValueList = DataCodecKit.decode(data, LongValueList.class);
+            return longValueList.values;
         }
 
         if (Objects.isNull(data)) {
-            return null;
+            return 0L;
         }
 
-        StringValue stringValue = DataCodecKit.decode(data, StringValue.class);
-        return stringValue.value;
+        var longValue = DataCodecKit.decode(data, LongValue.class);
+        return longValue.value;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
-
         if (actionMethodReturnInfo.isList()) {
-            StringValueList stringValueList = new StringValueList();
-            stringValueList.values = (List<String>) methodResult;
-            return stringValueList;
+            var longValueList = new LongValueList();
+            longValueList.values = (List<Long>) methodResult;
+            return longValueList;
         }
 
-        StringValue stringValue = new StringValue();
-        stringValue.value = String.valueOf(methodResult);
-        return stringValue;
+        /*
+         * 将结果转换为 LongValue；
+         * 注意这里不会检测 methodResult 是否为 null，如果担心 null 问题，
+         * 可以使用 long，而不是使用 Long
+         */
+        var longValue = new LongValue();
+        longValue.value = (long) methodResult;
+        return longValue;
     }
 
-    private StringMethodParser() {
-
+    private LongValueMethodParser() {
     }
 
-    public static StringMethodParser me() {
+    public static LongValueMethodParser me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final StringMethodParser ME = new StringMethodParser();
+        static final LongValueMethodParser ME = new LongValueMethodParser();
     }
 }

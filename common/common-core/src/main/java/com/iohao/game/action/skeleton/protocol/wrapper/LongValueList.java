@@ -26,16 +26,16 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 
 /**
- * string list 包装类
+ * long list 包装类
  *
  * @author 渔民小镇
- * @date 2023-02-05
+ * @date 2023-02-10
  */
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
-public class StringListPb {
-    /** string list */
-    @Protobuf(fieldType = FieldType.STRING, order = 1)
-    List<String> stringValues;
+public class LongValueList {
+    /** longList */
+    @Protobuf(fieldType = FieldType.SINT64, order = 1)
+    List<Long> values;
 }

@@ -19,8 +19,8 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
-import com.iohao.game.action.skeleton.protocol.wrapper.IntListPb;
-import com.iohao.game.action.skeleton.protocol.wrapper.IntPb;
+import com.iohao.game.action.skeleton.protocol.wrapper.IntValueList;
+import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,14 +43,14 @@ public class WrapperIntTest {
         return CmdInfo.getCmdInfo(WrapperIntActionCmd.cmd, subCmd);
     }
 
-    private FlowContext createIntPbFlowContext(int subCmd) {
+    private FlowContext createIntValueFlowContext(int subCmd) {
         CmdInfo cmdInfo = this.getCmdInfo(subCmd);
 
-        IntPb intPb = new IntPb();
-        intPb.intValue = 100;
+        IntValue intValue = new IntValue();
+        intValue.value = 100;
 
         RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
-        requestMessage.setData(intPb);
+        requestMessage.setData(intValue);
 
         return new FlowContext()
                 .setRequest(requestMessage);
@@ -58,81 +58,81 @@ public class WrapperIntTest {
 
     BarSkeleton barSkeleton;
 
-//    @Before
+    //    @Before
     public void setUp() {
         barSkeleton = TestDataKit.newBarSkeleton();
     }
 
 
-//    @Test
-    public void intPb() {
-        FlowContext flowContext ;
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.intPb2Void);
+    //    @Test
+    public void intValue1() {
+        FlowContext flowContext;
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.intValue2Void);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.intPb2Int);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.intValue2Int);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.intPb2IntPb);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.intValue2IntValue);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.intPb2IntList);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.intValue2IntList);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.intListVoid);
-        IntListPb intListPb = new IntListPb();
-        intListPb.intValues = new ArrayList<>();
-        intListPb.intValues.add(1);
-        intListPb.intValues.add(3);
-        intListPb.intValues.add(5);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.intListVoid);
+        IntValueList intValueList = new IntValueList();
+        intValueList.values = new ArrayList<>();
+        intValueList.values.add(1);
+        intValueList.values.add(3);
+        intValueList.values.add(5);
 
         RequestMessage request = flowContext.getRequest();
-        request.setData(intListPb);
+        request.setData(intValueList);
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
     }
 
-//    @Test
-    public void intValue() {
-        FlowContext flowContext ;
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.int2Void);
+    //    @Test
+    public void intValue2() {
+        FlowContext flowContext;
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.int2Void);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.int2Int);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.int2Int);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.int2IntPb);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.int2IntValue);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.int2IntList);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.int2IntList);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
     }
 
-//    @Test
+    //    @Test
     public void integerValue() {
-        FlowContext flowContext ;
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.integer2Void);
+        FlowContext flowContext;
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.integer2Void);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.integer2Integer);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.integer2Integer);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.integer2IntPb);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.integer2IntValue);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperIntActionCmd.integer2IntegerList);
+        flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.integer2IntegerList);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
     }

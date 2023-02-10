@@ -19,7 +19,7 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
-import com.iohao.game.action.skeleton.protocol.wrapper.LongPb;
+import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,14 +40,14 @@ public class WrapperLongTest {
         return CmdInfo.getCmdInfo(WrapperLongActionCmd.cmd, subCmd);
     }
 
-    private FlowContext createIntPbFlowContext(int subCmd) {
+    private FlowContext createLongValueFlowContext(int subCmd) {
         CmdInfo cmdInfo = this.getCmdInfo(subCmd);
 
-        LongPb intPb = new LongPb();
-        intPb.longValue = 100;
+        LongValue longValue = new LongValue();
+        longValue.value = 100;
 
         RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
-        requestMessage.setData(intPb);
+        requestMessage.setData(longValue);
 
         return new FlowContext()
                 .setRequest(requestMessage);
@@ -55,67 +55,67 @@ public class WrapperLongTest {
 
     BarSkeleton barSkeleton;
 
-//    @Before
+    //    @Before
     public void setUp() {
         barSkeleton = TestDataKit.newBarSkeleton();
     }
 
-//    @Test
-    public void longPb() {
+    //    @Test
+    public void longValue1() {
         FlowContext flowContext = null;
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.longPb2Void);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.longValue2Void);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.longPb2Long);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.longValue2Long);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.longPb2LongPb);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.longValue2LongValue);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.longPb2LongList);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.longValue2LongList);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
     }
 
-//    @Test
-    public void longValue() {
+    //    @Test
+    public void longValue2() {
         FlowContext flowContext = null;
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.long2Void);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.long2Void);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.long2Long);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.long2Long);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.long2LongPb);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.long2LongValue);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.long2LongList);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.long2LongList);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
     }
 
-//    @Test
-    public void longerValue() {
+    //    @Test
+    public void longerValue3() {
         FlowContext flowContext = null;
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.longer2Void);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.longer2Void);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.longer2Long);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.longer2Long);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.longer2LongPb);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.longer2LongValue);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
 
-        flowContext = this.createIntPbFlowContext(WrapperLongActionCmd.longer2LongList);
+        flowContext = this.createLongValueFlowContext(WrapperLongActionCmd.longer2LongList);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
     }

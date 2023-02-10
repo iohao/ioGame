@@ -106,11 +106,11 @@ public final class MethodParsers {
 
     private MethodParsers() {
         // 表示在 action 参数中，遇见 int 类型的参数，用 IntMethodParamParser 来解析
-        this.mapping(int.class, IntMethodParser.me());
-        this.mapping(Integer.class, IntMethodParser.me());
+        this.mapping(int.class, IntValueMethodParser.me());
+        this.mapping(Integer.class, IntValueMethodParser.me());
         // 表示在 action 参数中，遇见 long 类型的参数，用 LongMethodParamParser 来解析
-        this.mapping(long.class, LongMethodParser.me());
-        this.mapping(Long.class, LongMethodParser.me());
+        this.mapping(long.class, LongValueMethodParser.me());
+        this.mapping(Long.class, LongValueMethodParser.me());
         // 表示在 action 参数中，遇见 string 类型的参数，用 StringMethodParser 来解析
         this.mapping(String.class, StringMethodParser.me());
 
@@ -124,8 +124,15 @@ public final class MethodParsers {
         this.mapping(LongPb.class, DefaultMethodParser.me(), LongPb::new);
         this.mapping(LongListPb.class, DefaultMethodParser.me(), LongListPb::new);
 
-        this.mapping(StringPb.class, DefaultMethodParser.me(), StringPb::new);
-        this.mapping(StringListPb.class, DefaultMethodParser.me(), StringListPb::new);
+        
+        this.mapping(IntValue.class, DefaultMethodParser.me(), IntValue::new);
+        this.mapping(IntValueList.class, DefaultMethodParser.me(), IntValueList::new);
+
+        this.mapping(LongValue.class, DefaultMethodParser.me(), LongValue::new);
+        this.mapping(LongValueList.class, DefaultMethodParser.me(), LongValueList::new);
+
+        this.mapping(StringValue.class, DefaultMethodParser.me(), StringValue::new);
+        this.mapping(StringValueList.class, DefaultMethodParser.me(), StringValueList::new);
     }
 
     public static MethodParsers me() {

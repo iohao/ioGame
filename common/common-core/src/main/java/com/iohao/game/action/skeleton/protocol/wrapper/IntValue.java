@@ -24,16 +24,16 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 /**
- * string 包装类
+ * int 包装类
  *
  * @author 渔民小镇
- * @date 2023-02-05
+ * @date 2023-02-10
  */
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
-public class StringPb {
-    /** string value */
-    @Protobuf(fieldType = FieldType.STRING, order = 1)
-    String stringValue;
+public class IntValue {
+    /** int 值 */
+    @Protobuf(fieldType = FieldType.SINT32, order = 1)
+    int value;
 }

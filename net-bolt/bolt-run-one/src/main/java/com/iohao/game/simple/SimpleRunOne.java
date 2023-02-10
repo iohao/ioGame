@@ -52,7 +52,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Setter
 @Accessors(chain = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public class SimpleRunOne {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
@@ -146,13 +146,11 @@ public class SimpleRunOne {
         return this;
     }
 
-    private void startupLogic() {
+    protected void startupLogic() {
 
         if (Objects.nonNull(this.logicServerList)) {
             // 启动游戏逻辑服
-            for (AbstractBrokerClientStartup clientStartup : logicServerList) {
-                this.executorService.execute(() -> BrokerClientApplication.start(clientStartup));
-            }
+            this.executorService.execute(() -> this.logicServerList.forEach(BrokerClientApplication::start));
         }
 
         if (Objects.nonNull(this.externalServer)) {

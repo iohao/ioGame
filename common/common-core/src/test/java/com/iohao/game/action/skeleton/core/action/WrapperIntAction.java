@@ -18,7 +18,7 @@ package com.iohao.game.action.skeleton.core.action;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
-import com.iohao.game.action.skeleton.protocol.wrapper.IntPb;
+import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import org.slf4j.Logger;
 
@@ -36,31 +36,31 @@ import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.Wrappe
 public class WrapperIntAction {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
-    @ActionMethod(WrapperIntActionCmd.intPb2Void)
-    public void intPb2Void(IntPb intPb) {
-        log.info("intPb : {}", intPb);
+    @ActionMethod(WrapperIntActionCmd.intValue2Void)
+    public void intValue2Void(IntValue intValue) {
+        log.info("intValue : {}", intValue);
     }
 
-    @ActionMethod(WrapperIntActionCmd.intPb2Int)
-    public int intPb2Int(IntPb intPb) {
-        return intPb.intValue + 1;
+    @ActionMethod(WrapperIntActionCmd.intValue2Int)
+    public int intValue2Int(IntValue intValue) {
+        return intValue.value + 1;
     }
 
-    @ActionMethod(WrapperIntActionCmd.intPb2IntPb)
-    public IntPb intPb2IntPb(IntPb intPb) {
+    @ActionMethod(WrapperIntActionCmd.intValue2IntValue)
+    public IntValue intValue2IntValue(IntValue intValue) {
 
-        IntPb newIntPb = new IntPb();
-        newIntPb.intValue = intPb.intValue + 2;
+        IntValue newIntValue = new IntValue();
+        newIntValue.value = intValue.value + 2;
 
-        return newIntPb;
+        return newIntValue;
     }
 
-    @ActionMethod(WrapperIntActionCmd.intPb2IntList)
-    public List<Integer> intPb2IntList(IntPb intPb) {
+    @ActionMethod(WrapperIntActionCmd.intValue2IntList)
+    public List<Integer> intValue2IntList(IntValue intValue) {
 
         List<Integer> intList = new ArrayList<>();
-        intList.add(intPb.intValue);
-        intList.add(intPb.intValue + 3);
+        intList.add(intValue.value);
+        intList.add(intValue.value + 3);
 
         return intList;
     }
@@ -72,70 +72,61 @@ public class WrapperIntAction {
         return Collections.emptyList();
     }
 
-    /**
-     * int
-     *
-     * @param intPb intPb
-     */
     @ActionMethod(WrapperIntActionCmd.int2Void)
-    public void int2Void(int intPb) {
+    public void int2Void(int intValue) {
     }
 
     @ActionMethod(WrapperIntActionCmd.int2Int)
-    public int int2Int(int intPb) {
-        return intPb + 1;
+    public int int2Int(int intValue) {
+        return intValue + 1;
     }
 
-    @ActionMethod(WrapperIntActionCmd.int2IntPb)
-    public IntPb int2IntPb(int intPb) {
+    @ActionMethod(WrapperIntActionCmd.int2IntValue)
+    public IntValue int2IntValue(int intValue) {
 
-        IntPb newIntPb = new IntPb();
-        newIntPb.intValue = intPb + 2;
+        IntValue newIntValue = new IntValue();
+        newIntValue.value = intValue + 2;
 
-        return newIntPb;
+        return newIntValue;
     }
 
     @ActionMethod(WrapperIntActionCmd.int2IntList)
-    public List<Integer> int2IntList(int intPb) {
-        log.info("intPb : {}", intPb);
+    public List<Integer> int2IntList(int intValue) {
+        log.info("intValue : {}", intValue);
 
         List<Integer> intList = new ArrayList<>();
-        intList.add(intPb);
-        intList.add(intPb + 3);
+        intList.add(intValue);
+        intList.add(intValue + 3);
 
         return intList;
     }
 
-    /**
-     * integer
-     *
-     * @param intPb intPb
-     */
+
     @ActionMethod(WrapperIntActionCmd.integer2Void)
-    public void integer2Void(Integer intPb) {
+    public void integer2Void(Integer intValue) {
     }
 
     @ActionMethod(WrapperIntActionCmd.integer2Integer)
-    public Integer integer2Integer(Integer intPb) {
-        return intPb + 1;
+    public Integer integer2Integer(Integer intValue) {
+        return intValue + 1;
     }
 
-    @ActionMethod(WrapperIntActionCmd.integer2IntPb)
-    public IntPb integer2IntPb(Integer intPb) {
+    @ActionMethod(WrapperIntActionCmd.integer2IntValue)
+    public IntValue integer2IntValue(Integer intValue) {
 
-        IntPb newIntPb = new IntPb();
-        newIntPb.intValue = intPb + 2;
+        IntValue newIntValue = new IntValue();
+        newIntValue.value = intValue + 2;
 
-        return newIntPb;
+        return newIntValue;
     }
 
     @ActionMethod(WrapperIntActionCmd.integer2IntegerList)
-    public List<Integer> integer2IntegerList(Integer intPb) {
-        log.info("intPb : {}", intPb);
+    public List<Integer> integer2IntegerList(Integer intValue) {
+        log.info("intValue : {}", intValue);
 
         List<Integer> intList = new ArrayList<>();
-        intList.add(intPb);
-        intList.add(intPb + 3);
+        intList.add(intValue);
+        intList.add(intValue + 3);
 
         return intList;
     }

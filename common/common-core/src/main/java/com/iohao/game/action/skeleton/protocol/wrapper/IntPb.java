@@ -25,6 +25,9 @@ import lombok.experimental.FieldDefaults;
 
 /**
  * int 包装类
+ * <pre>
+ *     已经废弃，请使用 {@link IntValue} 代替
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2022-06-26
@@ -32,6 +35,7 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
+@Deprecated
 public class IntPb {
     /** int 值 */
     @Protobuf(fieldType = FieldType.SINT32, order = 1)

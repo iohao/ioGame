@@ -42,21 +42,21 @@ public interface ExampleActionCmd {
          */
         int cmd = 11;
 
-        int intPb2Void = 0;
-        int intPb2Int = 1;
-        int intPb2IntPb = 2;
-        int intPb2IntList = 3;
+        int intValue2Void = 0;
+        int intValue2Int = 1;
+        int intValue2IntValue = 2;
+        int intValue2IntList = 3;
         int intListVoid = 12;
 
 
         int int2Void = 4;
         int int2Int = 5;
-        int int2IntPb = 6;
+        int int2IntValue = 6;
         int int2IntList = 7;
 
         int integer2Void = 8;
         int integer2Integer = 9;
-        int integer2IntPb = 10;
+        int integer2IntValue = 10;
         int integer2IntegerList = 11;
 
     }
@@ -67,19 +67,19 @@ public interface ExampleActionCmd {
          */
         int cmd = 12;
 
-        int longPb2Void = 0;
-        int longPb2Long = 1;
-        int longPb2LongPb = 2;
-        int longPb2LongList = 3;
+        int longValue2Void = 0;
+        int longValue2Long = 1;
+        int longValue2LongValue = 2;
+        int longValue2LongList = 3;
 
         int long2Void = 4;
         int long2Long = 5;
-        int long2LongPb = 6;
+        int long2LongValue = 6;
         int long2LongList = 7;
 
         int longer2Void = 8;
         int longer2Long = 9;
-        int longer2LongPb = 10;
+        int longer2LongValue = 10;
         int longer2LongList = 11;
     }
 }

@@ -23,23 +23,17 @@ import lombok.AccessLevel;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 /**
- * long list 包装类
- * <pre>
- *     已经废弃，请使用 {@link LongValueList} 代替
- * </pre>
+ * string 包装类
  *
  * @author 渔民小镇
- * @date 2022-06-26
+ * @date 2023-02-05
  */
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
-@Deprecated
-public class LongListPb {
-    /** longList */
-    @Protobuf(fieldType = FieldType.SINT64, order = 1)
-    List<Long> longValues;
+public class StringValue {
+    /** string value */
+    @Protobuf(fieldType = FieldType.STRING, order = 1)
+    String value;
 }

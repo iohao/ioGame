@@ -14,32 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iohao.game.action.skeleton.protocol.wrapper;
+package com.iohao.game.action.skeleton.core.action.pojo;
 
-import com.baidu.bjf.remoting.protobuf.FieldType;
-import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import lombok.AccessLevel;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 /**
- * long list 包装类
- * <pre>
- *     已经废弃，请使用 {@link LongValueList} 代替
- * </pre>
- *
  * @author 渔民小镇
- * @date 2022-06-26
+ * @date 2023-02-08
  */
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
-@Deprecated
-public class LongListPb {
-    /** longList */
-    @Protobuf(fieldType = FieldType.SINT64, order = 1)
-    List<Long> longValues;
+public class Snake {
+    int id;
+    String name;
 }
