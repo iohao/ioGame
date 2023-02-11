@@ -72,7 +72,7 @@ import java.util.concurrent.TimeUnit;
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClusterSimpleRunOne {
+public final class ClusterSimpleRunOne {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
     final ExecutorService executorService = ExecutorKit.newCacheThreadPool(ClusterSimpleRunOne.class.toString());

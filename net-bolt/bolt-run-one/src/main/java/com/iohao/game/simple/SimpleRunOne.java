@@ -52,8 +52,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Setter
 @Accessors(chain = true)
-@FieldDefaults(level = AccessLevel.PROTECTED)
-public class SimpleRunOne {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public final class SimpleRunOne {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
     final ExecutorService executorService = ExecutorKit.newCacheThreadPool(SimpleRunOne.class.toString());
