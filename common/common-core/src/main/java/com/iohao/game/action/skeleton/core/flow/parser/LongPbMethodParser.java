@@ -26,11 +26,16 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 由 {@link LongValueMethodParser} 代替
+ * <pre>
+ *     将在下个大版本中移除
+ * </pre>
+ *
  * @author 渔民小镇
  * @date 2022-06-26
  */
 @Deprecated
-final class LongMethodParser implements MethodParser {
+final class LongPbMethodParser implements MethodParser {
 
     @Override
     public Class<?> getActualClazz(ActionCommand.MethodParamResultInfo methodParamResultInfo) {
@@ -77,17 +82,17 @@ final class LongMethodParser implements MethodParser {
 
     }
 
-    private LongMethodParser() {
+    private LongPbMethodParser() {
 
     }
 
-    public static LongMethodParser me() {
+    public static LongPbMethodParser me() {
         return Holder.ME;
     }
 
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final LongMethodParser ME = new LongMethodParser();
+        static final LongPbMethodParser ME = new LongPbMethodParser();
     }
 }

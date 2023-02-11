@@ -50,6 +50,32 @@ public final class MethodParsers {
     @Setter
     MethodParser methodParser = DefaultMethodParser.me();
 
+    /**
+     * 临时兼容
+     * <pre>
+     *     将在下个大版本移除
+     *
+     *     此方法是为了兼容 IntPb、IntListPb、LongPb、LongListPb 的用法，
+     *     如果你的项目中没有使用上面提到的这几个，是不需要调用此方法的，
+     *     如果有使用到上面提到的这几个，请尽快的做相应的替换。
+     * </pre>
+     */
+    @Deprecated
+    public static void tempCompatibility() {
+        // 表示在 action 参数中，遇见 int 类型的参数，用 IntPbMethodParser 来解析
+        me().mapping(int.class, IntPbMethodParser.me());
+        me().mapping(Integer.class, IntPbMethodParser.me());
+        // 表示在 action 参数中，遇见 long 类型的参数，用 LongPbMethodParser 来解析
+        me().mapping(long.class, LongPbMethodParser.me());
+        me().mapping(Long.class, LongPbMethodParser.me());
+
+        me().mapping(IntPb.class, DefaultMethodParser.me(), IntPb::new);
+        me().mapping(IntListPb.class, DefaultMethodParser.me(), IntListPb::new);
+
+        me().mapping(LongPb.class, DefaultMethodParser.me(), LongPb::new);
+        me().mapping(LongListPb.class, DefaultMethodParser.me(), LongListPb::new);
+    }
+
     public void mappingParamSupplier(Class<?> paramClass, Supplier<?> supplier) {
         this.paramSupplierMap.put(paramClass, supplier);
     }
@@ -70,6 +96,7 @@ public final class MethodParsers {
 
     public void clear() {
         this.methodParserMap.clear();
+        this.paramSupplierMap.clear();
     }
 
     public boolean containsKey(Class<?> clazz) {
@@ -82,6 +109,39 @@ public final class MethodParsers {
 
     public MethodParser getMethodParser(Class<?> paramClazz) {
         return this.methodParserMap.getOrDefault(paramClazz, this.methodParser);
+    }
+
+    private MethodParsers() {
+        // 表示在 action 参数中，遇见 int 类型的参数，用 IntValueMethodParser 来解析
+        this.mapping(int.class, IntValueMethodParser.me());
+        this.mapping(Integer.class, IntValueMethodParser.me());
+
+        // 表示在 action 参数中，遇见 long 类型的参数，用 LongValueMethodParser 来解析
+        this.mapping(long.class, LongValueMethodParser.me());
+        this.mapping(Long.class, LongValueMethodParser.me());
+
+        // 表示在 action 参数中，遇见 String 类型的参数，用 StringValueMethodParser 来解析
+        this.mapping(String.class, StringValueMethodParser.me());
+
+        // 表示在 action 参数中，遇见 boolean 类型的参数，用 BoolValueMethodParser 来解析
+        this.mapping(boolean.class, BoolValueMethodParser.me());
+        this.mapping(Boolean.class, BoolValueMethodParser.me());
+
+        /*
+         * 这里注册是为了顺便使用 containsKey 方法，因为生成文档的时候要用到短名字
+         * 当然也可以使用 instanceof 来做这些，但似乎没有这种方式优雅
+         */
+        this.mapping(IntValue.class, DefaultMethodParser.me(), IntValue::new);
+        this.mapping(IntValueList.class, DefaultMethodParser.me(), IntValueList::new);
+
+        this.mapping(LongValue.class, DefaultMethodParser.me(), LongValue::new);
+        this.mapping(LongValueList.class, DefaultMethodParser.me(), LongValueList::new);
+
+        this.mapping(BoolValue.class, DefaultMethodParser.me(), BoolValue::new);
+        this.mapping(BoolValueList.class, DefaultMethodParser.me(), BoolValueList::new);
+
+        this.mapping(StringValue.class, DefaultMethodParser.me(), StringValue::new);
+        this.mapping(StringValueList.class, DefaultMethodParser.me(), StringValueList::new);
     }
 
     Object newObject(Class<?> paramClass) {
@@ -102,43 +162,6 @@ public final class MethodParsers {
          * 具体使用可参考 DefaultMethodParser
          */
         mappingParamSupplier(paramClass, supplier);
-    }
-
-    private MethodParsers() {
-        // 表示在 action 参数中，遇见 int 类型的参数，用 IntMethodParamParser 来解析
-        this.mapping(int.class, IntValueMethodParser.me());
-        this.mapping(Integer.class, IntValueMethodParser.me());
-        // 表示在 action 参数中，遇见 long 类型的参数，用 LongMethodParamParser 来解析
-        this.mapping(long.class, LongValueMethodParser.me());
-        this.mapping(Long.class, LongValueMethodParser.me());
-        // 表示在 action 参数中，遇见 string 类型的参数，用 StringMethodParser 来解析
-        this.mapping(String.class, StringMethodParser.me());
-        // 表示在 action 参数中，遇见 boolean 类型的参数，用 BooleanMethodParamParser 来解析
-        this.mapping(boolean.class, BoolMethodParser.me());
-        this.mapping(Boolean.class, BoolMethodParser.me());
-
-        /*
-         * 这里注册是为了顺便使用 containsKey 方法，因为生成文档的时候要用到短名字
-         * 当然也可以使用 instanceof 来做这些，但似乎没有这种方式优雅
-         */
-        this.mapping(IntPb.class, DefaultMethodParser.me(), IntPb::new);
-        this.mapping(IntListPb.class, DefaultMethodParser.me(), IntListPb::new);
-
-        this.mapping(LongPb.class, DefaultMethodParser.me(), LongPb::new);
-        this.mapping(LongListPb.class, DefaultMethodParser.me(), LongListPb::new);
-
-
-        this.mapping(IntValue.class, DefaultMethodParser.me(), IntValue::new);
-        this.mapping(IntValueList.class, DefaultMethodParser.me(), IntValueList::new);
-
-        this.mapping(LongValue.class, DefaultMethodParser.me(), LongValue::new);
-        this.mapping(LongValueList.class, DefaultMethodParser.me(), LongValueList::new);
-
-        this.mapping(BoolValue.class, DefaultMethodParser.me(), BoolValue::new);
-        this.mapping(BoolValueList.class, DefaultMethodParser.me(), BoolValueList::new);
-
-        this.mapping(StringValue.class, DefaultMethodParser.me(), StringValue::new);
-        this.mapping(StringValueList.class, DefaultMethodParser.me(), StringValueList::new);
     }
 
     public static MethodParsers me() {

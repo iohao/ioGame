@@ -83,7 +83,6 @@
         <!--  reflectasm 高性能的反射处理 https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm  -->
         <reflectasm.version>1.11.9</reflectasm.version>
 
-        <!-- ==============轻量小部件============== -->
         <!--  cache2k https://mvnrepository.com/artifact/org.cache2k -->
         <cache2k.version>1.2.4.Final</cache2k.version>
         <!--  disruptor https://mvnrepository.com/artifact/com.lmax/disruptor -->

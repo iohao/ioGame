@@ -31,7 +31,7 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2023-02-07
  */
-final class BoolMethodParser implements MethodParser {
+final class BoolValueMethodParser implements MethodParser {
     @Override
     public Class<?> getActualClazz(ActionCommand.MethodParamResultInfo methodParamResultInfo) {
         return methodParamResultInfo.isList() ? BoolValueList.class : BoolValue.class;
@@ -69,7 +69,7 @@ final class BoolMethodParser implements MethodParser {
         }
 
         /*
-         * 将结果转换为 BooleanPb
+         * 将结果转换为 BoolValue
          * 注意这里不会检测 methodResult 是否为 null，如果担心 null 问题，
          * 可以使用 boolean，而不是使用 Boolean
          */
@@ -78,15 +78,15 @@ final class BoolMethodParser implements MethodParser {
         return boolValue;
     }
 
-    private BoolMethodParser() {
+    private BoolValueMethodParser() {
     }
 
-    public static BoolMethodParser me() {
+    public static BoolValueMethodParser me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final BoolMethodParser ME = new BoolMethodParser();
+        static final BoolValueMethodParser ME = new BoolValueMethodParser();
     }
 }
