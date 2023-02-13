@@ -6,7 +6,7 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>iogame</artifactId>
-    <version>17.1.32</version>
+    <version>17.1.33</version>
     <name>ioGame</name>
     <description>ioGame 网络游戏服务器框架</description>
     <url>http://game.iohao.com</url>
