@@ -218,7 +218,7 @@ public final class ExternalServerBuilder {
          * 注意 this.channelHandlerProcessors 成员将在下个大版本中移除，这里是做个兼容。
          * 通过 ChannelPipelineHook 钩子接口可以使得代码相对清晰，同时也更具灵活性。
          */
-        if (this.channelHandlerProcessors.isEmpty()) {
+        if (this.channelHandlerProcessors.isEmpty() && Objects.isNull(this.channelPipelineHook)) {
             this.channelPipelineHook = new DefaultChannelPipelineHook();
         }
     }

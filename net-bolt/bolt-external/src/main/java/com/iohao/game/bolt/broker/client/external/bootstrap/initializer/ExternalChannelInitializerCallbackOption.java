@@ -23,6 +23,7 @@ import io.netty.channel.ChannelPipeline;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -97,7 +98,7 @@ public class ExternalChannelInitializerCallbackOption {
      */
     @Deprecated
     private void channelHandlerProcessors(ChannelPipeline pipeline) {
-        if (Objects.nonNull(this.channelHandlerProcessors)) {
+        if (Objects.nonNull(this.channelHandlerProcessors) && !this.channelHandlerProcessors.isEmpty()) {
             // 将用户编排的 channelHandler 添加到 pipeline 中
             this.channelHandlerProcessors.forEach(pipeline::addLast);
         }
