@@ -16,6 +16,7 @@
  */
 package com.iohao.game.bolt.broker.client.external.config;
 
+import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -23,26 +24,45 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingSetInt;
 
-import java.util.Set;
-
 /**
  * @author 渔民小镇
  * @date 2022-07-27
  */
-@Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DefaultAccessAuthenticationHook implements AccessAuthenticationHook {
+public final class DefaultAccessAuthenticationHook implements AccessAuthenticationHook {
 
-    /** 如果要需要忽略的路由，可以添加到这 set 中 */
-    final Set<Integer> ignoreAuthenticationCmdMerge = new NonBlockingSetInt();
+    /** 需要忽略的路由，可以添加到这 set 中 */
+    final NonBlockingSetInt cmdMergeSet = new NonBlockingSetInt();
+    /** 需要忽略的主路由，可以添加到这 set 中 */
+    final NonBlockingSetInt cmdSet = new NonBlockingSetInt();
+
+    /** 需要拒绝的路由 */
+    final NonBlockingSetInt rejectionCmdMergeSet = new NonBlockingSetInt();
+    /** 需要拒绝的主路由 */
+    final NonBlockingSetInt rejectionCmdSet = new NonBlockingSetInt();
 
     /** true 表示请求业务方法需要先登录，默认不需要登录 */
+    @Setter
     boolean verifyIdentity;
 
     @Override
+    @Deprecated
     public AccessAuthenticationHook addIgnoreAuthenticationCmdMerge(int cmdMerge) {
-        this.ignoreAuthenticationCmdMerge.add(cmdMerge);
+        this.cmdMergeSet.add(cmdMerge);
+        return this;
+    }
+
+    @Override
+    public AccessAuthenticationHook addIgnoreAuthenticationCmd(int cmd, int subCmd) {
+        int cmdMerge = CmdKit.merge(cmd, subCmd);
+        this.cmdMergeSet.add(cmdMerge);
+        return this;
+    }
+
+    @Override
+    public AccessAuthenticationHook addIgnoreAuthenticationCmd(int cmd) {
+        this.cmdSet.add(cmd);
         return this;
     }
 
@@ -54,16 +74,33 @@ public class DefaultAccessAuthenticationHook implements AccessAuthenticationHook
             return true;
         }
 
-        // 如果路由在 ignoreSet 中的，那么也可以直接访问业务方法 （不需要登录）
-        if (ignoreAuthenticationCmdMerge.contains(cmdMerge)) {
-            return true;
-        }
+        // 已经【登录】的玩家，可以直接访问业务方法
+        return userSession.isVerifyIdentity()
+                // 在忽略的【路由】范围内的，可以直接访问业务方法（不需要登录）
+                || this.cmdMergeSet.contains(cmdMerge)
+                // 在忽略的【主路由】范围内的，可以直接访问业务方法（不需要登录）
+                || this.cmdSet.contains(CmdKit.getCmd(cmdMerge))
+                ;
+    }
 
-        if (userSession.isVerifyIdentity()) {
-            // 表示登录成功的
-            return true;
-        }
+    @Override
+    public AccessAuthenticationHook addRejectionCmd(int cmd) {
+        this.rejectionCmdSet.add(cmd);
+        return this;
+    }
 
-        return false;
+    @Override
+    public AccessAuthenticationHook addRejectionCmd(int cmd, int subCmd) {
+        int cmdMerge = CmdKit.merge(cmd, subCmd);
+        this.rejectionCmdMergeSet.add(cmdMerge);
+        return this;
+    }
+
+    @Override
+    public boolean reject(int cmdMerge) {
+        // 在拒绝访问的【路由】范围内的，不能直接访问业务方法
+        return this.rejectionCmdMergeSet.contains(cmdMerge)
+                // 在拒绝访问的【主路由】范围内的，不能直接访问业务方法
+                || this.rejectionCmdSet.contains(CmdKit.getCmd(cmdMerge));
     }
 }

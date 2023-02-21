@@ -191,7 +191,10 @@ public class UserSessions {
      * @param userSession userSession
      */
     public void removeUserSession(UserSession userSession) {
-        Objects.requireNonNull(userSession);
+
+        if (Objects.isNull(userSession)) {
+            return;
+        }
 
         if (userSession.getState() == UserSessionState.DEAD) {
             return;
@@ -270,9 +273,7 @@ public class UserSessions {
         }
     }
 
-
     private UserSessions() {
-
     }
 
     public static UserSessions me() {

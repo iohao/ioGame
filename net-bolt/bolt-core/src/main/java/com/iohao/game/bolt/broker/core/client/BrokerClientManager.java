@@ -91,7 +91,8 @@ public final class BrokerClientManager {
         BrokerClientItem brokerClientItem = new BrokerClientItem(address)
                 .setTimeoutMillis(this.timeoutMillis)
                 .setBarSkeleton(this.barSkeleton)
-                .setBrokerClient(this.brokerClient);
+                .setBrokerClient(this.brokerClient)
+                .setProcessorAwareContext(this.brokerClient.getProcessorAwareContext());
 
         // 添加连接处理器
         connectionEventProcessorMap.forEach((type, valueSupplier) -> {

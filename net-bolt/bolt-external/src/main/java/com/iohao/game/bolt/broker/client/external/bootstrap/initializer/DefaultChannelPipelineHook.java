@@ -16,7 +16,9 @@
  */
 package com.iohao.game.bolt.broker.client.external.bootstrap.initializer;
 
-import com.iohao.game.bolt.broker.client.external.bootstrap.handler.ExternalBizHandler;
+import com.iohao.game.bolt.broker.client.external.bootstrap.handler.AccessAuthenticationHandler;
+import com.iohao.game.bolt.broker.client.external.bootstrap.handler.RequestBrokerHandler;
+import com.iohao.game.bolt.broker.client.external.bootstrap.handler.UserSessionHandler;
 import io.netty.channel.ChannelPipeline;
 
 /**
@@ -42,12 +44,24 @@ public class DefaultChannelPipelineHook implements ChannelPipelineHook {
          *     2.ExternalChannelInitializerCallbackTcp
          * 这些实现类中，会给 ChannelPipeline 添加上一些默认的处理器，通常是编解码相关的。
          *
-         *
-         *
          * 当前默认的钩子实现类 DefaultChannelPipelineHook 只是一个样例，提供参考
          */
 
-        // 添加业务处理器
-        pipeline.addLast("ExternalBizHandler", new ExternalBizHandler());
+        // 管理 UserSession 的 Handler
+        pipeline.addLast("UserSessionHandler", new UserSessionHandler());
+
+        // 路由访问验证 的 Handler
+        pipeline.addLast("AccessAuthenticationHandler", new AccessAuthenticationHandler());
+
+        // 负责把游戏端的请求转发给 Broker（游戏网关）的 Handler
+        pipeline.addLast("RequestBrokerHandler", new RequestBrokerHandler());
+
+        /*
+         * UserSessionHandler、AccessAuthenticationHandler、RequestBrokerHandler
+         * 上面添加了三个 Handler 分别处理 UserSession、路由权限、转发请求到 Broker。
+         *
+         * 实际上 ExternalBizHandler 是包含了上述三个 Handler 的功能集合的，
+         * 拆分出来是为了更符合单一职责原则。
+         */
     }
 }

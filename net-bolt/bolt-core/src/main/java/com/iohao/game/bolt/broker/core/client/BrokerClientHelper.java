@@ -17,9 +17,6 @@
 package com.iohao.game.bolt.broker.core.client;
 
 import com.iohao.game.action.skeleton.core.commumication.*;
-import com.iohao.game.common.kit.attr.AttrOptionDynamic;
-import com.iohao.game.common.kit.attr.AttrOptions;
-import lombok.Getter;
 
 /**
  * 游戏逻辑服 BrokerClient 的引用持有
@@ -36,10 +33,7 @@ import lombok.Getter;
  * @author 渔民小镇
  * @date 2022-05-15
  */
-public class BrokerClientHelper implements AttrOptionDynamic {
-    @Getter
-    final AttrOptions options = new AttrOptions();
-
+public class BrokerClientHelper {
     BrokerClient brokerClient;
 
     public BrokerClientContext getBrokerClient() {

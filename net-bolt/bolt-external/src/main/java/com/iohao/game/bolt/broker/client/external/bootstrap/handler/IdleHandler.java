@@ -34,7 +34,7 @@ import java.util.Objects;
  * @date 2022-03-13
  */
 @ChannelHandler.Sharable
-public class IdleHandler extends ChannelInboundHandlerAdapter {
+public final class IdleHandler extends ChannelInboundHandlerAdapter {
 
     /** 心跳事件回调 */
     final IdleHook idleHook;

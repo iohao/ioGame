@@ -20,6 +20,7 @@ import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.ConnectionEventType;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.bolt.broker.core.aware.ProcessorAwareContext;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
@@ -100,6 +101,7 @@ public class BrokerClientBuilder {
     ClientProcessorHooks clientProcessorHooks;
     /** 管理 bolt client */
     BrokerClientManager brokerClientManager;
+    ProcessorAwareContext processorAwareContext;
 
     BrokerClientBuilder() {
     }
@@ -169,7 +171,8 @@ public class BrokerClientBuilder {
                 .setConnectionEventProcessorMap(this.connectionEventProcessorMap)
                 .setProcessorList(this.processorList)
                 .setClientProcessorHooks(this.clientProcessorHooks)
-                .setBrokerClientManager(this.brokerClientManager);
+                .setBrokerClientManager(this.brokerClientManager)
+                .setProcessorAwareContext(this.processorAwareContext);
 
         // 保存一下 BrokerClient 的引用
         if (this.brokerClientType == BrokerClientType.LOGIC) {

@@ -18,9 +18,6 @@ package com.iohao.game.bolt.broker.client.external;
 
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.common.kit.attr.AttrOptionDynamic;
-import com.iohao.game.common.kit.attr.AttrOptions;
-import lombok.Getter;
 
 /**
  * 对外服 BrokerClient 的引用持有
@@ -28,19 +25,14 @@ import lombok.Getter;
  * @author 渔民小镇
  * @date 2022-05-18
  */
-public class ExternalHelper implements AttrOptionDynamic {
-    @Getter
-    final AttrOptions options = new AttrOptions();
-
+public class ExternalHelper {
     BrokerClient brokerClient;
 
     public BrokerClientContext getBrokerClient() {
         return this.brokerClient;
     }
 
-
     private ExternalHelper() {
-
     }
 
     public static ExternalHelper me() {

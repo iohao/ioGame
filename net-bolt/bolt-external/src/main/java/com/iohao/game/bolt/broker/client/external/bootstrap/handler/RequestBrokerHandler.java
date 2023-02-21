@@ -6,21 +6,19 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License..
+ * limitations under the License.
  */
 package com.iohao.game.bolt.broker.client.external.bootstrap.handler;
 
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
-import com.iohao.game.bolt.broker.client.external.session.UserSession;
-import com.iohao.game.bolt.broker.client.external.session.UserSessions;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -28,34 +26,20 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 
 /**
- * 对外服 业务处理类
+ * 负责把游戏端的请求 转发给 Broker（游戏网关）
  * <pre>
- *     负责把游戏端的请求转发给网关
- * </pre>
- *
- * <pre>
- *     已经废弃，将在下个大版本中移除，由
- *     UserSessionHandler、
- *     AccessAuthenticationHandler、
- *     RequestBrokerHandler、
- *     三个 Handler 代替，这样更符合单一职责。
+ *     实际上是在游戏对外服请求 Broker
  * </pre>
  *
  * @author 渔民小镇
- * @date 2022-01-19
+ * @date 2023-02-14
  */
-@Deprecated
 @ChannelHandler.Sharable
-public class ExternalBizHandler extends SimpleChannelInboundHandler<ExternalMessage> {
+public final class RequestBrokerHandler extends SimpleChannelInboundHandler<ExternalMessage> {
     static final Logger log = IoGameLoggerFactory.getLoggerCommon();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage message) {
-
-        if (AccessAuthenticationHandler.notPass(ctx, message)) {
-            return;
-        }
-
         // 将 message 转换成 RequestMessage
         RequestMessage requestMessage = ExternalKit.convertRequestMessage(message);
 
@@ -65,27 +49,5 @@ public class ExternalBizHandler extends SimpleChannelInboundHandler<ExternalMess
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
-        // 从 session 管理中移除
-        UserSession userSession = UserSessions.me().getUserSession(ctx);
-        UserSessions.me().removeUserSession(userSession);
-    }
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) {
-        // 加入到 session 管理
-        UserSessions.me().add(ctx);
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error(cause.getMessage(), cause);
-
-        // 从 session 管理中移除
-        UserSession userSession = UserSessions.me().getUserSession(ctx);
-        UserSessions.me().removeUserSession(userSession);
     }
 }

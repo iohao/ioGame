@@ -36,6 +36,7 @@ import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalM
 import com.iohao.game.action.skeleton.protocol.processor.ExtRequestMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
+import com.iohao.game.bolt.broker.core.aware.ProcessorAwareContext;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientItemConnectMessage;
@@ -54,6 +55,7 @@ import org.slf4j.Logger;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
@@ -96,6 +98,7 @@ public class BrokerClientItem implements CommunicationAggregationContext {
     BrokerClient brokerClient;
 
     Status status = Status.DISCONNECT;
+    ProcessorAwareContext processorAwareContext;
 
     public BrokerClientItem(String address) {
         this.address = address;
@@ -248,6 +251,10 @@ public class BrokerClientItem implements CommunicationAggregationContext {
     }
 
     private void aware(Object obj) {
+        if (Objects.nonNull(this.processorAwareContext)) {
+            this.processorAwareContext.aware(obj);
+        }
+
         /*
          * 目前 aware 系列由框架提供，
          * 虽然这里可以开放给开发者来控制，但目前暂时不考虑开放
