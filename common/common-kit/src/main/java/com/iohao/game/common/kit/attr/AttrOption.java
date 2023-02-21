@@ -38,7 +38,7 @@ public record AttrOption<T>(String name, T defaultValue) implements Serializable
      * @return AttrOption
      */
     public static <T> AttrOption<T> valueOf(String name) {
-        return new AttrOption<T>(name, null);
+        return new AttrOption<>(name, null);
     }
 
     /**
@@ -50,7 +50,7 @@ public record AttrOption<T>(String name, T defaultValue) implements Serializable
      * @return AttrOption
      */
     public static <T> AttrOption<T> valueOf(String name, T defaultValue) {
-        return new AttrOption<T>(name, defaultValue);
+        return new AttrOption<>(name, defaultValue);
     }
 
     @Override

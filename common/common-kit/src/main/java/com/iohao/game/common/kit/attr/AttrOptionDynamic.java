@@ -17,6 +17,7 @@
 package com.iohao.game.common.kit.attr;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * 动态属性 (类型明确的)
@@ -98,6 +99,20 @@ public interface AttrOptionDynamic {
      */
     default <T> AttrOptions option(AttrOption<T> option, T value) {
         return this.getOptions().option(option, value);
+    }
+
+    /**
+     * 如果动态属性存在，则使用该值执行给定操作，否则不执行任何操作。
+     *
+     * @param option   option
+     * @param consumer 只有 option 的值存在且不为 null 时，则要执行的动作
+     * @param <T>      t
+     */
+    default <T> void ifPresent(AttrOption<T> option, Consumer<T> consumer) {
+        T data = this.option(option);
+        if (Objects.nonNull(data)) {
+            consumer.accept(data);
+        }
     }
 
 }
