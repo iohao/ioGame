@@ -51,7 +51,6 @@ class BroadcastDebug {
         StackTraceElement[] traces = ex.getStackTrace();
         int index = lookBusinessCodeInTrace(traces);
         StackTraceElement traceElement = traces[index];
-//        extracted(traceElement);
 
         // 接收广播的用户
         String userIds = getUserIds(broadcastMessage);
@@ -167,14 +166,8 @@ class BroadcastDebug {
         String methodName = traceElement.getMethodName();
         int line = traceElement.getLineNumber();
 
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("className", className);
-//        jsonObject.put("methodName", methodName);
-//        jsonObject.put("line", line);
-
-//        String jsonPretty = JsonKit.toJsonPretty(jsonObject);
-//        log.info("jsonPretty : {}", jsonPretty);
-//        System.out.println("~~~~~~~~~~~~~~~~~~");
-//        System.out.println("~~~~~~~~~~~~~~~~~~");
+        String format = "className:%s - methodName:%s - line:%d";
+        String msg = String.format(format, className, methodName, line);
+        System.out.println(msg);
     }
 }

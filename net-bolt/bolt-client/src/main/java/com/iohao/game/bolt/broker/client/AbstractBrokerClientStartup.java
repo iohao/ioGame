@@ -16,9 +16,7 @@
  */
 package com.iohao.game.bolt.broker.client;
 
-import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.ConnectionEventType;
-import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.bolt.broker.client.processor.*;
 import com.iohao.game.bolt.broker.client.processor.connection.CloseConnectEventClientProcessor;
@@ -33,7 +31,6 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * 逻辑服抽象类
@@ -63,37 +60,25 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
 
     @Override
     public void connectionEventProcessor(BrokerClientBuilder brokerClientBuilder) {
-        Supplier<ConnectionEventProcessor> connectProcessorSupplier = ConnectEventClientProcessor::new;
-        Supplier<ConnectionEventProcessor> closeConnectProcessorSupplier = CloseConnectEventClientProcessor::new;
-        Supplier<ConnectionEventProcessor> connectFailedProcessorSupplier = ConnectFailedEventClientProcessor::new;
-        Supplier<ConnectionEventProcessor> exceptionConnectProcessorSupplier = ExceptionConnectEventClientProcessor::new;
-
         brokerClientBuilder
-                .addConnectionEventProcessor(ConnectionEventType.CONNECT, connectProcessorSupplier)
-                .addConnectionEventProcessor(ConnectionEventType.CLOSE, closeConnectProcessorSupplier)
-                .addConnectionEventProcessor(ConnectionEventType.CONNECT_FAILED, connectFailedProcessorSupplier)
-                .addConnectionEventProcessor(ConnectionEventType.EXCEPTION, exceptionConnectProcessorSupplier);
+                .addConnectionEventProcessor(ConnectionEventType.CONNECT, ConnectEventClientProcessor::new)
+                .addConnectionEventProcessor(ConnectionEventType.CLOSE, CloseConnectEventClientProcessor::new)
+                .addConnectionEventProcessor(ConnectionEventType.CONNECT_FAILED, ConnectFailedEventClientProcessor::new)
+                .addConnectionEventProcessor(ConnectionEventType.EXCEPTION, ExceptionConnectEventClientProcessor::new);
     }
 
     @Override
     public void registerUserProcessor(BrokerClientBuilder brokerClientBuilder) {
-        // 收到网关请求模块信息
-        Supplier<UserProcessor<?>> requestBrokerClientModuleSupplier = RequestBrokerClientModuleMessageClientProcessor::new;
-        // broker （游戏网关）集群处理
-        Supplier<UserProcessor<?>> brokerClusterMessageProcessorSupplier = BrokerClusterMessageClientProcessor::new;
-        // 接收扩展逻辑服的消息
-        Supplier<UserProcessor<?>> extRequestMessageProcessorSupplier = ExtRequestMessageClientProcessor::new;
-
-        // 客户端请求处理器
-        Supplier<UserProcessor<?>> requestMessageClientSupplier = RequestMessageClientProcessor::new;
-        Supplier<UserProcessor<?>> syncRequestMessageClientSupplier = SyncRequestMessageClientProcessor::new;
-
         brokerClientBuilder
-                .registerUserProcessor(requestBrokerClientModuleSupplier)
-                .registerUserProcessor(brokerClusterMessageProcessorSupplier)
-                .registerUserProcessor(extRequestMessageProcessorSupplier)
-                .registerUserProcessor(requestMessageClientSupplier)
-                .registerUserProcessor(syncRequestMessageClientSupplier)
+                // 收到网关请求模块信息
+                .registerUserProcessor(RequestBrokerClientModuleMessageClientProcessor::new)
+                // broker （游戏网关）集群处理
+                .registerUserProcessor(BrokerClusterMessageClientProcessor::new)
+                // 接收扩展逻辑服的消息
+                .registerUserProcessor(ExtRequestMessageClientProcessor::new)
+                // 业务请求处理器
+                .registerUserProcessor(RequestMessageClientProcessor::new)
+                .registerUserProcessor(SyncRequestMessageClientProcessor::new)
         ;
     }
 

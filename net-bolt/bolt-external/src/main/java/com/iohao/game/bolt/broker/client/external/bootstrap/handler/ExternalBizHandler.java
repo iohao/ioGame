@@ -52,7 +52,13 @@ public class ExternalBizHandler extends SimpleChannelInboundHandler<ExternalMess
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage message) {
 
+        // 访问了需要登录才能访问的 action
         if (AccessAuthenticationHandler.notPass(ctx, message)) {
+            return;
+        }
+
+        // 拒绝玩家直接访问 action
+        if (AccessAuthenticationHandler.reject(ctx, message)) {
             return;
         }
 
