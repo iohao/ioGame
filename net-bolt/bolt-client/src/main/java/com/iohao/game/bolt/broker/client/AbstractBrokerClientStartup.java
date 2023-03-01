@@ -115,7 +115,6 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
         // 实验性功能
         experiment();
 
-
         return this.brokerClientBuilder;
     }
 
