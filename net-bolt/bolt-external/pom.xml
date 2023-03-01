@@ -22,12 +22,6 @@
 
         <dependency>
             <groupId>com.iohao.game</groupId>
-            <artifactId>bolt-external-core</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.iohao.game</groupId>
             <artifactId>bolt-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
