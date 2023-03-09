@@ -217,7 +217,7 @@ ioGame 是轻量级的网络游戏服务器框架，ioGame 没有中间件的强
 
 ### ioGame 使用趋势数据
 
-关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 2023-02 月统计数据；这里的统计信息是关于开发者关注 ioGame 框架相关的，从统计数据中可以看出，由于 ioGame 上手简单，功能强大等优点，得到了众多开发者的关注。
+关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 2023-03 月统计数据；这里的统计信息是关于开发者关注 ioGame 框架相关的，从统计数据中可以看出，由于 ioGame 上手简单，功能强大等优点，得到了众多开发者的关注。
 
 
 
@@ -241,7 +241,7 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 
 
-![](https://user-images.githubusercontent.com/26356013/217443021-735285e4-4ce9-406b-b503-2a2d6f7d7bdb.png)
+![](https://user-images.githubusercontent.com/26356013/223695669-700a601c-ae80-4b5c-b308-f8629eeb7c98.png)
 
 
 
