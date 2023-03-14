@@ -2,37 +2,40 @@
   ioGame
 </h2>
 <p align="center">
+  <strong>无锁异步化、事件驱动的架构设计；轻量级，无需依赖任何第三方中间件或数据库就能支持集群、分布式</strong>
+  <br>
   <strong>通过 ioGame 可以很容易的搭建出一个集群无中心节点、集群自动化、多进程的分步式游戏服务器</strong>
   <br>
-  <strong>无锁异步化、事件驱动的架构设计；首个基于蚂蚁金服 SOFABolt 的 java 网络游戏服务器框架</strong>
+  <strong>包体小、启动快、内存占用少、更加的节约、无需配置文件、提供了优雅的路由访问权限控制</strong>
   <br>
-  <strong>无中间件强依赖、代码即文档、JSR380、断言 + 异常机制 = 更少的维护成本、开发成本</strong>
+  <strong>让开发者用一套业务代码，无需任何改动，同时支持多种通信协议：WebSocket、TCP</strong>
   <br>
-  <strong>同样的一套业务代码无需变更，可以支持多种协议：protobuf、json，并且可扩展</strong>
+  <strong>让开发者用一套业务代码，能轻松切换和扩展不同的通信协议：Protobuf、JSON</strong>
   <br>
-  <strong>同样一套业务代码无需变更，可以支持多种通信协议：websocket、socket</strong>
+  <strong>近原生的性能；业务框架在单线程中平均每秒可以执行 1152 万次业务逻辑</strong>
   <br>
-  <strong>轻量级、启动快、更节约、简单、开箱即用、无配置文件、超高性能</strong>
+  <strong>代码即联调文档、JSR380验证、断言 + 异常机制 = 更少的维护成本</strong>
   <br>
-  <strong>近原生的快、业务框架平均每秒可以执行 1152 万次业务逻辑</strong>
+  <strong>在业务开发中，提供了业务逻辑的执行信息、代码定位与跳转等</strong>
   <br>
-  <strong>在业务开发中自带神级特性：业务代码访问定位与跳转</strong>
+  <strong>架构部署灵活性与多样性：既可相互独立，又可相互融合</strong>
   <br>
-  <strong>架构部署多样性：既可相互独立，又可相互融合</strong>
+  <strong>可同时与同类型的多个游戏逻辑服通信并得到数据</strong>
   <br>
-  <strong>各个逻辑服之间可以相互的进行跨进程通信</strong>
+  <strong>逻辑服之间可相互跨进程、跨机器进行通信</strong>
   <br>
-  <strong>可同时与同类型多个游戏逻辑服通信</strong>
+  <strong>支持玩家对游戏逻辑服进行动态绑定</strong>
   <br>
-  <strong>支持玩家动态绑定逻辑服节点</strong>
+  <strong>能与任何其他框架做融合共存</strong>
   <br>
-  <strong>对webMVC开发者友好</strong>
+  <strong>对 webMVC 开发者友好</strong>
   <br>
   <strong>无 spring 强依赖</strong>
+  <br>
+  <strong>零学习成本</strong>
 </p>
-
 <p align="center">
-	<a href="https://www.yuque.com/iohao/game">https://www.yuque.com/iohao/game</a>
+	<a href="https://www.yuque.com/iohao/game">http://game.iohao.com</a>
 </p>
 <p align="center">
 	<a target="_blank" href="https://www.oracle.com/java/technologies/downloads/#java17">
@@ -361,6 +364,7 @@ ioGame 是一个 java 网络游戏服务器框架，有以下特点：
 - 支持 protobuf、json 等不同的通信协议
 - 集群无中心节点、集群自动化、分布式的设计
 - 轻量级，不依赖第三方中间件或数据库就能支持集群、分布式
+- 提供多种通讯方式，且逻辑服之间可以相互跨机器通信
 - 与 spring 和其他框架融合方便
 - 学习成本低，开发体验好
 - 支持多服单进程、多服多进程的启动和部署方式
@@ -378,11 +382,15 @@ ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar
 
 
 
-在生态融合方面，ioGame 可以很方便的与 spring 集成（5 行代码）；除了 spring 外，还能与任何其他的框架做**融合**，从而使用其他框架的相关生态，因为 ioGame 是纯 javaSE 的项目。
+在生态融合方面，ioGame 可以很方便的与 spring 集成（5 行代码）；除了 spring 外，还能与任何其他的框架做**融合**，从而使用其他框架的相关生态。
 
 
 
 在轻量级方面，ioGame **不依赖任何第三方**中间件或数据库**就能支持集群、分布式**，只需要 java 环境就可以运行。这意味着在使用上简单了，在部署上也为企业减少了部署成本、维护难度。在使用 ioGame 时，只需一个依赖即可获得整个框架，而无需在安装其他服务，如： Nginx、Redis、MQ、Mysql、ZooKeeper、Protobuf协议编译工具 ... ...等。
+
+
+
+在通讯方式方面，大部分框架只能支持推送（广播）这一类型的通讯方式；而 ioGame 则提供了 3 种类型的通讯方式，分别是推送、单次请求处理、逻辑服之间相互通信。其中逻辑服之间相互通信，除了可以让我们跨机器通信外，还能与**同类型多个游戏逻辑服同时通信**并得到结果；
 
 
 
@@ -422,7 +430,7 @@ ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar
 
 
 
-开发者基于 ioGame 编写的项目模块，通常是条理清晰的，得益于框架对**路由的合理设计**。当我们整理好这些模块后，对于其他开发者接管项目或后续的维护中，会是一个不错的帮助（[模块的整理与建议](https://www.yuque.com/iohao/game/ruaqza/#OBwXQ)）。或许现阶段你感受不到这块的威力，随着你深入地使用实践就能体会到这么设计的诸多好处与优势。
+开发者基于 ioGame 编写的项目模块，通常是条理清晰的，得益于框架对**路由的合理设计**，同时也为路由提供了优雅的[访问权限控制](https://www.yuque.com/iohao/game/nap5y8p5fevhv99y)。当我们整理好这些模块后，对于其他开发者接管项目或后续的维护中，会是一个不错的帮助（[模块的整理与建议](https://www.yuque.com/iohao/game/ruaqza/#OBwXQ)）。或许现阶段你感受不到这块的威力，随着你深入地使用实践就能体会到这么设计的诸多好处与优势。
 
 
 
