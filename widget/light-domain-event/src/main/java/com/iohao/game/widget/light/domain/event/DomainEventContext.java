@@ -58,19 +58,17 @@ public class DomainEventContext {
     @SuppressWarnings("unchecked")
     public boolean startup() {
         AtomicBoolean init = param.getInit();
-        if (init.get()) {
-            return init.get();
+
+        if (!init.compareAndSet(false, true)) {
+            return true;
         }
 
-        init.set(true);
-
-        // 并发事件消费 - 无顺序的执行事件消费
-        DisruptorCreate disruptorCreate = param.disruptorCreate;
-
         Set<DomainEventHandler<?>> domainEventHandlerSet = param.domainEventHandlerSet;
-        domainEventHandlerSet.parallelStream().collect(Collectors.groupingBy(o -> {
+        domainEventHandlerSet.stream().collect(Collectors.groupingBy(o -> {
             // 一个key对应多个value. key 是从领域事件中的接口类型中查找领域实体类型
-            Type type = ((ParameterizedType) o.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];
+            ParameterizedType parameterizedType = (ParameterizedType) o.getClass().getGenericInterfaces()[0];
+            Type type = parameterizedType.getActualTypeArguments()[0];
+
             try {
                 String name = type.getTypeName();
                 return Class.forName(name);
@@ -80,7 +78,8 @@ public class DomainEventContext {
             }
         })).forEach((Class<?> topic, List<DomainEventHandler<?>> eventHandlers) -> {
 
-            // 创建disruptor
+            // 创建 disruptor；并发事件消费 - 无顺序的执行事件消费
+            DisruptorCreate disruptorCreate = param.disruptorCreate;
             Disruptor<EventDisruptor> disruptor = disruptorCreate.createDisruptor(topic, param);
             DisruptorManager.me().put(topic, disruptor);
 
@@ -88,10 +87,11 @@ public class DomainEventContext {
                 disruptor.setDefaultExceptionHandler(param.exceptionHandler);
             }
 
-            // disruptor 绑定领域事件消费接口
+            // disruptor 绑定领域事件消费接口，事件消费绑定
             eventHandlers.forEach(eventHandler -> {
                 // 事件消费绑定
-                disruptor.handleEventsWith(new ConsumeEventHandler(eventHandler));
+                var consumeEventHandler = new ConsumeEventHandler(eventHandler);
+                disruptor.handleEventsWith(consumeEventHandler);
             });
         });
 

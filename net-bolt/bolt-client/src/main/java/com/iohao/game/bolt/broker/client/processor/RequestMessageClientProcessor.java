@@ -20,6 +20,8 @@ import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.client.action.skeleton.BoltChannelContext;
@@ -59,13 +61,15 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
         BarSkeleton barSkeleton = brokerClient.getBarSkeleton();
 
         // 业务框架 flow 上下文
-        var flowContext = barSkeleton
+        FlowContext flowContext = barSkeleton
                 // 业务框架 flow 上下文 工厂
                 .getFlowContextFactory()
                 // 创建 flow 上下文
-                .createFlowContext()
-                // 设置请求参数
-                .setRequest(request);
+                .createFlowContext();
+
+        // 设置请求参数
+        flowContext.setRequest(request);
+        flowContext.setBarSkeleton(barSkeleton);
 
         // 动态属性添加
         ChannelContext channelContext = new BoltChannelContext(asyncCtx);
@@ -73,6 +77,9 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
         flowContext.option(FlowAttr.brokerClientContext, brokerClient);
         flowContext.option(FlowAttr.logicServerId, brokerClient.getId());
         flowContext.option(FlowAttr.logicServerTag, brokerClient.getTag());
+
+        // 设置 flowContext 的一些属性值
+        FlowContextKit.employ(flowContext);
 
         // 执行业务框架
         this.requestMessageClientProcessorHook.processLogic(barSkeleton, flowContext);
@@ -86,14 +93,6 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
         this.requestMessageClientProcessorHook = clientProcessorHooks.getRequestMessageClientProcessorHook();
     }
 
-    /**
-     * 指定感兴趣的请求数据类型，该 UserProcessor 只对感兴趣的请求类型的数据进行处理；
-     * 假设 除了需要处理 MyRequest 类型的数据，还要处理 java.lang.String 类型，有两种方式：
-     * 1、再提供一个 UserProcessor 实现类，其 interest() 返回 java.lang.String.class.getName()
-     * 2、使用 MultiInterestUserProcessor 实现类，可以为一个 UserProcessor 指定 List<String> multiInterest()
-     *
-     * @return 自定义处理器
-     */
     @Override
     public String interest() {
         return RequestMessage.class.getName();

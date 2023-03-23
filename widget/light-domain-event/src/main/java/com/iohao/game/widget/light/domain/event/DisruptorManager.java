@@ -57,7 +57,7 @@ public class DisruptorManager {
     }
 
     void forEach(Consumer<Disruptor<EventDisruptor>> action) {
-        listDisruptor().parallelStream().forEach(action);
+        listDisruptor().forEach(action);
     }
 
     /**

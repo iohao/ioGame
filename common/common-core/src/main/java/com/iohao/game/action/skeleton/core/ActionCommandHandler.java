@@ -17,8 +17,7 @@
 package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
 
 /**
  * 该handler用于执行 {@link ActionCommand} 对象
@@ -30,6 +29,7 @@ sealed class ActionCommandHandler implements Handler permits ActionCommandTryHan
 
     @Override
     public boolean handler(final FlowContext flowContext) {
+
         // 设置 flowContext 的一些属性
         this.settingFlowContext(flowContext);
 
@@ -40,31 +40,16 @@ sealed class ActionCommandHandler implements Handler permits ActionCommandTryHan
     }
 
     protected void settingFlowContext(FlowContext flowContext) {
+        /*
+         * 做一些兼容，这部分逻辑在 RequestMessageClientProcessor 已经设置过一次，
+         * 这里做兼容的目的有两个：
+         * 1 防止开发者将 RequestMessageClientProcessor 移除，并做了相关的自定义。
+         * 2 业务框架可以单独做测试
+         */
+        FlowContextKit.employ(flowContext);
+
         // 业务框架
         BarSkeleton barSkeleton = flowContext.getBarSkeleton();
-        // 请求参数
-        RequestMessage request = flowContext.getRequest();
-        // 元信息
-        HeadMetadata headMetadata = request.getHeadMetadata();
-
-        // 得到路由信息
-        int cmdMerge = headMetadata.getCmdMerge();
-        // 命令域管理器
-        var actionCommandRegions = barSkeleton.actionCommandRegions;
-        // 根据路由信息得到 ActionCommand
-        var actionCommand = actionCommandRegions.getActionCommand(cmdMerge);
-        flowContext.setActionCommand(actionCommand);
-
-        // 响应对象创建器
-        var responseMessageCreate = barSkeleton.getResponseMessageCreate();
-        // 创建响应对象
-        var responseMessage = responseMessageCreate.createResponseMessage();
-        request.settingCommonAttr(responseMessage);
-        // 当前用户 id
-        long userId = headMetadata.getUserId();
-        flowContext
-                .setResponse(responseMessage)
-                .setUserId(userId);
 
         // 参数解析器
         var paramParser = barSkeleton.getActionMethodParamParser();

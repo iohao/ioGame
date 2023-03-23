@@ -36,15 +36,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrategy {
     static final Logger log = IoGameLoggerFactory.getLoggerCommon();
 
-    AtomicInteger id = new AtomicInteger();
+    final AtomicInteger id = new AtomicInteger();
+    final Executor commonExecutor;
+
+    DefaultUserProcessorExecutorStrategy() {
+        this.commonExecutor = createExecutor("common");
+    }
 
     @Override
     public Executor getExecutor(UserProcessorExecutorAware userProcessorExecutorAware) {
         String userProcessorName = userProcessorExecutorAware.getClass().getSimpleName();
-        return this.getExecutor(userProcessorName);
+
+        var requestMessageClientProcessor = "RequestMessageClientProcessor";
+        if (requestMessageClientProcessor.equals(userProcessorName)) {
+            // 游戏逻辑服请求处理单独一个池
+            return this.createExecutor(userProcessorName);
+        }
+
+        // 其他类型的消息处理共用一个池
+        return this.commonExecutor;
     }
 
-    Executor getExecutor(String userProcessorName) {
+    Executor createExecutor(String userProcessorName) {
 
         /*
          * 目前 bolt 默认的 io 线程池的配置是
@@ -75,6 +88,13 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
                 new LinkedBlockingQueue<>(),
                 new NamedThreadFactory(namePrefix, true));
 
+        // Processor-Executor
+        log.debug("{} 【corePoolSize:{}】【maximumPoolSize:{}】 ",
+                namePrefix,
+                corePoolSize,
+                maximumPoolSize
+        );
+
         // 小预热
         int ready = corePoolSize >> 1;
         for (int i = 0; i < ready; i++) {
@@ -82,18 +102,6 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
             });
         }
 
-        // Processor-Executor
-        log.debug(" {} -- corePoolSize:{} - maximumPoolSize:{} ",
-                namePrefix,
-                corePoolSize,
-                corePoolSize
-        );
-
         return executor;
-    }
-
-
-    DefaultUserProcessorExecutorStrategy() {
-
     }
 }

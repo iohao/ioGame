@@ -26,7 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Accessors(chain = true)
 public class DomainEventContextParam {
     /** 领域事件消费 */
-    final Set<DomainEventHandler<?>> domainEventHandlerSet = new LinkedHashSet<>();
+    final Set<DomainEventHandler<?>> domainEventHandlerSet = new HashSet<>();
     /**
      * 等待策略
      * <pre>

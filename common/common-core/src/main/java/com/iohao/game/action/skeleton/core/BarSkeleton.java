@@ -66,6 +66,7 @@ public final class BarSkeleton {
     ActionAfter actionAfter;
 
     /** 响应对象的创建 */
+    @Getter
     ResponseMessageCreate responseMessageCreate;
     /** 推送相关的文档 */
     @Getter

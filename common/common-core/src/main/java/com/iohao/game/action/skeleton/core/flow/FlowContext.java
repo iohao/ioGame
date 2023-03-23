@@ -34,6 +34,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 业务框架 flow 上下文
@@ -102,6 +103,20 @@ public class FlowContext implements FlowOptionDynamic {
 
         // 默认使用 pb 来序列化
         return DataCodecKit.decode(attachmentData, clazz);
+    }
+
+    /**
+     * 设置响应结果
+     *
+     * @param methodResult 响应结果
+     * @return this
+     */
+    public FlowContext setMethodResult(Object methodResult) {
+        if (Objects.nonNull(methodResult)) {
+            this.methodResult = methodResult;
+        }
+
+        return this;
     }
 
     /**
