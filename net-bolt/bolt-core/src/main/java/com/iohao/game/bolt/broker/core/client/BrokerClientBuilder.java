@@ -176,7 +176,7 @@ public class BrokerClientBuilder {
 
         // 保存一下 BrokerClient 的引用
         if (this.brokerClientType == BrokerClientType.LOGIC) {
-            BrokerClientHelper.me().brokerClient = brokerClient;
+            BrokerClientHelper.brokerClient = brokerClient;
         }
 
         return brokerClient;

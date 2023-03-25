@@ -34,13 +34,13 @@ import com.iohao.game.action.skeleton.core.commumication.*;
  * @date 2022-05-15
  */
 public class BrokerClientHelper {
-    BrokerClient brokerClient;
+    static BrokerClient brokerClient;
 
-    public BrokerClientContext getBrokerClient() {
-        return this.brokerClient;
+    public static BrokerClientContext getBrokerClient() {
+        return brokerClient;
     }
 
-    public ProcessorContext getProcessorContext() {
+    public static ProcessorContext getProcessorContext() {
         return brokerClient.getCommunicationAggregationContext();
     }
 
@@ -49,7 +49,7 @@ public class BrokerClientHelper {
      *
      * @return BroadcastContext
      */
-    public BroadcastContext getBroadcastContext() {
+    public static BroadcastContext getBroadcastContext() {
         return brokerClient.getCommunicationAggregationContext();
     }
 
@@ -58,7 +58,7 @@ public class BrokerClientHelper {
      *
      * @return BroadcastOrderContext
      */
-    public BroadcastOrderContext getBroadcastOrderContext() {
+    public static BroadcastOrderContext getBroadcastOrderContext() {
         return brokerClient.getCommunicationAggregationContext();
     }
 
@@ -67,7 +67,7 @@ public class BrokerClientHelper {
      *
      * @return InvokeModuleContext
      */
-    public InvokeModuleContext getInvokeModuleContext() {
+    public static InvokeModuleContext getInvokeModuleContext() {
         return brokerClient.getCommunicationAggregationContext();
     }
 
@@ -76,19 +76,32 @@ public class BrokerClientHelper {
      *
      * @return InvokeExternalModuleContext
      */
-    public InvokeExternalModuleContext getInvokeExternalModuleContext() {
+    public static InvokeExternalModuleContext getInvokeExternalModuleContext() {
         return brokerClient.getCommunicationAggregationContext();
     }
 
+    @Deprecated
     private BrokerClientHelper() {
 
     }
 
+    /**
+     * 请使用静态方法
+     * <pre>
+     *     将 BrokerClientHelper.me().xxx() 改为 BrokerClientHelper.xxx()
+     *
+     *     将在下个大版本中移除
+     * </pre>
+     *
+     * @return me
+     */
+    @Deprecated
     public static BrokerClientHelper me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    @Deprecated
     private static class Holder {
         static final BrokerClientHelper ME = new BrokerClientHelper();
     }

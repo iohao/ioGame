@@ -18,9 +18,7 @@ package com.iohao.game.bolt.broker.core.common;
 
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
-import lombok.AccessLevel;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 import java.util.concurrent.Executor;
 
@@ -30,10 +28,10 @@ import java.util.concurrent.Executor;
  * @author 渔民小镇
  * @date 2022-11-10
  */
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class AbstractAsyncUserProcessor<T> extends AsyncUserProcessor<T> implements UserProcessorExecutorAware {
+public abstract class AbstractAsyncUserProcessor<T> extends AsyncUserProcessor<T>
+        implements UserProcessorExecutorAware {
 
+    @Setter
     Executor userProcessorExecutor;
 
     @Override

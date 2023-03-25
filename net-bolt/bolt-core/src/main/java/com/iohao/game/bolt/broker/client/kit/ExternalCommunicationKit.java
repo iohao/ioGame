@@ -36,7 +36,7 @@ public class ExternalCommunicationKit {
      * @return true 玩家在线
      */
     public boolean existUser(long userId) {
-        return BrokerClientHelper.me()
+        return BrokerClientHelper
                 // 【游戏逻辑服】与【游戏对外服】通讯上下文
                 .getInvokeExternalModuleContext()
                 // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （ExistUserExternalBizRegion）
@@ -56,7 +56,7 @@ public class ExternalCommunicationKit {
          * 实现类 ForcedOfflineExternalBizRegion
          * 因为不需要任何的返回值，所以我们只需要调用一下方法就好了
          */
-        BrokerClientHelper.me()
+        BrokerClientHelper
                 // 【游戏逻辑服】与【游戏对外服】通讯上下文
                 .getInvokeExternalModuleContext()
                 // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （ForcedOfflineExternalBizRegion）
@@ -80,7 +80,7 @@ public class ExternalCommunicationKit {
             throw new RuntimeException("userId error");
         }
 
-        BrokerClientHelper.me()
+        BrokerClientHelper
                 // 【游戏逻辑服】与【游戏对外服】通讯上下文
                 .getInvokeExternalModuleContext()
                 // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （AttachmentDataExternalBizRegion）
