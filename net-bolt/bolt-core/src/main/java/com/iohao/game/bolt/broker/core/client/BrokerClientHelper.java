@@ -88,7 +88,7 @@ public class BrokerClientHelper {
     /**
      * 请使用静态方法
      * <pre>
-     *     将 BrokerClientHelper.me().xxx() 改为 BrokerClientHelper.xxx()
+     *     将 BrokerClientHelper.xxx() 改为 BrokerClientHelper.xxx()
      *
      *     将在下个大版本中移除
      * </pre>
