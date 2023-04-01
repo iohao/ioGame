@@ -328,7 +328,8 @@ public class BrokerServerBuilder {
             aware.setBrokerServer(this.brokerServer);
         }
 
-        if (obj instanceof UserProcessorExecutorAware aware) {
+        if (obj instanceof UserProcessorExecutorAware aware && Objects.isNull(aware.getUserProcessorExecutor())) {
+            // 如果开发者没有自定义 Executor，则使用框架提供的 Executor 策略
             Executor executor = IoGameGlobalConfig.getExecutor(aware);
             aware.setUserProcessorExecutor(executor);
         }

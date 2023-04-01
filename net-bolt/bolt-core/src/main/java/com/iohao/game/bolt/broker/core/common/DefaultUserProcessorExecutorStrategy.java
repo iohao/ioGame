@@ -40,7 +40,9 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
     final Executor commonExecutor;
 
     DefaultUserProcessorExecutorStrategy() {
-        this.commonExecutor = createExecutor("common");
+        int corePoolSize = Runtime.getRuntime().availableProcessors();
+        int maximumPoolSize = corePoolSize << 1;
+        this.commonExecutor = createExecutor("common", corePoolSize, maximumPoolSize);
     }
 
     @Override
@@ -58,6 +60,11 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
     }
 
     Executor createExecutor(String userProcessorName) {
+        int corePoolSize = Runtime.getRuntime().availableProcessors();
+        return createExecutor(userProcessorName, corePoolSize, corePoolSize);
+    }
+
+    Executor createExecutor(String userProcessorName, int corePoolSize, int maximumPoolSize) {
 
         /*
          * 目前 bolt 默认的 io 线程池的配置是
@@ -79,9 +86,6 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
                 , userProcessorName
                 , id.incrementAndGet());
 
-        int corePoolSize = Runtime.getRuntime().availableProcessors();
-        int maximumPoolSize = corePoolSize << 1;
-
         var executor = new ThreadPoolExecutor(
                 corePoolSize, maximumPoolSize,
                 60L, TimeUnit.SECONDS,
@@ -96,8 +100,7 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
         );
 
         // 小预热
-        int ready = corePoolSize >> 1;
-        for (int i = 0; i < ready; i++) {
+        for (int i = 0; i < corePoolSize; i++) {
             executor.execute(() -> {
             });
         }

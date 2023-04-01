@@ -36,4 +36,11 @@ public interface UserProcessorExecutorAware {
      * @param executor Executor
      */
     void setUserProcessorExecutor(Executor executor);
+
+    /**
+     * get UserProcessor Executor
+     *
+     * @return Executor
+     */
+    Executor getUserProcessorExecutor();
 }

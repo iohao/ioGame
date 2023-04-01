@@ -20,6 +20,7 @@ import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.SyncUserProcessor;
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
@@ -27,7 +28,6 @@ import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.common.processor.hook.RequestMessageClientProcessorHook;
-import lombok.Setter;
 
 import java.util.concurrent.Executor;
 
@@ -42,7 +42,6 @@ public class SyncRequestMessageClientProcessor extends SyncUserProcessor<SyncReq
 
     BrokerClient brokerClient;
     RequestMessageClientProcessorHook requestMessageClientProcessorHook;
-    @Setter
     Executor userProcessorExecutor;
 
     @Override
@@ -61,15 +60,16 @@ public class SyncRequestMessageClientProcessor extends SyncUserProcessor<SyncReq
         BarSkeleton barSkeleton = brokerClient.getBarSkeleton();
 
         // 业务框架 flow 上下文
-        var flowContext = barSkeleton
+        FlowContext flowContext = barSkeleton
                 // 业务框架 flow 上下文 工厂
                 .getFlowContextFactory()
                 // 创建 flow 上下文
-                .createFlowContext()
-                // 设置请求参数
-                .setRequest(request)
-                // 不需要业务框架来发送消息，由消息处理器来发送
-                .setExecuteActionAfter(false);
+                .createFlowContext();
+
+        // 设置请求参数
+        flowContext.setRequest(request);
+        // 不需要业务框架来发送消息，由消息处理器来发送
+        flowContext.setExecuteActionAfter(false);
 
         // 动态属性添加
         flowContext.option(FlowAttr.brokerClientContext, brokerClient);
@@ -107,6 +107,16 @@ public class SyncRequestMessageClientProcessor extends SyncUserProcessor<SyncReq
 
     @Override
     public Executor getExecutor() {
+        return this.userProcessorExecutor;
+    }
+
+    @Override
+    public void setUserProcessorExecutor(Executor executor) {
+        this.userProcessorExecutor = executor;
+    }
+
+    @Override
+    public Executor getUserProcessorExecutor() {
         return this.userProcessorExecutor;
     }
 }

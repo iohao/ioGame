@@ -18,7 +18,6 @@ package com.iohao.game.bolt.broker.core.common;
 
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
-import lombok.Setter;
 
 import java.util.concurrent.Executor;
 
@@ -31,11 +30,20 @@ import java.util.concurrent.Executor;
 public abstract class AbstractAsyncUserProcessor<T> extends AsyncUserProcessor<T>
         implements UserProcessorExecutorAware {
 
-    @Setter
     Executor userProcessorExecutor;
 
     @Override
     public Executor getExecutor() {
-        return userProcessorExecutor;
+        return this.userProcessorExecutor;
+    }
+
+    @Override
+    public Executor getUserProcessorExecutor() {
+        return this.userProcessorExecutor;
+    }
+
+    @Override
+    public void setUserProcessorExecutor(Executor executor) {
+        this.userProcessorExecutor = executor;
     }
 }

@@ -16,7 +16,6 @@
  */
 package com.iohao.game.bolt.broker.core.common.processor.hook;
 
-import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.bolt.broker.core.client.BrokerClientBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -46,5 +45,5 @@ public class ClientProcessorHooks {
      *     通过业务框架把请求派发给指定的业务类（action）来处理
      * </pre>
      */
-    RequestMessageClientProcessorHook requestMessageClientProcessorHook = BarSkeleton::handle;
+    RequestMessageClientProcessorHook requestMessageClientProcessorHook = new DefaultRequestMessageClientProcessorHook();
 }
