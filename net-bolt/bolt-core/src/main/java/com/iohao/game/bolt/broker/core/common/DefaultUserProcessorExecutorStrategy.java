@@ -16,8 +16,8 @@
  */
 package com.iohao.game.bolt.broker.core.common;
 
-import com.alipay.remoting.NamedThreadFactory;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
+import com.iohao.game.common.kit.concurrent.DaemonThreadFactory;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import org.slf4j.Logger;
 
@@ -86,11 +86,12 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
                 , userProcessorName
                 , id.incrementAndGet());
 
+        DaemonThreadFactory threadFactory = new DaemonThreadFactory(namePrefix);
         var executor = new ThreadPoolExecutor(
                 corePoolSize, maximumPoolSize,
                 60L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(),
-                new NamedThreadFactory(namePrefix, true));
+                threadFactory);
 
         // Processor-Executor
         log.debug("{} 【corePoolSize:{}】【maximumPoolSize:{}】 ",

@@ -19,6 +19,7 @@ package com.iohao.game.bolt.broker.core.common.processor.hook;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.common.kit.concurrent.DaemonThreadFactory;
 
 import java.util.concurrent.Executor;
 
@@ -43,7 +44,8 @@ final class DefaultRequestMessageClientProcessorHook implements RequestMessageCl
         executors = new Executor[availableProcessors];
 
         for (int i = 0; i < availableProcessors; i++) {
-            executors[i] = ExecutorKit.newSingleThreadExecutor("RequestMessage-" + i);
+            String namePrefix = "RequestMessage-" + i;
+            executors[i] = ExecutorKit.newSingleThreadExecutor(new DaemonThreadFactory(namePrefix));
         }
 
         executorLength = executors.length;
@@ -55,9 +57,9 @@ final class DefaultRequestMessageClientProcessorHook implements RequestMessageCl
         long userId = flowContext.getUserId();
 
         if (userId == 0) {
-            // 如果没有登录，使用当前线程处理；
-            barSkeleton.handle(flowContext);
-            return;
+            // 如果没有登录，使用 channelId 计算
+            userId = flowContext.getRequest().getHeadMetadata().getChannelId().hashCode();
+            userId = Math.abs(userId);
         }
 
         // 根据 userId 获取对应的 Executor
