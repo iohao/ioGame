@@ -1,5 +1,70 @@
 更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
 
+2023-03-27 - v17.1.35
+https://www.yuque.com/iohao/game/ab15oe#xsmCW
+
+移除废弃的 UserProcessor ChangeUserIdMessageBrokerSyncProcessor
+
+[#62] RequestMessageClientProcessor 中的 FlowContext 增加路由、响应对象、用户id 相关的属性设置。
+
+UserProcessor DefaultUserProcessorExecutorStrategy 用户线程池策略变更:
+UserProcessor RequestMessageClientProcessor 请求处理单独一个池
+其他的 UserProcessor 共用一个池
+
+领域事件部分代码整理
+
+将 BrokerClientHelper.me() 标记为 Deprecated
+请使用 BrokerClientHelper 的静态方法，如 BrokerClientHelper.me().xxx() 改为 BrokerClientHelper.xxx()
+
+
+2023-03-02 - v17.1.34
+[#47] 增加拒绝外部直接访问 action 的路由权限
+有些 action 只能内部访问，比如增加金币、敏感数值的增加等。这些 action 是不能由外部直接访问的，这里说的外部指的连接的玩家。
+
+[#45] 游戏对外服独立 UserSession 管理部份逻辑，做成单独的 Handler
+[#54] 动态属性接口增加消费操作
+
+废弃 
+将 ExternalBizHandler 标记为废弃，由 UserSessionHandler、AccessAuthenticationHandler、RequestBrokerHandler 三个 Handler 代替。其一，这样更符合单一职责；其二，之前会有开发者将 ExternalBizHandler 重写或替换后，没有添加用户管理与路由访问权限管理的相关逻辑，导致逻辑与预期不符；
+
+查看 https://www.yuque.com/iohao/game/ea6geg#noCqn
+
+
+2023-02-13 - v17.1.33
+https://www.yuque.com/iohao/game/ab15oe#w9uZB
+
+action 业务参数自动装箱、拆箱增强。
+支持 action 接收与返回基础类型：int、long、boolean 和字符串 String。
+支持 action 接收与返回多个基础类型：List<Integer>、List<Long>、List<Boolean> 和 List<String>
+
+关于 action 业务参数、返回值的自动装箱、拆箱更详细的使用文档，可以参考：业务参数自动装箱、拆箱基础类型
+
+[#38] 新增业务参数自动装箱、拆箱基础类型-boolean
+
+[#39] 新增业务参数自动装箱、拆箱"基础"类型-String
+[#42] 新增业务参数自动装箱、拆箱基础类型-int
+[#43] 新增业务参数自动装箱、拆箱基础类型-long
+修复 ExternalServerBuilder.channelPipelineHook 设置业务编排钩子接口被默认实现覆盖的问题
+
+【废弃与替换】
+标记废弃 IntPb ，由 IntValue 代替
+标记废弃 IntListPb ，由 IntValueList 代替
+标记废弃 LongPb ，由 LongValue 代替
+标记废弃 LongListPb ，由 LongValueList 代替
+
+废弃原因-1：属性名称不统一
+废弃原因-2：命名以 pb 结尾，这会导致在使用非 pb 协议时，会产生歧义
+
+不兼容说明
+如果开发者在之前的版本中的 action 使用的是 int、long 作为接收与返回参数的，此次版本不会有兼容问题。
+如果使用的是 IntPb、IntListPb、LongPb、LongListPb 将会有不兼容的情况，因为当前版本已将 int、long 基础类型装箱、拆箱的类型解析器，替换为新版本的解析器。
+
+如果想兼容旧版本的，可以通过下面的代码来做兼容。如果条件允许，请使用新版本，因为这得到了统一。
+注意：由于此版本更新了 pb 原文件，需要前端同学重新生成一次协议。pb 原文件可查看：对外服协议说明。
+理论上前端不做更改问题也不大，只是生成的对接文档上有差异，如果后端使用了基础类型做接收参数或返回值的，原 IntPb 由 IntValue 代替，原 LongPb 由 LongValue 代替。
+其次影响是如果将来打算换成 json 协议来对接，会导致不兼容的情况，如果条件允许，请前端同学尽早做变更。
+
+
 2023-02-03 - v17.1.31
 https://www.yuque.com/iohao/game/ab15oe#dPVPB
 
