@@ -24,15 +24,19 @@ import com.iohao.game.common.kit.io.FileKit;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
-import java.lang.reflect.Modifier;
-import lombok.extern.slf4j.Slf4j;
-
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 渔民小镇
@@ -120,6 +124,7 @@ public class ProtoJavaAnalyse {
     private void analyseField(ProtoJava protoJava) {
         Class<?> clazz = protoJava.getClazz();
         Field[] fields;
+        int order;
         if (clazz.isEnum()) {
             // 如果是枚举类型，需要单独处理，因为FieldAccess.get(clazz)方法中的Modifier.isStatic(modifiers)判断会过滤枚举内的属性
             Field[] enumFields = clazz.getDeclaredFields();
@@ -135,10 +140,13 @@ public class ProtoJavaAnalyse {
             for (int i = 0; i < fieldList.size(); i++) {
                 fields[i] = fieldList.get(i);
             }
+            // 枚举enum的下标从0开始
+            order = 0;
         } else {
             fields = FieldAccess.get(clazz).getFields();
+            // message的下标从1开始
+            order = 1;
         }
-        int order = 1;
 
         JavaClass javaClass = protoJava.getJavaClass();
 
