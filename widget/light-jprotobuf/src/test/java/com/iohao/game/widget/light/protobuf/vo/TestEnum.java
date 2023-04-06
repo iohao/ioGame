@@ -7,7 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 /**
- * 用户收到的聊天消息返回
+ * 测试生成一个TestEnum
  */
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
