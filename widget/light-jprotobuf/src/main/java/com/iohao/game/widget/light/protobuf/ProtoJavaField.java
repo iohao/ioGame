@@ -62,7 +62,6 @@ public class ProtoJavaField {
         messageMap.put("comment", this.comment);
         messageMap.put("repeated", "");
         messageMap.put("fieldProtoType", this.fieldProtoType);
-        //    messageMap.put("fieldProtoType", fieldTypeClass.isEnum() ? "" : this.fieldProtoType);
         messageMap.put("fieldName", this.fieldName);
         messageMap.put("order", String.valueOf(this.order));
 
