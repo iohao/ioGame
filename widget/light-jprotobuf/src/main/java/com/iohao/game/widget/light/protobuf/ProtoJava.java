@@ -64,9 +64,9 @@ public class ProtoJava {
     public String toProtoMessage() {
 
         String fieldsString = protoJavaFieldList
-            .stream()
-            .map(ProtoJavaField::toProtoFieldLine)
-            .collect(Collectors.joining());
+                .stream()
+                .map(ProtoJavaField::toProtoFieldLine)
+                .collect(Collectors.joining());
 
         Map<String, String> messageMap = new HashMap<>();
         messageMap.put("className", this.className);
@@ -74,22 +74,22 @@ public class ProtoJava {
         messageMap.put("classComment", this.comment);
 
         String template;
-        if (clazz.isEnum()){
+        if (clazz.isEnum()) {
             template = """
-                // {classComment}
-                enum {className} {
-                {fieldsString}
-                }
-                                
-                """;
-        }else{
+                    // {classComment}
+                    enum {className} {
+                    {fieldsString}
+                    }
+                                    
+                    """;
+        } else {
             template = """
-                // {classComment}
-                message {className} {
-                {fieldsString}
-                }
-                                
-                """;
+                    // {classComment}
+                    message {className} {
+                    {fieldsString}
+                    }
+                                    
+                    """;
         }
 
         return StrKit.format(template, messageMap);

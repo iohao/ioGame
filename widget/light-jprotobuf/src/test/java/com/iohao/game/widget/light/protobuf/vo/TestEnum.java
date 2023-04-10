@@ -1,4 +1,4 @@
-package com.iohao.game.widget.light.protobuf.vo;//package com.iohao.game.widget.light.protobuf.vo;
+package com.iohao.game.widget.light.protobuf.vo;
 
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.widget.light.protobuf.ProtoFileMerge;

@@ -88,11 +88,13 @@ public class ProtoJavaField {
      */
     private String getTemplateFiled(boolean fieldIsInEnum) {
         StringBuilder templateFiled = new StringBuilder();
+
         if (!Objects.isNull(this.comment)) {
             templateFiled.append("""
-                  // {comment}
-                """);
+                      // {comment}
+                    """);
         }
+
         if (fieldIsInEnum) {
             templateFiled.append("""
                       {repeated}{fieldName} = {order};
@@ -102,6 +104,7 @@ public class ProtoJavaField {
                       {repeated}{fieldProtoType} {fieldName} = {order};
                     """);
         }
+
         return templateFiled.toString();
     }
 

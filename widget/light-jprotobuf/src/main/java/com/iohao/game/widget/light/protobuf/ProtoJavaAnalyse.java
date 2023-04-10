@@ -24,19 +24,15 @@ import com.iohao.game.common.kit.io.FileKit;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 渔民小镇
@@ -44,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ProtoJavaAnalyse {
-
 
     final Map<ProtoJavaRegionKey, ProtoJavaRegion> protoJavaRegionMap = new HashMap<>();
 
@@ -125,10 +120,12 @@ public class ProtoJavaAnalyse {
         Class<?> clazz = protoJava.getClazz();
         Field[] fields;
         int order;
+
         if (clazz.isEnum()) {
             // 如果是枚举类型，需要单独处理，因为FieldAccess.get(clazz)方法中的Modifier.isStatic(modifiers)判断会过滤枚举内的属性
             Field[] enumFields = clazz.getDeclaredFields();
             List<Field> fieldList = new ArrayList<>(enumFields.length);
+
             for (Field enumField : enumFields) {
                 if (Modifier.isPrivate(enumField.getModifiers())) {
                     // java的Enum有一个隐藏的$VALUES(private)，需要过滤掉---枚举其他属性默认public static
@@ -136,10 +133,12 @@ public class ProtoJavaAnalyse {
                 }
                 fieldList.add(enumField);
             }
+
             fields = new Field[fieldList.size()];
             for (int i = 0; i < fieldList.size(); i++) {
                 fields[i] = fieldList.get(i);
             }
+
             // 枚举enum的下标从0开始
             order = 0;
         } else {
@@ -160,13 +159,13 @@ public class ProtoJavaAnalyse {
             JavaField javaField = javaClass.getFieldByName(fieldName);
 
             ProtoJavaField protoJavaField = new ProtoJavaField()
-                .setRepeated(repeated)
-                .setFieldName(fieldName)
-                .setComment(javaField.getComment())
-                .setOrder(order++)
-                .setFieldTypeClass(fieldTypeClass)
-                .setField(field)
-                .setProtoJavaParent(protoJava);
+                    .setRepeated(repeated)
+                    .setFieldName(fieldName)
+                    .setComment(javaField.getComment())
+                    .setOrder(order++)
+                    .setFieldTypeClass(fieldTypeClass)
+                    .setField(field)
+                    .setProtoJavaParent(protoJava);
 
             protoJava.addProtoJavaFiled(protoJavaField);
 
