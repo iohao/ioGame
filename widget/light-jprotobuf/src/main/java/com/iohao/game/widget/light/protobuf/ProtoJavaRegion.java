@@ -86,21 +86,12 @@ public class ProtoJavaRegion {
         StringBuilder builder = new StringBuilder();
         builder.append(protoHead);
 
-        Map<String, ProtoJava> sortProto = sortProto();
-
-        for (Map.Entry<String, ProtoJava> temp : sortProto.entrySet()) {
-            String protoMessage = temp.getValue().toProtoMessage();
-            builder.append(protoMessage);
-        }
+        this.protoJavaList.stream()
+                // 排序规则
+                .sorted(Comparator.comparing(ProtoJava::getClassName))
+                .map(ProtoJava::toProtoMessage)
+                .forEach(builder::append);
 
         return builder.toString();
-    }
-
-    private Map<String,ProtoJava> sortProto() {
-        Map<String, ProtoJava> sortedMap = new TreeMap<>();
-        for (ProtoJava protoJava : protoJavaList) {
-            sortedMap.put(protoJava.getClassName(), protoJava);
-        }
-        return sortedMap;
     }
 }
