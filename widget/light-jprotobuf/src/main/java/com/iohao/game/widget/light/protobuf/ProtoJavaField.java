@@ -96,13 +96,9 @@ public class ProtoJavaField {
         }
 
         if (fieldIsInEnum) {
-            templateFiled.append("""
-                      {repeated}{fieldName} = {order};
-                    """);
+            templateFiled.append("  {repeated}{fieldName} = {order};");
         } else {
-            templateFiled.append("""
-                      {repeated}{fieldProtoType} {fieldName} = {order};
-                    """);
+            templateFiled.append("  {repeated}{fieldProtoType} {fieldName} = {order};");
         }
 
         return templateFiled.toString();

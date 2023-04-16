@@ -157,7 +157,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 ┣ 错误码: {errorCode}
                 ┣ 错误信息: {validatorMsg}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [执行线程:{threadName}]
+                ┗━━━━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [当前线程:{threadName}]
                 """;
 
         String message = StrKit.format(template, paramMap);
@@ -179,7 +179,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 ┣ 参数: {paramName} : {paramData}
                 ┣ 响应: {returnData}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [执行线程:{threadName}]
+                ┗━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [当前线程:{threadName}]
                 """;
 
         String message = StrKit.format(template, paramMap);
