@@ -43,6 +43,10 @@ public class DataCodecKit {
      * @return bytes
      */
     public byte[] encode(Object data) {
+        if (data instanceof byte[] bytes) {
+            return bytes;
+        }
+
         return dataCodec.encode(data);
     }
 

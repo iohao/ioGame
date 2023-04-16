@@ -94,6 +94,10 @@ public final class MethodParsers {
         return getMethodParser(actualTypeArgumentClazz);
     }
 
+    public MethodParser getMethodParser(Class<?> paramClazz) {
+        return this.methodParserMap.getOrDefault(paramClazz, this.methodParser);
+    }
+
     public void clear() {
         this.methodParserMap.clear();
         this.paramSupplierMap.clear();
@@ -105,10 +109,6 @@ public final class MethodParsers {
 
     public Set<Class<?>> keySet() {
         return this.methodParserMap.keySet();
-    }
-
-    public MethodParser getMethodParser(Class<?> paramClazz) {
-        return this.methodParserMap.getOrDefault(paramClazz, this.methodParser);
     }
 
     private MethodParsers() {
