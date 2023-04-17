@@ -18,10 +18,10 @@ package com.iohao.game.action.skeleton.core.flow.parser;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.protocol.wrapper.BoolValueList;
 import com.iohao.game.action.skeleton.protocol.wrapper.BoolValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.BoolValueList;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,7 +43,7 @@ final class BoolValueMethodParser implements MethodParser {
         if (paramInfo.isList()) {
 
             if (Objects.isNull(data)) {
-                return new ArrayList<Boolean>();
+                return Collections.emptyList();
             }
 
             var valueList = DataCodecKit.decode(data, BoolValueList.class);

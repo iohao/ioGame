@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadFactory;
  * @author 渔民小镇
  * @date 2023-04-02
  */
-public class DaemonThreadFactory extends ThreadCreator implements ThreadFactory {
+public final class DaemonThreadFactory extends ThreadCreator implements ThreadFactory {
 
     public DaemonThreadFactory(String threadNamePrefix) {
         super(threadNamePrefix);

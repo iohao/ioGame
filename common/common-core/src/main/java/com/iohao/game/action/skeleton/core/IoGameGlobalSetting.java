@@ -28,15 +28,17 @@ public class IoGameGlobalSetting {
 
     /**
      * 设置
+     *
      * @param dataCodec
      */
-    public void setDataCodec(DataCodec dataCodec) {
+    public static void setDataCodec(DataCodec dataCodec) {
         DataCodecKit.setDataCodec(dataCodec);
     }
 
     private IoGameGlobalSetting() {
     }
 
+    @Deprecated
     public static IoGameGlobalSetting me() {
         return Holder.ME;
     }

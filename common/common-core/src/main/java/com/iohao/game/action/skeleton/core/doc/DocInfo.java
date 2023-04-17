@@ -18,6 +18,7 @@ package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
+import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
 import com.iohao.game.common.kit.StrKit;
 import lombok.Getter;
 
@@ -37,20 +38,18 @@ class DocInfo {
 
     public void setHead(ActionCommand subBehavior) {
         ActionCommandDoc actionCommandDoc = subBehavior.getActionCommandDoc();
-
         this.actionSimpleName = subBehavior.getActionControllerClazz().getSimpleName();
         this.classComment = actionCommandDoc.getClassComment();
     }
 
     void add(ActionCommand subBehavior) {
-        Map<String, String> paramMap = new HashMap<>();
+        Map<String, String> paramMap = new HashMap<>(16);
         subBehaviorList.add(paramMap);
 
         ActionCommandDoc actionCommandDoc = subBehavior.getActionCommandDoc();
 
         int cmd = subBehavior.getCmdInfo().getCmd();
         int subCmd = subBehavior.getCmdInfo().getSubCmd();
-
         var actionMethodReturnInfo = subBehavior.getActionMethodReturnInfo();
 
         paramMap.put("cmd", String.valueOf(cmd));
@@ -59,24 +58,44 @@ class DocInfo {
         paramMap.put("methodName", subBehavior.getActionMethodName());
         paramMap.put("methodComment", actionCommandDoc.getComment());
         paramMap.put("methodParam", "");
-        paramMap.put("returnTypeClazz", actionMethodReturnInfo.getReturnTypeClazzName());
+        paramMap.put("returnTypeClazz", returnToString(actionMethodReturnInfo));
         paramMap.put("lineNumber", String.valueOf(actionCommandDoc.getLineNumber()));
 
-
         // 方法参数
-        for (ActionCommand.ParamInfo paramInfo : subBehavior.getParamInfos()) {
-            if (paramInfo.isExtension()) {
-                continue;
-            }
-
-            String methodParam = paramInfo.getMethodParamClassName();
-            paramMap.put("methodParam", methodParam);
-        }
+        Arrays.stream(subBehavior.getParamInfos())
+                .filter(paramInfo -> !paramInfo.isExtension())
+                .map(this::paramInfoToString)
+                .forEach(methodParam -> paramMap.put("methodParam", methodParam));
 
         if (subBehavior.isThrowException()) {
             paramMap.put("error", "");
-
         }
+    }
+
+    private String paramInfoToString(ActionCommand.ParamInfo paramInfo) {
+        Class<?> actualClazz = paramInfo.getActualClazz();
+        boolean isCustomList = paramInfo.isList() && !MethodParsers.me().containsKey(actualClazz);
+        return paramResultInfoToString(actualClazz, isCustomList);
+    }
+
+    private String returnToString(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo) {
+        Class<?> actualClazz = actionMethodReturnInfo.getActualClazz();
+        boolean isCustomList = actionMethodReturnInfo.isList() && !MethodParsers.me().containsKey(actualClazz);
+        return paramResultInfoToString(actualClazz, isCustomList);
+    }
+
+    private String paramResultInfoToString(Class<?> actualClazz, boolean isCustomList) {
+        if (isCustomList) {
+            /*
+             * 因为是生成对接文档，所以不能使用 List<xxx> 来表示，而是使用 ByteValueList<xxx> 来表示。
+             * 因为 ByteValueList 是一个类似 IntValueList、LongValueList 这样的包装类
+             */
+            String simpleName = ByteValueList.class.getSimpleName();
+            String simpleNameActualClazz = actualClazz.getSimpleName();
+            return String.format("%s<%s>", simpleName, simpleNameActualClazz);
+        }
+
+        return actualClazz.getSimpleName();
     }
 
     String render() {

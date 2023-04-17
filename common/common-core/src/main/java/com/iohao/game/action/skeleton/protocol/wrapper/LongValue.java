@@ -32,8 +32,8 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
-public class LongValue {
+public final class LongValue {
     /** long 值 */
     @Protobuf(fieldType = FieldType.SINT64, order = 1)
-    long value;
+    public long value;
 }

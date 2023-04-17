@@ -21,7 +21,7 @@ import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntValueList;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +44,7 @@ final class IntValueMethodParser implements MethodParser {
         if (paramInfo.isList()) {
 
             if (Objects.isNull(data)) {
-                return new ArrayList<Integer>();
+                return Collections.emptyList();
             }
 
             var valueList = DataCodecKit.decode(data, IntValueList.class);

@@ -21,16 +21,18 @@ import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
- * int 包装类
+ * 对象类型的包装类
  *
  * @author 渔民小镇
- * @date 2023-02-10
+ * @date 2023-04-17
  */
 @ToString
 @ProtobufClass
-public final class IntValue {
-    /** int 值 */
-    @Protobuf(fieldType = FieldType.SINT32, order = 1)
-    public int value;
+public final class ByteValueList {
+    /** byte[] List */
+    @Protobuf(fieldType = FieldType.BYTES, order = 1)
+    public List<byte[]> values;
 }

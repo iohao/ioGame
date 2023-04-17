@@ -126,11 +126,11 @@ class PrintActionKit {
                 String paramInfoShort = "";
 
                 if (ArrayKit.notEmpty(paramInfos)) {
-                    paramInfoShort = Arrays.stream(paramInfos)
-                            .map(ActionCommand.ParamInfo::toStringShort)
-                            .collect(Collectors.joining(", "));
+                    paramInfoShort = ArrayKit.join(paramInfos, ", ");
 
-                    paramInfo = ArrayKit.join(paramInfos, ", ");
+                    paramInfo = Arrays.stream(paramInfos)
+                            .map(theParamInfo -> theParamInfo.toString(true))
+                            .collect(Collectors.joining(", "));
                 }
 
                 Map<String, Object> params = new HashMap<>();
@@ -147,9 +147,8 @@ class PrintActionKit {
 
                 // 返回类型
                 ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = subBehavior.getActionMethodReturnInfo();
-                final Class<?> returnTypeClazz = actionMethodReturnInfo.getActualClazz();
-                params.put("returnTypeClazz", returnTypeClazz.getName());
-                params.put("returnTypeClazzShort", returnTypeClazz.getSimpleName());
+                params.put("returnTypeClazz", actionMethodReturnInfo.toString());
+                params.put("returnTypeClazzShort", actionMethodReturnInfo.toString(false));
 
                 checkReturnType(actionMethodReturnInfo.getReturnTypeClazz());
 

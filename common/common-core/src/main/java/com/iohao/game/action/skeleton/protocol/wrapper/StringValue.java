@@ -19,9 +19,7 @@ package com.iohao.game.action.skeleton.protocol.wrapper;
 import com.baidu.bjf.remoting.protobuf.FieldType;
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
-import lombok.AccessLevel;
 import lombok.ToString;
-import lombok.experimental.FieldDefaults;
 
 /**
  * string 包装类
@@ -31,9 +29,8 @@ import lombok.experimental.FieldDefaults;
  */
 @ToString
 @ProtobufClass
-@FieldDefaults(level = AccessLevel.PUBLIC)
-public class StringValue {
+public final class StringValue {
     /** string value */
     @Protobuf(fieldType = FieldType.STRING, order = 1)
-    String value;
+    public String value;
 }
