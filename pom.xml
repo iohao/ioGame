@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
 
     <groupId>com.iohao.game</groupId>
-    <artifactId>iogame</artifactId>
+    <artifactId>ioGame</artifactId>
     <version>17.1.37</version>
     <name>ioGame</name>
     <description>ioGame 网络游戏服务器框架</description>

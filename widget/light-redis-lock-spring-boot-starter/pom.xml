@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>light-redis-lock-spring-boot-starter</artifactId>
     <parent>
-        <artifactId>iogame</artifactId>
+        <artifactId>ioGame</artifactId>
         <groupId>com.iohao.game</groupId>
         <version>17.1.37</version>
         <relativePath>../../pom.xml</relativePath>
