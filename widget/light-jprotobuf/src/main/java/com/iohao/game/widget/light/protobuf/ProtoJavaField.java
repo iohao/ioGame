@@ -75,23 +75,33 @@ public class ProtoJavaField {
     public String toProtoFieldLine() {
         Map<String, String> messageMap = this.createParam();
 
-        String templateFiled = getTemplateFiled();
+        String templateFiled = getTemplateFiled(this.protoJavaParent.getClazz().isEnum());
 
         return StrKit.format(templateFiled, messageMap);
     }
 
-    private String getTemplateFiled() {
-        String templateFiled = """
-                  // {comment}
-                  {repeated}{fieldProtoType} {fieldName} = {order};
-                """;
+    /**
+     * 生成proto文本模板
+     *
+     * @param fieldIsInEnum 该bool含义表示当前Field所在的类文件是否是枚举类型，取得是protoJavaParent的isEnum
+     * @return 如果是枚举类文件中，属性前面不用加{fieldProtoType}，如果枚举类型是在类文件中则加上{fieldProtoType}
+     */
+    private String getTemplateFiled(boolean fieldIsInEnum) {
+        StringBuilder templateFiled = new StringBuilder();
 
-        if (Objects.isNull(this.comment)) {
-            templateFiled = """
-                      {repeated}{fieldProtoType} {fieldName} = {order};
-                    """;
+        if (!Objects.isNull(this.comment)) {
+            templateFiled.append("""
+                      // {comment}
+                    """);
         }
 
-        return templateFiled;
+        if (fieldIsInEnum) {
+            templateFiled.append("  {repeated}{fieldName} = {order};");
+        } else {
+            templateFiled.append("  {repeated}{fieldProtoType} {fieldName} = {order};");
+        }
+
+        return templateFiled.toString();
     }
+
 }

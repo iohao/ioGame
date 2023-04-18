@@ -19,12 +19,15 @@ package com.iohao.game.action.skeleton.core.flow.interal;
 import com.iohao.game.action.skeleton.IoGameVersion;
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
+import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.StrKit;
 
 import java.util.HashMap;
@@ -157,7 +160,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 ┣ 错误码: {errorCode}
                 ┣ 错误信息: {validatorMsg}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [执行线程:{threadName}]
+                ┗━━━━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [当前线程:{threadName}]
                 """;
 
         String message = StrKit.format(template, paramMap);
@@ -179,7 +182,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 ┣ 参数: {paramName} : {paramData}
                 ┣ 响应: {returnData}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [执行线程:{threadName}]
+                ┗━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [当前线程:{threadName}]
                 """;
 
         String message = StrKit.format(template, paramMap);
@@ -191,6 +194,17 @@ public final class DebugInOut implements ActionMethodInOut {
 
         if (Objects.isNull(data)) {
             data = "null";
+        }
+
+        // 将 ByteValueList 内的元素打印
+        if (data instanceof ByteValueList byteValueList && CollKit.notEmpty(byteValueList.values)) {
+            ActionCommand actionCommand = flowContext.getActionCommand();
+            ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = actionCommand.getActionMethodReturnInfo();
+            Class<?> actualTypeArgumentClazz = actionMethodReturnInfo.getActualTypeArgumentClazz();
+
+            data = byteValueList.values.stream()
+                    .map(bytes -> DataCodecKit.decode(bytes, actualTypeArgumentClazz))
+                    .toList();
         }
 
         paramMap.put("returnData", data);

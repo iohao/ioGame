@@ -86,10 +86,11 @@ public class ProtoJavaRegion {
         StringBuilder builder = new StringBuilder();
         builder.append(protoHead);
 
-        for (ProtoJava protoJava : protoJavaList) {
-            String protoMessage = protoJava.toProtoMessage();
-            builder.append(protoMessage);
-        }
+        this.protoJavaList.stream()
+                // 排序规则
+                .sorted(Comparator.comparing(ProtoJava::getClassName))
+                .map(ProtoJava::toProtoMessage)
+                .forEach(builder::append);
 
         return builder.toString();
     }

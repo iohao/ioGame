@@ -61,7 +61,6 @@ public class BarSkeletonDoc {
 
         if (FileKit.isDirectory(docPath)) {
             throw new RuntimeException("file is Directory ");
-
         }
 
         cmdDataClassRegionDevInfo();

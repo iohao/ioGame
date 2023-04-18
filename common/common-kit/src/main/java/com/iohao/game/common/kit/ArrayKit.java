@@ -105,4 +105,9 @@ public class ArrayKit {
     public boolean isEmpty(Object[] array) {
         return array == null || array.length == 0;
     }
+
+    public <T> T random(T[] array) {
+        int i = RandomKit.randomInt(array.length);
+        return array[i];
+    }
 }

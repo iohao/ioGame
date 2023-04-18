@@ -21,7 +21,7 @@ import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongValueList;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,7 +43,7 @@ final class LongValueMethodParser implements MethodParser {
         if (paramInfo.isList()) {
 
             if (Objects.isNull(data)) {
-                return new ArrayList<Long>();
+                return Collections.emptyList();
             }
 
             var valueList = DataCodecKit.decode(data, LongValueList.class);

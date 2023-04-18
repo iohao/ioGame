@@ -66,16 +66,17 @@ public class ProtoJava {
         String fieldsString = protoJavaFieldList
                 .stream()
                 .map(ProtoJavaField::toProtoFieldLine)
-                .collect(Collectors.joining());
+                .collect(Collectors.joining("\n"));
 
         Map<String, String> messageMap = new HashMap<>();
         messageMap.put("className", this.className);
         messageMap.put("fieldsString", fieldsString);
         messageMap.put("classComment", this.comment);
+        messageMap.put("classOrEnum", clazz.isEnum() ? "enum" : "message");
 
         String template = """
                 // {classComment}
-                message {className} {
+                {classOrEnum} {className} {
                 {fieldsString}
                 }
                                 

@@ -22,7 +22,6 @@ import com.esotericsoftware.reflectasm.MethodAccess;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
-import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -126,8 +125,6 @@ final class ActionCommandParser {
                  * 将映射类的方法，保存在 command 中，每个 command 封装成一个命令对象。
                  */
                 var command = builder.build();
-
-                checkParamResultInfo(command);
 
                 // 子路由映射
                 actionCommandRegion.add(command);
@@ -238,32 +235,6 @@ final class ActionCommandParser {
                     controllerClass);
 
             throw new RuntimeException(message);
-        }
-    }
-
-    private void checkParamResultInfo(ActionCommand actionCommand) {
-        ActionCommand.ParamInfo[] paramInfos = actionCommand.getParamInfos();
-        for (ActionCommand.ParamInfo paramInfo : paramInfos) {
-            checkMethodParamResultInfo(paramInfo);
-        }
-
-        ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = actionCommand.getActionMethodReturnInfo();
-        checkMethodParamResultInfo(actionMethodReturnInfo);
-    }
-
-    private void checkMethodParamResultInfo(ActionCommand.MethodParamResultInfo methodParamResultInfo) {
-
-        if (!methodParamResultInfo.isList()) {
-            return;
-        }
-
-        // 如果是 List 那么只支持基础类型
-        Class<?> actualTypeArgumentClazz = methodParamResultInfo.getActualTypeArgumentClazz();
-        boolean result = MethodParsers.me().containsKey(actualTypeArgumentClazz);
-
-        if (!result) {
-            Set<Class<?>> keySet = MethodParsers.me().keySet();
-            throw new RuntimeException("List 中的泛型类型只能是基础类型，如 " + keySet);
         }
     }
 }

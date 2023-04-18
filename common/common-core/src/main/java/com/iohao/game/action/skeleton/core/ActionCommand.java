@@ -288,13 +288,19 @@ public final class ActionCommand {
             this.extension = FlowContext.class.isAssignableFrom(paramClazz);
         }
 
+        /**
+         * 废弃的方法，请使用 toString 代替
+         *
+         * @return name
+         */
+        @Deprecated
         public String toStringShort() {
             return actualClazz.getSimpleName() + " " + name;
         }
 
         @Override
         public String toString() {
-            return actualClazz.getName() + " " + name;
+            return this.toString(false);
         }
 
         /**
@@ -306,12 +312,37 @@ public final class ActionCommand {
             return extension;
         }
 
+        /**
+         * 废弃的方法
+         *
+         * @return name
+         */
+        @Deprecated
         public String getMethodParamClassName() {
             if (this.isCustomMethodParser() || MethodParsers.me().containsKey(this.actualClazz)) {
                 return this.actualClazz.getSimpleName();
             }
 
             return this.actualClazz.getName();
+        }
+
+        public String toString(boolean fullName) {
+            boolean isCustomList = this.list && !MethodParsers.me().containsKey(this.actualClazz);
+
+            if (isCustomList) {
+                String simpleNameParamClazz = this.paramClazz.getSimpleName();
+                String simpleNameActualClazz = fullName
+                        ? this.actualClazz.getName()
+                        : this.actualClazz.getSimpleName();
+
+                return String.format("%s<%s> %s", simpleNameParamClazz, simpleNameActualClazz, this.name);
+            }
+
+            String simpleNameActualClazz = fullName
+                    ? this.actualClazz.getName()
+                    : this.actualClazz.getSimpleName();
+
+            return String.format("%s %s", simpleNameActualClazz, this.name);
         }
     }
 
@@ -393,12 +424,40 @@ public final class ActionCommand {
             return Void.TYPE == this.returnTypeClazz;
         }
 
+        /**
+         * 废弃，没什么作用了
+         *
+         * @return name
+         */
+        @Deprecated
         public String getReturnTypeClazzName() {
             if (this.isCustomMethodParser() || MethodParsers.me().containsKey(this.actualClazz)) {
                 return this.actualClazz.getSimpleName();
             }
 
             return this.actualClazz.getName();
+        }
+
+        @Override
+        public String toString() {
+            return toString(false);
+        }
+
+        public String toString(boolean fullName) {
+            boolean isCustomList = this.list && !MethodParsers.me().containsKey(this.actualClazz);
+
+            if (isCustomList) {
+                String simpleNameReturnTypeClazz = this.returnTypeClazz.getSimpleName();
+                String simpleNameActualClazz = fullName
+                        ? this.actualClazz.getName()
+                        : this.actualClazz.getSimpleName();
+
+                return String.format("%s<%s>", simpleNameReturnTypeClazz, simpleNameActualClazz);
+            }
+
+            return fullName
+                    ? this.actualClazz.getName()
+                    : this.actualClazz.getSimpleName();
         }
     }
 }

@@ -34,8 +34,8 @@ import java.util.List;
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
-public class LongValueList {
+public final class LongValueList {
     /** longList */
     @Protobuf(fieldType = FieldType.SINT64, order = 1)
-    List<Long> values;
+    public List<Long> values;
 }

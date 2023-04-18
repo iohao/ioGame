@@ -64,6 +64,12 @@ message BoolValueList {
   repeated bool values = 1;
 }
 
+// pb 对象 list 包装类
+message ByteValueList {
+  // pb 对象 List、pb 对象 Array
+  repeated bytes values = 1;
+}
+
 // ------- 以下是废弃的 -------
 // ------- 废弃原因-1：属性名称不统一
 // ------- 废弃原因-2：命名以 pb 结尾，这会导致在使用非 pb 协议时，会产生歧义

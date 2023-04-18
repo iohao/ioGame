@@ -173,9 +173,16 @@ public class UserSessions {
             return false;
         }
 
-        userSession.setUserId(userId);
+        // 如果 userId 不存在 map 中，将会执行 lambda 中的逻辑
+        var tempUserSession = this.userIdMap.computeIfAbsent(userId, theUserId -> {
+            userSession.setUserId(theUserId);
+            return userSession;
+        });
 
-        this.userIdMap.put(userId, userSession);
+        if (!userSession.equals(tempUserSession)) {
+            // 表示 UserSession 已经设置过 userId 了
+            return false;
+        }
 
         // 上线通知
         if (userSession.isVerifyIdentity()) {

@@ -27,6 +27,7 @@ import com.thoughtworks.qdox.model.JavaField;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -39,7 +40,6 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class ProtoJavaAnalyse {
-
 
     final Map<ProtoJavaRegionKey, ProtoJavaRegion> protoJavaRegionMap = new HashMap<>();
 
@@ -118,8 +118,34 @@ public class ProtoJavaAnalyse {
 
     private void analyseField(ProtoJava protoJava) {
         Class<?> clazz = protoJava.getClazz();
-        Field[] fields = FieldAccess.get(clazz).getFields();
-        int order = 1;
+        Field[] fields;
+        int order;
+
+        if (clazz.isEnum()) {
+            // 如果是枚举类型，需要单独处理，因为FieldAccess.get(clazz)方法中的Modifier.isStatic(modifiers)判断会过滤枚举内的属性
+            Field[] enumFields = clazz.getDeclaredFields();
+            List<Field> fieldList = new ArrayList<>(enumFields.length);
+
+            for (Field enumField : enumFields) {
+                if (Modifier.isPrivate(enumField.getModifiers())) {
+                    // java的Enum有一个隐藏的$VALUES(private)，需要过滤掉---枚举其他属性默认public static
+                    continue;
+                }
+                fieldList.add(enumField);
+            }
+
+            fields = new Field[fieldList.size()];
+            for (int i = 0; i < fieldList.size(); i++) {
+                fields[i] = fieldList.get(i);
+            }
+
+            // 枚举enum的下标从0开始
+            order = 0;
+        } else {
+            fields = FieldAccess.get(clazz).getFields();
+            // message的下标从1开始
+            order = 1;
+        }
 
         JavaClass javaClass = protoJava.getJavaClass();
 

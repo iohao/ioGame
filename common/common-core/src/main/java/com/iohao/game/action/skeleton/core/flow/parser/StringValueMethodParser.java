@@ -18,10 +18,10 @@ package com.iohao.game.action.skeleton.core.flow.parser;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.protocol.wrapper.StringValueList;
 import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.StringValueList;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,7 +41,7 @@ final class StringValueMethodParser implements MethodParser {
         if (paramInfo.isList()) {
 
             if (Objects.isNull(data)) {
-                return new ArrayList<String>();
+                return Collections.emptyList();
             }
 
             StringValueList valueList = DataCodecKit.decode(data, StringValueList.class);
