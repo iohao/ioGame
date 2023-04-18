@@ -12,7 +12,6 @@
 
     <artifactId>light-domain-event</artifactId>
 
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.lmax/disruptor -->
         <dependency>

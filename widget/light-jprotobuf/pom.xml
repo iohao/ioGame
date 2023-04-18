@@ -12,10 +12,7 @@
 
     <artifactId>light-jprotobuf</artifactId>
 
-
-
     <dependencies>
-
         <dependency>
             <groupId>com.iohao.game</groupId>
             <artifactId>common-kit</artifactId>
@@ -29,10 +26,5 @@
             <version>${qdox.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.baidu</groupId>-->
-<!--            <artifactId>jprotobuf</artifactId>-->
-<!--            <version>${jprotobuf.version}</version>-->
-<!--        </dependency>-->
     </dependencies>
 </project>

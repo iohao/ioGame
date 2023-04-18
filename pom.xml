@@ -214,6 +214,16 @@
 
     <build>
         <plugins>
+            <!-- Javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <show>private</show>
+                    <nohelp>true</nohelp>
+                </configuration>
+            </plugin>
 
             <!--
             编译插件
@@ -373,20 +383,11 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.4.1</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                        <version>3.5.0</version>
                         <configuration>
-                            <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-                            <doclint>none</doclint>
+                            <show>private</show>
+                            <nohelp>true</nohelp>
                         </configuration>
-
                     </plugin>
 
                 </plugins>
