@@ -115,6 +115,10 @@ public class GameFlow {
         return this.roomRuleInfoCustom.getRuleInfo(ruleInfoJson);
     }
 
+    /**
+     * 将在下处大版本中移除，请开发者直接构造
+     */
+    @Deprecated
     public static GameFlow me() {
         return Holder.ME;
     }

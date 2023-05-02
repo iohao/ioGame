@@ -228,7 +228,7 @@ public class UserSessions {
      *
      * @return 当前在线人数
      */
-    public long countOnline() {
+    public int countOnline() {
         return this.channelGroup.size();
     }
 

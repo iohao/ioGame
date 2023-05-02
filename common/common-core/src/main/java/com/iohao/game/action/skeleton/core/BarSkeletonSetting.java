@@ -54,6 +54,9 @@ public final class BarSkeletonSetting {
     /** true 编解码器日志打印 */
     boolean printDataCodec = true;
 
+    /** true runners 日志打印 */
+    boolean printRunners = true;
+
     /** inOut 的 in 。 true 开启 */
     boolean openIn = true;
     /** inOut 的 out 。 true 开启 */
@@ -93,6 +96,10 @@ public final class BarSkeletonSetting {
      * </pre>
      */
     boolean validator = false;
+    /** true 开启文档解析 */
+    boolean parseDoc = true;
+    /** true 生成文档 */
+    boolean generateDoc = true;
 
     BarSkeletonSetting() {
     }

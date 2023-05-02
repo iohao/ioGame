@@ -1,18 +1,21 @@
 /*
+ * ioGame
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.iohao.game.action.skeleton.core;
 
@@ -41,9 +44,13 @@ final class ActionCommandDocParser {
 
     final Map<Integer, ActionCommandDoc> actionCommandDocMap = new NonBlockingHashMap<>();
 
-    ActionCommandDocParser(ActionCommandParser actionCommandParser, List<Class<?>> controllerList) {
+    ActionCommandDoc emptyActionCommandDoc = new ActionCommandDoc();
+
+    ActionCommandDocParser(ActionCommandParser actionCommandParser, List<Class<?>> controllerList, boolean parseDoc) {
         this.actionCommandParser = actionCommandParser;
-        this.buildSourceDoc(controllerList);
+        if (parseDoc) {
+            this.buildSourceDoc(controllerList);
+        }
     }
 
     private void buildSourceDoc(List<Class<?>> controllerList) {
@@ -53,7 +60,7 @@ final class ActionCommandDocParser {
         // java source
         Map<String, JavaClassDocInfo> javaClassDocInfoMap = ActionCommandDocKit.getJavaClassDocInfoMap(controllerList);
 
-        this.actionCommandParser.getActionControllerStream(controllerList).forEach(controllerClazz -> {
+        this.actionCommandParser.getActionControllerStream(controllerList).parallel().forEach(controllerClazz -> {
             // java source
             JavaClassDocInfo javaClassDocInfo = javaClassDocInfoMap.get(controllerClazz.toString());
 
@@ -78,7 +85,7 @@ final class ActionCommandDocParser {
 
     ActionCommandDoc getActionCommandDoc(int cmd, int subCmd) {
         int cmdMerge = CmdKit.merge(cmd, subCmd);
-        return actionCommandDocMap.get(cmdMerge);
+        return actionCommandDocMap.getOrDefault(cmdMerge, emptyActionCommandDoc);
     }
 
     private ActionCommandDoc getActionCommandDoc(JavaClassDocInfo javaClassDocInfo, Method method) {

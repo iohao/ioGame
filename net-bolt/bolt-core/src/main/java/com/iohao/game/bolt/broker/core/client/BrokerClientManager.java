@@ -1,18 +1,21 @@
 /*
+ * ioGame 
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.iohao.game.bolt.broker.core.client;
 
@@ -32,6 +35,7 @@ import org.jctools.maps.NonBlockingHashMap;
 import org.slf4j.Logger;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -58,7 +62,7 @@ public final class BrokerClientManager {
      *     value : 与 broker 建立连接的 bolt client
      * </pre>
      */
-    final Map<String, BrokerClientItem> boltClientMap = new NonBlockingHashMap<>();
+    final Map<String, BrokerClientItem> brokerClientItemMap = new NonBlockingHashMap<>();
 
     /** 连接 broker （游戏网关） 的地址 */
     BrokerAddress brokerAddress;
@@ -84,7 +88,7 @@ public final class BrokerClientManager {
     }
 
     public boolean contains(String address) {
-        return this.boltClientMap.containsKey(address);
+        return this.brokerClientItemMap.containsKey(address);
     }
 
     public void register(String address) {
@@ -92,7 +96,7 @@ public final class BrokerClientManager {
                 .setTimeoutMillis(this.timeoutMillis)
                 .setBarSkeleton(this.barSkeleton)
                 .setBrokerClient(this.brokerClient)
-                .setProcessorAwareContext(this.brokerClient.getProcessorAwareContext());
+                .setAwareInject(this.brokerClient.getAwareInject());
 
         // 添加连接处理器
         connectionEventProcessorMap.forEach((type, valueSupplier) -> {
@@ -109,14 +113,14 @@ public final class BrokerClientManager {
         brokerClientItem.startup();
 
         // 添加映射关系
-        boltClientMap.put(address, brokerClientItem);
+        brokerClientItemMap.put(address, brokerClientItem);
 
         // 生成负载对象
         this.resetSelector();
     }
 
     public Set<String> keySet() {
-        return new HashSet<>(this.boltClientMap.keySet());
+        return new HashSet<>(this.brokerClientItemMap.keySet());
     }
 
     public void remove(String address) {
@@ -125,13 +129,13 @@ public final class BrokerClientManager {
         }
 
         // 移除
-        this.boltClientMap.remove(address);
+        this.brokerClientItemMap.remove(address);
 
         // 生成负载对象
         this.resetSelector();
 
         if (IoGameGlobalConfig.openLog) {
-            log.info("当前网关数量 : {}", this.boltClientMap.size());
+            log.info("当前网关数量 : {}", this.brokerClientItemMap.size());
         }
 
         // TODO: 2022/5/13 这里重连需要注意集群与单机的情况
@@ -145,7 +149,7 @@ public final class BrokerClientManager {
 
     void resetSelector() {
         // 生成负载对象；注意，这个 List 是不支持序列化的
-        List<BrokerClientItem> brokerClientItems = boltClientMap.values()
+        List<BrokerClientItem> brokerClientItems = brokerClientItemMap.values()
                 .stream()
                 .filter(brokerClientItem -> brokerClientItem.getStatus() == BrokerClientItem.Status.ACTIVE)
                 .toList();
@@ -155,7 +159,7 @@ public final class BrokerClientManager {
     }
 
     public int countActiveItem() {
-        return (int) boltClientMap.values()
+        return (int) brokerClientItemMap.values()
                 .stream()
                 .filter(brokerClientItem -> brokerClientItem.getStatus() == BrokerClientItem.Status.ACTIVE)
                 .count();
@@ -166,6 +170,10 @@ public final class BrokerClientManager {
     }
 
     public List<BrokerClientItem> listBrokerClientItem() {
-        return new ArrayList<>(this.boltClientMap.values());
+        return new ArrayList<>(this.brokerClientItemMap.values());
+    }
+
+    public void forEach(Consumer<BrokerClientItem> consumer) {
+        this.brokerClientItemMap.values().forEach(consumer);
     }
 }

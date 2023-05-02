@@ -45,7 +45,6 @@ import java.util.function.Predicate;
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract class AbstractRoom implements Serializable {
-
     @Serial
     private static final long serialVersionUID = -6937915481102847959L;
 

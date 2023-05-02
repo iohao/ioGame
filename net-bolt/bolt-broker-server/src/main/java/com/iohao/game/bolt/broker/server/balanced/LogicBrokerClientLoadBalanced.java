@@ -1,18 +1,21 @@
 /*
+ * ioGame
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.iohao.game.bolt.broker.server.balanced;
 
@@ -41,7 +44,7 @@ public class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
      *     value : BoltClientRegion
      * </pre>
      */
-    final Map<Integer, BrokerClientRegion> cmdBoltClientRegionMap = new NonBlockingHashMap<>();
+    final Map<Integer, BrokerClientRegion> cmdClientRegionMap = new NonBlockingHashMap<>();
 
     /**
      * 逻辑服tag 与逻辑服域的关联
@@ -50,9 +53,9 @@ public class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
      *     value : BoltClientRegion
      * </pre>
      */
-    final Map<String, BrokerClientRegion> tagBoltClientRegionMap = new NonBlockingHashMap<>();
+    final Map<String, BrokerClientRegion> tagClientRegionMap = new NonBlockingHashMap<>();
 
-    final Map<Integer, BrokerClientProxy> serverIdBoltClientProxyMap = new NonBlockingHashMap<>();
+    final Map<Integer, BrokerClientProxy> serverIdClientProxyMap = new NonBlockingHashMap<>();
 
     @Setter
     BrokerClientRegionFactory brokerClientRegionFactory;
@@ -63,16 +66,16 @@ public class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
         // 相同业务模块（逻辑服）的信息域
         String tag = brokerClientProxy.getTag();
 
-        BrokerClientRegion brokerClientRegion = getBoltClientRegionByTag(tag);
+        BrokerClientRegion brokerClientRegion = getBrokerClientRegionByTag(tag);
         brokerClientRegion.add(brokerClientProxy);
 
         // 路由与逻辑服域的关联
         var cmdMergeList = brokerClientProxy.getCmdMergeList();
         for (Integer cmdMerge : cmdMergeList) {
-            this.cmdBoltClientRegionMap.put(cmdMerge, brokerClientRegion);
+            this.cmdClientRegionMap.put(cmdMerge, brokerClientRegion);
         }
 
-        this.serverIdBoltClientProxyMap.put(brokerClientProxy.getIdHash(), brokerClientProxy);
+        this.serverIdClientProxyMap.put(brokerClientProxy.getIdHash(), brokerClientProxy);
     }
 
     @Override
@@ -82,15 +85,41 @@ public class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
 
         // 相同业务模块（逻辑服）的信息域
         String tag = brokerClientProxy.getTag();
-        BrokerClientRegion brokerClientRegion = getBoltClientRegionByTag(tag);
+        BrokerClientRegion brokerClientRegion = getBrokerClientRegionByTag(tag);
         brokerClientRegion.remove(id);
 
-        this.serverIdBoltClientProxyMap.remove(brokerClientProxy.getIdHash());
+        this.serverIdClientProxyMap.remove(brokerClientProxy.getIdHash());
     }
 
+    /**
+     * 请使用 {@link LogicBrokerClientLoadBalanced#getBrokerClientRegion(int)} 代替。
+     * <p>
+     * 方法将在下个大版本中移除
+     *
+     * @param cmdMerge cmdMerge
+     * @return BrokerClientRegion
+     */
+    @Deprecated
     public BrokerClientRegion getBoltClientRegion(int cmdMerge) {
         // 通过 路由信息 得到对应的逻辑服列表（域）
-        BrokerClientRegion region = this.cmdBoltClientRegionMap.get(cmdMerge);
+        BrokerClientRegion region = this.cmdClientRegionMap.get(cmdMerge);
+
+        if (Objects.isNull(region)) {
+            return null;
+        }
+
+        return region;
+    }
+
+    /**
+     * get BrokerClientRegion
+     *
+     * @param cmdMerge cmdMerge
+     * @return BrokerClientRegion
+     */
+    public BrokerClientRegion getBrokerClientRegion(int cmdMerge) {
+        // 通过 路由信息 得到对应的逻辑服列表（域）
+        BrokerClientRegion region = this.cmdClientRegionMap.get(cmdMerge);
 
         if (Objects.isNull(region)) {
             return null;
@@ -100,22 +129,22 @@ public class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
     }
 
     public Collection<BrokerClientRegion> listBrokerClientRegion() {
-        return this.tagBoltClientRegionMap.values();
+        return this.tagClientRegionMap.values();
     }
 
     public BrokerClientProxy getBrokerClientProxyByIdHash(int idHash) {
-        return this.serverIdBoltClientProxyMap.get(idHash);
+        return this.serverIdClientProxyMap.get(idHash);
     }
 
-    private BrokerClientRegion getBoltClientRegionByTag(String tag) {
-        BrokerClientRegion brokerClientRegion = this.tagBoltClientRegionMap.get(tag);
+    private BrokerClientRegion getBrokerClientRegionByTag(String tag) {
+        BrokerClientRegion brokerClientRegion = this.tagClientRegionMap.get(tag);
 
         // 无锁化
         if (Objects.isNull(brokerClientRegion)) {
             brokerClientRegion = this.brokerClientRegionFactory.createBrokerClientRegion(tag);
-            brokerClientRegion = this.tagBoltClientRegionMap.putIfAbsent(tag, brokerClientRegion);
+            brokerClientRegion = this.tagClientRegionMap.putIfAbsent(tag, brokerClientRegion);
             if (Objects.isNull(brokerClientRegion)) {
-                brokerClientRegion = this.tagBoltClientRegionMap.get(tag);
+                brokerClientRegion = this.tagClientRegionMap.get(tag);
             }
         }
 

@@ -19,6 +19,7 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.IoGameVersion;
 import com.iohao.game.action.skeleton.core.codec.DataCodec;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
+import com.iohao.game.action.skeleton.core.runner.Runners;
 import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.StrKit;
 import lombok.experimental.UtilityClass;
@@ -57,11 +58,28 @@ class PrintActionKit {
             PrintActionKit.printDataCodec();
         }
 
+        if (setting.isPrintRunners()) {
+            extractedRunners(barSkeleton);
+        }
+
         if (setting.isPrintAction()) {
             PrintActionKit.printActionCommand(barSkeleton.actionCommandRegions.actionCommands, setting.printActionShort);
         }
 
         System.out.println();
+    }
+
+    private static void extractedRunners(BarSkeleton barSkeleton) {
+        Runners runners = barSkeleton.runners;
+        List<String> nameList = runners.listRunnerName();
+        String title = "@|CYAN ======================== Runners ========================= |@";
+        System.out.println(Ansi.ansi().render(title));
+        System.out.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printRunners");
+
+        for (String name : nameList) {
+            String info = String.format("@|BLUE %s |@", name);
+            System.out.println(Ansi.ansi().render(info));
+        }
     }
 
     /**

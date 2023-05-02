@@ -29,18 +29,4 @@
 
     </dependencies>
 
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.sonatype.plugins</groupId>-->
-<!--                <artifactId>nexus-staging-maven-plugin</artifactId>-->
-<!--                <version>1.6.8</version>-->
-<!--                <configuration>-->
-<!--                    &lt;!&ndash; 表示不需要发布到中央仓库 &ndash;&gt;-->
-<!--                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
-
 </project>

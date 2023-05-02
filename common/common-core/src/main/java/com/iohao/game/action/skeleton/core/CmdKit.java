@@ -73,4 +73,12 @@ public class CmdKit {
 
         return String.format(template, cmd, subCmd, cmdMerge);
     }
+
+    public String toString(int cmdMerge) {
+        int cmd = getCmd(cmdMerge);
+        int subCmd = getSubCmd(cmdMerge);
+        String template = "cmd[%d - %d]";
+
+        return String.format(template, cmd, subCmd);
+    }
 }

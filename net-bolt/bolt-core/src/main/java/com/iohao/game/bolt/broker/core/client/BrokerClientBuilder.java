@@ -1,18 +1,21 @@
 /*
+ * ioGame
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.iohao.game.bolt.broker.core.client;
 
@@ -20,7 +23,8 @@ import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.ConnectionEventType;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.bolt.broker.core.aware.ProcessorAwareContext;
+import com.iohao.game.action.skeleton.protocol.processor.SimpleServerInfo;
+import com.iohao.game.bolt.broker.core.aware.AwareInject;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
@@ -101,7 +105,8 @@ public class BrokerClientBuilder {
     ClientProcessorHooks clientProcessorHooks;
     /** 管理 bolt client */
     BrokerClientManager brokerClientManager;
-    ProcessorAwareContext processorAwareContext;
+    /** aware 注入扩展 */
+    AwareInject awareInject;
 
     BrokerClientBuilder() {
     }
@@ -157,7 +162,8 @@ public class BrokerClientBuilder {
         this.settingDefaultValue();
 
         // 模块信息 （子游戏服的信息、逻辑服）
-        var brokerClientModuleMessage = this.createBoltBrokerClientMessage();
+        var brokerClientModuleMessage = this.createBrokerClientMessage();
+        SimpleServerInfo simpleServerInfo = this.createSimpleServerInfo();
 
         BrokerClient brokerClient = new BrokerClient()
                 .setId(this.id)
@@ -172,7 +178,8 @@ public class BrokerClientBuilder {
                 .setProcessorList(this.processorList)
                 .setClientProcessorHooks(this.clientProcessorHooks)
                 .setBrokerClientManager(this.brokerClientManager)
-                .setProcessorAwareContext(this.processorAwareContext);
+                .setSimpleServerInfo(simpleServerInfo)
+                .setAwareInject(this.awareInject);
 
         // 保存一下 BrokerClient 的引用
         if (this.brokerClientType == BrokerClientType.LOGIC) {
@@ -180,7 +187,6 @@ public class BrokerClientBuilder {
         }
 
         return brokerClient;
-
     }
 
     private void settingDefaultValue() {
@@ -231,7 +237,7 @@ public class BrokerClientBuilder {
      *
      * @return 模块信息
      */
-    private BrokerClientModuleMessage createBoltBrokerClientMessage() {
+    private BrokerClientModuleMessage createBrokerClientMessage() {
         var cmdMergeList = this.listCmdMerge();
 
         return new BrokerClientModuleMessage()
@@ -242,6 +248,14 @@ public class BrokerClientBuilder {
                 .setBrokerClientType(this.brokerClientType)
                 .setTag(this.tag)
                 ;
+    }
+
+    private SimpleServerInfo createSimpleServerInfo() {
+        SimpleServerInfo simpleServerInfo = new SimpleServerInfo();
+        simpleServerInfo.setId(this.id);
+        simpleServerInfo.setName(this.appName);
+        simpleServerInfo.setTag(this.tag);
+        return simpleServerInfo;
     }
 
 }

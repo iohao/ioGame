@@ -1,18 +1,21 @@
 /*
+ * ioGame
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.iohao.game.bolt.broker.server;
 
@@ -24,8 +27,10 @@ import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManagerBuilder;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
+import com.iohao.game.bolt.broker.core.aware.AwareInject;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.bolt.broker.server.aware.BrokerClientModulesAware;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.LogicBrokerClientLoadBalanced;
@@ -34,6 +39,8 @@ import com.iohao.game.bolt.broker.server.balanced.region.DefaultBrokerClientRegi
 import com.iohao.game.bolt.broker.server.processor.*;
 import com.iohao.game.bolt.broker.server.processor.connection.CloseConnectionEventBrokerProcessor;
 import com.iohao.game.bolt.broker.server.processor.connection.ConnectionEventBrokerProcessor;
+import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
+import com.iohao.game.bolt.broker.server.service.DefaultBrokerClientModules;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -55,14 +62,14 @@ import java.util.function.Supplier;
  */
 @Accessors(fluent = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrokerServerBuilder {
+public class BrokerServerBuilder implements AwareInject {
     /** broker （游戏网关） */
     final BrokerServer brokerServer = new BrokerServer();
     /** 用户处理器 */
     final List<Supplier<UserProcessor<?>>> processorList = new ArrayList<>();
-
     /** bolt 连接器 */
     final Map<ConnectionEventType, Supplier<ConnectionEventProcessor>> connectionEventProcessorMap = new NonBlockingHashMap<>();
+    final BrokerClientModules brokerClientModules = new DefaultBrokerClientModules();
 
     /**
      * brokerId （游戏网关的id），服务器唯一标识
@@ -118,6 +125,7 @@ public class BrokerServerBuilder {
                 .setBrokerId(this.brokerId)
                 .setBrokerRunMode(this.brokerRunMode)
                 .setPort(this.port)
+                .setBrokerClientModules(this.brokerClientModules)
         ;
 
         // 初始化 boltRpcServer
@@ -263,7 +271,7 @@ public class BrokerServerBuilder {
         // ============================注册用户处理器============================
 
         // 处理 - 模块注册（逻辑服注册）
-        Supplier<UserProcessor<?>> registerSupplier = RegisterBrokerClientMessageBrokerProcessor::new;
+        Supplier<UserProcessor<?>> registerSupplier = RegisterBrokerClientModuleMessageBrokerProcessor::new;
 
         // 处理 - (接收真实用户的请求) 把对外服的请求转发到逻辑服
         Supplier<UserProcessor<?>> externalMessageSupplier = ExternalRequestMessageBrokerProcessor::new;
@@ -295,11 +303,6 @@ public class BrokerServerBuilder {
 
         Supplier<UserProcessor<?>> brokerClientItemConnectMessageSupplier = BrokerClientItemConnectMessageBrokerProcessor::new;
 
-        // 处理 - 扩展逻辑服的请求信息
-        Supplier<UserProcessor<?>> extRequestMessageSupplier = ExtRequestMessageBrokerProcessor::new;
-        // 处理 - 响应信息给扩展逻辑服
-        Supplier<UserProcessor<?>> extResponseMessageSupplier = ExtResponseMessageBrokerProcessor::new;
-
         this
                 .registerUserProcessor(registerSupplier)
                 .registerUserProcessor(externalMessageSupplier)
@@ -313,12 +316,15 @@ public class BrokerServerBuilder {
                 .registerUserProcessor(broadcastOrderMessageSupplier)
                 .registerUserProcessor(brokerClientItemConnectMessageSupplier)
                 .registerUserProcessor(endPointLogicServerMessageSupplier)
-                .registerUserProcessor(extRequestMessageSupplier)
-                .registerUserProcessor(extResponseMessageSupplier)
+                // 处理 - 接收脉冲生产者-的脉冲信号
+                .registerUserProcessor(PulseSignalRequestBrokerProcessor::new)
+                // 处理 - 接收脉冲消费者-的脉冲信号
+                .registerUserProcessor(PulseSignalResponseBrokerProcessor::new)
         ;
     }
 
-    private void aware(Object obj) {
+    @Override
+    public void aware(Object obj) {
         /*
          * 目前 aware 系列由框架提供，
          * 虽然这里可以开放给开发者来控制，但目前暂时不考虑开放
@@ -332,6 +338,10 @@ public class BrokerServerBuilder {
             // 如果开发者没有自定义 Executor，则使用框架提供的 Executor 策略
             Executor executor = IoGameGlobalConfig.getExecutor(aware);
             aware.setUserProcessorExecutor(executor);
+        }
+
+        if (obj instanceof BrokerClientModulesAware aware) {
+            aware.setBrokerClientModules(this.brokerClientModules);
         }
     }
 }

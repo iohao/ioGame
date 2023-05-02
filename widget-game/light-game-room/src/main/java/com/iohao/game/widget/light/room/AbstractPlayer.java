@@ -36,7 +36,6 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract class AbstractPlayer implements Serializable {
-
     @Serial
     private static final long serialVersionUID = -26338708253909097L;
     /** userId 玩家 id */

@@ -26,7 +26,6 @@ import lombok.Data;
  */
 @Data
 public class CreateRoomInfo {
-
     /** 玩法规则信息 - (创建房间时添加) */
     RuleInfo ruleInfo;
     /** 游戏 id */

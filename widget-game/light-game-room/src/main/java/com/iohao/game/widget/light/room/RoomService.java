@@ -78,7 +78,7 @@ public class RoomService {
      *
      * @param room 房间
      */
-    public void removeRoom(AbstractRoom room){
+    public void removeRoom(AbstractRoom room) {
         long roomId = room.getRoomId();
         this.roomMap.remove(roomId);
     }
@@ -94,7 +94,7 @@ public class RoomService {
      * @param room   房间
      * @param player 玩家
      */
-    public void removePlayer(AbstractRoom room, AbstractPlayer player){
+    public void removePlayer(AbstractRoom room, AbstractPlayer player) {
         room.removePlayer(player);
         this.userRoomMap.remove(player.getId());
     }
@@ -104,6 +104,10 @@ public class RoomService {
         return (Collection<T>) this.roomMap.values();
     }
 
+    /**
+     * 将在下处大版本中移除，请开发者直接构造
+     */
+    @Deprecated
     public static RoomService me() {
         return Holder.ME;
     }

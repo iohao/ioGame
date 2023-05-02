@@ -22,6 +22,8 @@ import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.core.flow.*;
 import com.iohao.game.action.skeleton.core.flow.interal.*;
+import com.iohao.game.action.skeleton.core.runner.Runner;
+import com.iohao.game.action.skeleton.core.runner.Runners;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -48,7 +50,7 @@ public final class BarSkeletonBuilder {
     /** BarSkeletonSetting */
     @Getter
     final BarSkeletonSetting setting = new BarSkeletonSetting();
-
+    final Runners runners = new Runners();
     /** handler 列表 */
     final List<Handler> handlerList = new LinkedList<>();
     /** ActionCommand 执行前与执行后的逻辑钩子类 */
@@ -117,7 +119,9 @@ public final class BarSkeletonBuilder {
                 // 错误码相关的文档
                 .setErrorCodeDocs(this.errorCodeDocs)
                 // 业务框架 flow 上下文 工厂
-                .setFlowContextFactory(this.flowContextFactory);
+                .setFlowContextFactory(this.flowContextFactory)
+                // runners 机制
+                .setRunners(this.runners);
 
         // 构建推送相关的文档信息
         this.actionSendDocs.buildActionSendDoc(this.actionSendClazzList);
@@ -131,7 +135,11 @@ public final class BarSkeletonBuilder {
         // 控制台打印
         PrintActionKit.print(barSkeleton, this.setting);
 
+        // 文档相关
         BarSkeletonDoc.me().addSkeleton(barSkeleton);
+        BarSkeletonDoc.me().setGenerateDoc(this.setting.generateDoc);
+
+        this.runners.setBarSkeleton(barSkeleton);
 
         return barSkeleton;
     }
@@ -170,6 +178,17 @@ public final class BarSkeletonBuilder {
     public BarSkeletonBuilder addInOut(ActionMethodInOut inOut) {
         Objects.requireNonNull(inOut);
         this.inOutList.add(inOut);
+        return this;
+    }
+
+    /**
+     * 添加 Runner
+     *
+     * @param runner Runner
+     * @return this
+     */
+    public BarSkeletonBuilder addRunner(Runner runner) {
+        this.runners.addRunner(runner);
         return this;
     }
 

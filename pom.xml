@@ -46,8 +46,6 @@
 
         <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
         <module>widget-game/light-game-room</module>
-        <module>common-net/common-net-core</module>
-
 
     </modules>
 
@@ -58,7 +56,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.91.Final</netty.version>
+        <netty.version>4.1.92.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.6</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
@@ -66,10 +64,10 @@
         <!--  Jansi 控制台输出彩色文字 https://mvnrepository.com/artifact/org.fusesource.jansi/jansi  -->
         <jansi.version>2.4.0</jansi.version>
         <!-- Java文档解析器 https://mvnrepository.com/artifact/com.thoughtworks.qdox/qdox -->
-        <qdox.version>2.0.2</qdox.version>
+        <qdox.version>2.0.3</qdox.version>
 
         <!-- JCTools 是一款对jdk并发数据结构进行增强的并发工具 see http://jctools.github.io/JCTools/ https://mvnrepository.com/artifact/org.jctools/jctools-core -->
-        <jctools-core.version>3.3.0</jctools-core.version>
+        <jctools-core.version>4.0.1</jctools-core.version>
 
         <!-- lombok 消除冗长的 Java 代码 https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <lombok.version>1.18.24</lombok.version>

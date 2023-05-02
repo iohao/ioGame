@@ -1,18 +1,21 @@
 /*
+ * ioGame
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.iohao.game.bolt.broker.core.client;
 
@@ -22,10 +25,12 @@ import com.alipay.remoting.config.Configs;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.SkeletonAttr;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.bolt.broker.core.aware.ProcessorAwareContext;
+import com.iohao.game.action.skeleton.protocol.processor.SimpleServerInfo;
+import com.iohao.game.bolt.broker.core.aware.AwareInject;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
@@ -104,7 +109,11 @@ public class BrokerClient implements BrokerClientContext {
     /** bolt 业务处理器的钩子管理器 */
     ClientProcessorHooks clientProcessorHooks;
 
-    ProcessorAwareContext processorAwareContext;
+    /** 简单的服务器信息 */
+    SimpleServerInfo simpleServerInfo;
+
+    /** aware 注入扩展 */
+    AwareInject awareInject;
 
     BrokerClient() {
         // 开启 bolt 重连, 通过系统属性来开和关，如果一个进程有多个 RpcClient，则同时生效
@@ -118,13 +127,18 @@ public class BrokerClient implements BrokerClientContext {
 
     public void init() {
 
-        if (initAtomic.get()) {
-            return;
+        if (initAtomic.compareAndSet(false, true)) {
+            // 在业务框架中保存一份与之相关的 BrokerClient 引用
+            this.barSkeleton.option(SkeletonAttr.brokerClientContext, this);
+            int idHash = this.getBrokerClientModuleMessage().getIdHash();
+            this.barSkeleton.option(SkeletonAttr.logicServerIdHash, idHash);
+
+            // 启动 runner 机制
+            this.barSkeleton.getRunners().onStart();
+
+            // 初始化一些信息，并将逻辑服信息发送给 Broker（游戏网关）
+            this.initBoltClientManager();
         }
-
-        initAtomic.set(true);
-
-        this.initBoltClientManager();
     }
 
     private BrokerClientItem next() {
@@ -149,6 +163,11 @@ public class BrokerClient implements BrokerClientContext {
     public void oneway(final Object request) throws Exception {
         BrokerClientItem nextClient = next();
         nextClient.oneway(request);
+    }
+
+    @Override
+    public SimpleServerInfo getSimpleServerInfo() {
+        return this.simpleServerInfo;
     }
 
     void invokeWithCallback(Object request) throws RemotingException {

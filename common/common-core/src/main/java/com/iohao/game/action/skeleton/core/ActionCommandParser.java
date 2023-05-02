@@ -66,7 +66,7 @@ final class ActionCommandParser {
      */
     ActionCommandParser buildAction(List<Class<?>> controllerList) {
 
-        var doc = new ActionCommandDocParser(this, controllerList);
+        var doc = new ActionCommandDocParser(this, controllerList, setting.parseDoc);
 
         // action 类的 stream
         this.getActionControllerStream(controllerList).forEach(controllerClazz -> {

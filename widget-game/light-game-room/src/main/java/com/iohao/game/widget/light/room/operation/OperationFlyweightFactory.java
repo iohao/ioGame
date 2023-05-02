@@ -59,22 +59,6 @@ public class OperationFlyweightFactory {
         return operationHandler;
     }
 
-    /**
-     * 映射
-     *
-     * @param operation 操作类型
-     * @param clazz     操作处理类
-     */
-    public void mapping(int operation, Class<? extends OperationHandler> clazz) {
-        try {
-            // TODO: 2022/1/14 这里是否要 spring ?
-//            OperationHandler operationHandler = SpringHolder.getBean(clazz);
-//            map.put(operation, operationHandler);
-        } catch (Exception e) {
-            log.error("操作处理注册错误: {}", clazz);
-        }
-    }
-
     public void mapping(int operation, OperationHandler operationHandler) {
         map.put(operation, operationHandler);
     }

@@ -28,7 +28,7 @@ package com.iohao.game.action.skeleton.core.commumication;
  * @author 渔民小镇
  * @date 2021-12-20
  */
-public interface BrokerClientContext extends ChannelContext {
+public interface BrokerClientContext extends ChannelContext, SimpleServer {
 
     /**
      * 发送消息到游戏网关

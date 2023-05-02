@@ -42,18 +42,18 @@
 		<img src="https://img.shields.io/badge/JDK-17-green.svg" alt="JDK 17" />
 	</a>
 	<br>
-	<a target="_blank" href="https://license.coscl.org.cn/Apache2/">
-		<img src="https://img.shields.io/:license-Apache2-blue.svg" alt="Apache 2" />
+	<a target="_blank" href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">
+		<img src="https://img.shields.io/:license-GPL2.0-blue.svg" alt="Apache 2" />
 	</a>
 	<br />
-	<a target="_blank" href='https://gitee.com/iohao/iogame'>
-		<img src='https://gitee.com/iohao/iogame/badge/star.svg' alt='gitee star'/>
+	<a target="_blank" href='https://gitee.com/iohao/ioGame'>
+		<img src='https://gitee.com/iohao/ioGame/badge/star.svg' alt='gitee star'/>
 	</a>
-	<a target="_blank" href='https://github.com/iohao/iogame'>
-		<img src="https://img.shields.io/github/stars/iohao/iogame.svg?logo=github" alt="github star"/>
+	<a target="_blank" href='https://github.com/iohao/ioGame'>
+		<img src="https://img.shields.io/github/stars/iohao/ioGame.svg?logo=github" alt="github star"/>
 	</a>
   <br />
-  <a href="https://www.murphysec.com/dr/O8oMcWWWVoU9hV4M9z" alt="OSCS Status"><img src="https://www.oscs1024.com/platform/badge/iohao/iogame.git.svg?size=small"/></a>
+  <a href="https://www.murphysec.com/dr/O8oMcWWWVoU9hV4M9z" alt="OSCS Status"><img src="https://www.oscs1024.com/platform/badge/iohao/ioGame.git.svg?size=small"/></a>
 </p>
 <hr />
 

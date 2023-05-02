@@ -19,6 +19,9 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.doc.ActionSendDocs;
 import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
 import com.iohao.game.action.skeleton.core.flow.*;
+import com.iohao.game.action.skeleton.core.runner.Runners;
+import com.iohao.game.common.kit.attr.AttrOptionDynamic;
+import com.iohao.game.common.kit.attr.AttrOptions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,15 +41,15 @@ import lombok.experimental.Accessors;
  * @author 渔民小镇
  * @date 2021-12-12
  */
+@Getter
 @Accessors(chain = true)
 @Setter(AccessLevel.PACKAGE)
-@Getter(AccessLevel.PACKAGE)
-public final class BarSkeleton {
-
+public final class BarSkeleton implements AttrOptionDynamic {
+    final AttrOptions options = new AttrOptions();
     /** handler array */
     final Handler[] handlers;
+    Runners runners;
     /** 命令域 管理器 */
-    @Getter
     ActionCommandRegions actionCommandRegions = new ActionCommandRegions();
     /** InOut 插件相关 */
     InOutManager inOutManager;
@@ -57,25 +60,18 @@ public final class BarSkeleton {
     /** 方法参数解析器 */
     ActionMethodParamParser actionMethodParamParser;
     /** 异常处理 */
-    @Getter
     ActionMethodExceptionProcess actionMethodExceptionProcess;
     /** 结果包装器 */
-    @Getter
     ActionMethodResultWrap actionMethodResultWrap;
     /** action 执行完后，最后需要做的事。 一般用于将数据发送到 Broker（游戏网关） */
     ActionAfter actionAfter;
-
     /** 响应对象的创建 */
-    @Getter
     ResponseMessageCreate responseMessageCreate;
     /** 推送相关的文档 */
-    @Getter
     ActionSendDocs actionSendDocs;
     /** 错误码相关的文档 */
-    @Getter
     ErrorCodeDocs errorCodeDocs;
     /** 业务框架 flow 上下文 工厂 */
-    @Getter
     FlowContextFactory flowContextFactory;
 
     BarSkeleton(Handler[] handlers) {

@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License..
  */
-
 package com.iohao.game.common.validation.support;
 
 import com.iohao.game.common.kit.CollKit;

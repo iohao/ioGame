@@ -51,7 +51,11 @@ public class ExternalKit {
         int cmdMerge = message.getCmdMerge();
         byte[] data = message.getData();
 
-        return createRequestMessage(cmdMerge, data);
+        RequestMessage requestMessage = createRequestMessage(cmdMerge, data);
+        HeadMetadata headMetadata = requestMessage.getHeadMetadata();
+        headMetadata.setMsgId(message.getMsgId());
+
+        return requestMessage;
     }
 
     /**
@@ -127,6 +131,7 @@ public class ExternalKit {
         externalMessage.setResponseStatus(responseMessage.getResponseStatus());
         // 验证信息（异常消息）
         externalMessage.setValidMsg(responseMessage.getValidatorMsg());
+        externalMessage.setMsgId(headMetadata.getMsgId());
 
         return externalMessage;
     }

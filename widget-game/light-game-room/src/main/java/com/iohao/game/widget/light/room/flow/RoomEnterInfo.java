@@ -31,5 +31,4 @@ import java.io.Serializable;
 public class RoomEnterInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = -7622385452364486394L;
-
 }

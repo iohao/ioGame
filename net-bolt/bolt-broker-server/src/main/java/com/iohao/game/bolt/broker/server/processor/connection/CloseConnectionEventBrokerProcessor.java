@@ -1,48 +1,59 @@
 /*
+ * ioGame
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
- * Copyright (C) 2021 - 2023 double joker （262610965@qq.com） . All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.iohao.game.bolt.broker.server.processor.connection;
 
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
+import com.alipay.remoting.exception.RemotingException;
+import com.iohao.game.bolt.broker.core.client.BrokerClientType;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
+import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessageOffline;
 import com.iohao.game.bolt.broker.server.BrokerServer;
+import com.iohao.game.bolt.broker.server.aware.BrokerClientModulesAware;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
+import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import lombok.Setter;
 import org.slf4j.Logger;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * @author 渔民小镇
  * @date 2022-05-14
  */
-public class CloseConnectionEventBrokerProcessor implements ConnectionEventProcessor, BrokerServerAware {
+public class CloseConnectionEventBrokerProcessor implements ConnectionEventProcessor,
+        BrokerServerAware, BrokerClientModulesAware {
     static final Logger log = IoGameLoggerFactory.getLoggerConnection();
 
     private final AtomicInteger disConnectTimes = new AtomicInteger();
     private final AtomicBoolean dicConnected = new AtomicBoolean();
-    @Setter
     BrokerServer brokerServer;
+    BrokerClientModules brokerClientModules;
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
@@ -54,6 +65,34 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
         BalancedManager balancedManager = this.brokerServer.getBalancedManager();
         BrokerClientProxy brokerClientProxy = balancedManager.remove(remoteAddress);
         BrokerPrintKit.print(this.brokerServer);
+
+        Optional.ofNullable(brokerClientProxy).ifPresent(proxy -> {
+            String id = proxy.getId();
+            BrokerClientModuleMessage moduleMessage = this.brokerClientModules.removeById(id);
+
+            BrokerClientType brokerClientType = moduleMessage.getBrokerClientType();
+            if (brokerClientType != BrokerClientType.LOGIC) {
+                return;
+            }
+
+            Consumer<BrokerClientProxy> consumer = externalProxy -> {
+                BrokerClientModuleMessageOffline offline = new BrokerClientModuleMessageOffline();
+                offline.setBrokerClientModuleMessage(moduleMessage);
+
+                try {
+                    externalProxy.oneway(offline);
+                } catch (RemotingException | InterruptedException e) {
+                    log.error(e.getMessage(), e);
+                }
+            };
+
+            // 通知所有的游戏对外服，有游戏逻辑服下线了
+            this.brokerServer.getBalancedManager()
+                    .getExternalLoadBalanced()
+                    .listBrokerClientProxy()
+                    .forEach(consumer);
+
+        });
 
         if (IoGameGlobalConfig.openLog) {
             log.info("连接关闭 remoteAddress 【{}】 brokerClientProxy : 【{}】", remoteAddress, brokerClientProxy);
@@ -73,4 +112,13 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
         this.dicConnected.set(false);
     }
 
+    @Override
+    public void setBrokerServer(BrokerServer brokerServer) {
+        this.brokerServer = brokerServer;
+    }
+
+    @Override
+    public void setBrokerClientModules(BrokerClientModules brokerClientModules) {
+        this.brokerClientModules = brokerClientModules;
+    }
 }

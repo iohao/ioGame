@@ -61,6 +61,9 @@ public class ExternalMessage {
     String validMsg;
     @Protobuf(fieldType = FieldType.BYTES, order = 6)
     byte[] data;
+    /** 消息标记号；由前端请求时设置，服务器响应时会携带上 */
+    @Protobuf(fieldType = FieldType.INT32, order = 7)
+    int msgId;
 
     /**
      * 业务数据

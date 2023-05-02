@@ -42,11 +42,31 @@ public class BarSkeletonDoc {
     @Setter
     String docPath;
 
+    /** true 生成文档 */
+    boolean generateDoc = true;
+
+    /**
+     * 只有当 this.generateDoc 为 true 时，才会执行 set 操作
+     *
+     * @param generateDoc generateDoc
+     */
+    public void setGenerateDoc(boolean generateDoc) {
+        // 只有当 this.generateDoc 为 true 时，才会执行 set 操作
+        if (this.generateDoc) {
+            this.generateDoc = generateDoc;
+        }
+    }
+
     public void addSkeleton(BarSkeleton barSkeleton) {
         skeletonList.add(barSkeleton);
     }
 
     public void buildDoc() {
+
+        if (!generateDoc) {
+            return;
+        }
+
         // 路径为当前项目
         if (Objects.isNull(this.docPath)) {
             this.docPath = System.getProperty("user.dir") + File.separator + docFileName;
