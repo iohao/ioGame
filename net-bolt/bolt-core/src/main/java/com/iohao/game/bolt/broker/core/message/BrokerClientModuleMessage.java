@@ -21,7 +21,6 @@ import com.iohao.game.common.kit.MurmurHash3;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
@@ -41,7 +40,6 @@ import java.util.Objects;
  */
 @Getter
 @Setter
-@ToString
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerClientModuleMessage implements Serializable {
@@ -70,6 +68,7 @@ public class BrokerClientModuleMessage implements Serializable {
      * </pre>
      */
     String tag;
+    int status;
 
     public BrokerClientModuleMessage setId(String id) {
         this.id = id;

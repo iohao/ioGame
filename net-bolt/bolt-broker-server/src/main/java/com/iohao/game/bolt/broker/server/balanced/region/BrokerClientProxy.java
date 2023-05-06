@@ -82,8 +82,8 @@ public class BrokerClientProxy {
         this.tag = brokerClientModuleMessage.getTag();
         this.brokerClientType = brokerClientModuleMessage.getBrokerClientType();
         this.cmdMergeList = brokerClientModuleMessage.getCmdMergeList();
-
         this.rpcServer = rpcServer;
+        this.status = brokerClientModuleMessage.getStatus();
     }
 
     public void oneway(Object request) throws RemotingException, InterruptedException {

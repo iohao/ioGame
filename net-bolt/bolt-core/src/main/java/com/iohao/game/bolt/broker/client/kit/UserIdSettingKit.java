@@ -55,6 +55,11 @@ public class UserIdSettingKit {
      * @return true 变更成功
      */
     public boolean settingUserId(FlowContext flowContext, long userId) {
+
+        if (userId <= 0) {
+            throw new IllegalArgumentException("userId 需要 > 0");
+        }
+
         // 这个 userId 一般是首次建立连接时，系统随机分配的临时 id
         HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
         // 一般指用户的 channelId （来源于对外服的 channel 长连接）
@@ -65,7 +70,6 @@ public class UserIdSettingKit {
                 .setUserChannelId(userChannelId)
                 .setHeadMetadata(headMetadata)
                 .setStartTime(System.currentTimeMillis());
-
 
         if (log.isDebugEnabled()) {
             log.debug("1 逻辑服 {}", userIdMessage);

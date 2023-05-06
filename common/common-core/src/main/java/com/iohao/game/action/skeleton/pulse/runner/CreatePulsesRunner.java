@@ -29,6 +29,7 @@ import com.iohao.game.action.skeleton.pulse.core.consumer.PulseConsumers;
 import com.iohao.game.action.skeleton.pulse.core.producer.PulseProducers;
 import com.iohao.game.action.skeleton.pulse.core.PulseTransmit;
 import com.iohao.game.action.skeleton.pulse.message.PulseSignalMessage;
+import com.iohao.game.action.skeleton.pulse.message.PulseSignalRequest;
 import com.iohao.game.action.skeleton.pulse.message.PulseSignalResponse;
 
 import java.util.Objects;
@@ -95,8 +96,10 @@ public class CreatePulsesRunner implements Runner {
              *
              * 将脉冲信号发射到 Broker（游戏网关）
              */
-            message.setSourceClientId(sourceClientId);
-            this.brokerClientContext.sendResponse(message);
+            if (message instanceof PulseSignalRequest request && request.getSignalType() != 0) {
+                message.setSourceClientId(sourceClientId);
+                this.brokerClientContext.sendResponse(message);
+            }
         }
     }
 }

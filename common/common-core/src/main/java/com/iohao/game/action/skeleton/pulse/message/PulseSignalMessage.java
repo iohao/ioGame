@@ -43,7 +43,10 @@ public sealed class PulseSignalMessage implements Serializable permits PulseSign
     @Serial
     private static final long serialVersionUID = -954007335024894018L;
 
-    /** 信号类型 */
+    /**
+     * 信号类型
+     * see {@link SignalType}
+     */
     int signalType;
 
     /**

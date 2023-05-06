@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -55,4 +55,12 @@ public class SimpleServerInfo implements Serializable {
     String tag;
     /** 模块名 */
     String name;
+    /** 服务器唯一标识 hash */
+    int idHash;
+    /**
+     * 逻辑服类型
+     */
+    String brokerClientType;
+    /** 启动时间 */
+    long startTime;
 }
