@@ -571,7 +571,9 @@ ioGame 提供了多种类型的通讯方式，下面分别对这些通讯方式�
 
 <details>
 <summary>多类型的通讯方式的详细内容--点我展开</summary>
+
 **1.单次请求处理**
+
 [1.1 请求、无响应](https://www.yuque.com/iohao/game/krzxcmgoispw0gl8)
 
 action 处理逻辑时，使用是就是这种通讯方式。将方法声明为 void，无需给请求端任何响应；本质上是不给请求端推送任何数据；
