@@ -100,9 +100,9 @@
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
 
         <!-- temp spring boot https://mvnrepository.com/artifact/org.springframework/spring-core -->
-        <spring.version>5.3.23</spring.version>
+        <spring.version>5.3.27</spring.version>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
-        <springboot.version>2.7.4</springboot.version>
+        <springboot.version>2.7.11</springboot.version>
         <!--  junit https://mvnrepository.com/artifact/junit/junit  -->
         <junit.version>4.13.2</junit.version>
 
@@ -120,8 +120,8 @@
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
         <protobuf-java.version>3.22.4</protobuf-java.version>
 
-        <!-- 后期整理需要移除的 -->
-        <snakeyaml.version>1.32</snakeyaml.version>
+        <!-- 后期整理需要移除的 https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <snakeyaml.version>1.33</snakeyaml.version>
     </properties>
 
     <dependencies>
@@ -378,13 +378,32 @@
                     </plugin>
 
                     <!-- Javadoc -->
+<!--                    <plugin>-->
+<!--                        <groupId>org.apache.maven.plugins</groupId>-->
+<!--                        <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--                        <version>3.5.0</version>-->
+<!--                        <configuration>-->
+<!--                            <show>private</show>-->
+<!--                            <nohelp>true</nohelp>-->
+<!--                        </configuration>-->
+<!--                    </plugin>-->
+
+                    <!-- Javadoc -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.5.0</version>
+                        <version>3.4.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                         <configuration>
-                            <show>private</show>
-                            <nohelp>true</nohelp>
+                            <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                            <doclint>none</doclint>
                         </configuration>
                     </plugin>
 
