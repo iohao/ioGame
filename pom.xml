@@ -192,8 +192,8 @@
 
     <licenses>
         <license>
-            <name>Apache License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <name>GPL2.0</name>
+            <url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html</url>
         </license>
     </licenses>
 
@@ -205,8 +205,8 @@
     </developers>
 
     <scm>
-        <url>https://github.com/iohao/iogame</url>
-        <connection>https://github.com/iohao/iogame.git</connection>
+        <url>https://github.com/iohao/ioGame</url>
+        <connection>https://github.com/iohao/ioGame.git</connection>
         <developerConnection>https://github.com/iohao</developerConnection>
     </scm>
 
@@ -359,7 +359,7 @@
                         <version>1.6.8</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>oss-iogame</serverId>
+                            <serverId>oss-ioGame</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <!-- false 手动关闭 release -->
                             <autoReleaseAfterClose>false</autoReleaseAfterClose>
@@ -396,7 +396,7 @@
     <distributionManagement>
         <repository>
             <!-- 这里的id要与 maven setting.xml 中 server 的 id 一致 -->
-            <id>oss-iogame</id>
+            <id>oss-ioGame</id>
             <name>Nexus Release Repository</name>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
             <uniqueVersion>true</uniqueVersion>

@@ -19,12 +19,6 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.iohao.game</groupId>
-            <artifactId>common-net-core</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.alipay.sofa/bolt -->
         <dependency>
             <groupId>com.alipay.sofa</groupId>
