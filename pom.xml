@@ -45,7 +45,7 @@
         <module>widget/other-tool</module>
 
         <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
-        <module>widget-game/light-game-room</module>
+        <module>widget/light-game-room</module>
 
     </modules>
 
