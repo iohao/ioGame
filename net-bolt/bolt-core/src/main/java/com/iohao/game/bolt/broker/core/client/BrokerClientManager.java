@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -27,6 +27,7 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelector;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelectorFactory;
 import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
+import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +36,8 @@ import org.jctools.maps.NonBlockingHashMap;
 import org.slf4j.Logger;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -113,7 +116,7 @@ public final class BrokerClientManager {
         brokerClientItem.startup();
 
         // 添加映射关系
-        brokerClientItemMap.put(address, brokerClientItem);
+        this.brokerClientItemMap.put(address, brokerClientItem);
 
         // 生成负载对象
         this.resetSelector();
@@ -135,11 +138,19 @@ public final class BrokerClientManager {
         this.resetSelector();
 
         if (IoGameGlobalConfig.openLog) {
-            log.info("当前网关数量 : {}", this.brokerClientItemMap.size());
+            Set<String> keySet = brokerClientItemMap.keySet();
+            log.info("当前网关数量 : {} {}", this.brokerClientItemMap.size(), keySet);
         }
+    }
 
-        // TODO: 2022/5/13 这里重连需要注意集群与单机的情况
-
+    private void a() {
+        AtomicBoolean flag = new AtomicBoolean();
+        if (flag.compareAndSet(false, true)) {
+            ExecutorKit.newSingleScheduled("aa").scheduleAtFixedRate(() -> {
+                Set<String> keySet = brokerClientItemMap.keySet();
+                log.info("当前网关数量 : {} {}", this.brokerClientItemMap.size(), keySet);
+            }, 1, 5, TimeUnit.SECONDS);
+        }
     }
 
     public void remove(BrokerClientItem brokerClientItem) {
@@ -170,10 +181,13 @@ public final class BrokerClientManager {
     }
 
     public List<BrokerClientItem> listBrokerClientItem() {
-        return new ArrayList<>(this.brokerClientItemMap.values());
+        return new ArrayList<>(brokerClientItemMap.values());
     }
 
     public void forEach(Consumer<BrokerClientItem> consumer) {
-        this.brokerClientItemMap.values().forEach(consumer);
+        this.brokerClientItemMap.values()
+                .stream()
+                .filter(brokerClientItem -> brokerClientItem.getStatus() == BrokerClientItem.Status.ACTIVE)
+                .forEach(consumer);
     }
 }

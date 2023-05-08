@@ -52,7 +52,7 @@ public class BalancedManager {
     /** 对外服 负载均衡 */
     @Getter
     final ExternalBrokerClientLoadBalanced externalLoadBalanced = new ExternalBrokerClientLoadBalanced();
-
+    /** key:address value:proxy */
     final Map<String, BrokerClientProxy> refMap = new NonBlockingHashMap<>();
 
     final BrokerServer brokerServer;

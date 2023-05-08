@@ -27,12 +27,15 @@ import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerMessage;
+import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
 import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 /**
  * 集群消息请求处理器
@@ -47,12 +50,19 @@ import java.util.Set;
 public class BrokerClusterMessageClientProcessor extends AsyncUserProcessor<BrokerClusterMessage>
         implements BrokerClientAware {
     static final Logger log = IoGameLoggerFactory.getLoggerCluster();
+    final ExecutorService executorService = ExecutorKit.newSingleThreadExecutor("BrokerClusterMessageClientProcessor");
 
     @Setter
     BrokerClient brokerClient;
 
     @Override
+    public Executor getExecutor() {
+        return executorService;
+    }
+
+    @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClusterMessage message) {
+
         if (log.isDebugEnabled()) {
             log.debug("==接收来自网关的集群消息 {} {}", message.getBrokerMessageList().size(), message);
         }
@@ -68,14 +78,13 @@ public class BrokerClusterMessageClientProcessor extends AsyncUserProcessor<Brok
 
             keySet.remove(address);
 
-            boolean contains = brokerClientManager.contains(address);
-
-            // 如果 BrokerClientManager 没有这个集群的地址，说明是新增的机器
-            if (!contains) {
-                log.debug("集群有新的机器 address : {}", address);
-                // 需要新增连接
-                brokerClientManager.register(address);
+            // 如果 BrokerClientManager 有这个集群的地址，说明机器已经存在了
+            if (brokerClientManager.contains(address)) {
+                continue;
             }
+
+            log.debug("集群有新的机器 address : {}", address);
+            brokerClientManager.register(address);
         }
 
         // 多出来的，要移除；通常是 broker （游戏网关）的机器减少了

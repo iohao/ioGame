@@ -35,5 +35,4 @@ public interface BrokerClientModules {
     BrokerClientModuleMessage removeById(String id);
 
     Collection<BrokerClientModuleMessage> listBrokerClientModuleMessage();
-
 }

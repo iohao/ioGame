@@ -70,6 +70,11 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
             String id = proxy.getId();
             BrokerClientModuleMessage moduleMessage = this.brokerClientModules.removeById(id);
 
+            // 在集群下，可能为 null，因为存在 127、192 的问题
+            if (Objects.isNull(moduleMessage)) {
+                return;
+            }
+
             BrokerClientType brokerClientType = moduleMessage.getBrokerClientType();
             if (brokerClientType != BrokerClientType.LOGIC) {
                 return;
@@ -91,7 +96,6 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
                     .getExternalLoadBalanced()
                     .listBrokerClientProxy()
                     .forEach(consumer);
-
         });
 
         if (IoGameGlobalConfig.openLog) {

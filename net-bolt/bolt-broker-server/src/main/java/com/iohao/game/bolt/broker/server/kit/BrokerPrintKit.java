@@ -59,7 +59,7 @@ public class BrokerPrintKit {
 
         // 对外服信息
         int externalCount = balancedManager.getExternalLoadBalanced().count();
-        BrokerClientNodeInfo externalNodeInfo = new BrokerClientNodeInfo("对外服", externalCount);
+        BrokerClientNodeInfo externalNodeInfo = new BrokerClientNodeInfo("游戏对外服", externalCount);
         collect.add(externalNodeInfo);
 
         String info = collect.stream()

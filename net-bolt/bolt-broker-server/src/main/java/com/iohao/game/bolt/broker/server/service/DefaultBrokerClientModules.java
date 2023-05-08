@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -21,8 +21,6 @@ package com.iohao.game.bolt.broker.server.service;
 
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -32,10 +30,8 @@ import java.util.Collection;
  * @author 渔民小镇
  * @date 2023-05-01
  */
-@Getter
-@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DefaultBrokerClientModules implements BrokerClientModules {
+public final class DefaultBrokerClientModules implements BrokerClientModules {
     NonBlockingHashMap<String, BrokerClientModuleMessage> moduleMessageMap = new NonBlockingHashMap<>();
 
     @Override
