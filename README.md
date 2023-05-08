@@ -620,7 +620,7 @@ Result "com.iohao.game.example.benchmark.BarSkeletonBenchmark.handle1":
 
 ## 架构简图
 
-![img](https://oscimg.oschina.net/oscnet/up-2a383c8fd7b13161b4e5bf210bdf9980771.png)
+![img](https://user-images.githubusercontent.com/26356013/236763803-0d1ed4f4-208b-460f-ae57-b58d3f63677d.png)
 
 <p align="center" style="color:red">
 通过 ioGame 你可以很容易的搭建出一个集群无中心节点、集群自动化、分步式的网络游戏服务器！
