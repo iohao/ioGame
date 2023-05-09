@@ -19,6 +19,7 @@
  */
 package com.iohao.game.bolt.broker.server;
 
+import com.alipay.remoting.rpc.RpcConfigs;
 import com.alipay.remoting.rpc.RpcServer;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
@@ -79,6 +80,8 @@ public class BrokerServer {
     }
 
     public void startup() {
+        // #100
+        System.setProperty(RpcConfigs.DISPATCH_MSG_LIST_IN_DEFAULT_EXECUTOR, "false");
 
         // 启动 bolt rpc
         this.rpcServer.startup();

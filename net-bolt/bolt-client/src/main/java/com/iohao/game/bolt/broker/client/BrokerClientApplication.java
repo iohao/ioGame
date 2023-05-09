@@ -19,6 +19,7 @@
  */
 package com.iohao.game.bolt.broker.client;
 
+import com.alipay.remoting.rpc.RpcConfigs;
 import com.iohao.game.action.skeleton.core.ActionCommandRegionGlobalCheckKit;
 import com.iohao.game.action.skeleton.core.ActionCommandRegions;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
@@ -55,6 +56,9 @@ public class BrokerClientApplication {
     }
 
     public BrokerClient start(BrokerClientBuilder builder) {
+        // #100
+        System.setProperty(RpcConfigs.DISPATCH_MSG_LIST_IN_DEFAULT_EXECUTOR, "false");
+
         BrokerClient brokerClient = builder.build();
         brokerClient.init();
 
