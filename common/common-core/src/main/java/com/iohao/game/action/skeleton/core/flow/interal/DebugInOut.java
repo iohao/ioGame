@@ -32,10 +32,12 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.StrKit;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 
 /**
@@ -82,6 +84,22 @@ public final class DebugInOut implements ActionMethodInOut {
     final FlowOption<Long> timeKey = FlowOption.valueOf("ExecuteTimeInOutStartTime");
 
     final long time;
+
+    /**
+     * 开发者可自定义打印
+     * <pre>
+     *     message: 可用于直接输出的 debug 信息
+     *
+     *     通过此方法，可以做一些简单的逻辑，如：
+     *     不输出某个 cmd 的信息、
+     *     或使用 log.info 来打印 message ... 等等。
+     * </pre>
+     */
+    @Setter
+    BiConsumer<String, FlowContext> printConsumer = (message, flowContext) -> {
+        // 打印 message
+        System.out.println(message);
+    };
 
     public DebugInOut() {
         this(0);
@@ -167,7 +185,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 """;
 
         String message = StrKit.format(template, paramMap);
-        System.out.println(message);
+        this.printConsumer.accept(message, flowContext);
     }
 
     private void printNormal(FlowContext flowContext, Map<String, Object> paramMap) {
@@ -189,7 +207,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 """;
 
         String message = StrKit.format(template, paramMap);
-        System.out.println(message);
+        this.printConsumer.accept(message, flowContext);
     }
 
     private void methodResponseData(FlowContext flowContext, Map<String, Object> paramMap) {
