@@ -59,7 +59,8 @@ public class ClusterMessageListenerImpl implements ClusterMessageListener {
     private void extractedLogic(BrokerClusterMessage brokerClusterMessage) {
         BalancedManager balancedManager = brokerServer.getBalancedManager();
         // 得到逻辑服负载器
-        balancedManager.getLogicBalanced()
+        balancedManager
+                .getLogicBalanced()
                 // 得到逻辑服域 BrokerClientRegion
                 .listBrokerClientRegion()
                 .stream()

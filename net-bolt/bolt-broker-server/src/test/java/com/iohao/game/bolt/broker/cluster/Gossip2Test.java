@@ -30,7 +30,7 @@ public class Gossip2Test {
 
         brokerClusterManager.start();
 
-        brokerClusterManager.send();
+//        brokerClusterManager.send();
 
         TimeUnit.MINUTES.sleep(22);
     }

@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -54,6 +54,8 @@ public class IoGameGlobalConfig {
 
     /** true 开启集群相关日志 */
     public boolean brokerClusterLog = BrokerGlobalConfig.brokerClusterLog;
+    /** true 使用调度器打印集群信息，默认 30 秒打印一次（目前不提供打印频率设置） */
+    public boolean brokerClusterFixedRateLog;
     /** UserProcessor 构建 Executor 的策略 */
     public UserProcessorExecutorStrategy userProcessorExecutorStrategy = new DefaultUserProcessorExecutorStrategy();
 
@@ -73,6 +75,10 @@ public class IoGameGlobalConfig {
 
     public boolean isBrokerClusterLog() {
         return openLog && brokerClusterLog;
+    }
+
+    public boolean isBrokerClusterFixedRateLog() {
+        return openLog && brokerClusterFixedRateLog;
     }
 
     public boolean isSendBrokerClientModuleMessage() {

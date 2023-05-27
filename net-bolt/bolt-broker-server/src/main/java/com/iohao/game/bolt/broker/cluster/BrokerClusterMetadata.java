@@ -17,45 +17,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.bolt.broker.core.message;
+package com.iohao.game.bolt.broker.cluster;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serial;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
- * 通知客户端有 broker 上线或下线
+ * 集群 Metadata
  *
  * @author 渔民小镇
- * @date 2022-05-15
+ * @date 2023-05-27
  */
 @Data
+@Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrokerClusterMessage implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 2753485289174578530L;
+final class BrokerClusterMetadata implements Serializable {
+    /** memberAlias */
+    String name;
+    /** 对应的 broker */
+    Broker localBroker;
 
-    List<BrokerMessage> brokerMessageList;
-
-    public int count() {
-        if (Objects.isNull(brokerMessageList)) {
-            return 0;
-        }
-
-        return this.brokerMessageList.size();
+    public BrokerClusterMetadata(String name, Broker localBroker) {
+        this.name = name;
+        this.localBroker = localBroker;
     }
 
-    public List<BrokerMessage> getBrokerMessageList() {
-        if (Objects.isNull(this.brokerMessageList)) {
-            return Collections.emptyList();
-        }
-
-        return this.brokerMessageList;
+    public BrokerClusterMetadata() {
     }
 }

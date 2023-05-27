@@ -30,6 +30,7 @@ import com.iohao.game.bolt.broker.core.client.BrokerClientType;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
+import com.iohao.game.bolt.broker.core.message.BrokerMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerClientModulesAware;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
@@ -43,6 +44,7 @@ import org.slf4j.Logger;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * 模块注册
@@ -55,6 +57,7 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
     private static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     BrokerServer brokerServer;
     BrokerClientModules brokerClientModules;
+    AtomicBoolean fixedRateFlag = new AtomicBoolean(false);
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientModuleMessage brokerClientModuleMessage) {
@@ -70,6 +73,8 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
         // 发送网关集群消息给客户端 （逻辑服）
         if (brokerServer.getBrokerRunMode() == BrokerRunModeEnum.CLUSTER) {
             this.sendClusterMessage(bizCtx);
+
+            this.printCluster();
         }
 
         print(brokerClientModuleMessage);
@@ -112,7 +117,25 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
                     .filter(message -> message.getBrokerClientType() == BrokerClientType.LOGIC)
                     .forEach(consumer);
         }
+    }
 
+    private void printCluster(BrokerClusterMessage brokerClusterMessage) {
+        if (brokerServer.getBrokerRunMode() != BrokerRunModeEnum.CLUSTER) {
+            return;
+        }
+
+        if (IoGameGlobalConfig.isBrokerClusterLog()) {
+            String message = brokerClusterMessage
+                    .getBrokerMessageList()
+                    .stream()
+                    .map(BrokerMessage::toString)
+                    .collect(Collectors.joining("\n"));
+
+            log.info("\n游戏网关端口: [{}] --  集群数量[{}] - 详细：\n[{}]"
+                    , this.brokerServer.getPort()
+                    , brokerClusterMessage.count()
+                    , message);
+        }
     }
 
     private void sendClusterMessage(BizContext bizCtx) {
@@ -120,12 +143,7 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
         BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
         BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
 
-        if (IoGameGlobalConfig.isBrokerClusterLog()) {
-            log.info("游戏网关端口: [{}] --  集群数量[{}] - 详细：[{}]"
-                    , this.brokerServer.getPort()
-                    , brokerClusterMessage.count()
-                    , brokerClusterMessage);
-        }
+        this.printCluster(brokerClusterMessage);
 
         try {
             this.brokerServer.getRpcServer().oneway(bizCtx.getConnection(), brokerClusterMessage);
@@ -141,29 +159,31 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
             log.info("模块注册信息 --- 网关port: [{}] --- {}", port, brokerClientModuleMessage);
         }
 
-        if (a.compareAndSet(false, true)) {
+        // print
+        BrokerPrintKit.print(this.brokerServer);
+    }
+
+    private void printCluster() {
+        if (brokerServer.getBrokerRunMode() != BrokerRunModeEnum.CLUSTER) {
+            return;
+        }
+
+        if (!IoGameGlobalConfig.isBrokerClusterFixedRateLog()) {
+            return;
+        }
+
+        if (fixedRateFlag.compareAndSet(false, true)) {
             ExecutorKit.newSingleScheduled("print").scheduleAtFixedRate(() -> {
-                // print
-                log.info("port : -----");
                 BrokerPrintKit.print(this.brokerServer);
 
-                if (brokerServer.getBrokerRunMode() == BrokerRunModeEnum.CLUSTER) {
-                    BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
-                    BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
+                BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
+                BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
 
-                    if (IoGameGlobalConfig.isBrokerClusterLog()) {
-                        log.info("游戏网关端口: [{}] --  集群数量[{}] - \n详细：[{}]"
-                                , this.brokerServer.getPort()
-                                , brokerClusterMessage.count()
-                                , brokerClusterMessage);
-                    }
-                }
+                this.printCluster(brokerClusterMessage);
 
             }, 5, 30, TimeUnit.SECONDS);
         }
     }
-
-    static AtomicBoolean a = new AtomicBoolean(false);
 
 
     @Override
