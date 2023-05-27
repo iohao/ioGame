@@ -71,6 +71,7 @@ public class BrokerClientModuleMessage implements Serializable {
      * </pre>
      */
     String tag;
+    /** 逻辑服状态 */
     int status;
 
     public BrokerClientModuleMessage setId(String id) {

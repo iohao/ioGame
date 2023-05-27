@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -103,10 +103,13 @@ public class BrokerClusterManager implements ClusterMessageHandler {
     /** brokers changes emitter processor */
     private Sinks.Many<Collection<Broker>> brokersEmitterProcessor = Sinks.many().multicast().onBackpressureBuffer();
 
+    String name;
+
     BrokerClusterManager() {
     }
 
     public void start() {
+        this.name = String.format("ClusterBroker-%d-%d", port, gossipListenPort);
 
         final String localIp = NetworkKit.LOCAL_IP;
 
@@ -115,7 +118,7 @@ public class BrokerClusterManager implements ClusterMessageHandler {
 
         this.clusterMono = new ClusterImpl()
                 .config(clusterConfig -> clusterConfig
-                        .memberAlias("Gateway Broker")
+                        .memberAlias(name)
                         .externalHost(localIp)
                         // externalPort是一个容器环境的配置属性，它被设置为向 scalecube 集群发布一个映射到 scalecube 传输侦听端口。
                         .externalPort(gossipListenPort)
@@ -216,6 +219,17 @@ public class BrokerClusterManager implements ClusterMessageHandler {
 
     @Override
     public void onMembershipEvent(MembershipEvent event) {
+        //
+//        Optional.ofNullable(this.clusterMono.block()).ifPresent(cluster -> {
+//            log.info("\n{} {}", name + " received: " + event.member().alias(), event);
+//            int size = cluster.members().size();
+//            String mStr = cluster.members().stream()
+//                    .map(Member::toString)
+//                    .collect(Collectors.joining("\n"));
+//
+//            log.info("size : {} {} \n{}", size, event.type(), mStr);
+//        });
+
         // 事件广播
         // xx.send(member, msg); 会触发到这
         Broker broker = memberToBroker(event.member());

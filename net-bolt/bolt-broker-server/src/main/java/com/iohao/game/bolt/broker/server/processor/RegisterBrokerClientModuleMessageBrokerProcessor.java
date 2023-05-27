@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -36,9 +36,12 @@ import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
+import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import org.slf4j.Logger;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 /**
@@ -138,8 +141,30 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
             log.info("模块注册信息 --- 网关port: [{}] --- {}", port, brokerClientModuleMessage);
         }
 
-        BrokerPrintKit.print(this.brokerServer);
+        if (a.compareAndSet(false, true)) {
+            ExecutorKit.newSingleScheduled("print").scheduleAtFixedRate(() -> {
+                // print
+                log.info("port : -----");
+                BrokerPrintKit.print(this.brokerServer);
+
+                if (brokerServer.getBrokerRunMode() == BrokerRunModeEnum.CLUSTER) {
+                    BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
+                    BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
+
+                    if (IoGameGlobalConfig.isBrokerClusterLog()) {
+                        log.info("游戏网关端口: [{}] --  集群数量[{}] - \n详细：[{}]"
+                                , this.brokerServer.getPort()
+                                , brokerClusterMessage.count()
+                                , brokerClusterMessage);
+                    }
+                }
+
+            }, 5, 30, TimeUnit.SECONDS);
+        }
     }
+
+    static AtomicBoolean a = new AtomicBoolean(false);
+
 
     @Override
     public String interest() {

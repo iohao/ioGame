@@ -25,6 +25,7 @@ import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.protocol.processor.SimpleServerInfo;
 import com.iohao.game.bolt.broker.core.aware.AwareInject;
+import com.iohao.game.bolt.broker.core.client.config.BrokerClientStatusConfig;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
@@ -108,7 +109,8 @@ public class BrokerClientBuilder {
     BrokerClientManager brokerClientManager;
     /** aware 注入扩展 */
     AwareInject awareInject;
-    int status = 1;
+    /** 逻辑服状态 */
+    int status = BrokerClientStatusConfig.normal;
 
     BrokerClientBuilder() {
     }
@@ -181,7 +183,9 @@ public class BrokerClientBuilder {
                 .setClientProcessorHooks(this.clientProcessorHooks)
                 .setBrokerClientManager(this.brokerClientManager)
                 .setSimpleServerInfo(simpleServerInfo)
-                .setAwareInject(this.awareInject);
+                .setAwareInject(this.awareInject)
+                .setStatus(this.status)
+                ;
 
         // 保存一下 BrokerClient 的引用
         if (this.brokerClientType == BrokerClientType.LOGIC) {
@@ -261,6 +265,8 @@ public class BrokerClientBuilder {
         simpleServerInfo.setIdHash(MurmurHash3.hash32(this.id));
         simpleServerInfo.setBrokerClientType(this.brokerClientType.name());
         simpleServerInfo.setStartTime(System.currentTimeMillis());
+        simpleServerInfo.setStatus(this.status);
+
         return simpleServerInfo;
     }
 }

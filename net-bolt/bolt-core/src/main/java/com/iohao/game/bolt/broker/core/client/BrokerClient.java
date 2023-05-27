@@ -114,6 +114,8 @@ public class BrokerClient implements BrokerClientContext {
 
     /** aware 注入扩展 */
     AwareInject awareInject;
+    /** 逻辑服状态 */
+    int status;
 
     BrokerClient() {
         // 开启 bolt 重连, 通过系统属性来开和关，如果一个进程有多个 RpcClient，则同时生效

@@ -63,4 +63,6 @@ public class SimpleServerInfo implements Serializable {
     String brokerClientType;
     /** 启动时间 */
     long startTime;
+    /** 逻辑服状态 */
+    int status;
 }
