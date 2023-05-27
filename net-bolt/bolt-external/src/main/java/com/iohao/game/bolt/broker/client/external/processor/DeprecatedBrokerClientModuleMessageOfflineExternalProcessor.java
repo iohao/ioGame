@@ -31,13 +31,13 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2023-05-26
  */
+@Deprecated
 public class DeprecatedBrokerClientModuleMessageOfflineExternalProcessor extends AbstractAsyncUserProcessor<BrokerClientModuleMessageOffline> {
     static final Logger log = IoGameLoggerFactory.getLoggerCommon();
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientModuleMessageOffline messageOffline) {
-
-        log.info("修补 #132 : {}", messageOffline);
+//        log.debug("修补 #132 : {}", messageOffline);
     }
 
     @Override
