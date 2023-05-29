@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -58,14 +58,14 @@ public class ExternalCodecSocket extends MessageToMessageCodec<ByteBuf, External
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) {
         // 解码器 - 字节数组 ---> ExternalMessage
 
         // 读取消息长度
-        int length = msg.readInt();
+        int length = buffer.readInt();
         // 消息
         byte[] msgBytes = new byte[length];
-        msg.readBytes(msgBytes);
+        buffer.readBytes(msgBytes);
 
         ExternalMessage message = DataCodecKit.decode(msgBytes, ExternalMessage.class);
         // 【对外服】 接收 游戏客户端的消息

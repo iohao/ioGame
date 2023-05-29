@@ -35,6 +35,7 @@ import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerClientModulesAware;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
+import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.kit.ExecutorKit;
@@ -90,13 +91,20 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
 
         if (brokerClientType == BrokerClientType.LOGIC) {
             // 将当前游戏逻辑服的信息，发送给所有的游戏对外服
-            this.brokerServer.getBalancedManager().getExternalLoadBalanced().listBrokerClientProxy().forEach(proxy -> {
+            Consumer<BrokerClientProxy> consumer = proxy -> {
                 try {
+                    log.info("moduleMessage11 : \n{}", moduleMessage);
                     proxy.oneway(moduleMessage);
                 } catch (RemotingException | InterruptedException e) {
                     log.error(e.getMessage(), e);
                 }
-            });
+            };
+
+            this.brokerServer
+                    .getBalancedManager()
+                    .getExternalLoadBalanced()
+                    .listBrokerClientProxy()
+                    .forEach(consumer);
         }
 
         if (brokerClientType == BrokerClientType.EXTERNAL) {

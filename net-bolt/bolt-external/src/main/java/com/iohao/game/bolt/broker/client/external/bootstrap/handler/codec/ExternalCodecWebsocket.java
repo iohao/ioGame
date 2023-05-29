@@ -58,9 +58,9 @@ public class ExternalCodecWebsocket extends MessageToMessageCodec<BinaryWebSocke
     @Override
     protected void decode(ChannelHandlerContext ctx, BinaryWebSocketFrame binary, List<Object> out) {
         // 解码器 - 字节数组 ---> ExternalMessage
-        ByteBuf content = binary.content();
-        byte[] msgBytes = new byte[content.readableBytes()];
-        content.readBytes(msgBytes);
+        ByteBuf buffer = binary.content();
+        byte[] msgBytes = new byte[buffer.readableBytes()];
+        buffer.readBytes(msgBytes);
 
         ExternalMessage message = DataCodecKit.decode(msgBytes, ExternalMessage.class);
         // 【对外服】 接收 游戏客户端的消息

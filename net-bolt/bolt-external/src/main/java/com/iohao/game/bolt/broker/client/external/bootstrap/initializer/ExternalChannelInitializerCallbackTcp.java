@@ -41,7 +41,6 @@ public class ExternalChannelInitializerCallbackTcp extends ChannelInitializer<So
 
     @Override
     public void initChannelPipeline(SocketChannel ch) {
-
         // 编排网关业务
         ChannelPipeline pipeline = ch.pipeline();
 
