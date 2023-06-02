@@ -22,12 +22,14 @@ package com.iohao.game.action.skeleton.core.flow.interal;
 import com.iohao.game.action.skeleton.IoGameVersion;
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
 import com.iohao.game.common.kit.CollKit;
@@ -143,7 +145,7 @@ public final class DebugInOut implements ActionMethodInOut {
         paramMap.put("lineNumber", actionCommandDoc.getLineNumber());
         // 路由信息
         CmdInfo cmdInfo = flowContext.getRequest().getHeadMetadata().getCmdInfo();
-        paramMap.put("cmdInfo", cmdInfo);
+        paramMap.put("cmdInfo", CmdKit.mergeToShort(cmdInfo.getCmdMerge()));
         paramMap.put("userId", flowContext.getUserId());
 
         paramMap.put("paramName", "");
@@ -152,6 +154,8 @@ public final class DebugInOut implements ActionMethodInOut {
 
         paramMap.put("logicServerId", flowContext.option(FlowAttr.logicServerId));
         paramMap.put("logicServerTag", flowContext.option(FlowAttr.logicServerTag));
+
+        extractedJoin(flowContext, paramMap);
 
         methodRequestParam(flowContext, paramMap);
 
@@ -162,6 +166,20 @@ public final class DebugInOut implements ActionMethodInOut {
         } else {
             this.printNormal(flowContext, paramMap);
         }
+    }
+
+    private static void extractedJoin(FlowContext flowContext, Map<String, Object> paramMap) {
+        HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
+        int stick = headMetadata.getStick();
+
+        String str = switch (stick) {
+            case 1 -> " [连接方式:TCP] ";
+            case 2 -> " [连接方式:WebSocket] ";
+            case 3 -> " [连接方式:UDP] ";
+            default -> "";
+        };
+
+        paramMap.put("joinName", str);
     }
 
     private void printValidate(FlowContext flowContext, Map<String, Object> paramMap) {
@@ -181,7 +199,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 ┣ 错误码: {errorCode}
                 ┣ 错误信息: {validatorMsg}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [当前线程:{threadName}]
+                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [线程:{threadName}] ━━━━━{joinName}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 """;
 
         String message = StrKit.format(template, paramMap);
@@ -198,12 +216,12 @@ public final class DebugInOut implements ActionMethodInOut {
         }
 
         String template = """
-                ┏━━━━━ Debug. [({className}.java:{lineNumber}).{actionMethodName}] ━━━ {cmdInfo} ━━━ [逻辑服 [{logicServerTag}] - id:[{logicServerId}]]
+                ┏━━━━━ Debug. [({className}.java:{lineNumber}).{actionMethodName}] ━━━━━ {cmdInfo} ━━━━━ [逻辑服 [{logicServerTag}] - id:[{logicServerId}]]
                 ┣ userId: {userId}
                 ┣ 参数: {paramName} : {paramData}
                 ┣ 响应: {returnData}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━ Debug  [{className}.java - ioGame:{ioGameVersion}] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [当前线程:{threadName}]
+                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [线程:{threadName}] ━━━━━{joinName}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 """;
 
         String message = StrKit.format(template, paramMap);

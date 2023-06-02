@@ -93,7 +93,7 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
             // 将当前游戏逻辑服的信息，发送给所有的游戏对外服
             Consumer<BrokerClientProxy> consumer = proxy -> {
                 try {
-                    log.info("moduleMessage11 : \n{}", moduleMessage);
+                    // 将【游戏逻辑服】的模块信息发送给【游戏对外服】
                     proxy.oneway(moduleMessage);
                 } catch (RemotingException | InterruptedException e) {
                     log.error(e.getMessage(), e);
@@ -114,6 +114,7 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
 
             Consumer<BrokerClientModuleMessage> consumer = message -> {
                 try {
+                    // 将【游戏逻辑服】的模块信息发送给【游戏对外服】
                     rpcServer.oneway(address, message);
                 } catch (RemotingException | InterruptedException e) {
                     log.error(e.getMessage(), e);

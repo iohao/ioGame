@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -135,6 +135,9 @@ public final class HeadMetadata implements Serializable {
 
     /** 消息标记号；由前端请求时设置，服务器响应时会携带上 */
     int msgId;
+
+    /** 框架自用字段。将来变化可能较大，开发者请不要使用。 */
+    int stick;
 
     public HeadMetadata setCmdInfo(CmdInfo cmdInfo) {
         this.cmdMerge = cmdInfo.getCmdMerge();
