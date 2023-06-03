@@ -86,5 +86,5 @@ public class IoGameGlobalConfig {
         return sendBrokerClientModuleMessage;
     }
 
-    public boolean sendBrokerClientModuleMessage = false;
+    public boolean sendBrokerClientModuleMessage = true;
 }
