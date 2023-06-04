@@ -125,14 +125,7 @@ public class UserSessions {
     }
 
     public UserSession getUserSession(UserChannelId userChannelId) throws RuntimeException {
-        UserSession userSession = this.userChannelIdMap.get(userChannelId);
-
-        if (Objects.isNull(userSession)) {
-            // 如果你登录了，但是又报这个异常，一般是将 ExternalGlobalConfig.verifyIdentity = false 了。
-            throw new RuntimeException("userSession 不存在");
-        }
-
-        return userSession;
+        return this.userChannelIdMap.get(userChannelId);
     }
 
     /**

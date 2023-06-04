@@ -74,28 +74,19 @@ public class ResponseMessageExternalProcessor extends AbstractAsyncUserProcessor
         HeadMetadata headMetadata = responseMessage.getHeadMetadata();
         long userId = headMetadata.getUserId();
 
-        try {
-
-            // 当存在 userId 时，并且可以找到对应的 UserSession
-            if (userId > 0 && UserSessions.me().existUserSession(userId)) {
-                return UserSessions.me().getUserSession(userId);
-            } else {
-
-                String channelId = headMetadata.getChannelId();
-
-                final UserChannelId userChannelId = Objects.isNull(channelId)
-                        ? emptyUserChannelId
-                        : new UserChannelId(channelId);
-
-                // 通过 channelId 来查找 UserSession
-                return UserSessions.me().getUserSession(userChannelId);
-            }
-
-        } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
+        // 当存在 userId 时，并且可以找到对应的 UserSession
+        if (userId > 0 && UserSessions.me().existUserSession(userId)) {
+            return UserSessions.me().getUserSession(userId);
         }
 
-        return null;
+        String channelId = headMetadata.getChannelId();
+
+        final UserChannelId userChannelId = Objects.isNull(channelId)
+                ? emptyUserChannelId
+                : new UserChannelId(channelId);
+
+        // 通过 channelId 来查找 UserSession
+        return UserSessions.me().getUserSession(userChannelId);
     }
 
     /**
