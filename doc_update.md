@@ -1,6 +1,537 @@
-更新日志在线文档 https://www.yuque.com/iohao/game/ab15oe
+更新日志在线文档
+https://www.yuque.com/iohao/game/ab15oe
 
-2023-03-27 - v17.1.35
+
+
+#### 2023-06-08 17.1.43（重要版本）
+
+**[**[**#115**](https://github.com/iohao/ioGame/issues/115)**] 游戏对外服增加路由是否存在检测**
+
+参考：https://www.yuque.com/iohao/game/ea6geg#EeWiH
+
+新游戏对外服中增加路由存在检测。当路由不存在时，可以起到抵挡的作用，而不必经过其他服务器。
+
+
+
+**[**[**#114**](https://github.com/iohao/ioGame/issues/114)**] 支持玩家与多个游戏逻辑服的动态绑定**
+
+文档：[动态绑定游戏逻辑服](https://www.yuque.com/iohao/game/idl1wm)
+
+动态绑定游戏逻辑服，指的是玩家与游戏逻辑服绑定后，之后的请求都由该游戏逻辑服来处理。
+
+玩家动态绑定逻辑服节点后，之后的请求都由这个绑定的游戏逻辑服来处理，可以实现类似 LOL、王者荣耀匹配后动态分配房间的效果。
+
+支持玩家与多个游戏逻辑服的动态绑定。
+
+
+
+
+
+**使用场景**
+
+跨服活动、跨服战斗等。
+
+
+
+动态绑定游戏逻辑服可以解决玩家增量的问题，我们都知道一台机器所能承载的运算是有上限的；当上限达到时，就需要增加新机器来分摊请求量；如果你开发的游戏是有状态的，那么你如何解决请求分配的问题呢？在比如让你做一个类似 LOL、王者荣耀的匹配，将匹配好的玩家分配到一个房间中，之后这些玩家的请求都能在同一个游戏逻辑服上处理，这种业务你该如何实现呢？
+
+
+
+使用框架提供的动态绑定逻辑服节点可以轻松解决此类问题，而且还可以根据业务规则，计算出当前空闲最多的游戏逻辑服，并将此游戏逻辑服与玩家做绑定，从而做到均衡的利用机器资源，来防止请求倾斜的问题。
+
+
+
+**[**[**#113**](https://github.com/iohao/ioGame/issues/113)**]** **新版本游戏对外服**
+
+文档：[新游戏对外服使用](https://www.yuque.com/iohao/game/ea6geg)
+
+迁移指南 ：[迁移到新版游戏对外服](https://www.yuque.com/iohao/game/vu0hrkn8xqq0x9a5)
+
+
+
+【新版游戏对外服】用于取代【旧的游戏对外服】，如果条件允许，请尽可能做迁移，整体工作量很少。旧的游戏对外服将不在做功能上的新增，如果存在 bug 将会继续修复，维护期会持续到下个大版本前。
+
+
+
+从架构简图中，我们知道了整体架构由三部分组成 1.游戏对外服、2.游戏网关、3.游戏逻辑服。本篇将介绍游戏对外服这部分，及功能扩展等相关的。
+
+
+
+**游戏对外服的职责**
+
+1. 保持与用户（玩家）长的连接
+2. 帮助开发者屏蔽通信细节、与连接方式的细节
+3. 连接方式支持：WebSocket、TCP、UDP
+4. 将用户（玩家）请求转发到游戏网关
+5. 可动态增减扩展机器
+6. 功能扩展，如：路由存在检测、路由权限、UserSession 管理、心跳，及后续要提供但还未提供的熔断、限流、降载、用户流量统计等功能。
+
+
+
+**扩展场景**
+
+游戏对外服主要负责与用户（玩家）的连接。假设一台硬件支持最多建立 5000 个用户连接，当用户量达到 7000 人时，我们可以增加一个游戏对外服来进行流量控制和减压。
+
+
+
+由于游戏对外服的扩展性和灵活性，可以支持同时在线玩家从几千人到数千万人不等。这是因为，通过增加游戏对外服的数量，可以有效地进行连接的负载均衡和流量控制，使得系统能够更好地承受高并发的压力。
+
+
+
+**连接方式的切换、支持、扩展**
+
+ioGame 已提供了 TCP、WebSocket、UDP 连接方式的支持，并提供了灵活的方式来实现连接方式的切换。可以将 TCP、WebSocket、UDP 连接方式与业务代码进行无缝衔接。开发者可以用一套业务代码，无需任何改动，同时支持多种通信协议。
+
+
+
+如果想要切换到不同的连接方式，只需要更改相应的枚举即可，非常简单。在不使用 ioGame 时，将连接方式从 TCP 改为 WebSocket 或 UDP 等，需要进行大量的调整和改动。然而，在 ioGame 中，实现这些转换是非常简单的。此外，不仅可以轻松切换各种连接方式，而且可以同时支持多种连接方式，并使它们在同一应用程序中共存。
+
+
+
+连接方式是可扩展的，而且扩展也简单，这意味着之后如果支持了 KCP，那么将已有项目的连接方式，如 TCP、WebSocket、UDP 切换成 KCP 也是简单的。
+
+
+
+需要再次强调的是，连接方式的切换对业务代码没有任何影响，无需做出任何改动即可实现连接方式的更改。
+
+
+
+**游戏对外服由两部分构成**
+
+1. ExternalCore：与真实玩家连接的 ExternalCore 服务器
+2. ExternalBrokerClientStartup：负责内部通信，与 Broker（游戏网关）通信
+
+
+
+我们只需要关注 ExternalCore 这部分。
+
+
+
+新版游戏对外服总体来说只有四个核心接口，如果你只打算做功能扩展，只需要关注 MicroBootstrapFlow 接口就好了。
+
+| 接口名             | 描述                                                         |
+| ------------------ | ------------------------------------------------------------ |
+| ExternalServer     | 由 ExternalCore 和 ExternalBrokerClientStartup 组成的一个整体。职责：是启动 ExternalCore 和 ExternalBrokerClientStartup 。 |
+| ExternalCore       | 与真实玩家连接的服务器，也是通信框架屏蔽接口。ExternalCore 帮助开发者**屏蔽各通信框架**的细节，如 Netty、mina、smart-socket 等通信框。ioGame 默认提供了基于 Netty 的实现。职责：与真实玩家连接的服务器 |
+| MicroBootstrap     | 与真实玩家连接的服务器，服务器的创建由 MicroBootstrap 完成，实际上 ExternalCore 是一个类似代理类的角色。MicroBootstrap 帮助开发者**屏蔽连接方式**的细节，如 TCP、WebSocket、UDP 等。 职责：与真实玩家连接的【真实】服务器 |
+| MicroBootstrapFlow | 与真实玩家连接【真实】服务器的启动流程，专为 MicroBootstrap 服务。开发者可通过此接口对服务器做编排，编排分为：构建时、新建连接时两种。框架提供了 TCP、WebSocket、UDP 的实现；开发者可以选择性的重写流程方法，来定制符合自身项目的业务。职责：业务编排，也是开发者在扩展时接触最多的一个接口。 |
+
+
+
+**其他更新**
+
+<scalecube-cluster.version>2.6.15</scalecube-cluster.version>
+
+<netty.version>4.1.93.Final</netty.version>
+
+
+
+#### 2023-05-29 - v17.1.42
+
+**[**[**#127**](https://github.com/iohao/ioGame/issues/127)**] DebugInOut，可限制某些 action 不输出 log**
+
+使用文档 https://www.yuque.com/iohao/game/pf3sx0#esnXX ，文档中提供了两种参考示例：
+
+- 使用硬编码的方式
+- 使用自定义注解的方式来扩展
+
+```java
+@ActionController(1)
+public class DemoAction {
+    @ActionMethod(3)
+    @IgnoreDebugInout
+    public String hello() {
+        // 给 action 添加上自定义注解 IgnoreDebugInout 后，将不会打印 debug 信息
+        return "hello";
+    }
+}
+```
+
+
+
+**[**[**#132**](https://github.com/iohao/ioGame/issues/132)**] 集群重启后组网异常**
+
+导致集群数量对不上，触发的事件顺序可能是 ADDED、REMOVED，也可能是REMOVED、ADDED，现已修复。
+
+
+
+**其他更新**
+
+<scalecube-cluster.version>2.6.14</scalecube-cluster.version>
+
+
+
+#### 2023-05-09 - v17.1.40
+
+**[**[**#99**](https://github.com/iohao/ioGame/issues/99)**] 增加 msgId 特性，默认只在 request/response 通讯方式下生效**
+
+游戏前端可以给游戏对外服协议添加一个 msgId，当 ioGame 接收到请求并处理完请求后，会在响应时将 msgId 回传给请求端；类似透传参数。
+
+使用时请更新游戏对外服协议 https://www.yuque.com/iohao/game/xeokui
+
+
+
+**[**[**#102**](https://github.com/iohao/ioGame/issues/102)**] 业务框架 BarSkeleton 类增加动态属性，方便扩展.**
+
+
+
+**[**[**#111**](https://github.com/iohao/ioGame/issues/111)**] 新增文档解析、文档生成的控制选项**
+
+在 windows 系统下开发时，如果 action 类过多，可能会导致启动慢；类 Linux 系统没有此问题，框架增加两个设置，可以让开发者决定是否启用相关功能。
+
+```java
+public class DemoLogicServer extends AbstractBrokerClientStartup {
+    ... ... 省略部分代码
+    @Override
+    public BarSkeleton createBarSkeleton() {
+
+        // 业务框架构建器
+        BarSkeletonBuilder builder = ...;
+
+        BarSkeletonSetting setting = builder.getSetting();
+        // 不生成文档
+        setting.setGenerateDoc(false);
+        // 不解析文档
+        setting.setParseDoc(false);
+
+       ...
+
+        return builder.build();
+    }
+
+}
+```
+
+
+
+**[**[**#103**](https://github.com/iohao/ioGame/issues/103)**] 业务框架新增 Runner 机制，增强扩展性、规范性**
+
+详细的使用文档：[Runner 机制 - 文档](https://www.yuque.com/iohao/game/dpwe6r6sqwwtrh1q)
+
+Runner 机制类似于 Spring CommandLineRunner 的启动项，它能够在逻辑服务器启动之后调用一次 Runner 接口实现类，让开发者能够通过实现 Runner 接口来扩展自身的系统。
+
+
+
+使用 Runner 机制，开发者可以通过扩展已有模块的功能或提供配置相关的功能来实现自定义扩展。
+
+
+
+Runner 机制不仅可以让我们将已有模块的功能以 Runner 形式进行扩展，也可以通过 Runner 机制来提供配置相关的功能，避免配置过于零散。
+
+
+
+事实上，Runner 机制的可扩展性远远不止于此。通过 onStart 方法中的业务框架对象 BarSkeleton，开发者可以实现相关隔离并利用其动态属性来扩展特殊业务数据。一个业务框架对象对应一个逻辑服。
+
+
+
+**[**[**#104**](https://github.com/iohao/ioGame/issues/104)**] 新增实验性特性-脉冲通讯方式**
+
+详细的使用文档：[脉冲通讯方式-文档](https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn)
+
+脉冲通讯与发布订阅类似，但是它除了具备发布订阅的无需反馈的方式，还增加了接收消息响应的动作，这是它与发布订阅的重要区别。
+
+
+
+需要注意的是，脉冲通讯只是一种通讯方式，不能完全取代发布订阅，而是适用于一些特殊的业务场景。虽然在理论上，这些特殊的业务场景可以使用发布订阅来完成，但这会让代码变得复杂。
+
+
+
+脉冲通讯在特定的场景下有巨大的优势！关于脉冲通讯更多的应用场景发挥，如同[业务框架插件](https://www.yuque.com/iohao/game/gmxz33)一样，取决于开发者的想象力。
+
+
+
+**注意事项**
+
+开源协议更改为 GPL2.0
+
+
+
+**其他更新**
+
+BrokerClient 添加 AwareInject
+
+<netty.version>4.1.92.Final</netty.version>
+
+<jctools-core.version>4.0.1</jctools-core.version>
+
+<qdox.version>2.0.3</qdox.version>
+
+<protobuf-java.version>3.22.4</protobuf-java.version>
+
+
+
+#### 2023-04-18 - v17.1.38
+
+此版本有 2 位开发者参与贡献
+
+[miaozhiyan](https://github.com/miaozhiyan) 贡献的 [#79](https://github.com/iohao/ioGame/issues/79)
+
+[hia](https://github.com/hia) 贡献的 [#84](https://github.com/iohao/ioGame/issues/84)
+
+
+
+[#46](https://github.com/iohao/ioGame/issues/46) action 业务参数与返回值增加 List 支持
+
+详细使用文档可参考：https://www.yuque.com/iohao/game/ieimzn#Aqc1C
+
+
+
+action 支持 List 参数与返回值，可以有效的减少协议碎片、减少工作量等。在没有支持 List 之前的代码，如果想要传输一个列表的数据，通常需要将 pb 对象包装到另一个 pb 响应对象中。
+
+
+
+让我们先看一个示例，这个示例中 action 方法的的逻辑很简单，将查询到的数据列表给到请求端。由于之前不支持 List 返回值，开发者想要将列表中的数据给到请求端，还需要额外的定义一个与之对应的响应类，只有这样才能将列表数据给到请求端。
+
+
+
+我们可以想象一下，如果你的系统中有很多固定的配置数据，比如装备、道具、活动信息、英雄人物介绍、敌人相关信息、地图信息、技能信息、宠物基本信息...等等，通常会有几十、上百个这样的响应对象。
+
+
+
+为了将这些固定的配置数据给到请求端，而建立与之对应的响应对象，想想这是一件多么无聊的一件事情。这些多出来的响应对象，就是协议碎片，是一种可有可无的协议；此外还有如下缺点：
+
+- 将会变成干扰项
+- 增加维护成本
+- 增加工作量（每次有新的配置表都要新建、在每个 action 中，都要创建这个响应对象）
+
+
+
+```java
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+public class Animal {
+    /** id */
+    int id;
+}
+
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+public class AnimalResponse {
+    List<Animal> animals;
+}
+
+@ActionController(3)
+public class HallAction {
+    @ActionMethod(10)
+    public AnimalResponse listAnimal1() {
+        // 查询出列表
+        var list = IntStream.range(1, 4).mapToObj(id -> {
+            Animal animal = new Animal();
+            animal.id = id;
+            return animal;
+        }).collect(Collectors.toList());
+
+        // 将列表存放到 Animal 的响应对象中
+        AnimalResponse animalResponse = new AnimalResponse();
+        animalResponse.animals = list;
+
+        return animalResponse;
+    }
+}
+```
+
+
+
+通过上面的介绍，知道协议碎片是多么恐怖的一件事了把。其实我们的需求也很简单，只是想把列表中的数据给到请求端就可以了。此时，我们可以利用 action 将列表数据通过 List 直接返回，这样可以避免上面所说的各种缺点。同时，还可以让我们的代码更加的简洁，这种方式可以使前端与后端都受益。
+
+
+
+用更少的代码实现了同样的功能，减少了工作量，避免了协议碎片。这样，开发者就不在需要额外的建立一个与之对应的响应协议了；当使用了框架提供的 List 返回值后，可以帮助你的系统减少几十、上百个类似 xxxResponse 的协议。
+
+
+
+来，让我们看看修改后的代码是有多么简洁的吧。这种编码方式，即使你是一个新手，也能快速的看懂；
+
+```java
+@ActionController(3)
+public class HallAction {
+    @ActionMethod(9)
+    public List<Animal> listAnimal() {
+        // 查询出列表
+        return IntStream.range(1, 4).mapToObj(id -> {
+            Animal animal = new Animal();
+            animal.id = id;
+            return animal;
+        }).collect(Collectors.toList());
+    }
+}
+```
+
+
+
+[#74](https://github.com/iohao/ioGame/issues/74) action 返回值增加 byte[] 扩展
+
+
+
+<details class="lake-collapse"><summary id="u9cdd38f3"><span class="ne-text">框架已经取消该功能，取消原因--点我展开</span></summary><p id="ud1f58c5f" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">经过思考，决定取消 action 返回值 byte[] 类型的支持。<br></span><span class="ne-text">因为这会导致在生成文档时，不知道其具体的类型，从而增加沟通负担；</span></p><p id="u1aee9384" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><pre data-language="latex" id="2e6234d1" class="ne-codeblock language-latex" style="border: 1px solid #e8e8e8; border-radius: 2px; background: #f9f9f9; padding: 16px; font-size: 13px; color: #595959">路由: 1 - 4  --- 【】 --- 【DemoAction:120】【testByte】
+    方法参数: IntValue
+    方法返回值: [B</pre><p id="u1567634c" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><h3 id="2c4fadc2" style="font-size: 20; line-height: 28px; margin: 16px 0 5px 0"><span class="ne-text">可扩展</span></h3><p id="uf9516962" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><p id="u465ccb28" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">如果开发者有需要，可以自行扩展，扩展协议参考 </span><a href="https://www.yuque.com/iohao/game/uq2zrltrc7to27bt" data-href="https://www.yuque.com/iohao/game/uq2zrltrc7to27bt" target="_blank" class="ne-link"><span class="ne-text">https://www.yuque.com/iohao/game/uq2zrltrc7to27bt</span></a></p><p id="u68685372" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><p id="u5a6ef47c" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">以 proto 编解码器为例，只需要在 encode 方法添加如下逻辑</span></p><p id="u23a1d06f" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><pre data-language="java" id="0c90482d" class="ne-codeblock language-java" style="border: 1px solid #e8e8e8; border-radius: 2px; background: #f9f9f9; padding: 16px; font-size: 13px; color: #595959">public final class MyProtoDataCodec implements DataCodec {
+    @Override
+    public byte[] encode(Object data) {
+        if (data instanceof byte[] bytes) {
+            return bytes;
+        }
+
+        return ProtoKit.toBytes(data);
+    }
+
+    ... 省略部分代码
+}</pre><p id="u932c9f85" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><p id="u4ec3c8c9" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">将自定义的，添加到框架中</span></p><p id="u2e4f885a" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><pre data-language="java" id="96d4e3d3" class="ne-codeblock language-java" style="border: 1px solid #e8e8e8; border-radius: 2px; background: #f9f9f9; padding: 16px; font-size: 13px; color: #595959">// 设置自定义的编解码。如果不做设置，默认使用 jprotobuf
+IoGameGlobalSetting.setDataCodec(new MyProtoDataCodec());</pre><p id="ube57b01c" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><p id="u9ff96ed5" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">action byte[] 使用展示</span></p><p id="u93f9b4ba" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><pre data-language="java" id="3e546c5d" class="ne-codeblock language-java" style="border: 1px solid #e8e8e8; border-radius: 2px; background: #f9f9f9; padding: 16px; font-size: 13px; color: #595959">@Slf4j
+@ActionController(1)
+public class DemoAction {
+    static byte[] helloReqData;
+
+    static {
+        // 这里模拟缓存数据，不用每次序列化
+        HelloReq helloReq = new HelloReq();
+        helloReq.theIndex = 100;
+        helloReq.name = "to byte[]";
+        helloReqData = DataCodecKit.encode(helloReq);
+    }
+
+    @ActionMethod(4)
+    public byte[] testByte(int id) {
+        return helloReqData;
+    }
+}</pre><p id="udfba6099" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><h3 id="fb57a6b6" style="font-size: 20; line-height: 28px; margin: 16px 0 5px 0"><span class="ne-text">原用意</span></h3><p id="ueb2cc0b5" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><p id="ue08fa132" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">之前是为了少一次序列化操作，节约一些 cpu，特别是在请求访问一些固定配置数据表时；但这样的编码格式增加了以后的维护成本，也增加了沟通成本，综合下来决定取消支持。另外一个原因是，找到了一种更加彻底的方式，就是游戏对外服缓存特性；</span></p><p id="u16e6e051" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><p id="u27879819" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">关于游戏对外服缓存特性可阅读 #76</span></p><p id="u39c95061" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><p id="ucb2ae8c6" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">这种方式不但能节约 CPU，还能减少传输、请求次数、无形中帮助游戏逻辑服做了一些防护性措施等，并且不破坏代码可读性。</span></p></details>
+
+```java
+@ActionController(1)
+public class DemoAction {
+    static byte[] helloReqData;
+
+    static {
+        // 这里模拟缓存数据，不用每次序列化
+        HelloReq helloReq = new HelloReq();
+        helloReq.theIndex = 100;
+        helloReq.name = "to byte[]";
+        helloReqData = DataCodecKit.encode(helloReq);
+    }
+
+    @ActionMethod(4)
+    public byte[] testByte() {
+        return helloReqData;
+    }
+}
+```
+
+
+
+[#79](https://github.com/iohao/ioGame/issues/79) light-jprotobuf 模块支持枚举
+
+```protobuf
+// 动物
+message Animal {
+  // id
+  int32 id = 1;
+  // 动物类型 - 枚举测试
+  AnimalType animalType = 2;
+}
+
+// 动物类型
+enum AnimalType {
+  // 鸟
+  BIRD = 0;
+  // 猫
+  CAT = 1;
+}
+```
+
+
+
+对应的 java 代码
+
+```java
+@ProtobufClass
+public enum AnimalType {
+    /** 鸟 */
+    BIRD,
+    /** 猫 */
+    CAT;
+}
+
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+public class Animal {
+    /** id */
+    int id;
+    /** 动物类型 - 枚举测试 */
+    AnimalType animalType;
+}
+```
+
+
+
+[#84](https://github.com/iohao/ioGame/issues/84) 生成proto文件时,内容的顺序总是产生变化
+
+实际使用过程中发现一个问题如下：当协议没有任何变化时，生成的协议文件依然会产生顺序变化。
+
+例如：当前的协议定义有 A，B，C 三个类。如果对协议进行多次生成,产生的proto文件内的定义顺序可能是：A，C，B 或者 B，C，A。
+
+
+
+
+
+
+
+**标记废弃的**
+
+将 IoGameGlobalSetting.me() 方法标记为废弃的，将 IoGameGlobalSetting 内的方法改为静态的。
+
+
+
+**其他更新**
+
+<netty.version>4.1.91.Final</netty.version>
+
+优化文档生成、控制台打印。
+
+ExternalMessage.proto 新增 message ByteValueList，用于接收与发送 List 类型的数据
+
+```java
+... 省略部分代码
+// pb 对象 list 包装类
+message ByteValueList {
+  // pb 对象 List、pb 对象 Array
+  repeated bytes values = 1;
+}
+```
+
+
+
+**注意事项**
+
+此版本在游戏对外服协议中新增了 message ByteValueList 来支持 action 返回 List 类型，因此需要前端同学同步一下协议文件。
+
+对外服的协议说明： https://www.yuque.com/iohao/game/xeokui
+
+
+
+#### 2023-04-03 - v17.1.37
+
+UserProcessor 如果自身提供了 Executor ，将不会使用框架的 Executor 创建策略。
+
+
+
+调整 DefaultUserProcessorExecutorStrategy 创建参数。
+
+
+
+**DebugInOut** 增加当前执行业务的线程名打印
+
+
+
+[[#77](https://github.com/iohao/ioGame/issues/77)] RequestMessageClientProcessorHook 提供新的默认实现 DefaultRequestMessageClientProcessorHook，通过 userId 取得对应的线程来处理业务逻辑，避免并发问题；
+
+
+
+重新编写 [ioGame 线程相关的文档](https://www.yuque.com/iohao/game/eixd6x)。详细的介绍了网络部分的线程及扩展、业务框架部分的线程及扩展；单玩家如何避免多线程并发的、同一房间内多个玩家如何避免多线程并发的。
+
+
+
+#### 2023-03-27 - v17.1.35
+
 https://www.yuque.com/iohao/game/ab15oe#xsmCW
 
 移除废弃的 UserProcessor ChangeUserIdMessageBrokerSyncProcessor
@@ -16,8 +547,8 @@ UserProcessor RequestMessageClientProcessor 请求处理单独一个池
 将 BrokerClientHelper.me() 标记为 Deprecated
 请使用 BrokerClientHelper 的静态方法，如 BrokerClientHelper.me().xxx() 改为 BrokerClientHelper.xxx()
 
+#### 2023-03-02 - v17.1.34
 
-2023-03-02 - v17.1.34
 [#47] 增加拒绝外部直接访问 action 的路由权限
 有些 action 只能内部访问，比如增加金币、敏感数值的增加等。这些 action 是不能由外部直接访问的，这里说的外部指的连接的玩家。
 
@@ -29,8 +560,8 @@ UserProcessor RequestMessageClientProcessor 请求处理单独一个池
 
 查看 https://www.yuque.com/iohao/game/ea6geg#noCqn
 
+#### 2023-02-13 - v17.1.33
 
-2023-02-13 - v17.1.33
 https://www.yuque.com/iohao/game/ab15oe#w9uZB
 
 action 业务参数自动装箱、拆箱增强。
@@ -64,8 +595,8 @@ action 业务参数自动装箱、拆箱增强。
 理论上前端不做更改问题也不大，只是生成的对接文档上有差异，如果后端使用了基础类型做接收参数或返回值的，原 IntPb 由 IntValue 代替，原 LongPb 由 LongValue 代替。
 其次影响是如果将来打算换成 json 协议来对接，会导致不兼容的情况，如果条件允许，请前端同学尽早做变更。
 
+#### 2023-02-03 - v17.1.31
 
-2023-02-03 - v17.1.31
 https://www.yuque.com/iohao/game/ab15oe#dPVPB
 
 #37 缩小打包后的包体大小，ioGame 打 jar 包后大约 15MB，演示查看 快速从零编写服务器完整示例。
@@ -93,12 +624,13 @@ MethodParsers 增加 action 参数解析器的默认设置
 为缩小打包，将 hutool 依赖移除、将 fastjson2 依赖配置中的 scope 改为 provided；如有使用到相关的，需要开发者自行引入。
 移除项目中 json 相关的类文件 ToJson。
 
+#### 2023-01-14 - v17.1.29
 
-2023-01-14 - v17.1.29
 https://www.yuque.com/iohao/game/ab15oe#pqHj1
 修复文档生成时的路径问题
 
-2022-12-29 - v17.1.28
+#### 2022-12-29 - v17.1.28
+
 https://www.yuque.com/iohao/game/ab15oe#Y38Hx
 
 增加版本标识
@@ -110,7 +642,8 @@ https://www.yuque.com/iohao/game/ab15oe#Y38Hx
 
 bolt 日志文件相关 https://www.yuque.com/iohao/game/derl0laiu2v0k104#likQv
 
-2022-12-14 - v17.1.27
+#### 2022-12-14 - v17.1.27
+
 https://www.yuque.com/iohao/game/ab15oe#KR00k
 
 命令解析器与源码文档逻辑分离。
@@ -124,8 +657,8 @@ https://www.yuque.com/iohao/game/ab15oe#KR00k
 
 简单的说，就是你想在 FlowContext 中获取一些用户（玩家）特有的信息数据时，可以通过这个特性来实现。
 
+#### 2022-12-06 - v17.1.26
 
-2022-12-06 - v17.1.26
 https://www.yuque.com/iohao/game/ab15oe#Qzog2
 
 #27
@@ -142,8 +675,9 @@ https://www.yuque.com/iohao/game/ab15oe#Qzog2
 ExternalServerBuilder 新增 channelPipelineHook 属性 ，用于自定义 netty 业务编排的处理器设置。
 废弃标记 ExternalServerBuilder.channelHandlerProcessors 属性及其相关地方为过期，由 ChannelPipelineHook 来代替，使用示例如下。
 
-2022-11-29
-v17.1.25 https://www.yuque.com/iohao/game/ab15oe#VghQ6
+#### 2022-11-29 - v17.1.25
+
+ https://www.yuque.com/iohao/game/ab15oe#VghQ6
 
 ActionCommandInfoBuilder 改名为 ActionCommandParser 命令解析器
 将业务框架中的部分类设置为 final 权限
@@ -168,9 +702,8 @@ addActionSend 标记为废弃，请使用 scanActionSendPackage。
 
 简单点说，如果开发者的项目之前使用的是 json 数据来传输的，以后想改用 protobuf 来传输，是不需要改变业务方法的。框架除了内置支持的 protobuf、json 协议外，开发者还可以对协议进行扩展。
 
+#### 2022-11-14 - v17.1.23
 
-2022-11-14
-v17.1.23
 #I6032U
 BrokerServerBuilder 游戏网关构建器中增加移除 UserProcessor 的方法
 
@@ -191,8 +724,8 @@ see IoGameGlobalConfig.userProcessorExecutorStrategy
 当前大版本会兼容 BrokerGlobalConfig 配置，下个大版本将会移除 BrokerGlobalConfig；
 BrokerGlobalConfig 有点表示游戏网关全局配置的意思，名字不太理想。
 
-2022-11-08
-v17.1.22
+#### 2022-11-08 - v17.1.22
+
 #I5YM30
 提供 action 调试工具-模拟客户端的需要数据
 具体 https://www.oschina.net/news/216923/iogame-17-1-22-released
@@ -222,9 +755,8 @@ SimpleRunOne 中 startup 优化
 通常我们为了测试这 80 个 action ，会需要模拟客户端，写 80 个相关的请求端来访问我们的 action。
 当使用上“模拟客户端” 将不在需要编写这些，这大量的降低的开发者的工作量；
 
+#### 2022-09-26 - v17.1.20
 
-2022-09-26
-v17.1.20
 （#I5SLRA、#I5S8QC、#I5SG8T、#I5RXMY、#I5SS3C）
 
 #I5SLRA
@@ -247,8 +779,8 @@ https://www.yuque.com/iohao/game/ghng6g#DMPBH
 #I5SS3C
 修复：light-profile getInt getBool 无法获取数据
 
-2022-09-08
-v17.1.18
+#### 2022-09-08 - v17.1.18
+
 （#I5PU5R、#I5PFGP、#I5NDEG、#I5Q1AO、#I5Q89K）
 
 #I5PFGP
@@ -261,8 +793,8 @@ u3d 连接示例语雀在线文档 https://www.yuque.com/iohao/game/syv5mm
 DomainEventContextParam.producerType 由 ProducerType.SINGLE 改为 ProducerType.MULTI
 DomainEventContextParam.waitStrategy 由 BlockingWaitStrategy 改为 LiteBlockingWaitStrategy
 
-2022-08-29
-v17.1.17
+#### 2022-08-29 - v17.1.17
+
 #I5O5QH
 新增集群日志开关 BrokerGlobalConfig.brokerClusterLog，默认为 true
 
@@ -285,8 +817,8 @@ v17.1.17
 #I5OB8T
 修复 JSR380 验证相关缺少判断
 
-2022-08-23
-v17.1.13
+#### 2022-08-23 - v17.1.13
+
 #I5N97K
 (可跨进程通信) 游戏逻辑服与同类型逻辑服通信，超时问题；
 在之前的版本中，使用通讯方式 -- 游戏逻辑服与同类型逻辑服通信时，当目标游戏逻辑服中的业务处理时间过长时，框架不能按开发者的预期值返回（相当于超时了），现在改为默认是在调用端进行阻塞，直到得到目标游戏逻辑服返回的结果为止；
@@ -301,8 +833,8 @@ v17.1.13
 框架默认提供的 FlowContext 已经将 invokeXXX 系列方法给标记为 Deprecated ，因为这是前期的一个 API 错误设计，invokeXXX 系列方法严格来说不算是 FlowContext 的职责；但在实际的业务开发中，开发者自定义的 FlowContext 是可以这么做的；
 对于更详细的描述与具体使用，可以参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn 在线文档
 
-2022-08-16
-v17.1.10
+#### 2022-08-16 - v17.1.10
+
 #I5LL08
 逻辑服务之间通信相关的扩展增强方式
 
@@ -323,8 +855,7 @@ https://gitee.com/iohao/iogame/issues/I5KR7T
 断言抛异常没有带异常信息
 https://gitee.com/iohao/iogame/issues/I5KZTP
 
-2022-08-04
-v17.1.5 ~ v17.1.8
+#### 2022-08-04 - v17.1.5 ~ v17.1.8
 
 （#I5K3WE、#I5KLED、#I5KLDA、#I5KMXT、#I5KMYK）
 
@@ -364,9 +895,9 @@ CocosCreator 与综合示例联调（登录）
 
 移除示例中 EnableZigZap 注解的使用，减少相关理解。
 
+#### 2022-07-28 - v17.1.4 
 
-2022-07-28
-v17.1.4 （#I5J96X、#I5J7JU、#I5J7HG、#I5J7GI、#I5J7G5、#I5IS7V、#I5IEXO）
+（#I5J96X、#I5J7JU、#I5J7HG、#I5J7GI、#I5J7G5、#I5IS7V、#I5IEXO）
 
 -- 3类通讯方式相关 --
 新增：【游戏逻辑服】访问多个【游戏对外服】的上下文。
@@ -412,8 +943,9 @@ accessAuthenticationHook.addIgnoreAuthenticationCmd(1, 1);
 
 具体查看 https://gitee.com/iohao/iogame/issues/I5J7HG
 
-2022-07-19
-v17.1.3 (#I5H8NV、#I5H8H9)
+#### 2022-07-19 - v17.1.3
+
+ (#I5H8NV、#I5H8H9)
 
 #I5H8H9
 增强：相同路由可以用在 action 与广播上；当 action 返回值为 void 时，可以复用路由来作为广播的响应路由。
@@ -443,54 +975,11 @@ for (int i = 0; i < 10; i++) {
 
 BroadcastContext 与 BroadcastOrderContext 的使用方式上基本是一致的；
 
-广播日志 --- 严格顺序广播日志
-# 广播给单个玩家
-┏━━━━━ 严格顺序广播. [(Broadcast.java:121)] ━━━ [cmd:2 - subCmd:8 - cmdMerge:131080]
-┣ userId: 1
-┣ 广播数据: BarHelloPb(amount=7)
-┣ 广播时间: 2022-07-14 18:26:49.786
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 广播给多个玩家
-┏━━━━━ 严格顺序广播. [(Broadcast.java:121)] ━━━ [cmd:2 - subCmd:8 - cmdMerge:131080]
-┣ userId: [1,5,7]
-┣ 广播数据: BarHelloPb(amount=7)
-┣ 广播时间: 2022-07-14 18:26:49.786
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 广播给全服玩家
-┏━━━━━ 严格顺序广播. [(Broadcast.java:121)] ━━━ [cmd:2 - subCmd:8 - cmdMerge:131080]
-┣ userId: 全服广播
-┣ 广播数据: BarHelloPb(amount=7)
-┣ 广播时间: 2022-07-14 18:26:49.786
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-广播日志 --- 默认的广播日志
-# 广播给单个玩家
-┏━━━━━ 广播. [(TankAction.java:116)] ━━━ [cmd:2 - subCmd:7 - cmdMerge:131079]
-┣ userId: 1
-┣ 广播数据: BarHelloPb(amount=7)
-┣ 广播时间: 2022-07-14 18:31:02.253
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 广播给多个玩家
-┏━━━━━ 广播. [(TankAction.java:116)] ━━━ [cmd:2 - subCmd:7 - cmdMerge:131079]
-┣ userId: [1,5,7]
-┣ 广播数据: BarHelloPb(amount=7)
-┣ 广播时间: 2022-07-14 18:31:02.253
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 广播给全服玩家
-┏━━━━━ 广播. [(TankAction.java:116)] ━━━ [cmd:2 - subCmd:7 - cmdMerge:131079]
-┣ userId: 全服广播
-┣ 广播数据: BarHelloPb(amount=7)
-┣ 广播时间: 2022-07-14 18:31:02.253
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
+#### 2022-07-11 - v17.1.2
 
-2022-07-11
-v17.1.2 (#I5G0FC、#I5GB1D)
+ (#I5G0FC、#I5GB1D)
 
 3类通讯方式，逻辑服间的相互通信相关
 InvokeModuleContext，新增无参请求方法，单个逻辑服与单个逻辑服通信请求 invokeModuleMessage
@@ -531,9 +1020,10 @@ JSR380相关
 
 增加，当触发 JSR380 验证时，会给请求端一些对应的错误信息
 
+#### 2022-07-06 - v17.1.1
 
-2022-07-06
-v17.1.1 (上传到中央仓库)
+ (上传到中央仓库)
+
 (#I5EE8E、#I5DFRM)
 
 ioGame上传到中央仓库；
@@ -737,12 +1227,12 @@ https://alibroker.info/
         房间创建接口 RoomCreateCustom
         进入房间接口 RoomEnterCustom
         游戏开始接口 RoomGameStartCustom
-
+    
     提供抽象类的有：
         抽象房间 AbstractRoom
         抽象玩家 AbstractPlayer
         业务操作接口 OperationHandler
-
+    
     玩法操作的处理对象, 享元工厂 OperationFlyweightFactory
 
 2022-03-27
@@ -937,7 +1427,7 @@ FlowContext 的动态属性由 AttrDynamic 改为 AttrOptionDynamic
 
     不在需要 @Protobuf(description = "xxx") 来生成注释了
     现在 jprotobuf 的类中，注释即文档
-
+    
     可将多个 jprotobuf 类 合并生成为一个原生的 .proto 文件， 不使用 jprotobuf 提供的生成插件，
     因为 jprotobuf 生成的 .proto 文件太乱（会有重复的文件类），在阅读时也不方便
 
@@ -987,10 +1477,10 @@ BarMessage 增加 rpcCommandType 字段:
 
         则 AsyncContext.sendResponse 无法回传响应
         原因可阅读 com.alipay.remoting.rpc.protocol.RpcRequestProcessor.sendResponseIfNecessary 源码。
-
+    
         业务框架保持与 bolt 的风格一至使用 RpcCommandType
         不同的是业务框架会用 RpcCommandType 区别使用什么方式来发送响应。
-
+    
         如果 rpcCommandType != RpcCommandType.REQUEST_ONEWAY ,
         就使用 com.alipay.remoting.AsyncContext.sendResponse 来发送响应
         具体发送逻辑可读 DefaultActionAfter 源码
