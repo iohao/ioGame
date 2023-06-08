@@ -50,7 +50,7 @@ public class BroadcastMessageBrokerProcessor extends AbstractAsyncUserProcessor<
             log.info("Broadcast 网关 广播消息到对外服务器 {}", broadcastMessage);
         }
 
-        BrokerExternalKit.sendMessageToExternals(this.brokerServer, broadcastMessage);
+        BrokerExternalKit.sendMessageToExternal(this.brokerServer, broadcastMessage);
     }
 
     @Override

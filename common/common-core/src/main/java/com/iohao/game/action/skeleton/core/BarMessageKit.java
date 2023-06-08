@@ -118,6 +118,5 @@ public class BarMessageKit {
         responseMessage.setData(bizData);
 
         return responseMessage;
-
     }
 }

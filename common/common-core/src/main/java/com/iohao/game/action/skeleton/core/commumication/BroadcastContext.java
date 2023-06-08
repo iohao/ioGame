@@ -93,6 +93,4 @@ public interface BroadcastContext {
         ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcast(responseMessage, userId);
     }
-
-
 }

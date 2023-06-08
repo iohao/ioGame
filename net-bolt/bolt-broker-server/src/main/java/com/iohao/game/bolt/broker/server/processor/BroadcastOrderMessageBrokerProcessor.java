@@ -56,7 +56,7 @@ public class BroadcastOrderMessageBrokerProcessor extends AsyncUserProcessor<Bro
             log.info("Broadcast 网关 顺序的 广播消息到对外服务器 {}", broadcastOrderMessage);
         }
 
-        BrokerExternalKit.sendMessageToExternals(this.brokerServer, broadcastOrderMessage);
+        BrokerExternalKit.sendMessageToExternal(this.brokerServer, broadcastOrderMessage);
     }
 
 

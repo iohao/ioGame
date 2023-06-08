@@ -38,7 +38,6 @@ public class EndPointLogicServerMessageBrokerProcessor extends AbstractAsyncUser
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, EndPointLogicServerMessage request) {
-
         BrokerExternalKit.sendMessageToExternals(this.brokerServer, request);
     }
 
