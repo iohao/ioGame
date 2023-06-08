@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -28,6 +28,7 @@ import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
@@ -37,7 +38,9 @@ import com.iohao.game.bolt.broker.server.balanced.ExternalBrokerClientLoadBalanc
 import com.iohao.game.bolt.broker.server.balanced.LogicBrokerClientLoadBalanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
+import com.iohao.game.bolt.broker.server.kit.EndPointClientIdKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.core.common.cmd.CmdRegions;
 import lombok.Setter;
 import org.slf4j.Logger;
 
@@ -50,12 +53,15 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-public class ExternalRequestMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestMessage>
-        implements BrokerServerAware {
+public class RequestMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestMessage>
+        implements BrokerServerAware, CmdRegionsAware {
     static final Logger log = IoGameLoggerFactory.getLoggerMsg();
 
     @Setter
     BrokerServer brokerServer;
+
+    @Setter
+    CmdRegions cmdRegions;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestMessage request) {
@@ -69,8 +75,7 @@ public class ExternalRequestMessageBrokerProcessor extends AbstractAsyncUserProc
 
         // 得到路由对应的逻辑服区域
         HeadMetadata headMetadata = request.getHeadMetadata();
-        int cmdMerge = headMetadata.getCmdMerge();
-        BrokerClientRegion brokerClientRegion = loadBalanced.getBrokerClientRegion(cmdMerge);
+        BrokerClientRegion brokerClientRegion = loadBalanced.getBrokerClientRegion(headMetadata.getCmdMerge());
 
         if (brokerClientRegion == null) {
             //  通知对外服， 路由不存在
@@ -78,7 +83,8 @@ public class ExternalRequestMessageBrokerProcessor extends AbstractAsyncUserProc
             return;
         }
 
-        // 从逻辑服区域得到一个逻辑服来处理请求
+        EndPointClientIdKit.endPointClientId(headMetadata, this.cmdRegions);
+        // 从游戏逻辑服区域中查找一个游戏逻辑服，用于处理请求
         BrokerClientProxy brokerClientProxy = brokerClientRegion.getBrokerClientProxy(headMetadata);
         if (brokerClientProxy == null) {
             //  通知对外服， 路由不存在
@@ -91,7 +97,6 @@ public class ExternalRequestMessageBrokerProcessor extends AbstractAsyncUserProc
         } catch (RemotingException | InterruptedException | NullPointerException e) {
             log.error(e.getMessage(), e);
         }
-
     }
 
     private void extractedPrint(RequestMessage request) {
@@ -110,8 +115,13 @@ public class ExternalRequestMessageBrokerProcessor extends AbstractAsyncUserProc
         // 路由不存在
         Connection connection = bizCtx.getConnection();
         ResponseMessage responseMessage = requestMessage.createResponseMessage();
+        HeadMetadata headMetadata = requestMessage.getHeadMetadata();
 
         ActionErrorEnum errorCode = ActionErrorEnum.cmdInfoErrorCode;
+        if (headMetadata.getOther() instanceof ActionErrorEnum theCode) {
+            errorCode = theCode;
+        }
+
         responseMessage.setValidatorMsg(errorCode.getMsg())
                 .setResponseStatus(errorCode.getCode());
 

@@ -112,12 +112,33 @@ public interface InvokeModuleContext {
      * </pre>
      *
      * @param cmdInfo 路由信息
-     * @param clazz   pb class
+     * @param clazz   response data class
      * @param <T>     t
-     * @return pb 对象
+     * @return response data 解析后的数据
      */
     default <T> T invokeModuleMessageData(CmdInfo cmdInfo, Class<T> clazz) {
         return this.invokeModuleMessageData(cmdInfo, null, clazz);
+    }
+
+    /**
+     * 根据 RequestMessage 来请求其他子服务器（其他逻辑服）的数据
+     * <pre>
+     *     相关文档
+     *     https://www.yuque.com/iohao/game/nelwuz#L9TAJ
+     *     https://www.yuque.com/iohao/game/anguu6
+     * </pre>
+     *
+     * @param requestMessage RequestMessage
+     * @param clazz          response data class
+     * @param <T>            t
+     * @return response data 解析后的数据
+     */
+    default <T> T invokeModuleMessageData(RequestMessage requestMessage, Class<T> clazz) {
+        ResponseMessage responseMessage = this.invokeModuleMessage(requestMessage);
+
+        // 将字节解析成对象
+        byte[] dataContent = responseMessage.getData();
+        return DataCodecKit.decode(dataContent, clazz);
     }
 
     /**

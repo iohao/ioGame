@@ -19,13 +19,12 @@
  */
 package com.iohao.game.common.kit.log;
 
-import ch.qos.logback.classic.LoggerContext;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.log.LoggerSpaceManager;
 import lombok.AccessLevel;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -36,13 +35,15 @@ import java.io.File;
  * @author 渔民小镇
  * @date 2023-01-16
  */
-@Slf4j
 @UtilityClass
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IoGameLoggerFactory {
     public final String GAME_LOG_SPACE_PROPERTY = "ioGame.log.space";
 
     String GAME_LOG_SPACE = "com.iohao.game.common";
+
+    @Setter
+    String commonDefaultName = "CommonDefault";
 
     /** 日志存放路径: {user.home}/logs */
     final String LOG_PATH = "logging.path";
@@ -81,6 +82,14 @@ public class IoGameLoggerFactory {
         }
     }
 
+    /**
+     * 控制台也打印一份日志输出
+     */
+    public void printConsole() {
+        // 控制台也打印一份
+        commonDefaultName = "CommonStdout";
+    }
+
     public Logger getLogger(Class<?> clazz) {
         if (clazz == null) {
             return getLogger("");
@@ -93,16 +102,7 @@ public class IoGameLoggerFactory {
             return LoggerSpaceManager.getLoggerBySpace("", GAME_LOG_SPACE);
         }
 
-//        return LoggerSpaceManager.getLoggerBySpace(name, GAME_LOG_SPACE);
-
-//        return a();
-        return log;
-    }
-
-    private Logger a() {
-        LoggerContext loggerContext = new LoggerContext();
-
-        return loggerContext.getLogger("hh");
+        return LoggerSpaceManager.getLoggerBySpace(name, GAME_LOG_SPACE);
     }
 
     public Logger getLoggerConnection() {
@@ -110,8 +110,11 @@ public class IoGameLoggerFactory {
     }
 
     public Logger getLoggerCommon() {
-        return getLogger("CommonStdout");
-        // return getLogger("CommonDefault");
+        return getLogger(commonDefaultName);
+    }
+
+    public Logger getLoggerExternal() {
+        return getLogger("CommonExternal");
     }
 
     public Logger getLoggerCommonStdout() {

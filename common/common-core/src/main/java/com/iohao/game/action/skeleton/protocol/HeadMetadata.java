@@ -139,6 +139,17 @@ public final class HeadMetadata implements Serializable {
     /** 框架自用字段。将来变化可能较大，开发者请不要使用。 */
     int stick;
 
+    /**
+     * 玩家绑定的多个游戏逻辑服 id
+     * <pre>
+     *     所有与该游戏逻辑服相关的请求都将被分配给已绑定的游戏逻辑服处理。
+     *     即使启动了多个同类型的游戏逻辑服，该请求仍将被分配给已绑定的游戏逻辑服处理。
+     * </pre>
+     */
+    int[] bindingLogicServerIds;
+    /** 临时变量 */
+    transient Object other;
+
     public HeadMetadata setCmdInfo(CmdInfo cmdInfo) {
         this.cmdMerge = cmdInfo.getCmdMerge();
         return this;
@@ -163,5 +174,36 @@ public final class HeadMetadata implements Serializable {
     public HeadMetadata setCmdMerge(int cmdMerge) {
         this.cmdMerge = cmdMerge;
         return this;
+    }
+
+    /**
+     * 类似 clone
+     * <p>
+     * 使用场景
+     * <pre>
+     *     与其他游戏逻辑服通信时可以使用
+     *     方法中给 HeadMetadata 赋值了玩家的必要属性：
+     *     userId、attachmentData、channelId、bindingLogicServerIds
+     * </pre>
+     * 以下属性不会赋值，如有需要，请自行赋值
+     * <pre>
+     *     cmdMerge
+     *     sourceClientId
+     *     endPointClientId
+     *     rpcCommandType
+     *     msgId
+     * </pre>
+     *
+     * @return HeadMetadata
+     */
+    public HeadMetadata cloneHeadMetadata() {
+
+        HeadMetadata headMetadata = new HeadMetadata();
+        headMetadata.userId = this.userId;
+        headMetadata.attachmentData = this.attachmentData;
+        headMetadata.channelId = this.channelId;
+        headMetadata.bindingLogicServerIds = this.bindingLogicServerIds;
+
+        return headMetadata;
     }
 }

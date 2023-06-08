@@ -31,10 +31,10 @@ import java.util.Objects;
 public class PresentKit {
 
     /**
-     * 如果 obj 为 null，则执行 runnable
+     * 如果属性为 null，则执行给定操作，否则不执行任何操作。
      *
-     * @param obj      obj
-     * @param runnable runnable
+     * @param obj      属性
+     * @param runnable 给定操作
      */
     public void ifNull(Object obj, Runnable runnable) {
         if (Objects.isNull(obj)) {

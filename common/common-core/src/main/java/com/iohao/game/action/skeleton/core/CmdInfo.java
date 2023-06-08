@@ -57,11 +57,11 @@ public final class CmdInfo {
      */
     final int cmdMerge;
 
-    CmdInfo(int cmd, int subCmd) {
+    CmdInfo(int cmdMerge) {
         // -------------- 路由相关 --------------
-        this.cmd = cmd;
-        this.subCmd = subCmd;
-        this.cmdMerge = CmdKit.merge(cmd, subCmd);
+        this.cmd = CmdKit.getCmd(cmdMerge);
+        this.subCmd = CmdKit.getSubCmd(cmdMerge);
+        this.cmdMerge = cmdMerge;
     }
 
     /**

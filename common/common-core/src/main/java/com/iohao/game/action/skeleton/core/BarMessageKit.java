@@ -42,6 +42,23 @@ public class BarMessageKit {
         return requestMessage;
     }
 
+    public RequestMessage createRequestMessage(CmdInfo cmdInfo) {
+        return createRequestMessage(cmdInfo, null);
+    }
+
+    public RequestMessage createRequestMessage(CmdInfo cmdInfo, HeadMetadata headMetadata) {
+        return createRequestMessage(cmdInfo, null, headMetadata);
+    }
+
+    public RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data, HeadMetadata headMetadata) {
+        RequestMessage requestMessage = new RequestMessage();
+
+        requestMessage.setHeadMetadata(headMetadata);
+
+
+        return requestMessage;
+    }
+
     public void employ(RequestMessage requestMessage, CmdInfo cmdInfo, Object data) {
 
         requestMessage.setHeadMetadata(new HeadMetadata().setCmdInfo(cmdInfo));

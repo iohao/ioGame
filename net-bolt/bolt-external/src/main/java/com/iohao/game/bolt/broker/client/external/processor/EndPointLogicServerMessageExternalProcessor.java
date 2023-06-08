@@ -22,14 +22,17 @@ package com.iohao.game.bolt.broker.client.external.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.iohao.game.action.skeleton.protocol.processor.EndPointLogicServerMessage;
+import com.iohao.game.action.skeleton.protocol.processor.EndPointOperationEnum;
 import com.iohao.game.bolt.broker.client.external.session.UserSessionAttr;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.MurmurHash3;
-import com.iohao.game.common.kit.StrKit;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author 渔民小镇
@@ -38,19 +41,33 @@ import java.util.List;
 public class EndPointLogicServerMessageExternalProcessor extends AbstractAsyncUserProcessor<EndPointLogicServerMessage> {
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, EndPointLogicServerMessage message) {
-
+        // 旧游戏对外服的动态绑定逻辑
         List<Long> userList = message.getUserList();
-        String logicServerId = message.getLogicServerId();
-
-        if (CollKit.isEmpty(userList) || StrKit.isEmpty(logicServerId)) {
+        if (CollKit.isEmpty(userList)) {
             return;
+        }
+
+        EndPointOperationEnum operation = Objects.isNull(message.getOperation())
+                ? EndPointOperationEnum.CLEAR
+                : EndPointOperationEnum.COVER_BINDING;
+
+        String logicServerId = null;
+
+        if (EndPointOperationEnum.COVER_BINDING == operation) {
+            Set<String> logicServerIdSet = message.getLogicServerIdSet();
+            Optional<String> optional = CollKit.findAny(logicServerIdSet);
+            logicServerId = optional.orElse(null);
+
+            if (Objects.isNull(logicServerId)) {
+                return;
+            }
         }
 
         // 到对外服在转 hash32，以防之后需要这个逻辑服的id（string）
         int endPointLogicServerId = MurmurHash3.hash32(logicServerId);
 
         // true 绑定逻辑服id，false 清除绑定的逻辑服id
-        boolean binding = message.isBinding();
+        boolean binding = operation != EndPointOperationEnum.CLEAR;
 
         userList.stream()
                 .filter(UserSessions.me()::existUserSession)

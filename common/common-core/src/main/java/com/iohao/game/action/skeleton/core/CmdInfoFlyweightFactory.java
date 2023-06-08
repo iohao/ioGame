@@ -63,10 +63,7 @@ public final class CmdInfoFlyweightFactory {
 
         // 无锁化
         if (Objects.isNull(cmdInfo)) {
-            int cmd = CmdKit.getCmd(cmdMerge);
-            int subCmd = CmdKit.getSubCmd(cmdMerge);
-
-            cmdInfo = new CmdInfo(cmd, subCmd);
+            cmdInfo = new CmdInfo(cmdMerge);
             cmdInfo = cmdInfoMap.putIfAbsent(cmdMerge, cmdInfo);
             if (Objects.isNull(cmdInfo)) {
                 cmdInfo = cmdInfoMap.get(cmdMerge);

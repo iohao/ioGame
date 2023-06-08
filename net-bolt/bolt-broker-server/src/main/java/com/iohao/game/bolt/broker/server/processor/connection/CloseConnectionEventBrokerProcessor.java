@@ -22,6 +22,7 @@ package com.iohao.game.bolt.broker.server.processor.connection;
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.exception.RemotingException;
+import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
@@ -34,6 +35,8 @@ import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.core.common.cmd.BrokerClientId;
+import com.iohao.game.core.common.cmd.CmdRegions;
 import org.slf4j.Logger;
 
 import java.util.Objects;
@@ -47,13 +50,14 @@ import java.util.function.Consumer;
  * @date 2022-05-14
  */
 public class CloseConnectionEventBrokerProcessor implements ConnectionEventProcessor,
-        BrokerServerAware, BrokerClientModulesAware {
+        BrokerServerAware, BrokerClientModulesAware, CmdRegionsAware {
     static final Logger log = IoGameLoggerFactory.getLoggerConnection();
 
     private final AtomicInteger disConnectTimes = new AtomicInteger();
     private final AtomicBoolean dicConnected = new AtomicBoolean();
     BrokerServer brokerServer;
     BrokerClientModules brokerClientModules;
+    CmdRegions cmdRegions;
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
@@ -80,6 +84,8 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
                 return;
             }
 
+            unLoading(moduleMessage);
+
             Consumer<BrokerClientProxy> consumer = externalProxy -> {
                 BrokerClientModuleMessageOffline offline = new BrokerClientModuleMessageOffline();
                 offline.setBrokerClientModuleMessage(moduleMessage);
@@ -98,9 +104,21 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
                     .forEach(consumer);
         });
 
+        extractedPrint(remoteAddress, brokerClientProxy);
+    }
+
+    private static void extractedPrint(String remoteAddress, BrokerClientProxy brokerClientProxy) {
         if (IoGameGlobalConfig.openLog) {
             log.info("连接关闭 remoteAddress 【{}】 brokerClientProxy : 【{}】", remoteAddress, brokerClientProxy);
         }
+    }
+
+    private void unLoading(BrokerClientModuleMessage moduleMessage) {
+        String id = moduleMessage.getId();
+        int idHash = moduleMessage.getIdHash();
+        BrokerClientId brokerClientId = new BrokerClientId(idHash, id);
+        // 游戏逻辑服的路由数据
+        this.cmdRegions.unLoading(brokerClientId);
     }
 
     public boolean isDisConnected() {
@@ -124,5 +142,10 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
     @Override
     public void setBrokerClientModules(BrokerClientModules brokerClientModules) {
         this.brokerClientModules = brokerClientModules;
+    }
+
+    @Override
+    public void setCmdRegions(CmdRegions cmdRegions) {
+        this.cmdRegions = cmdRegions;
     }
 }

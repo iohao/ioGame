@@ -57,6 +57,13 @@ public enum ActionErrorEnum implements MsgExceptionInfo {
     dataNotExist(-1006, "数据不存在"),
     /** 强制玩家下线 */
     forcedOffline(-1007, "强制玩家下线"),
+    /**
+     * 查找（访问）绑定的游戏逻辑服不存在
+     * <pre>
+     *     玩家绑定的游戏逻辑服，但是又找不到对应的游戏逻辑服
+     * </pre>
+     */
+    findBindingLogicServerNotExist(-1008, "绑定的游戏逻辑服不存在"),
     ;
 
     /** 消息码 */

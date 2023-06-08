@@ -46,6 +46,9 @@
 
         <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
         <module>widget/light-game-room</module>
+        <module>external/external-core</module>
+        <module>external/external-netty</module>
+        <module>run-one/run-one-netty</module>
 
     </modules>
 
@@ -56,7 +59,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.92.Final</netty.version>
+        <netty.version>4.1.93.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.6</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->

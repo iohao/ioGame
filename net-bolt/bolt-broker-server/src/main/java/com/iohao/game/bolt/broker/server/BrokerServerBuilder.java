@@ -28,6 +28,7 @@ import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManagerBuilder;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.core.aware.AwareInject;
+import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.aware.BrokerClientModulesAware;
@@ -35,7 +36,7 @@ import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.LogicBrokerClientLoadBalanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegionFactory;
-import com.iohao.game.bolt.broker.server.balanced.region.DefaultBrokerClientRegion;
+import com.iohao.game.bolt.broker.server.balanced.region.StrictBrokerClientRegion;
 import com.iohao.game.bolt.broker.server.processor.*;
 import com.iohao.game.bolt.broker.server.processor.connection.CloseConnectionEventBrokerProcessor;
 import com.iohao.game.bolt.broker.server.processor.connection.ConnectionEventBrokerProcessor;
@@ -93,7 +94,7 @@ public class BrokerServerBuilder implements AwareInject {
 
     /** BrokerClientRegion 工厂 */
     @Setter
-    BrokerClientRegionFactory brokerClientRegionFactory = DefaultBrokerClientRegion::new;
+    BrokerClientRegionFactory brokerClientRegionFactory = StrictBrokerClientRegion::new;
 
     BrokerServerBuilder() {
         // 初始化一些处理器，如果开发者觉得默认的这些处理器没用，可以选择清除后，在添加自定义的。 this.clearProcessor
@@ -274,7 +275,7 @@ public class BrokerServerBuilder implements AwareInject {
         Supplier<UserProcessor<?>> registerSupplier = RegisterBrokerClientModuleMessageBrokerProcessor::new;
 
         // 处理 - (接收真实用户的请求) 把对外服的请求转发到逻辑服
-        Supplier<UserProcessor<?>> externalMessageSupplier = ExternalRequestMessageBrokerProcessor::new;
+        Supplier<UserProcessor<?>> externalMessageSupplier = RequestMessageBrokerProcessor::new;
 
         // 处理 - 改变用户 id -- external server
         Supplier<UserProcessor<?>> changeUserIdMessageSupplier = ChangeUserIdMessageBrokerProcessor::new;
@@ -332,6 +333,10 @@ public class BrokerServerBuilder implements AwareInject {
 
         if (obj instanceof BrokerServerAware aware) {
             aware.setBrokerServer(this.brokerServer);
+        }
+
+        if (obj instanceof CmdRegionsAware aware) {
+            aware.setCmdRegions(this.brokerServer.getCmdRegions());
         }
 
         if (obj instanceof UserProcessorExecutorAware aware && Objects.isNull(aware.getUserProcessorExecutor())) {

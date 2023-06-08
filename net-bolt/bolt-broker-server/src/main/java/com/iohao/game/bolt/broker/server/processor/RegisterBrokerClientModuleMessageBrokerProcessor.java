@@ -26,6 +26,7 @@ import com.alipay.remoting.rpc.RpcServer;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
+import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
@@ -40,6 +41,7 @@ import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.core.common.cmd.CmdRegions;
 import org.slf4j.Logger;
 
 import java.util.concurrent.TimeUnit;
@@ -54,10 +56,11 @@ import java.util.stream.Collectors;
  * @date 2022-05-14
  */
 public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserProcessor<BrokerClientModuleMessage>
-        implements BrokerServerAware, BrokerClientModulesAware {
+        implements BrokerServerAware, BrokerClientModulesAware, CmdRegionsAware {
     private static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     BrokerServer brokerServer;
     BrokerClientModules brokerClientModules;
+    CmdRegions cmdRegions;
     AtomicBoolean fixedRateFlag = new AtomicBoolean(false);
 
     @Override
@@ -90,42 +93,52 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
         BrokerClientType brokerClientType = moduleMessage.getBrokerClientType();
 
         if (brokerClientType == BrokerClientType.LOGIC) {
-            // 将当前游戏逻辑服的信息，发送给所有的游戏对外服
-            Consumer<BrokerClientProxy> consumer = proxy -> {
-                try {
-                    // 将【游戏逻辑服】的模块信息发送给【游戏对外服】
-                    proxy.oneway(moduleMessage);
-                } catch (RemotingException | InterruptedException e) {
-                    log.error(e.getMessage(), e);
-                }
-            };
-
-            this.brokerServer
-                    .getBalancedManager()
-                    .getExternalLoadBalanced()
-                    .listBrokerClientProxy()
-                    .forEach(consumer);
+            extractedLogic(moduleMessage);
         }
 
         if (brokerClientType == BrokerClientType.EXTERNAL) {
-            // 将所有游戏逻辑服的信息发送给当前游戏对外服
-            String address = moduleMessage.getAddress();
-            RpcServer rpcServer = this.brokerServer.getRpcServer();
-
-            Consumer<BrokerClientModuleMessage> consumer = message -> {
-                try {
-                    // 将【游戏逻辑服】的模块信息发送给【游戏对外服】
-                    rpcServer.oneway(address, message);
-                } catch (RemotingException | InterruptedException e) {
-                    log.error(e.getMessage(), e);
-                }
-            };
-
-            this.brokerClientModules.listBrokerClientModuleMessage()
-                    .stream()
-                    .filter(message -> message.getBrokerClientType() == BrokerClientType.LOGIC)
-                    .forEach(consumer);
+            extractedExternal(moduleMessage);
         }
+    }
+
+    private void extractedExternal(BrokerClientModuleMessage moduleMessage) {
+        // 将所有游戏逻辑服的信息发送给当前游戏对外服
+        String address = moduleMessage.getAddress();
+        RpcServer rpcServer = this.brokerServer.getRpcServer();
+
+        Consumer<BrokerClientModuleMessage> consumer = message -> {
+            try {
+                // 将【游戏逻辑服】的模块信息发送给【游戏对外服】
+                rpcServer.oneway(address, message);
+            } catch (RemotingException | InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+        };
+
+        this.brokerClientModules.listBrokerClientModuleMessage()
+                .stream()
+                .filter(message -> message.getBrokerClientType() == BrokerClientType.LOGIC)
+                .forEach(consumer);
+    }
+
+    private void extractedLogic(BrokerClientModuleMessage moduleMessage) {
+        cmdRegions.loading(moduleMessage);
+
+        // 将当前游戏逻辑服的信息，发送给所有的游戏对外服
+        Consumer<BrokerClientProxy> consumer = proxy -> {
+            try {
+                // 将【游戏逻辑服】的模块信息发送给【游戏对外服】
+                proxy.oneway(moduleMessage);
+            } catch (RemotingException | InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+        };
+
+        this.brokerServer
+                .getBalancedManager()
+                .getExternalLoadBalanced()
+                .listBrokerClientProxy()
+                .forEach(consumer);
     }
 
     private void printCluster(BrokerClusterMessage brokerClusterMessage) {
@@ -194,7 +207,6 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
         }
     }
 
-
     @Override
     public String interest() {
         return BrokerClientModuleMessage.class.getName();
@@ -208,5 +220,10 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
     @Override
     public void setBrokerClientModules(BrokerClientModules brokerClientModules) {
         this.brokerClientModules = brokerClientModules;
+    }
+
+    @Override
+    public void setCmdRegions(CmdRegions cmdRegions) {
+        this.cmdRegions = cmdRegions;
     }
 }

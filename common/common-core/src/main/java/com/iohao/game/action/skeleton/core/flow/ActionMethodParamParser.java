@@ -19,6 +19,8 @@
  */
 package com.iohao.game.action.skeleton.core.flow;
 
+import com.iohao.game.common.kit.EmptyConst;
+
 /**
  * action 方法参数解析器 actionCommand
  *
@@ -27,7 +29,7 @@ package com.iohao.game.action.skeleton.core.flow;
  */
 public interface ActionMethodParamParser {
     /** 方法空参数 */
-    Object[] METHOD_PARAMS = new Object[0];
+    Object[] METHOD_PARAMS = EmptyConst.emptyObjects;
 
     /**
      * 参数解析

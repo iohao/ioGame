@@ -27,6 +27,23 @@
             </Policies>
         </RollingRandomAccessFile>
 
+        <RollingRandomAccessFile name="CommonExternalAppender"
+                                 immediateFlush="false"
+                                 fileName="${LOG_HOME}/common-external.log"
+                                 append="true"
+                                 filePattern="${LOG_HOME}/common-external.log.%d{yyyy-MM-dd}">
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="${LOG_LEVEL}" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout charset="${LOG_ENCODE}">
+                <pattern>%d %-5p [%C{1}#%L] [%t] %m%n%throwable</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
         <RollingRandomAccessFile name="ConnectionDefaultAppender"
                                  immediateFlush="false"
                                  fileName="${LOG_HOME}/connection-default.log"
@@ -115,6 +132,11 @@
             <appender-ref ref="ERROR-APPENDER"/>
         </AsyncLogger>
 
+        <AsyncLogger name="CommonExternal" level="${LOG_LEVEL}" additivity="false">
+            <appender-ref ref="CommonExternalAppender"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+        </AsyncLogger>
+
         <AsyncLogger name="ClusterDefault" level="${LOG_LEVEL}" additivity="false">
             <appender-ref ref="ClusterDefaultAppender"/>
             <appender-ref ref="ERROR-APPENDER"/>
@@ -137,6 +159,7 @@
 
         <root level="${LOG_LEVEL}">
             <appender-ref ref="CommonDefaultAppender"/>
+            <appender-ref ref="CommonExternalAppender"/>
             <appender-ref ref="ERROR-APPENDER"/>
             <appender-ref ref="STDOUT"/>
         </root>

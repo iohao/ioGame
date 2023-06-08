@@ -35,13 +35,13 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-public class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
+public final class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
 
     /**
      * 路由与逻辑服域的关联
      * <pre>
      *     key : cmdMerge
-     *     value : BoltClientRegion
+     *     value : BrokerClientRegion
      * </pre>
      */
     final Map<Integer, BrokerClientRegion> cmdClientRegionMap = new NonBlockingHashMap<>();
@@ -50,7 +50,7 @@ public class LogicBrokerClientLoadBalanced implements BrokerClientLoadBalanced {
      * 逻辑服tag 与逻辑服域的关联
      * <pre>
      *     key : tag
-     *     value : BoltClientRegion
+     *     value : BrokerClientRegion
      * </pre>
      */
     final Map<String, BrokerClientRegion> tagClientRegionMap = new NonBlockingHashMap<>();

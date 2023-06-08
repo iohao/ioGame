@@ -26,6 +26,7 @@ import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.message.InnerModuleMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
@@ -33,7 +34,9 @@ import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
+import com.iohao.game.bolt.broker.server.kit.EndPointClientIdKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.core.common.cmd.CmdRegions;
 import lombok.Setter;
 import org.slf4j.Logger;
 
@@ -49,11 +52,14 @@ import org.slf4j.Logger;
  * @date 2022-05-14
  */
 public class InnerModuleMessageBrokerProcessor extends AbstractAsyncUserProcessor<InnerModuleMessage>
-        implements BrokerServerAware {
+        implements BrokerServerAware, CmdRegionsAware {
     static final Logger log = IoGameLoggerFactory.getLoggerCommon();
 
     @Setter
     BrokerServer brokerServer;
+
+    @Setter
+    CmdRegions cmdRegions;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, InnerModuleMessage innerModuleMessage) {
@@ -73,7 +79,9 @@ public class InnerModuleMessageBrokerProcessor extends AbstractAsyncUserProcesso
             return;
         }
 
-        // 逻辑服的负载均衡
+        EndPointClientIdKit.endPointClientId(headMetadata, this.cmdRegions);
+
+        // 从游戏逻辑服区域中查找一个游戏逻辑服，用于处理请求
         BrokerClientProxy brokerClientProxy = brokerClientRegion.getBrokerClientProxy(headMetadata);
 
         if (brokerClientProxy == null) {

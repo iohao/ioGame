@@ -22,9 +22,7 @@ package com.iohao.game.common.kit;
 
 import lombok.experimental.UtilityClass;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -73,5 +71,13 @@ public class CollKit {
     public boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
+
+   public <T> Optional<T> findAny(Set<T> set) {
+        if (isEmpty(set)) {
+            return Optional.empty();
+        }
+
+        return set.stream().findAny();
+   }
 
 }

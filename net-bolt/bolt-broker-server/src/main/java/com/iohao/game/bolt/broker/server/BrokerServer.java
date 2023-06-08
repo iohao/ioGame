@@ -27,6 +27,8 @@ import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.core.common.cmd.CmdRegions;
+import com.iohao.game.core.common.cmd.DefaultCmdRegions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,12 +46,14 @@ import org.slf4j.Logger;
  * @date 2022-05-14
  */
 @Getter
-@Setter(AccessLevel.PACKAGE)
 @Accessors(chain = true)
+@Setter(AccessLevel.PACKAGE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerServer {
     private static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     final BalancedManager balancedManager = new BalancedManager(this);
+    final CmdRegions cmdRegions = new DefaultCmdRegions();
+
 
     /**
      * brokerId （游戏网关的id），服务器唯一标识
@@ -71,6 +75,8 @@ public class BrokerServer {
     BrokerClusterManager brokerClusterManager;
 
     BrokerClientModules brokerClientModules;
+
+
 
     BrokerServer() {
     }

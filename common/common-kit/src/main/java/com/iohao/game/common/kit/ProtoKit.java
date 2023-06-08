@@ -35,8 +35,6 @@ import java.util.Objects;
 public class ProtoKit {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
-    final byte[] emptyBytes = new byte[0];
-
     /**
      * 将对象转为 pb 字节数组
      *
@@ -47,7 +45,7 @@ public class ProtoKit {
     public byte[] toBytes(Object data) {
 
         if (Objects.isNull(data)) {
-            return emptyBytes;
+            return EmptyConst.emptyBytes;
         }
 
         Class clazz = data.getClass();
@@ -59,7 +57,7 @@ public class ProtoKit {
             log.error(e.getMessage(), e);
         }
 
-        return emptyBytes;
+        return EmptyConst.emptyBytes;
     }
 
     /**

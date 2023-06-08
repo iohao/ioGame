@@ -46,7 +46,9 @@ public interface BrokerClientRegion {
      *
      * @return 统计
      */
-    int count();
+    default int count() {
+        return this.getBrokerClientProxyMap().size();
+    }
 
     /**
      * 添加逻辑服

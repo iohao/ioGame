@@ -40,7 +40,7 @@ public interface UserSessionAttr {
      *     意思是无论启动了多少个同类型的逻辑服，都会给到这个逻辑服来处理。
      *
      *     see {@link com.iohao.game.common.kit.MurmurHash3#hash32(String)}
-     *     see {@link EndPointLogicServerMessage#getLogicServerId()}
+     *     see {@link EndPointLogicServerMessage#addLogicServerId(String)}
      * </pre>
      */
     AttributeKey<Integer> endPointLogicServerId = AttributeKey.valueOf("endPointLogicServerId");

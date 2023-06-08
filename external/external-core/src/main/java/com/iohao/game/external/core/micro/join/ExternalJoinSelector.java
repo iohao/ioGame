@@ -1,0 +1,54 @@
+/*
+ * ioGame
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
+ * # iohao.com . 渔民小镇
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+package com.iohao.game.external.core.micro.join;
+
+import com.iohao.game.external.core.ExternalCoreSetting;
+import com.iohao.game.external.core.config.ExternalJoinEnum;
+
+/**
+ * 游戏对外服连接方式选择器
+ * <pre>
+ *     连接方式：tcp、websocket、udp、kcp
+ *
+ *     Selector 作用是根据当前的连接方式（实现类），初始化一此属性和编解码
+ *     <ui>
+ *         <li>getCodecPipeline：编解码相关的 Pipeline</li>
+ *         <li>defaultSetting：相关连接方式的一些默认设置</li>
+ *     </ui>
+ * </pre>
+ *
+ * @author 渔民小镇
+ * @date 2023-05-29
+ */
+public interface ExternalJoinSelector {
+    /**
+     * 连接方式
+     *
+     * @return 连接方式
+     */
+    ExternalJoinEnum getExternalJoinEnum();
+
+    /**
+     * 相关连接方式的一些默认设置
+     *
+     * @param coreSetting coreSetting
+     */
+    void defaultSetting(ExternalCoreSetting coreSetting);
+}

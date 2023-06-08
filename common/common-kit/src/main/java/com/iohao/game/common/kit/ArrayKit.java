@@ -105,6 +105,10 @@ public class ArrayKit {
         return array == null || array.length == 0;
     }
 
+    public boolean isEmpty(int[] array) {
+        return array == null || array.length == 0;
+    }
+
     public boolean isEmpty(Object[] array) {
         return array == null || array.length == 0;
     }

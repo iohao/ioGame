@@ -31,10 +31,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 骨架构建器
@@ -57,7 +54,7 @@ public final class BarSkeletonBuilder {
     /** handler 列表 */
     final List<Handler> handlerList = new LinkedList<>();
     /** ActionCommand 执行前与执行后的逻辑钩子类 */
-    final List<ActionMethodInOut> inOutList = new LinkedList<>();
+    final Map<Class<?>, ActionMethodInOut> inOutMap = new HashMap<>();
     /** action class */
     final List<Class<?>> actionControllerClazzList = new LinkedList<>();
     /** action send class */
@@ -174,13 +171,17 @@ public final class BarSkeletonBuilder {
 
     /**
      * 添加 inOut
+     * <pre>
+     *     如果存在相同的类型，则覆盖之前的
+     * </pre>
      *
      * @param inOut inOut
      * @return this
      */
     public BarSkeletonBuilder addInOut(ActionMethodInOut inOut) {
         Objects.requireNonNull(inOut);
-        this.inOutList.add(inOut);
+        Class<? extends ActionMethodInOut> key = inOut.getClass();
+        this.inOutMap.put(key, inOut);
         return this;
     }
 
@@ -196,7 +197,8 @@ public final class BarSkeletonBuilder {
     }
 
     private void extractedInOut(BarSkeleton barSkeleton) {
-        var inOutManager = new InOutManager(this.setting, this.inOutList);
+        List<ActionMethodInOut> list = this.inOutMap.values().stream().toList();
+        var inOutManager = new InOutManager(this.setting, list);
         barSkeleton.setInOutManager(inOutManager);
     }
 

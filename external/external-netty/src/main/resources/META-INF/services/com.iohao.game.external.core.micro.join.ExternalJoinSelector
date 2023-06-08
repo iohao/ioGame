@@ -1,0 +1,2 @@
+com.iohao.game.external.core.netty.micro.join.TcpExternalJoinSelector
+com.iohao.game.external.core.netty.micro.join.WebSocketExternalJoinSelector
