@@ -33,9 +33,7 @@ import lombok.ToString;
 @ToString
 @ProtobufClass
 public final class StringValue {
-    /**
-     * string value
-     */
+    /** string value */
     @Protobuf(fieldType = FieldType.STRING, order = 1)
     public String value;
 

@@ -35,9 +35,7 @@ import java.util.List;
 @ToString
 @ProtobufClass
 public final class BoolValueList {
-    /**
-     * boolList
-     */
+    /** boolList */
     @Protobuf(fieldType = FieldType.BOOL, order = 1)
     public List<Boolean> values;
 

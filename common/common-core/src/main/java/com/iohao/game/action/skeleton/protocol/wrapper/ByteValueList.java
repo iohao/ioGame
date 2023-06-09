@@ -35,9 +35,7 @@ import java.util.List;
 @ToString
 @ProtobufClass
 public final class ByteValueList {
-    /**
-     * byte[] List
-     */
+    /** byte[] List */
     @Protobuf(fieldType = FieldType.BYTES, order = 1)
     public List<byte[]> values;
 

@@ -33,9 +33,7 @@ import lombok.ToString;
 @ToString
 @ProtobufClass
 public final class IntValue {
-    /**
-     * int 值
-     */
+    /** int 值 */
     @Protobuf(fieldType = FieldType.SINT32, order = 1)
     public int value;
 
