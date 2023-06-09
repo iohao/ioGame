@@ -77,7 +77,7 @@ public class BrokerExternalKit {
             return;
         }
 
-        boolean toggleAK47 = IoGameGlobalConfig.broadcastSniperToggleAK47;
+        boolean toggleAK47 = IoGameGlobalConfig.brokerSniperToggleAK47;
         if (toggleAK47) {
             // 给所有的游戏对外服发送
             sendMessageToExternals(brokerServer, broadcastMessage);

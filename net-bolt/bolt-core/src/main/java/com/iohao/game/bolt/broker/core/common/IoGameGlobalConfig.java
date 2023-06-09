@@ -52,11 +52,25 @@ public class IoGameGlobalConfig {
     /** true 开启广播相关日志，默认为 false */
     public boolean broadcastLog = BrokerGlobalConfig.broadcastLog;
     /**
-     * 广播配置
+     * Broker（游戏网关）转发消息容错配置
      * <pre>
-     *     注意事项：
-     *         配置只在 Broker（游戏网关）生效。
+     *     游戏逻辑服与游戏对外服通信时，如果没有明确指定要通信游戏对外服，游戏网关则会将消息转发到所有的游戏对外服上。
+     *     如果指定了游戏对外服的，游戏网关则会将消息转发到该游戏对外服上，而不会将消息转发到所有的对外服上。
      *
+     *     当为 true 时，开启容错机制
+     *         表示开发者在发送消息时，如果指定了游戏对外服的，
+     *         但【游戏网关】中没有找到所指定的【游戏对外服】，则会将消息转发到所有的游戏对外服上，
+     *         这么做的目的是，即使开发者填错了指定的游戏对外服，也能保证消息可以送达到游戏对外服。
+     *
+     *     当为 false 时，关闭容错机制
+     *         表示在【游戏网关】中找不到指定的【游戏对外服】时，则不管了。
+     *
+     *     支持的通讯方式场景
+     *         <a href="https://www.yuque.com/iohao/game/qv4qfo">广播、推送</a>
+     *         <a href="https://www.yuque.com/iohao/game/ivxsw5">获取游戏对外服的数据与扩展</a>
+     * </pre>
+     * 另一种叙述版本
+     * <pre>
      *     作用：
      *         在游戏逻辑服发送广播时，支持指定游戏对外服来广播；
      *         如果你能事先知道所要广播的游戏对外服，那么在广播时通过指定游戏对外服，可以避免一些无效的转发。
@@ -64,7 +78,7 @@ public class IoGameGlobalConfig {
      *         为了更好的理解的这个配置的作用，这里将作一些比喻：
      *         1. 将广播时指定的游戏对外服，看作是目标
      *         2. 将发送广播的游戏逻辑服，看作是命令
-     *         3. 而 Broker（游戏网关），则是一名射击员；射击员手上有两把枪，分别是狙击枪和 AK47。
+     *         3. 而 Broker（游戏网关）职责是对消息做转发，可看成是一名射击员；射击员手上有两把枪，分别是狙击枪和 AK47。
      *
      *         狙击枪的作用是单点目标，而 AK47 的作用则是扫射多个目标（就是所有的游戏对外服）。
      *
@@ -77,7 +91,7 @@ public class IoGameGlobalConfig {
      *         当设置为 false 时，表示找不到指定的【游戏对外服】时，则不管了。
      * </pre>
      */
-    public boolean broadcastSniperToggleAK47 = true;
+    public boolean brokerSniperToggleAK47 = true;
 
     /** true 开启集群相关日志 */
     public boolean brokerClusterLog = BrokerGlobalConfig.brokerClusterLog;

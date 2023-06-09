@@ -67,9 +67,12 @@ public class ExternalBrokerClientLoadBalanced implements BrokerClientLoadBalance
         this.resetSelector();
     }
 
-
     public BrokerClientProxy get(int externalId) {
         return this.map.get(externalId);
+    }
+
+    public boolean contains(int externalId) {
+        return this.map.containsKey(externalId);
     }
 
     /**

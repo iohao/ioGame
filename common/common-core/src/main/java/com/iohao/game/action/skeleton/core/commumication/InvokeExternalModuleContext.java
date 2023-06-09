@@ -19,6 +19,7 @@
  */
 package com.iohao.game.action.skeleton.core.commumication;
 
+import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
 
 import java.io.Serializable;
@@ -48,7 +49,7 @@ public interface InvokeExternalModuleContext {
      *
      * @param bizCode 业务码
      * @param data    业务参数
-     * @return ResponseCollectExternalMessage
+     * @return ResponseCollectExternalMessage 一定不为 null
      */
     ResponseCollectExternalMessage invokeExternalModuleCollectMessage(int bizCode, Serializable data);
 
@@ -60,9 +61,21 @@ public interface InvokeExternalModuleContext {
      * </pre>
      *
      * @param bizCode 业务码
-     * @return ResponseCollectExternalMessage
+     * @return ResponseCollectExternalMessage 一定不为 null
      */
     default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(int bizCode) {
         return this.invokeExternalModuleCollectMessage(bizCode, null);
     }
+
+    /**
+     * 【游戏逻辑服】访问多个【游戏对外服】
+     * <pre>
+     *     有些数据只存在于游戏对外服，但由于游戏对外服可能会有多个，特别是在分步式场景下。
+     *     所以这里发起请求时，会调用多个游戏对外服来处理这个请求。
+     * </pre>
+     *
+     * @param request 请求
+     * @return ResponseCollectExternalMessage 一定不为 null
+     */
+    ResponseCollectExternalMessage invokeExternalModuleCollectMessage(RequestCollectExternalMessage request);
 }

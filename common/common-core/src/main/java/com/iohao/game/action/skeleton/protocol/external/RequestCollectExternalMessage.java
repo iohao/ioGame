@@ -29,6 +29,8 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serial;
 import java.io.Serializable;
 
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+
 /**
  * 游戏逻辑服访问游戏对外服，同时访问多个游戏对外服 - 请求
  * <pre>
@@ -61,6 +63,17 @@ public final class RequestCollectExternalMessage implements Serializable {
     int bizCode;
     /** 请求业务数据 */
     Serializable data;
+
+    /**
+     * 游戏对外服 idHash
+     * <pre>
+     *     当 sourceClientId == 0 时，将访问【所有的】游戏对外服。
+     *     当 sourceClientId != 0 时，将访问【指定的】游戏对外服。
+     *
+     *     为方便记忆，与 {@link HeadMetadata#setSourceClientId(int)} 同名
+     * </pre>
+     */
+    int sourceClientId;
 
     @SuppressWarnings("unchecked")
     public <T> T getData() {

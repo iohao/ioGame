@@ -26,10 +26,12 @@ import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMe
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalItemMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.ExternalBrokerClientLoadBalanced;
+import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.common.kit.CompletableFutureKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
@@ -40,6 +42,7 @@ import org.slf4j.Logger;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 游戏逻辑服访问游戏对外服，同时访问多个游戏对外服 - 请求
@@ -61,7 +64,6 @@ public class InnerModuleRequestCollectExternalMessageBrokerProcessor extends Abs
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestCollectExternalMessage requestCollectMessage) {
-
         BalancedManager balancedManager = brokerServer.getBalancedManager();
         var balanced = balancedManager.getExternalLoadBalanced();
 
@@ -82,32 +84,40 @@ public class InnerModuleRequestCollectExternalMessageBrokerProcessor extends Abs
             RequestCollectExternalMessage requestCollectMessage,
             ExternalBrokerClientLoadBalanced externalLoadBalanced) {
 
-        return externalLoadBalanced.listBrokerClientProxy().stream().map(brokerClientProxy -> {
-            // 逻辑服 id
+        Stream<BrokerClientProxy> stream = externalLoadBalanced.listBrokerClientProxy().stream();
+        // 游戏对外服 id
+        int sourceClientId = requestCollectMessage.getSourceClientId();
+
+        if (IoGameGlobalConfig.brokerSniperToggleAK47) {
+            // 当为 true 时，开启容错机制，只有找到了指定的游戏对外服，则增加过虑条件
+            if (externalLoadBalanced.contains(sourceClientId)) {
+                stream = stream.filter(brokerClientProxy -> brokerClientProxy.getIdHash() == sourceClientId);
+            }
+        } else {
+            // 当为 false 时，表示关闭容错机制，直接增加过虑条件
+            stream = stream.filter(brokerClientProxy -> brokerClientProxy.getIdHash() == sourceClientId);
+        }
+
+        return stream.map(brokerClientProxy -> CompletableFuture.supplyAsync(() -> {
+            ResponseCollectExternalItemMessage itemMessage;
+
+            try {
+                // 请求方请求其它服务器得到的响应数据
+                itemMessage = brokerClientProxy.invokeSync(requestCollectMessage);
+            } catch (RemotingException | InterruptedException e) {
+                log.error(e.getMessage(), e);
+                return null;
+            }
+
+            // 有错误或没有数据的，就不做处理了，意义不大
+            if (itemMessage == null) {
+                return null;
+            }
+
             String logicServerId = brokerClientProxy.getId();
-
-            // 异步请求逻辑服
-            return CompletableFuture.supplyAsync(() -> {
-                ResponseCollectExternalItemMessage itemMessage;
-
-                try {
-                    // 请求方请求其它服务器得到的响应数据
-                    itemMessage = brokerClientProxy.invokeSync(requestCollectMessage);
-                } catch (RemotingException | InterruptedException e) {
-                    log.error(e.getMessage(), e);
-                    return null;
-                }
-
-                // 有错误或没有数据的，就不做处理了，意义不大
-                if (itemMessage == null) {
-                    return null;
-                }
-
-                // 得到一个逻辑服的结果
-                return itemMessage.setLogicServerId(logicServerId);
-            });
-
-        }).collect(Collectors.toList());
+            // 得到一个逻辑服的结果
+            return itemMessage.setLogicServerId(logicServerId);
+        })).toList();
     }
 
     @Override

@@ -216,13 +216,22 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
                 .setBizCode(bizCode)
                 .setData(data);
 
+        return this.invokeExternalModuleCollectMessage(request);
+    }
+
+    @Override
+    public ResponseCollectExternalMessage invokeExternalModuleCollectMessage(RequestCollectExternalMessage request) {
         try {
             return (ResponseCollectExternalMessage) this.invokeSync(request);
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);
         }
 
-        return null;
+        /*
+         * 给一个空对象，这样调用端可以减少一些 null 判断。
+         * 而且正常情况下，也走不到这里。
+         */
+        return new ResponseCollectExternalMessage();
     }
 
     @Override
