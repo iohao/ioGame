@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -35,7 +35,15 @@ import java.util.List;
 @ToString
 @ProtobufClass
 public final class BoolValueList {
-    /** boolList */
+    /**
+     * boolList
+     */
     @Protobuf(fieldType = FieldType.BOOL, order = 1)
     public List<Boolean> values;
+
+    public static BoolValueList of(List<Boolean> values) {
+        var theValue = new BoolValueList();
+        theValue.values = values;
+        return theValue;
+    }
 }

@@ -33,7 +33,15 @@ import lombok.ToString;
 @ToString
 @ProtobufClass
 public final class StringValue {
-    /** string value */
+    /**
+     * string value
+     */
     @Protobuf(fieldType = FieldType.STRING, order = 1)
     public String value;
+
+    public static StringValue of(String value) {
+        var theValue = new StringValue();
+        theValue.value = value;
+        return theValue;
+    }
 }

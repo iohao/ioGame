@@ -38,7 +38,15 @@ import java.util.List;
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
 public final class LongValueList {
-    /** longList */
+    /**
+     * longList
+     */
     @Protobuf(fieldType = FieldType.SINT64, order = 1)
     public List<Long> values;
+
+    public static LongValueList of(List<Long> values) {
+        var theValue = new LongValueList();
+        theValue.values = values;
+        return theValue;
+    }
 }

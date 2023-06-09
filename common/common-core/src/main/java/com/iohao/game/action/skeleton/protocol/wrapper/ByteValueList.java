@@ -35,7 +35,15 @@ import java.util.List;
 @ToString
 @ProtobufClass
 public final class ByteValueList {
-    /** byte[] List */
+    /**
+     * byte[] List
+     */
     @Protobuf(fieldType = FieldType.BYTES, order = 1)
     public List<byte[]> values;
+
+    public static ByteValueList of(List<byte[]> values) {
+        var theValue = new ByteValueList();
+        theValue.values = values;
+        return theValue;
+    }
 }

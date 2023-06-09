@@ -35,7 +35,15 @@ import java.util.List;
 @ToString
 @ProtobufClass
 public final class IntValueList {
-    /** intList */
+    /**
+     * intList
+     */
     @Protobuf(fieldType = FieldType.SINT32, order = 1)
     public List<Integer> values;
+
+    public static IntValueList of(List<Integer> values) {
+        var theValue = new IntValueList();
+        theValue.values = values;
+        return theValue;
+    }
 }

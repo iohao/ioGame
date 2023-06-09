@@ -35,7 +35,15 @@ import java.util.List;
 @ToString
 @ProtobufClass
 public final class StringValueList {
-    /** string list */
+    /**
+     * string list
+     */
     @Protobuf(fieldType = FieldType.STRING, order = 1)
     public List<String> values;
+
+    public static StringValueList of(List<String> values) {
+        var theValue = new StringValueList();
+        theValue.values = values;
+        return theValue;
+    }
 }

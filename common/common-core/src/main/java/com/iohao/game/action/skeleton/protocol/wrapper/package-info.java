@@ -17,32 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.action.skeleton.protocol.wrapper;
-
-import com.baidu.bjf.remoting.protobuf.FieldType;
-import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
-import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
-import lombok.AccessLevel;
-import lombok.ToString;
-import lombok.experimental.FieldDefaults;
-
 /**
- * long 包装类
+ * <a href="https://www.yuque.com/iohao/game/ieimzn">装箱、拆箱包装;解决协议碎片</a>
  *
  * @author 渔民小镇
- * @date 2023-02-10
+ * @date 2023-06-09
  */
-@ToString
-@ProtobufClass
-@FieldDefaults(level = AccessLevel.PUBLIC)
-public final class LongValue {
-    /** long 值 */
-    @Protobuf(fieldType = FieldType.SINT64, order = 1)
-    public long value;
-
-    public static LongValue of(long value) {
-        var theValue = new LongValue();
-        theValue.value = value;
-        return theValue;
-    }
-}
+package com.iohao.game.action.skeleton.protocol.wrapper;
