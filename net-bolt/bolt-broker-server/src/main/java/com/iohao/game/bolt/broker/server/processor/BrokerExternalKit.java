@@ -26,12 +26,15 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
+import com.iohao.game.bolt.broker.server.balanced.ExternalBrokerClientLoadBalanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.experimental.UtilityClass;
 import org.slf4j.Logger;
 
-import java.util.Objects;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * 工具类：把游戏逻辑服的广播转发到游戏对外服
@@ -50,38 +53,26 @@ public class BrokerExternalKit {
      * @param broadcastMessage 数据
      */
     public void sendMessageToExternal(BrokerServer brokerServer, BroadcastMessage broadcastMessage) {
+        // 指定的游戏对外服 id
         ResponseMessage responseMessage = broadcastMessage.getResponseMessage();
         HeadMetadata headMetadata = responseMessage.getHeadMetadata();
-        // 指定的游戏对外服 id
         int sourceClientId = headMetadata.getSourceClientId();
 
-        // 表示没有指定要访问的游戏对外服
-        if (sourceClientId == 0) {
-            // 给所有的游戏对外服发送
-            sendMessageToExternals(brokerServer, broadcastMessage);
-            return;
-        }
-
+        // 游戏对外服相关
         BalancedManager balancedManager = brokerServer.getBalancedManager();
         var externalLoadBalanced = balancedManager.getExternalLoadBalanced();
-        // 得到指定的游戏对外服
-        BrokerClientProxy brokerClientProxy = externalLoadBalanced.get(sourceClientId);
-        if (Objects.nonNull(brokerClientProxy)) {
-            try {
-                //  发送到指定的游戏对外服
-                brokerClientProxy.oneway(broadcastMessage);
-            } catch (RemotingException | InterruptedException e) {
-                log.error(e.getMessage(), e);
-            }
 
+        // 没有指定游戏对外服 id，全部转发
+        if (sourceClientId == 0) {
+            List<BrokerClientProxy> list = externalLoadBalanced.listBrokerClientProxy();
+            sendMessage(list, broadcastMessage);
             return;
         }
 
-        boolean toggleAK47 = IoGameGlobalConfig.brokerSniperToggleAK47;
-        if (toggleAK47) {
-            // 给所有的游戏对外服发送
-            sendMessageToExternals(brokerServer, broadcastMessage);
-        }
+        // 指定了游戏对外服
+        Stream<BrokerClientProxy> stream = streamToggle(sourceClientId, externalLoadBalanced);
+        Consumer<BrokerClientProxy> consumer = consumer(broadcastMessage);
+        stream.forEach(consumer);
     }
 
     /**
@@ -93,14 +84,55 @@ public class BrokerExternalKit {
     public void sendMessageToExternals(BrokerServer brokerServer, Object message) {
         BalancedManager balancedManager = brokerServer.getBalancedManager();
         var externalLoadBalanced = balancedManager.getExternalLoadBalanced();
+        List<BrokerClientProxy> list = externalLoadBalanced.listBrokerClientProxy();
+        sendMessage(list, message);
+    }
 
-        try {
-            for (BrokerClientProxy brokerClientProxy : externalLoadBalanced.listBrokerClientProxy()) {
-                //  转发到对外服务器
-                brokerClientProxy.oneway(message);
-            }
-        } catch (RemotingException | InterruptedException e) {
-            log.error(e.getMessage(), e);
+    /**
+     * 得到 Stream，根据 Broker（游戏网关）转发消息容错配置
+     * <pre>
+     *     更详细的说明可以看 {@link IoGameGlobalConfig#brokerSniperToggleAK47}
+     * </pre>
+     *
+     * @param sourceClientId       游戏对外服 id
+     * @param externalLoadBalanced externalLoadBalanced
+     * @return 得到 Stream
+     */
+    Stream<BrokerClientProxy> streamToggle(int sourceClientId, ExternalBrokerClientLoadBalanced externalLoadBalanced) {
+        List<BrokerClientProxy> list = externalLoadBalanced.listBrokerClientProxy();
+        Stream<BrokerClientProxy> stream = list.stream();
+
+        // 没有指定游戏对外服 id，不增加任何过虑条件
+        if (sourceClientId == 0) {
+            return stream;
         }
+
+        if (IoGameGlobalConfig.brokerSniperToggleAK47) {
+            // 当为 true 时，开启容错机制，只有找到了指定的游戏对外服，才增加过虑条件
+            if (externalLoadBalanced.contains(sourceClientId)) {
+                stream = stream.filter(brokerClientProxy -> brokerClientProxy.getIdHash() == sourceClientId);
+            }
+        } else {
+            // 当为 false 时，表示关闭容错机制，直接增加过虑条件
+            stream = stream.filter(brokerClientProxy -> brokerClientProxy.getIdHash() == sourceClientId);
+        }
+
+        return stream;
+    }
+
+    private void sendMessage(List<BrokerClientProxy> list, Object message) {
+        Consumer<BrokerClientProxy> consumer = consumer(message);
+        list.forEach(consumer);
+    }
+
+    private Consumer<BrokerClientProxy> consumer(Object message) {
+        return brokerClientProxy -> {
+            try {
+                //  转发到游戏对外服务器
+                brokerClientProxy.oneway(message);
+            } catch (RemotingException | InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+        };
     }
 }

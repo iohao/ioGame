@@ -26,7 +26,6 @@ import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMe
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalItemMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -41,7 +40,6 @@ import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -84,19 +82,9 @@ public class InnerModuleRequestCollectExternalMessageBrokerProcessor extends Abs
             RequestCollectExternalMessage requestCollectMessage,
             ExternalBrokerClientLoadBalanced externalLoadBalanced) {
 
-        Stream<BrokerClientProxy> stream = externalLoadBalanced.listBrokerClientProxy().stream();
         // 游戏对外服 id
         int sourceClientId = requestCollectMessage.getSourceClientId();
-
-        if (IoGameGlobalConfig.brokerSniperToggleAK47) {
-            // 当为 true 时，开启容错机制，只有找到了指定的游戏对外服，则增加过虑条件
-            if (externalLoadBalanced.contains(sourceClientId)) {
-                stream = stream.filter(brokerClientProxy -> brokerClientProxy.getIdHash() == sourceClientId);
-            }
-        } else {
-            // 当为 false 时，表示关闭容错机制，直接增加过虑条件
-            stream = stream.filter(brokerClientProxy -> brokerClientProxy.getIdHash() == sourceClientId);
-        }
+        Stream<BrokerClientProxy> stream = BrokerExternalKit.streamToggle(sourceClientId, externalLoadBalanced);
 
         return stream.map(brokerClientProxy -> CompletableFuture.supplyAsync(() -> {
             ResponseCollectExternalItemMessage itemMessage;
