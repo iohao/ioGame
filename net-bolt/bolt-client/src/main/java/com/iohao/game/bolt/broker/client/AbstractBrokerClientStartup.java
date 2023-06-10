@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -26,6 +26,7 @@ import com.iohao.game.bolt.broker.client.processor.connection.CloseConnectEventC
 import com.iohao.game.bolt.broker.client.processor.connection.ConnectEventClientProcessor;
 import com.iohao.game.bolt.broker.client.processor.connection.ConnectFailedEventClientProcessor;
 import com.iohao.game.bolt.broker.client.processor.connection.ExceptionConnectEventClientProcessor;
+import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
 import com.iohao.game.bolt.broker.core.client.BrokerClientBuilder;
 import com.iohao.game.bolt.broker.core.common.processor.pulse.PulseSignalRequestUserProcessor;
@@ -46,7 +47,7 @@ import java.util.Objects;
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract non-sealed class AbstractBrokerClientStartup implements BrokerClientStartup {
+public abstract non-sealed class AbstractBrokerClientStartup implements BrokerClientStartup, GroupWith {
     /** 连接 broker （游戏网关） 的地址 */
     BrokerAddress brokerAddress;
     /** 业务框架 */
@@ -62,6 +63,7 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
      * </pre>
      */
     BrokerClientBuilder brokerClientBuilder;
+    int withNo;
 
     @Override
     public void connectionEventProcessor(BrokerClientBuilder brokerClientBuilder) {
@@ -111,6 +113,7 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
 
         // 设置 config 配置信息到 BoltBrokerClientBuilder 中
         this.brokerClientBuilder
+                .withNo(this.withNo)
                 .barSkeleton(this.barSkeleton)
                 .brokerAddress(this.brokerAddress);
 
@@ -130,5 +133,10 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
      */
     private void experiment() {
         //        ExtRegions.me().add(new MonitorExtRegion());
+    }
+
+    @Override
+    public void setWithNo(int withNo) {
+        this.withNo = withNo;
     }
 }

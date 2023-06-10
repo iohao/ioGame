@@ -44,6 +44,7 @@ public class IoGameLoggerFactory {
 
     @Setter
     String commonDefaultName = "CommonDefault";
+    String connectionDefaultName = "ConnectionDefault";
 
     /** 日志存放路径: {user.home}/logs */
     final String LOG_PATH = "logging.path";
@@ -88,6 +89,7 @@ public class IoGameLoggerFactory {
     public void printConsole() {
         // 控制台也打印一份
         commonDefaultName = "CommonStdout";
+        connectionDefaultName = commonDefaultName;
     }
 
     public Logger getLogger(Class<?> clazz) {
@@ -106,7 +108,7 @@ public class IoGameLoggerFactory {
     }
 
     public Logger getLoggerConnection() {
-        return getLogger("ConnectionDefault");
+        return getLogger(connectionDefaultName);
     }
 
     public Logger getLoggerCommon() {

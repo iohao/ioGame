@@ -24,6 +24,7 @@ import com.alipay.remoting.rpc.RpcServer;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
+import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
@@ -49,11 +50,10 @@ import org.slf4j.Logger;
 @Accessors(chain = true)
 @Setter(AccessLevel.PACKAGE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrokerServer {
+public class BrokerServer implements GroupWith {
     private static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     final BalancedManager balancedManager = new BalancedManager(this);
     final CmdRegions cmdRegions = new DefaultCmdRegions();
-
 
     /**
      * brokerId （游戏网关的id），服务器唯一标识
@@ -76,7 +76,7 @@ public class BrokerServer {
 
     BrokerClientModules brokerClientModules;
 
-
+    int withNo;
 
     BrokerServer() {
     }
@@ -106,4 +106,8 @@ public class BrokerServer {
         return new BrokerServerBuilder();
     }
 
+    @Override
+    public void setWithNo(int withNo) {
+        this.withNo = withNo;
+    }
 }

@@ -149,6 +149,7 @@ public final class HeadMetadata implements Serializable {
     int[] bindingLogicServerIds;
     /** 临时变量 */
     transient Object other;
+    transient int withNo;
 
     public HeadMetadata setCmdInfo(CmdInfo cmdInfo) {
         this.cmdMerge = cmdInfo.getCmdMerge();

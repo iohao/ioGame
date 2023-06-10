@@ -20,6 +20,7 @@
 package com.iohao.game.external.core.netty;
 
 import com.iohao.game.bolt.broker.client.BrokerClientApplication;
+import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.external.core.ExternalCore;
@@ -42,7 +43,7 @@ import java.util.ServiceLoader;
  * @author 渔民小镇
  * @date 2023-02-19
  */
-public final class DefaultExternalServer implements ExternalServer {
+public final class DefaultExternalServer implements ExternalServer, GroupWith {
     /** 与真实玩家连接的 ExternalCore 服务器 */
     ExternalCore externalCore;
     /** ExternalCore 的一些设置 */
@@ -52,6 +53,7 @@ public final class DefaultExternalServer implements ExternalServer {
     ExternalBrokerClientStartup externalBrokerClientStartup;
     /** 连接 broker （游戏网关） 的地址 */
     BrokerAddress brokerAddress;
+    int withNo;
 
     static {
         ServiceLoader.load(ExternalJoinSelector.class).forEach(ExternalJoinSelectors::putIfAbsent);
@@ -86,6 +88,7 @@ public final class DefaultExternalServer implements ExternalServer {
     }
 
     private void startExternalBrokerClient() {
+        this.externalBrokerClientStartup.setWithNo(this.withNo);
         // 与 Broker 游戏网关通信的 BrokerClient
         var brokerClientBuilder = BrokerClientApplication.initConfig(this.externalBrokerClientStartup);
         // aware 注入扩展
@@ -106,5 +109,10 @@ public final class DefaultExternalServer implements ExternalServer {
 
     public static DefaultExternalServerBuilder newBuilder(int externalCorePort) {
         return new DefaultExternalServerBuilder(externalCorePort);
+    }
+
+    @Override
+    public void setWithNo(int withNo) {
+        this.withNo = withNo;
     }
 }

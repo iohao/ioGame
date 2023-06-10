@@ -21,12 +21,8 @@ package com.iohao.game.bolt.broker.server.balanced.region;
 
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.bolt.broker.core.loadbalance.ElementSelector;
-import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
 import org.jctools.maps.NonBlockingHashMap;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -34,8 +30,6 @@ import java.util.Objects;
  * 负载均衡，相同业务模块（逻辑服）的信息域
  * <pre>
  *     即同一个业务模块起了N个服务（来负载）
- *
- *
  * </pre>
  *
  * @author 渔民小镇
@@ -51,8 +45,7 @@ public final class StrictBrokerClientRegion implements BrokerClientRegion {
      */
     final Map<Integer, BrokerClientProxy> brokerClientProxyMap = new NonBlockingHashMap<>();
     final String tag;
-
-    ElementSelector<BrokerClientProxy> elementSelector;
+    WithElementSelector withElementSelector;
 
     public StrictBrokerClientRegion(String tag) {
         this.tag = tag;
@@ -73,12 +66,11 @@ public final class StrictBrokerClientRegion implements BrokerClientRegion {
             return brokerClientProxy;
         }
 
-        if (Objects.isNull(this.elementSelector)) {
+        if (Objects.isNull(this.withElementSelector)) {
             return null;
         }
 
-        // 随机选一个逻辑服
-        return this.elementSelector.get();
+        return this.withElementSelector.next(headMetadata.getWithNo());
     }
 
     @Override
@@ -120,8 +112,6 @@ public final class StrictBrokerClientRegion implements BrokerClientRegion {
     }
 
     private void resetSelector() {
-        // 随机选择器
-        List<BrokerClientProxy> list = new ArrayList<>(brokerClientProxyMap.values());
-        this.elementSelector = new RandomElementSelector<>(list);
+        this.withElementSelector = new WithElementSelector(this.brokerClientProxyMap);
     }
 }

@@ -55,7 +55,6 @@ import java.util.function.Supplier;
 @Accessors(fluent = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerClientBuilder {
-
     /** 连接处理器 */
     final Map<ConnectionEventType, Supplier<ConnectionEventProcessor>> connectionEventProcessorMap = new NonBlockingHashMap<>();
     /** 用户处理器 */
@@ -111,6 +110,7 @@ public class BrokerClientBuilder {
     AwareInject awareInject;
     /** 逻辑服状态 */
     int status = BrokerClientStatusConfig.normal;
+    int withNo;
 
     BrokerClientBuilder() {
     }
@@ -187,6 +187,8 @@ public class BrokerClientBuilder {
                 .setStatus(this.status)
                 ;
 
+        brokerClient.setWithNo(this.withNo);
+
         // 保存一下 BrokerClient 的引用
         if (this.brokerClientType == BrokerClientType.LOGIC) {
             BrokerClientHelper.brokerClient = brokerClient;
@@ -254,6 +256,7 @@ public class BrokerClientBuilder {
                 .setBrokerClientType(this.brokerClientType)
                 .setTag(this.tag)
                 .setStatus(this.status)
+                .setWithNo(this.withNo)
                 ;
     }
 

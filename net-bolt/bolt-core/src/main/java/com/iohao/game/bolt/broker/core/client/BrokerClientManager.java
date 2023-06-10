@@ -58,7 +58,6 @@ import java.util.function.Supplier;
 public final class BrokerClientManager {
     static final Logger log = IoGameLoggerFactory.getLoggerCommon();
 
-
     /**
      * <pre>
      *     key : address ，broker 的地址，格式：ip:port
@@ -66,7 +65,6 @@ public final class BrokerClientManager {
      * </pre>
      */
     final Map<String, BrokerClientItem> brokerClientItemMap = new NonBlockingHashMap<>();
-
     /** 连接 broker （游戏网关） 的地址 */
     BrokerAddress brokerAddress;
     /** 连接事件 */
@@ -83,15 +81,12 @@ public final class BrokerClientManager {
     int timeoutMillis;
     BrokerClient brokerClient;
 
-    public void init() {
+    BrokerClientItem brokerClientItemWith;
 
+    public void init() {
         this.elementSelector = elementSelectorFactory.createElementSelector(Collections.emptyList());
 
         this.register(this.brokerAddress.getAddress());
-    }
-
-    public boolean contains(String address) {
-        return this.brokerClientItemMap.containsKey(address);
     }
 
     public void register(String address) {
@@ -117,13 +112,8 @@ public final class BrokerClientManager {
 
         // 添加映射关系
         this.brokerClientItemMap.put(address, brokerClientItem);
-
         // 生成负载对象
         this.resetSelector();
-    }
-
-    public Set<String> keySet() {
-        return new HashSet<>(this.brokerClientItemMap.keySet());
     }
 
     public void remove(String address) {
@@ -177,11 +167,23 @@ public final class BrokerClientManager {
     }
 
     public BrokerClientItem next() {
+        if (Objects.nonNull(this.brokerClientItemWith)) {
+            return this.brokerClientItemWith;
+        }
+
         return elementSelector.next();
     }
 
     public List<BrokerClientItem> listBrokerClientItem() {
         return new ArrayList<>(brokerClientItemMap.values());
+    }
+
+    public boolean contains(String address) {
+        return this.brokerClientItemMap.containsKey(address);
+    }
+
+    public Set<String> keySet() {
+        return new HashSet<>(this.brokerClientItemMap.keySet());
     }
 
     public void forEach(Consumer<BrokerClientItem> consumer) {

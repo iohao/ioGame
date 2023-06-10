@@ -51,7 +51,6 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
-        Objects.nonNull(remoteAddress);
         doCheckConnection(conn);
         this.remoteAddress = remoteAddress;
         this.connection = conn;
@@ -61,7 +60,6 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
 
         // 设置连接
         brokerClientItem.setConnection(conn);
-
         log.debug("~~~~~~~~~~~ client connect: {}", latch);
         count.increment();
         log.debug("~~~~~~~~~~~ client count: {}", count);

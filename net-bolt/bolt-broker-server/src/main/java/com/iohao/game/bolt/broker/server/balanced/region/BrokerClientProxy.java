@@ -67,6 +67,8 @@ public class BrokerClientProxy {
     /** 逻辑服类型 */
     final BrokerClientType brokerClientType;
     final RpcServer rpcServer;
+    final int withNo;
+
     /** 状态 */
     int status;
 
@@ -83,6 +85,7 @@ public class BrokerClientProxy {
         this.brokerClientType = brokerClientModuleMessage.getBrokerClientType();
         this.cmdMergeList = brokerClientModuleMessage.getCmdMergeList();
         this.rpcServer = rpcServer;
+        this.withNo = brokerClientModuleMessage.getWithNo();
         this.status = brokerClientModuleMessage.getStatus();
     }
 

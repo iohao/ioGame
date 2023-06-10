@@ -59,7 +59,6 @@ public class Broker implements Serializable {
     /** cluster 格式 ip:port */
     String clusterAddress;
 
-
     public Broker(String ip) {
         this.ip = ip;
         startedAt = System.currentTimeMillis();

@@ -102,6 +102,7 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
     Status status = Status.DISCONNECT;
     /** aware 注入扩展 */
     AwareInject awareInject;
+    int brokerServerWithNo;
 
     public BrokerClientItem(String address) {
         this.address = address;
@@ -315,6 +316,8 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
             this.brokerClient.getBrokerClientManager().resetSelector();
 
             this.barSkeleton.getRunners().onStartAfter();
+
+            this.with();
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);
         }
@@ -332,5 +335,18 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    private void with() {
+        int withNo = this.brokerClient.getWithNo();
+
+        if (withNo == 0 || withNo != this.brokerServerWithNo) {
+            this.brokerServerWithNo = 0;
+            return;
+        }
+
+        // 连接与当前 brokerClientItem 是同一个进程的。
+        BrokerClientManager manager = brokerClient.getBrokerClientManager();
+        manager.setBrokerClientItemWith(this);
     }
 }

@@ -71,13 +71,15 @@ public class ConnectionEventBrokerProcessor implements ConnectionEventProcessor,
         connectTimes.incrementAndGet();
         latch.countDown();
 
+        int withNo = brokerServer.getWithNo();
+        requestBrokerClientModuleMessage.setWithNo(withNo);
+
         //  通知客户端发送模块信息
         try {
             brokerServer.getRpcServer().oneway(conn, requestBrokerClientModuleMessage);
         } catch (RemotingException e) {
             log.error(e.getMessage(), e);
         }
-
     }
 
     /**

@@ -24,8 +24,10 @@ import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.client.BrokerClientApplication;
+import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.common.kit.MurmurHash3;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.core.ExternalServer;
 import lombok.AccessLevel;
@@ -37,6 +39,7 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -60,30 +63,21 @@ public final class NettyRunOne {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
     final ExecutorService executorService = ExecutorKit.newCacheThreadPool(NettyRunOne.class.toString());
-    /**
-     * 游戏对外服列表
-     */
+    final int withNo = MurmurHash3.hash32(UUID.randomUUID().toString());
+    /** 游戏对外服列表 */
     List<ExternalServer> externalServerList;
-    /**
-     * 游戏逻辑服
-     */
+    /** 游戏逻辑服 */
     List<AbstractBrokerClientStartup> logicServerList;
-    /**
-     * broker 游戏网关
-     */
+    /** broker 游戏网关 */
     BrokerServer brokerServer;
-    /**
-     * true 在本地启动 broker （游戏网关）
-     */
+    /** true 在本地启动 broker （游戏网关） */
     boolean runBrokerServer = true;
 
     /**
-     * 简单的快速启动
+     * 简单的快速启动，
      * <pre>
-     *     快速启动:
-     *          对外服
-     *          网关服
-     *          逻辑服
+     *     游戏对外服、Broker（游戏网关）、游戏逻辑服这三部分，在一个进程中使用内存通信。
+     *     【单体应用；在开发分步式时，调试更加方便】
      * </pre>
      */
     public void startup() {
@@ -96,6 +90,7 @@ public final class NettyRunOne {
                 this.brokerServer = BrokerServer.newBuilder().build();
             }
 
+            this.brokerServer.setWithNo(this.withNo);
             this.executorService.execute(this.brokerServer::startup);
         }
 
@@ -120,16 +115,25 @@ public final class NettyRunOne {
         return this;
     }
 
-    protected void startupLogic() {
+    private void startupLogic() {
 
         if (Objects.nonNull(this.logicServerList)) {
             // 启动游戏逻辑服
-            this.executorService.execute(() -> this.logicServerList.forEach(BrokerClientApplication::start));
+            this.logicServerList.forEach(logicServer -> {
+                logicServer.setWithNo(withNo);
+                this.executorService.execute(() -> BrokerClientApplication.start(logicServer));
+            });
         }
 
         if (Objects.nonNull(this.externalServerList)) {
             // 启动游戏对外服
-            this.externalServerList.forEach(externalServer -> this.executorService.execute(externalServer::startup));
+            this.externalServerList.forEach(externalServer -> {
+                if (externalServer instanceof GroupWith groupWith) {
+                    groupWith.setWithNo(this.withNo);
+                }
+
+                this.executorService.execute(externalServer::startup);
+            });
         }
 
         try {

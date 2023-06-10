@@ -30,6 +30,7 @@ import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.processor.SimpleServerInfo;
+import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.core.aware.AwareInject;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
@@ -65,7 +66,7 @@ import java.util.function.Supplier;
 @Setter(value = AccessLevel.PROTECTED)
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrokerClient implements BrokerClientContext {
+public class BrokerClient implements BrokerClientContext, GroupWith {
     static final Logger log = IoGameLoggerFactory.getLoggerCommon();
 
     /** 服务器唯一标识 */
@@ -116,6 +117,7 @@ public class BrokerClient implements BrokerClientContext {
     AwareInject awareInject;
     /** 逻辑服状态 */
     int status;
+    int withNo;
 
     BrokerClient() {
         // 开启 bolt 重连, 通过系统属性来开和关，如果一个进程有多个 RpcClient，则同时生效
@@ -237,6 +239,10 @@ public class BrokerClient implements BrokerClientContext {
         ;
 
         this.brokerClientManager.init();
+    }
 
+    @Override
+    public void setWithNo(int withNo) {
+        this.withNo = withNo;
     }
 }

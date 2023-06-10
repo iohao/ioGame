@@ -17,22 +17,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.bolt.broker.core.message;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import java.io.Serial;
-import java.io.Serializable;
+package com.iohao.game.bolt.broker.core;
 
 /**
  * @author 渔民小镇
- * @date 2022-05-16
+ * @date 2023-06-09
  */
-@Setter
-@Getter
-public class RequestBrokerClientModuleMessage implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -8701320309480192037L;
-    int withNo;
+public interface GroupWith {
+    void setWithNo(int withNo);
 }
