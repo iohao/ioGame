@@ -43,7 +43,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class IoGameBanner {
-
+    /** 特殊字段，开发者不要使用 */
+    public static int flag44;
     final AtomicBoolean trigger = new AtomicBoolean(false);
     Date startTime = new Date();
 
@@ -98,7 +99,14 @@ public final class IoGameBanner {
 
             extractedPrint(table);
 
+            extractedAdv();
+            // breaking news
+            extractedBreakingNews();
+            extractedMiss();
+
             clean();
+
+            System.out.println();
         };
 
         var executorService = ExecutorKit.newSingleThreadExecutor("IoGameBanner");
@@ -125,6 +133,30 @@ public final class IoGameBanner {
         other.putLine("consume", consume);
     }
 
+    private void extractedBreakingNews() {
+        String next = BreakingNews.randomNews();
+        String builder = "| News     | %s%n";
+        System.out.printf(builder, next);
+        System.out.println("+----------+--------------------------------------------------------------------------------------");
+    }
+
+    private void extractedAdv() {
+        String builder = "| adv      | %s%n";
+        System.out.printf(builder, "启动项广告位招租");
+        System.out.println("+----------+--------------------------------------------------------------------------------------");
+    }
+
+    private void extractedMiss() {
+        String desc = "大家可以来登记，有需要展示或记念的宠物、动漫人物等各种事物";
+
+        String builder = "| miss     | %s%n";
+        System.out.printf(builder, "女娲:中国神话中的造物主，据说创造了人类和世界。", desc);
+        builder = "|          | (%s)%n";
+        System.out.printf(builder, desc);
+
+        System.out.println("+----------+--------------------------------------------------------------------------------------");
+    }
+
     private void extractedPrint(ToyTable table) {
         // 为了在控制台上显示得不那么的枯燥，这里使用随机的 banner 和随机上色策略
         List<String> bannerList = new BannerData().listData();
@@ -138,7 +170,6 @@ public final class IoGameBanner {
         System.out.println(anyBanner);
         table.render();
     }
-
 
     private static String getPid() {
         //获取进程的PID
@@ -157,6 +188,7 @@ public final class IoGameBanner {
     }
 
     public static IoGameBanner me() {
+        flag44 = 1;
         return Holder.ME;
     }
 

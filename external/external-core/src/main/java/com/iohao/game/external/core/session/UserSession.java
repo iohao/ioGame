@@ -97,4 +97,11 @@ public interface UserSession extends AttrOptionDynamic {
      * @return
      */
     <T> T writeAndFlush(Object message);
+
+    /**
+     * 获取玩家 ip
+     *
+     * @return 玩家 ip
+     */
+    String getIp();
 }

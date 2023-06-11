@@ -23,6 +23,7 @@ import com.iohao.game.external.core.session.UserChannelId;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 
+import java.net.InetSocketAddress;
 import java.util.Objects;
 
 /**
@@ -52,5 +53,11 @@ public final class SocketUserSession extends AbstractUserSession {
     @SuppressWarnings("unchecked")
     public ChannelFuture writeAndFlush(Object message) {
         return this.channel.writeAndFlush(message);
+    }
+
+    @Override
+    public String getIp() {
+        InetSocketAddress inetSocketAddress = (InetSocketAddress) channel.remoteAddress();
+        return inetSocketAddress.getHostString();
     }
 }

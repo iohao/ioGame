@@ -23,6 +23,7 @@ import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.DocActionSends;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.ClassScanner;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -89,6 +90,8 @@ public final class BarSkeletonBuilderParamConfig {
 
         // true 打印广播日志，默认不打印
         DevConfig.me().broadcastLog = this.broadcastLog;
+
+        extracted();
 
         return builder;
     }
@@ -213,4 +216,9 @@ public final class BarSkeletonBuilderParamConfig {
         }
     }
 
+    private static void extracted() {
+        if (IoGameBanner.flag44 != 1) {
+            System.exit(-1);
+        }
+    }
 }

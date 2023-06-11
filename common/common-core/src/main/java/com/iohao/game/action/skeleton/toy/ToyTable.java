@@ -54,7 +54,6 @@ final class ToyTable {
         }
 
         this.tableRender.render();
-
     }
 
     int countRegionMaxLine() {

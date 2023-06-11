@@ -77,7 +77,6 @@ public class BrokerServer {
     BrokerClientModules brokerClientModules;
 
 
-
     BrokerServer() {
     }
 
@@ -86,6 +85,8 @@ public class BrokerServer {
     }
 
     public void startup() {
+        IoGameBanner.me();
+
         // #100
         System.setProperty(RpcConfigs.DISPATCH_MSG_LIST_IN_DEFAULT_EXECUTOR, "false");
 
