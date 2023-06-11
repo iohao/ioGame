@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -66,7 +66,7 @@ final class ToyTableRender {
         }
 
         // table last
-        builder.append("+").append(this.lastLine).append("\n");
+        builder.append("+").append(this.lastLine);
         System.out.println(builder);
     }
 

@@ -21,6 +21,7 @@ package com.iohao.game.bolt.broker.client;
 
 import com.alipay.remoting.ConnectionEventType;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.client.processor.*;
 import com.iohao.game.bolt.broker.client.processor.connection.CloseConnectEventClientProcessor;
 import com.iohao.game.bolt.broker.client.processor.connection.ConnectEventClientProcessor;
@@ -100,6 +101,7 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
      * @return BoltBrokerClientBuilder
      */
     BrokerClientBuilder initConfig() {
+        IoGameBanner.me();
         // 业务框架
         this.barSkeleton = this.createBarSkeleton();
         // 连接到游戏网关的地址
