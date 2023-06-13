@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -21,7 +21,9 @@ package com.iohao.game.bolt.broker.server.processor.connection;
 
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
+import com.alipay.remoting.ConnectionEventType;
 import com.alipay.remoting.exception.RemotingException;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.RequestBrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
@@ -62,7 +64,7 @@ public class ConnectionEventBrokerProcessor implements ConnectionEventProcessor,
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
-
+        extractedPrint(remoteAddress, conn);
         Objects.requireNonNull(remoteAddress);
         doCheckConnection(conn);
         this.remoteAddress = remoteAddress;
@@ -77,7 +79,14 @@ public class ConnectionEventBrokerProcessor implements ConnectionEventProcessor,
         } catch (RemotingException e) {
             log.error(e.getMessage(), e);
         }
+    }
 
+    private static void extractedPrint(String remoteAddress, Connection conn) {
+        if (IoGameGlobalConfig.openLog) {
+            log.info("Broker ConnectionEventType:【{}】 remoteAddress:【{}】，Connection:【{}】",
+                    ConnectionEventType.CONNECT, remoteAddress, conn
+            );
+        }
     }
 
     /**
