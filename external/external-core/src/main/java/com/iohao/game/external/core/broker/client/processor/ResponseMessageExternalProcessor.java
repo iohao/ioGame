@@ -27,6 +27,7 @@ import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.core.aware.UserSessionsAware;
+import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.kit.ExternalKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.session.UserChannelId;
@@ -79,6 +80,12 @@ public final class ResponseMessageExternalProcessor extends AbstractAsyncUserPro
 
         // 响应结果给用户
         Optional.ofNullable(userSession).ifPresent(session -> session.writeAndFlush(externalMessage));
+
+        // 缓存结果
+        var externalCacheHook = ExternalGlobalConfig.externalCacheHook;
+        if (Objects.nonNull(externalCacheHook)) {
+            externalCacheHook.put(responseMessage);
+        }
     }
 
     @Override

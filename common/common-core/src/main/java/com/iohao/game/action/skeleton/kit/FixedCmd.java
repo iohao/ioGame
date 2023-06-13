@@ -34,7 +34,6 @@ public interface FixedCmd<V extends FixedCmd.CmdNode> {
 
     Stream<V> stream();
 
-
     interface CmdNode {
     }
 }

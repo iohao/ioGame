@@ -25,8 +25,11 @@ import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Arrays;
 
 /**
  * 游戏对外服协议
@@ -37,7 +40,8 @@ import lombok.experimental.FieldDefaults;
  * @author 渔民小镇
  * @date 2023-02-21
  */
-@Data
+@Getter
+@Setter
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class ExternalMessage {
@@ -99,5 +103,18 @@ public final class ExternalMessage {
     @SuppressWarnings("unchecked")
     public <T> T getOther() {
         return (T) other;
+    }
+
+    @Override
+    public String toString() {
+        return "ExternalMessage{" +
+                "cmdCode=" + cmdCode +
+                ", protocolSwitch=" + protocolSwitch +
+                ", cmdMerge=" + cmdMerge +
+                ", responseStatus=" + responseStatus +
+                ", validMsg='" + validMsg + '\'' +
+                ", msgId=" + msgId +
+                ", data=" + Arrays.toString(data) +
+                '}';
     }
 }
