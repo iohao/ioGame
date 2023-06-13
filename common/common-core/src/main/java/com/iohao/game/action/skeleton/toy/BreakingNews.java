@@ -72,6 +72,7 @@ class BreakingNews {
         list.add(new News("心跳设置与心跳钩子", "https://www.yuque.com/iohao/game/uueq3i"));
         list.add(new News("用户上线、下线钩子", "https://www.yuque.com/iohao/game/hv5qqh"));
         list.add(new News("路由访问权限控制", "https://www.yuque.com/iohao/game/nap5y8p5fevhv99y"));
+        list.add(new News("游戏对外服缓存", "https://www.yuque.com/iohao/game/khg23pvbh59a7spm"));
 
         // 通讯方式
         list.add(new News("脉冲通讯方式", "https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn"));

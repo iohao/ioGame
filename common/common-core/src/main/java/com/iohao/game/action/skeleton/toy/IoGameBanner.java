@@ -102,7 +102,7 @@ public final class IoGameBanner {
             extractedAdv();
             // breaking news
             extractedBreakingNews();
-            extractedMiss();
+//            extractedMiss();
 
             clean();
 

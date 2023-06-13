@@ -21,8 +21,12 @@ package com.iohao.game.bolt.broker.client.processor.connection;
 
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
+import com.alipay.remoting.ConnectionEventType;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
+import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
+import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -51,6 +55,12 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
+        if (IoGameGlobalConfig.openLog) {
+            log.info("连接网关 ConnectionEventType:【{}】 remoteAddress:【{}】，Connection:【{}】",
+                    ConnectionEventType.CONNECT, remoteAddress, conn
+            );
+        }
+
         doCheckConnection(conn);
         this.remoteAddress = remoteAddress;
         this.connection = conn;
@@ -60,10 +70,16 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
 
         // 设置连接
         brokerClientItem.setConnection(conn);
-        log.debug("~~~~~~~~~~~ client connect: {}", latch);
         count.increment();
-        log.debug("~~~~~~~~~~~ client count: {}", count);
 
+        if (IoGameGlobalConfig.openLog) {
+            BrokerClient brokerClient = brokerClientItem.getBrokerClient();
+            BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
+
+            log.info("连接网关 ConnectionEventType:【{}】 remoteAddress:【{}】，网关连接数量:【{}】",
+                    ConnectionEventType.CONNECT, remoteAddress, brokerClientManager.countActiveItem()
+            );
+        }
     }
 
     /**
