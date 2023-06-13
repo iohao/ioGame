@@ -21,6 +21,7 @@ package com.iohao.game.bolt.broker.client.processor.connection;
 
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
+import com.alipay.remoting.ConnectionEventType;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
@@ -48,6 +49,11 @@ public class CloseConnectEventClientProcessor implements ConnectionEventProcesso
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
+        if (IoGameGlobalConfig.openLog) {
+            log.info("网关断开 ConnectionEventType:【{}】 remoteAddress:【{}】，Connection:【{}】",
+                    ConnectionEventType.CLOSE, remoteAddress, conn
+            );
+        }
 
         Objects.requireNonNull(conn);
         dicConnected.set(true);
@@ -57,11 +63,14 @@ public class CloseConnectEventClientProcessor implements ConnectionEventProcesso
         BrokerClient brokerClient = brokerClientItem.getBrokerClient();
         BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
 
+
         //  在集群时，需要移除与当前 broker （游戏网关）连接的 brokerClientItem
         brokerClientManager.remove(brokerClientItem);
 
         if (IoGameGlobalConfig.openLog) {
-            log.info("网关断开:{} ，连接网关数量 : {}", remoteAddress, brokerClientManager.countActiveItem());
+            log.info("网关断开 ConnectionEventType:【{}】 remoteAddress:【{}】，网关连接数量:【{}】",
+                    ConnectionEventType.CLOSE, remoteAddress, brokerClientManager.countActiveItem()
+            );
         }
     }
 
@@ -77,5 +86,4 @@ public class CloseConnectEventClientProcessor implements ConnectionEventProcesso
         this.disConnectTimes.set(0);
         this.dicConnected.set(false);
     }
-
 }

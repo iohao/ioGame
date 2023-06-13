@@ -21,6 +21,7 @@ package com.iohao.game.bolt.broker.client.processor.connection;
 
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
+import com.alipay.remoting.ConnectionEventType;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import org.slf4j.Logger;
@@ -35,7 +36,9 @@ public class ExceptionConnectEventClientProcessor implements ConnectionEventProc
     @Override
     public void onEvent(String remoteAddress, Connection connection) {
         if (IoGameGlobalConfig.openLog) {
-            log.info("Exception remoteAddress : {}", remoteAddress);
+            log.info("ConnectionEventType:【{}】 remoteAddress:【{}】，Connection:【{}】",
+                    ConnectionEventType.EXCEPTION, remoteAddress, connection
+            );
         }
     }
 }

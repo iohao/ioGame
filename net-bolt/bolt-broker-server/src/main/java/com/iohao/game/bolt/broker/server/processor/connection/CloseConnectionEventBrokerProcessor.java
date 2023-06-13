@@ -21,6 +21,7 @@ package com.iohao.game.bolt.broker.server.processor.connection;
 
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
+import com.alipay.remoting.ConnectionEventType;
 import com.alipay.remoting.exception.RemotingException;
 import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
@@ -59,8 +60,15 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
     BrokerClientModules brokerClientModules;
     CmdRegions cmdRegions;
 
+
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
+
+        if (IoGameGlobalConfig.openLog) {
+            log.info("Broker ConnectionEventType:【{}】 remoteAddress:【{}】，Connection:【{}】",
+                    ConnectionEventType.CLOSE, remoteAddress, conn
+            );
+        }
 
         Objects.requireNonNull(conn);
         dicConnected.set(true);
@@ -68,6 +76,8 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
 
         BalancedManager balancedManager = this.brokerServer.getBalancedManager();
         BrokerClientProxy brokerClientProxy = balancedManager.remove(remoteAddress);
+
+        extractedPrint(remoteAddress, brokerClientProxy);
         BrokerPrintKit.print(this.brokerServer);
 
         Optional.ofNullable(brokerClientProxy).ifPresent(proxy -> {
@@ -104,12 +114,13 @@ public class CloseConnectionEventBrokerProcessor implements ConnectionEventProce
                     .forEach(consumer);
         });
 
-        extractedPrint(remoteAddress, brokerClientProxy);
     }
 
     private static void extractedPrint(String remoteAddress, BrokerClientProxy brokerClientProxy) {
         if (IoGameGlobalConfig.openLog) {
-            log.info("连接关闭 remoteAddress 【{}】 brokerClientProxy : 【{}】", remoteAddress, brokerClientProxy);
+            log.info("Broker ConnectionEventType:【{}】 remoteAddress:【{}】，brokerClientProxy:【{}】",
+                    ConnectionEventType.CLOSE, remoteAddress, brokerClientProxy
+            );
         }
     }
 
