@@ -43,7 +43,7 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2022-05-14
  */
-public class ChangeUserIdMessageBrokerProcessor extends AbstractAsyncUserProcessor<SettingUserIdMessage>
+public class SettingUserIdMessageBrokerProcessor extends AbstractAsyncUserProcessor<SettingUserIdMessage>
         implements BrokerServerAware {
     static final Logger log = IoGameLoggerFactory.getLoggerCommon();
 

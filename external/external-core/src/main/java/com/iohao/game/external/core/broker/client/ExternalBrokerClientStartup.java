@@ -29,6 +29,7 @@ import com.iohao.game.bolt.broker.core.client.BrokerClientBuilder;
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
 import com.iohao.game.bolt.broker.core.common.processor.pulse.PulseSignalRequestUserProcessor;
 import com.iohao.game.bolt.broker.core.common.processor.pulse.PulseSignalResponseUserProcessor;
+import com.iohao.game.external.core.broker.client.enhance.ExternalEnhances;
 import com.iohao.game.external.core.broker.client.processor.*;
 import lombok.Setter;
 
@@ -42,12 +43,17 @@ public class ExternalBrokerClientStartup extends AbstractBrokerClientStartup {
     @Setter
     String id;
 
-    @Override
-    public BarSkeleton createBarSkeleton() {
+    protected BarSkeletonBuilder createBarSkeletonBuilder() {
         // 对外服不需要业务框架，这里给个空的
         BarSkeletonBuilder builder = BarSkeleton.newBuilder();
         builder.getSetting().setPrint(false);
-        return builder.build();
+        ExternalEnhances.enhance(builder);
+        return builder;
+    }
+
+    @Override
+    public BarSkeleton createBarSkeleton() {
+        return createBarSkeletonBuilder().build();
     }
 
     @Override

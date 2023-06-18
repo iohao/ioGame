@@ -20,10 +20,12 @@
 package com.iohao.game.bolt.broker.core.common;
 
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
+import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.concurrent.DaemonThreadFactory;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import org.slf4j.Logger;
 
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -52,10 +54,17 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
     public Executor getExecutor(UserProcessorExecutorAware userProcessorExecutorAware) {
         String userProcessorName = userProcessorExecutorAware.getClass().getSimpleName();
 
-        var requestMessageClientProcessor = "RequestMessageClientProcessor";
-        if (requestMessageClientProcessor.equals(userProcessorName)) {
+        if (StrKit.isEmpty(userProcessorName)) {
+            return this.commonExecutor;
+        }
+
+        if (userProcessorName.equals("RequestMessageClientProcessor")) {
             // 游戏逻辑服请求处理单独一个池
             return this.createExecutor(userProcessorName);
+        }
+
+        if (userProcessorName.equals("SettingUserIdMessageExternalProcessor")) {
+            createExecutor(userProcessorName);
         }
 
         // 其他类型的消息处理共用一个池

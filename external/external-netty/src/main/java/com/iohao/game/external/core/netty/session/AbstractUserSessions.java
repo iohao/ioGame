@@ -19,8 +19,8 @@
  */
 package com.iohao.game.external.core.netty.session;
 
-import com.iohao.game.common.kit.attr.AttrOptions;
 import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
+import com.iohao.game.common.kit.attr.AttrOptions;
 import com.iohao.game.core.common.cmd.CmdRegions;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
 import com.iohao.game.external.core.hook.UserHook;
