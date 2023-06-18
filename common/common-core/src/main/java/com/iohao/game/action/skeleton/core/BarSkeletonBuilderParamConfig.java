@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.DocActionSends;
+import com.iohao.game.action.skeleton.core.enhance.BarSkeletonBuilderEnhances;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
@@ -78,6 +79,7 @@ public final class BarSkeletonBuilderParamConfig {
 
         // 业务框架构建器
         BarSkeletonBuilder builder = BarSkeleton.newBuilder();
+        BarSkeletonBuilderEnhances.enhance(builder);
 
         // action send class. class has @DocActionSend
         this.scanClassActionSend(builder::addActionSend);

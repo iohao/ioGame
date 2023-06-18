@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -17,21 +17,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.action.skeleton;
+package com.iohao.game.action.skeleton.core.enhance;
+
+import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
 
 /**
  * @author 渔民小镇
- * @date 2022-12-23
+ * @date 2023-06-16
  */
-public final class IoGameVersion {
-    public static final String VERSION;
-
-    static {
-        String internalVersion = "<version>17.1.44</version>";
-
-        VERSION = internalVersion
-                .replace("<version>", "")
-                .replace("</version>", "")
-        ;
-    }
+public interface BarSkeletonBuilderEnhance {
+    void enhance(BarSkeletonBuilder builder);
 }
