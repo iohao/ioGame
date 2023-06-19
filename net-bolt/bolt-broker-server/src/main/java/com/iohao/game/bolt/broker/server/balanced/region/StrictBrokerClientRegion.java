@@ -45,7 +45,7 @@ public final class StrictBrokerClientRegion implements BrokerClientRegion {
      */
     final Map<Integer, BrokerClientProxy> brokerClientProxyMap = new NonBlockingHashMap<>();
     final String tag;
-    WithElementSelector withElementSelector;
+    WithElementSelector<BrokerClientProxy> withElementSelector;
 
     public StrictBrokerClientRegion(String tag) {
         this.tag = tag;
@@ -112,6 +112,6 @@ public final class StrictBrokerClientRegion implements BrokerClientRegion {
     }
 
     private void resetSelector() {
-        this.withElementSelector = new WithElementSelector(this.brokerClientProxyMap);
+        this.withElementSelector = new DefaultWithElementSelector(this.brokerClientProxyMap);
     }
 }
