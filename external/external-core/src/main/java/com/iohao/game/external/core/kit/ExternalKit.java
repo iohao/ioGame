@@ -138,7 +138,7 @@ public class ExternalKit {
         // 错误消息
         externalMessage.setValidMsg(ActionErrorEnum.idleErrorCode.getMsg());
 
-        return null;
+        return externalMessage;
     }
 
 
