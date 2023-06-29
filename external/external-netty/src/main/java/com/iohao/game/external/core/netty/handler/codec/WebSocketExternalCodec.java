@@ -61,4 +61,17 @@ public class WebSocketExternalCodec extends MessageToMessageCodec<BinaryWebSocke
         //【游戏对外服】接收【游戏客户端】的消息
         out.add(message);
     }
+
+
+    public WebSocketExternalCodec() {
+    }
+
+    public static WebSocketExternalCodec me() {
+        return Holder.ME;
+    }
+
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final WebSocketExternalCodec ME = new WebSocketExternalCodec();
+    }
 }

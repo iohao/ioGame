@@ -48,8 +48,4 @@ public class BarSkeletonBuilderEnhances {
             enhance.enhance(builder);
         }
     }
-
-    public void clear() {
-        enhanceSet.clear();
-    }
 }

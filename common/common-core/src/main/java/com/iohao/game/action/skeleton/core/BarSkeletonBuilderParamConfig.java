@@ -67,6 +67,7 @@ public final class BarSkeletonBuilderParamConfig {
     Predicate<Class<?>> actionControllerPredicate = clazz -> Objects.nonNull(clazz.getAnnotation(ActionController.class));
     /** 推送相关的 class */
     Predicate<Class<?>> actionSendPredicate = clazz -> Objects.nonNull(clazz.getAnnotation(DocActionSends.class));
+    boolean enhance = true;
 
     /**
      * 创建业务框架构建器
@@ -79,7 +80,7 @@ public final class BarSkeletonBuilderParamConfig {
 
         // 业务框架构建器
         BarSkeletonBuilder builder = BarSkeleton.newBuilder();
-        BarSkeletonBuilderEnhances.enhance(builder);
+        enhance(builder);
 
         // action send class. class has @DocActionSend
         this.scanClassActionSend(builder::addActionSend);
@@ -181,6 +182,13 @@ public final class BarSkeletonBuilderParamConfig {
     public BarSkeletonBuilderParamConfig addErrorCode(MsgExceptionInfo[] msgExceptionInfoArray) {
         msgExceptionInfoList.addAll(Arrays.asList(msgExceptionInfoArray));
         return this;
+    }
+
+
+    private void enhance(BarSkeletonBuilder builder) {
+        if (this.enhance) {
+            BarSkeletonBuilderEnhances.enhance(builder);
+        }
     }
 
     /**

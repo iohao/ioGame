@@ -63,7 +63,6 @@ public class ClassScannerTest {
 
         Ansi render = Ansi.ansi().eraseScreen().render(title);
         System.out.println(render.eraseScreen().reset());
-
     }
 
 }

@@ -24,6 +24,11 @@ import com.iohao.game.external.core.hook.internal.IdleProcessSetting;
 import com.iohao.game.external.core.micro.MicroBootstrap;
 import com.iohao.game.external.core.micro.join.ExternalJoinSelector;
 import com.iohao.game.external.core.netty.DefaultExternalCoreSetting;
+import com.iohao.game.external.core.netty.SettingOption;
+import com.iohao.game.external.core.netty.handler.SocketCmdAccessAuthHandler;
+import com.iohao.game.external.core.netty.handler.SocketIdleHandler;
+import com.iohao.game.external.core.netty.handler.SocketRequestBrokerHandler;
+import com.iohao.game.external.core.netty.handler.SocketUserSessionHandler;
 import com.iohao.game.external.core.netty.hook.DefaultSocketIdleHook;
 import com.iohao.game.external.core.netty.micro.SocketMicroBootstrap;
 import com.iohao.game.external.core.netty.session.SocketUserSessions;
@@ -57,6 +62,14 @@ abstract class SocketExternalJoinSelector implements ExternalJoinSelector {
             if (Objects.isNull(idleProcessSetting.getIdleHook())) {
                 idleProcessSetting.setIdleHook(new DefaultSocketIdleHook());
             }
+
+            // 心跳钩子 Handler
+            setting.option(SettingOption.socketIdleHandler, new SocketIdleHandler());
         }
+
+        // pipelineCustom Handler
+        setting.option(SettingOption.socketUserSessionHandler, new SocketUserSessionHandler());
+        setting.option(SettingOption.socketCmdAccessAuthHandler, new SocketCmdAccessAuthHandler());
+        setting.option(SettingOption.socketRequestBrokerHandler, new SocketRequestBrokerHandler());
     }
 }

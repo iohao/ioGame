@@ -44,7 +44,11 @@ public class TcpExternalCodec extends MessageToMessageCodec<ByteBuf, ExternalMes
          */
         byte[] bytes = DataCodecKit.encode(externalMessage);
 
-        // 使用默认 buffer 。如果没有做任何配置，通常默认实现为池化的 direct （直接内存，也称为堆外内存）
+        /*
+         * 使用默认 buffer 。如果没有做任何配置，通常默认实现为池化的 direct （直接内存，也称为堆外内存）
+         * 优点：使用的系统内存，读写效率高（少一次拷贝），且不受 GC 影响
+         * 缺点：分配效率低
+         */
         ByteBuf buffer = ctx.alloc().buffer(bytes.length + 4);
         // 消息长度
         buffer.writeInt(bytes.length);
@@ -67,5 +71,17 @@ public class TcpExternalCodec extends MessageToMessageCodec<ByteBuf, ExternalMes
         ExternalMessage message = DataCodecKit.decode(msgBytes, ExternalMessage.class);
         //【游戏对外服】接收【游戏客户端】的消息
         out.add(message);
+    }
+
+    public TcpExternalCodec() {
+    }
+
+    public static TcpExternalCodec me() {
+    	return Holder.ME;
+    }
+
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final TcpExternalCodec ME = new TcpExternalCodec();
     }
 }

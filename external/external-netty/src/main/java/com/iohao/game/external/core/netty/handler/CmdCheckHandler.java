@@ -47,7 +47,6 @@ public final class CmdCheckHandler extends SimpleChannelInboundHandler<ExternalM
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage message) {
         int cmdMerge = message.getCmdMerge();
-
         // 路由存在
         if (cmdRegions.existCmdMerge(cmdMerge)) {
             // 交给下一个业务处理 (handler) , 下一个业务指的是你编排 handler 时的顺序
@@ -63,5 +62,18 @@ public final class CmdCheckHandler extends SimpleChannelInboundHandler<ExternalM
     @Override
     public void setCmdRegions(CmdRegions cmdRegions) {
         this.cmdRegions = cmdRegions;
+    }
+
+
+    public CmdCheckHandler() {
+    }
+
+    public static CmdCheckHandler me() {
+        return Holder.ME;
+    }
+
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final CmdCheckHandler ME = new CmdCheckHandler();
     }
 }

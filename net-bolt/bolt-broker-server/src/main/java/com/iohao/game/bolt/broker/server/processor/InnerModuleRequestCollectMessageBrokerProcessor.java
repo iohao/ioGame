@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
  * 模块之间的访问，访问同类型的多个逻辑服
@@ -128,42 +127,38 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AbstractAsy
         }
     }
 
-    private List<CompletableFuture<ResponseCollectItemMessage>> listFuture(SyncRequestMessage requestMessage, BrokerClientRegion brokerClientRegion) {
+    private List<CompletableFuture<ResponseCollectItemMessage>> listFuture(SyncRequestMessage requestMessage
+            , BrokerClientRegion brokerClientRegion) {
 
-        // 逻辑服列表 stream
-        return brokerClientRegion.listBrokerClientProxy().stream().map(brokerClientProxy -> {
+        // 逻辑服列表 stream；异步请求逻辑服
+        var stream = brokerClientRegion.listBrokerClientProxy().stream();
+        return stream.map(brokerClientProxy -> CompletableFuture.supplyAsync(() -> {
+            ResponseMessage responseMessage;
+
+            try {
+                // 请求方请求其它服务器得到的响应数据
+                responseMessage = brokerClientProxy.invokeSync(requestMessage);
+            } catch (RemotingException | InterruptedException e) {
+                log.error(e.getMessage(), e);
+                return null;
+            }
+
+            byte[] data;
+            // 有错误或没有数据的，就不做处理了，意义不大
+            if (responseMessage == null
+                    || responseMessage.hasError()
+                    || (data = responseMessage.getData()) == null
+                    || data.length == 0) {
+                return null;
+            }
+
             // 逻辑服 id
             String logicServerId = brokerClientProxy.getId();
-
-            // 异步请求逻辑服
-            return CompletableFuture.supplyAsync(() -> {
-                ResponseMessage responseMessage;
-
-                try {
-                    // 请求方请求其它服务器得到的响应数据
-                    responseMessage = brokerClientProxy.invokeSync(requestMessage);
-                } catch (RemotingException | InterruptedException e) {
-                    log.error(e.getMessage(), e);
-                    return null;
-                }
-
-                byte[] data;
-                // 有错误或没有数据的，就不做处理了，意义不大
-                if (responseMessage == null
-                        || responseMessage.hasError()
-                        || (data = responseMessage.getData()) == null
-                        || data.length == 0) {
-                    return null;
-                }
-
-                // 得到一个逻辑服的结果
-                return new ResponseCollectItemMessage()
-                        .setResponseMessage(responseMessage)
-                        .setLogicServerId(logicServerId);
-
-            });
-
-        }).collect(Collectors.toList());
+            // 得到一个逻辑服的结果
+            return new ResponseCollectItemMessage()
+                    .setResponseMessage(responseMessage)
+                    .setLogicServerId(logicServerId);
+        })).toList();
     }
 
     @Override

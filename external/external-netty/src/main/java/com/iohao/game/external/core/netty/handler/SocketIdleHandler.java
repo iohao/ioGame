@@ -19,6 +19,8 @@
  */
 package com.iohao.game.external.core.netty.handler;
 
+import com.iohao.game.external.core.ExternalCoreSetting;
+import com.iohao.game.external.core.aware.ExternalCoreSettingAware;
 import com.iohao.game.external.core.hook.IdleHook;
 import com.iohao.game.external.core.hook.internal.IdleProcessSetting;
 import com.iohao.game.external.core.message.ExternalMessage;
@@ -40,23 +42,13 @@ import java.util.Objects;
  * @date 2023-02-18
  */
 @ChannelHandler.Sharable
-public final class SocketIdleHandler extends ChannelInboundHandlerAdapter {
+public final class SocketIdleHandler extends ChannelInboundHandlerAdapter
+        implements ExternalCoreSettingAware {
     /** 心跳事件回调 */
-    final IdleHook<IdleStateEvent> idleHook;
+    IdleHook<IdleStateEvent> idleHook;
     /** true : 响应心跳给客户端 */
-    final boolean pong;
-    final UserSessions<ChannelHandlerContext, SocketUserSession> userSessions;
-
-    @SuppressWarnings("unchecked")
-    public SocketIdleHandler(DefaultExternalCoreSetting setting) {
-        IdleProcessSetting idleProcessSetting = setting.getIdleProcessSetting();
-
-        this.idleHook = idleProcessSetting.getIdleHook();
-
-        this.pong = idleProcessSetting.isPong();
-
-        this.userSessions = (UserSessions<ChannelHandlerContext, SocketUserSession>) setting.getUserSessions();
-    }
+    boolean pong;
+    UserSessions<ChannelHandlerContext, SocketUserSession> userSessions;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -100,5 +92,20 @@ public final class SocketIdleHandler extends ChannelInboundHandlerAdapter {
         } else {
             super.userEventTriggered(ctx, evt);
         }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void setExternalCoreSetting(ExternalCoreSetting externalCoreSetting) {
+
+        if (Objects.nonNull(this.userSessions)) {
+            return;
+        }
+
+        DefaultExternalCoreSetting setting = (DefaultExternalCoreSetting) externalCoreSetting;
+        IdleProcessSetting idleProcessSetting = setting.getIdleProcessSetting();
+        this.idleHook = idleProcessSetting.getIdleHook();
+        this.pong = idleProcessSetting.isPong();
+        this.userSessions = (UserSessions<ChannelHandlerContext, SocketUserSession>) setting.getUserSessions();
     }
 }
