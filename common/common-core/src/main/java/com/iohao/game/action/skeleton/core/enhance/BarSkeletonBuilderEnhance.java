@@ -17,12 +17,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.bolt.broker.server.balanced.region;
+package com.iohao.game.action.skeleton.core.enhance;
+
+import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
 
 /**
  * @author 渔民小镇
- * @date 2023-06-18
+ * @date 2023-06-16
  */
-public interface WithElementSelector<T> {
-    T next(int withNo);
+public interface BarSkeletonBuilderEnhance {
+    void enhance(BarSkeletonBuilder builder);
 }

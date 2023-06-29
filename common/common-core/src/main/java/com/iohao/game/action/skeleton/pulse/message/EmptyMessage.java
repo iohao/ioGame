@@ -31,4 +31,10 @@ import java.io.Serializable;
 public class EmptyMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = 6890608282265776947L;
+
+    static final EmptyMessage empty = new EmptyMessage();
+
+    public static EmptyMessage empty() {
+        return empty;
+    }
 }

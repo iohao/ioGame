@@ -37,6 +37,7 @@ import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.LogicBrokerClientLoadBalanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegionFactory;
 import com.iohao.game.bolt.broker.server.balanced.region.StrictBrokerClientRegion;
+import com.iohao.game.bolt.broker.server.enhance.BrokerEnhances;
 import com.iohao.game.bolt.broker.server.processor.*;
 import com.iohao.game.bolt.broker.server.processor.connection.CloseConnectionEventBrokerProcessor;
 import com.iohao.game.bolt.broker.server.processor.connection.ConnectionEventBrokerProcessor;
@@ -99,7 +100,6 @@ public class BrokerServerBuilder implements AwareInject {
     BrokerServerBuilder() {
         // 初始化一些处理器，如果开发者觉得默认的这些处理器没用，可以选择清除后，在添加自定义的。 this.clearProcessor
         this.defaultProcessor();
-
         // 开启 bolt 重连, 通过系统属性来开和关，如果一个进程有多个 RpcClient，则同时生效
         System.setProperty(Configs.CONN_MONITOR_SWITCH, "true");
         System.setProperty(Configs.CONN_RECONNECT_SWITCH, "true");
@@ -278,8 +278,7 @@ public class BrokerServerBuilder implements AwareInject {
         Supplier<UserProcessor<?>> externalMessageSupplier = RequestMessageBrokerProcessor::new;
 
         // 处理 - 改变用户 id -- external server
-        Supplier<UserProcessor<?>> changeUserIdMessageSupplier = ChangeUserIdMessageBrokerProcessor::new;
-//        Supplier<UserProcessor<?>> changeUserIdMessageSupplier = ChangeUserIdMessageBrokerSyncProcessor::new;
+        Supplier<UserProcessor<?>> changeUserIdMessageSupplier = SettingUserIdMessageBrokerProcessor::new;
 
         // 处理 - （响应真实用户的请求）把逻辑服的响应转发到对外服
         Supplier<UserProcessor<?>> responseMessageSupplier = ResponseMessageBrokerProcessor::new;
@@ -322,6 +321,8 @@ public class BrokerServerBuilder implements AwareInject {
                 // 处理 - 接收脉冲消费者-的脉冲信号
                 .registerUserProcessor(PulseSignalResponseBrokerProcessor::new)
         ;
+
+        BrokerEnhances.enhance(this);
     }
 
     @Override

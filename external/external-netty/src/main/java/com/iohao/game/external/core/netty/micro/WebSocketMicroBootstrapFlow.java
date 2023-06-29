@@ -99,6 +99,6 @@ public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
         context.addLast("WebSocketServerProtocolHandler", new WebSocketServerProtocolHandler(config));
 
         // websocket 编解码
-        context.addLast("codec", new WebSocketExternalCodec());
+        context.addLast("codec", WebSocketExternalCodec.me());
     }
 }

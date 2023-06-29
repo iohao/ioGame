@@ -21,6 +21,7 @@ package com.iohao.game.external.core.netty.micro;
 
 import com.iohao.game.external.core.hook.internal.IdleProcessSetting;
 import com.iohao.game.external.core.micro.PipelineContext;
+import com.iohao.game.external.core.netty.SettingOption;
 import com.iohao.game.external.core.netty.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -70,23 +71,28 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
                 idleProcessSetting.getTimeUnit())
         );
 
+        SocketIdleHandler socketIdleHandler = setting.option(SettingOption.socketIdleHandler);
+
         // 心跳响应、心跳钩子 Handler
-        SocketIdleHandler idleHandler = new SocketIdleHandler(setting);
-        context.addLast("idleHandler", idleHandler);
+        context.addLast("idleHandler", socketIdleHandler);
     }
 
     @Override
     public void pipelineCustom(PipelineContext context) {
+
         // 路由存在检测
-        context.addLast("CmdCheckHandler", new CmdCheckHandler());
+        context.addLast("CmdCheckHandler", CmdCheckHandler.me());
 
         // 管理 UserSession 的 Handler
-        context.addLast("UserSessionHandler", new SocketUserSessionHandler());
+        SocketUserSessionHandler socketUserSessionHandler = setting.option(SettingOption.socketUserSessionHandler);
+        context.addLast("UserSessionHandler", socketUserSessionHandler);
 
         // 路由访问验证 的 Handler
-        context.addLast("CmdAccessAuthHandler", new SocketCmdAccessAuthHandler());
+        SocketCmdAccessAuthHandler socketCmdAccessAuthHandler = setting.option(SettingOption.socketCmdAccessAuthHandler);
+        context.addLast("CmdAccessAuthHandler", socketCmdAccessAuthHandler);
 
         // 负责把游戏端的请求转发给 Broker（游戏网关）的 Handler
-        context.addLast("RequestBrokerHandler", new SocketRequestBrokerHandler());
+        SocketRequestBrokerHandler socketRequestBrokerHandler = setting.option(SettingOption.socketRequestBrokerHandler);
+        context.addLast("RequestBrokerHandler", socketRequestBrokerHandler);
     }
 }

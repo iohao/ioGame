@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -54,9 +54,23 @@ public class RandomKit {
     }
 
     public <T> T randomEle(List<T> list) {
+
+        if (CollKit.isEmpty(list)) {
+            return null;
+        }
+
         // 不做 null 判断了
         int size = list.size();
-        int randomInt = RandomKit.randomInt(size);
+
+        if (size == 0) {
+            return null;
+        }
+
+        if (size == 1) {
+            return list.get(0);
+        }
+
+        int randomInt = ThreadLocalRandom.current().nextInt(size);
         return list.get(randomInt);
     }
 }

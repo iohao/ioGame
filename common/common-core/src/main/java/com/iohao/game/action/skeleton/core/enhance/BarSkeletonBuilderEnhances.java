@@ -17,12 +17,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.bolt.broker.server.balanced.region;
+package com.iohao.game.action.skeleton.core.enhance;
+
+import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
+import lombok.experimental.UtilityClass;
+import org.jctools.maps.NonBlockingHashSet;
+
+import java.util.ServiceLoader;
+import java.util.Set;
 
 /**
  * @author 渔民小镇
- * @date 2023-06-18
+ * @date 2023-06-16
  */
-public interface WithElementSelector<T> {
-    T next(int withNo);
+@UtilityClass
+public class BarSkeletonBuilderEnhances {
+
+    final Set<BarSkeletonBuilderEnhance> enhanceSet = new NonBlockingHashSet<>();
+
+    static {
+        ServiceLoader.load(BarSkeletonBuilderEnhance.class).forEach(BarSkeletonBuilderEnhances::add);
+    }
+
+    void add(BarSkeletonBuilderEnhance enhance) {
+        enhanceSet.add(enhance);
+    }
+
+    public void enhance(BarSkeletonBuilder builder) {
+        for (BarSkeletonBuilderEnhance enhance : enhanceSet) {
+            enhance.enhance(builder);
+        }
+    }
 }
