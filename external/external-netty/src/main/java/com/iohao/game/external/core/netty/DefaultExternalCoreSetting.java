@@ -73,6 +73,7 @@ public final class DefaultExternalCoreSetting implements ExternalCoreSetting {
     UserSessions<?, ?> userSessions;
     /** UserHook 钩子接口，上线时、下线时会触发 */
     UserHook userHook;
+    /** 与 Broker（游戏网关）通信的 client */
     @Setter
     BrokerClient brokerClient;
 
