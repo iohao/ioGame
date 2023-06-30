@@ -168,7 +168,7 @@ public final class HeadMetadata implements Serializable {
      * @return cmdInfo
      */
     public CmdInfo getCmdInfo() {
-        return CmdInfoFlyweightFactory.me().getCmdInfo(this.cmdMerge);
+        return CmdInfoFlyweightFactory.getCmdInfo(this.cmdMerge);
     }
 
     public HeadMetadata setCmdMerge(int cmdMerge) {

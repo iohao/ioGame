@@ -37,7 +37,7 @@ public final class CmdInfoFlyweightFactory {
      * value : cmdInfo
      * </pre>
      */
-    final Map<Integer, CmdInfo> cmdInfoMap = new NonBlockingHashMap<>();
+    static final Map<Integer, CmdInfo> cmdInfoMap = new NonBlockingHashMap<>();
 
     /**
      * 获取路由信息
@@ -46,7 +46,7 @@ public final class CmdInfoFlyweightFactory {
      * @param subCmd 子路由
      * @return 路由信息
      */
-    public CmdInfo getCmdInfo(int cmd, int subCmd) {
+    public static CmdInfo getCmdInfo(int cmd, int subCmd) {
         int cmdMerge = CmdKit.merge(cmd, subCmd);
         return getCmdInfo(cmdMerge);
     }
@@ -57,14 +57,13 @@ public final class CmdInfoFlyweightFactory {
      * @param cmdMerge 主路由(高16) + 子路由(低16)
      * @return 路由信息
      */
-    public CmdInfo getCmdInfo(int cmdMerge) {
+    public static CmdInfo getCmdInfo(int cmdMerge) {
 
         CmdInfo cmdInfo = cmdInfoMap.get(cmdMerge);
 
         // 无锁化
         if (Objects.isNull(cmdInfo)) {
-            cmdInfo = new CmdInfo(cmdMerge);
-            cmdInfo = cmdInfoMap.putIfAbsent(cmdMerge, cmdInfo);
+            cmdInfo = cmdInfoMap.putIfAbsent(cmdMerge, new CmdInfo(cmdMerge));
             if (Objects.isNull(cmdInfo)) {
                 cmdInfo = cmdInfoMap.get(cmdMerge);
             }
@@ -73,6 +72,14 @@ public final class CmdInfoFlyweightFactory {
         return cmdInfo;
     }
 
+    /**
+     * 请直接使用静态方法
+     * <pre>
+     *     将在下个大版本中移除
+     * </pre>
+     *
+     * @return me
+     */
     public static CmdInfoFlyweightFactory me() {
         return Holder.ME;
     }

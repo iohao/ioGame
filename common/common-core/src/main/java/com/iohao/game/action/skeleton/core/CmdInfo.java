@@ -75,7 +75,20 @@ public final class CmdInfo {
      * @return 路由信息
      */
     public static CmdInfo getCmdInfo(int cmd, int subCmd) {
-        return CmdInfoFlyweightFactory.me().getCmdInfo(cmd, subCmd);
+        return CmdInfoFlyweightFactory.getCmdInfo(cmd, subCmd);
+    }
+
+    /**
+     * 获取 cmdInfo
+     * <pre>
+     *     内部使用享元工厂来获取 cmdInfo
+     * </pre>
+     *
+     * @param cmdMerge cmd-subCmd {@link CmdKit#merge(int, int)}
+     * @return 路由信息
+     */
+    public static CmdInfo getCmdInfo(int cmdMerge) {
+        return CmdInfoFlyweightFactory.getCmdInfo(cmdMerge);
     }
 
     @Override
