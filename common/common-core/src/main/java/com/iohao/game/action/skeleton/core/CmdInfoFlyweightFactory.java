@@ -80,6 +80,7 @@ public final class CmdInfoFlyweightFactory {
      *
      * @return me
      */
+    @Deprecated
     public static CmdInfoFlyweightFactory me() {
         return Holder.ME;
     }
