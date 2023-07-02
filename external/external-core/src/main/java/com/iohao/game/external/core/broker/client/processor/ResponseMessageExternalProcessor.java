@@ -82,11 +82,10 @@ public final class ResponseMessageExternalProcessor extends AbstractAsyncUserPro
 
         // 游戏对外服缓存
         int cacheCondition = headMetadata.getCacheCondition();
+        // 当缓存条件存在时，表示需要缓存数据
         if (cacheCondition != 0) {
-            var externalCmdCache = ExternalGlobalConfig.externalCmdCache;
-            if (Objects.nonNull(externalCmdCache)) {
-                externalCmdCache.addCacheData(responseMessage);
-            }
+            // 能到这里，externalCmdCache 一定不为 null
+            ExternalGlobalConfig.externalCmdCache.addCacheData(responseMessage);
         }
     }
 
