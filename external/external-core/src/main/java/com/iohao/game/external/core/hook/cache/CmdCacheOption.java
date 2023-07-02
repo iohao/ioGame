@@ -1,0 +1,105 @@
+/*
+ * ioGame
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
+ * # iohao.com . 渔民小镇
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+package com.iohao.game.external.core.hook.cache;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import lombok.experimental.FieldDefaults;
+
+import java.time.Duration;
+import java.util.Objects;
+
+/**
+ * 游戏对外服缓存配置
+ *
+ * @author 渔民小镇
+ * @date 2023-07-02
+ */
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public final class CmdCacheOption {
+    /** 过期时间 */
+    final Duration expireTime;
+    /** cmdActionCache 内的缓存数量 */
+    final int cacheLimit;
+    /** 缓存过期检测时间周期 */
+    final Duration expireCheckTime;
+
+    private CmdCacheOption(Duration expireTime, int cacheLimit, Duration expireCheckTime) {
+        this.expireTime = expireTime;
+        this.cacheLimit = cacheLimit;
+        this.expireCheckTime = expireCheckTime;
+    }
+
+    public int getCacheTime() {
+        return (int) this.expireTime.getSeconds();
+    }
+
+    public static CmdCacheOption.Builder newBuilder() {
+        return new Builder();
+    }
+
+    @Setter
+    @Accessors(chain = true)
+    public final static class Builder {
+        /** 过期时间 */
+        Duration expireTime = Duration.ofHours(1);
+
+        /**
+         * 缓存数量
+         * <pre>
+         *     因为游戏对外服缓存支持对应条件与缓存数据关联，
+         *     所以这里有必要做个缓存数据上限，
+         *     目的是防止客户端恶意制造无效的查询条件
+         * </pre>
+         */
+        int cacheLimit = 512;
+
+        /**
+         * 缓存过期检测时间
+         * <pre>
+         *     间隔多久做一次缓存过期检测
+         *
+         *     默认是每 30 秒做一次缓存数据的检测
+         *
+         *     注意事项：
+         *     检测时间是为了避免频繁的对缓存做检测。
+         *     所以缓存的过期时间会有一些误差，
+         *     误差范围值 = expireTime 正负 expireCheckTime
+         *
+         *     如果你想很精准的控制缓存时间，可以设置为每秒做一次检测。
+         * </pre>
+         */
+        Duration expireCheckTime = Duration.ofSeconds(30);
+
+        public CmdCacheOption build() {
+
+            Objects.requireNonNull(expireTime);
+
+            if (cacheLimit <= 0) {
+                throw new IllegalArgumentException("cacheLimit 必须 > 0");
+            }
+
+            return new CmdCacheOption(this.expireTime, this.cacheLimit, this.expireCheckTime);
+        }
+    }
+}

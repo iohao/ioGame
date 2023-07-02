@@ -17,34 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.core.hook;
-
-import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-
-import java.time.Duration;
-
 /**
+ * 游戏对外服缓存
+ *
  * @author 渔民小镇
- * @date 2023-06-11
+ * @date 2023-07-02
  */
-public interface ExternalCacheHook<T> {
-    T getCache(T message);
-
-    void setExpireTime(Duration expireTime);
-
-    Duration getExpireTime();
-
-    default void addCmd(int cmd) {
-        this.addCmd(cmd, getExpireTime());
-    }
-
-    void addCmd(int cmd, Duration expireTime);
-
-    void addCmd(int cmd, int subCmd, Duration expireTime);
-
-    default void addCmd(int cmd, int subCmd) {
-        this.addCmd(cmd, subCmd, getExpireTime());
-    }
-
-    void put(ResponseMessage responseMessage);
-}
+package com.iohao.game.external.core.hook.cache;

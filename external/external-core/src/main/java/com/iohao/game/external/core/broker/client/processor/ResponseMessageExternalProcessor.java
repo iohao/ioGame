@@ -50,7 +50,6 @@ import java.util.Optional;
 public final class ResponseMessageExternalProcessor extends AbstractAsyncUserProcessor<ResponseMessage>
         implements UserSessionsAware {
     static final Logger log = IoGameLoggerFactory.getLoggerMsg();
-
     final UserChannelId emptyUserChannelId = new UserChannelId("empty");
     UserSessions<?, ?> userSessions;
 
@@ -81,10 +80,13 @@ public final class ResponseMessageExternalProcessor extends AbstractAsyncUserPro
         // 响应结果给用户
         Optional.ofNullable(userSession).ifPresent(session -> session.writeAndFlush(externalMessage));
 
-        // 缓存结果
-        var externalCacheHook = ExternalGlobalConfig.externalCacheHook;
-        if (Objects.nonNull(externalCacheHook)) {
-            externalCacheHook.put(responseMessage);
+        // 游戏对外服缓存
+        int cacheCondition = headMetadata.getCacheCondition();
+        if (cacheCondition != 0) {
+            var externalCmdCache = ExternalGlobalConfig.externalCmdCache;
+            if (Objects.nonNull(externalCmdCache)) {
+                externalCmdCache.addCacheData(responseMessage);
+            }
         }
     }
 

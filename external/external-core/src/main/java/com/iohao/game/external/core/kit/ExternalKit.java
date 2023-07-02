@@ -30,6 +30,7 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.common.CommonConst;
 import com.iohao.game.common.kit.CollKit;
+import com.iohao.game.common.kit.MurmurHash3;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.message.ExternalMessageCmdCode;
@@ -37,6 +38,7 @@ import com.iohao.game.external.core.session.UserSessions;
 import lombok.experimental.UtilityClass;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * @author 渔民小镇
@@ -91,6 +93,11 @@ public class ExternalKit {
                 .setMsgId(externalMessage.getMsgId());
 
         byte[] data = externalMessage.getData();
+
+        if (externalMessage.getCmdCode() == ExternalMessageCmdCode.bizCache) {
+            int cacheCondition = getCacheCondition(data);
+            headMetadata.setCacheCondition(cacheCondition);
+        }
 
         // 请求
         RequestMessage requestMessage = new RequestMessage();
@@ -196,5 +203,21 @@ public class ExternalKit {
         message.setResponseStatus(exceptionInfo.getCode());
         message.setValidMsg(exceptionInfo.getMsg());
         message.setData(CommonConst.EMPTY_BYTES);
+    }
+
+    /**
+     * byte[] 转 hash
+     * <pre>
+     *     缓存查询条件: 由请求参数计算出一个 hash 值。
+     *     同一 action 条件参数的 hash 值碰撞的几率不是很大。
+     *
+     *     当条件参数不存在时，那么就是无参 action，使用 1 来表示。
+     * </pre>
+     *
+     * @param data bytes
+     * @return hash
+     */
+    public int getCacheCondition(byte[] data) {
+        return Objects.nonNull(data) ? MurmurHash3.hash32(data) : 1;
     }
 }

@@ -20,7 +20,7 @@
 package com.iohao.game.external.core.config;
 
 import com.iohao.game.external.core.hook.AccessAuthenticationHook;
-import com.iohao.game.external.core.hook.ExternalCacheHook;
+import com.iohao.game.external.core.hook.cache.ExternalCmdCache;
 import com.iohao.game.external.core.hook.internal.DefaultAccessAuthenticationHook;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.experimental.UtilityClass;
@@ -39,7 +39,8 @@ public class ExternalGlobalConfig {
      * </pre>
      */
     public AccessAuthenticationHook accessAuthenticationHook = new DefaultAccessAuthenticationHook();
-    public ExternalCacheHook<ExternalMessage> externalCacheHook;
+    /** 游戏对外服路由缓存 */
+    public ExternalCmdCache externalCmdCache;
 
     /**
      * 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验

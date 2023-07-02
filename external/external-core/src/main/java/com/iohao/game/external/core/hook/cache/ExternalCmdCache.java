@@ -17,16 +17,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.core.message;
+package com.iohao.game.external.core.hook.cache;
+
+import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.external.core.message.ExternalMessage;
 
 /**
+ * 游戏对外服缓存数据查询、添加相关接口
+ *
  * @author 渔民小镇
- * @date 2023-02-21
+ * @date 2023-07-02
  */
-public interface ExternalMessageCmdCode {
-    /** 请求命令类型: 0 心跳 */
-    int idle = 0;
-    /** 请求命令类型: 1 业务 */
-    int biz = 1;
-    int bizCache = 2;
+public interface ExternalCmdCache {
+
+    /**
+     * 查询：从缓存中取数据
+     *
+     * @param message message
+     * @return 返回值为 null，表示缓存中没有数据
+     */
+    ExternalMessage getCache(ExternalMessage message);
+
+    /**
+     * 添加：将响应数据添加到缓存中
+     *
+     * @param responseMessage responseMessage
+     */
+    void addCacheData(ResponseMessage responseMessage);
 }

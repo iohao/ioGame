@@ -147,6 +147,8 @@ public final class HeadMetadata implements Serializable {
      * </pre>
      */
     int[] bindingLogicServerIds;
+    /** 框架自用字段。将来变化可能较大，开发者请不要使用。 */
+    int cacheCondition;
     /** 临时变量 */
     transient Object other;
     transient int withNo;
