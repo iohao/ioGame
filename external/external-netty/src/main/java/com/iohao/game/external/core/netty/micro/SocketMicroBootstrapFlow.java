@@ -19,6 +19,7 @@
  */
 package com.iohao.game.external.core.netty.micro;
 
+import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.hook.internal.IdleProcessSetting;
 import com.iohao.game.external.core.micro.PipelineContext;
 import com.iohao.game.external.core.netty.SettingOption;
@@ -90,6 +91,11 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
         // 路由访问验证 的 Handler
         SocketCmdAccessAuthHandler socketCmdAccessAuthHandler = setting.option(SettingOption.socketCmdAccessAuthHandler);
         context.addLast("CmdAccessAuthHandler", socketCmdAccessAuthHandler);
+
+        // 游戏对外服路由数据缓存
+        if (Objects.nonNull(ExternalGlobalConfig.externalCmdCache)) {
+            context.addLast("ExternalCmdCacheHandler", ExternalCmdCacheHandler.me());
+        }
 
         // 负责把游戏端的请求转发给 Broker（游戏网关）的 Handler
         SocketRequestBrokerHandler socketRequestBrokerHandler = setting.option(SettingOption.socketRequestBrokerHandler);

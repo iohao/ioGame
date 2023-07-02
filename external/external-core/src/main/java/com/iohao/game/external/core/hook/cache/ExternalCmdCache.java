@@ -32,6 +32,10 @@ public interface ExternalCmdCache {
 
     /**
      * 查询：从缓存中取数据
+     * <pre>
+     *     当从缓存中找到数据时，会复用 ExternalMessage 对象（引用不变）。
+     *     将缓存数据设置到 ExternalMessage.data 中，避免一次对象的创建。
+     * </pre>
      *
      * @param message message
      * @return 返回值为 null，表示缓存中没有数据
