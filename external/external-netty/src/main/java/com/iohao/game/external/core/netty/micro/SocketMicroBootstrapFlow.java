@@ -94,7 +94,7 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
 
         // 游戏对外服路由数据缓存
         if (Objects.nonNull(ExternalGlobalConfig.externalCmdCache)) {
-            context.addLast("ExternalCmdCacheHandler", ExternalCmdCacheHandler.me());
+            context.addLast("CmdCacheHandler", CmdCacheHandler.me());
         }
 
         // 负责把游戏端的请求转发给 Broker（游戏网关）的 Handler

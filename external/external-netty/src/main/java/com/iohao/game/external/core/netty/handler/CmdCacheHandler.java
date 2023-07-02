@@ -40,7 +40,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ExternalCmdCacheHandler extends SimpleChannelInboundHandler<ExternalMessage> {
+public class CmdCacheHandler extends SimpleChannelInboundHandler<ExternalMessage> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -70,16 +70,16 @@ public class ExternalCmdCacheHandler extends SimpleChannelInboundHandler<Externa
     }
 
 
-    public ExternalCmdCacheHandler() {
+    public CmdCacheHandler() {
 
     }
 
-    public static ExternalCmdCacheHandler me() {
+    public static CmdCacheHandler me() {
     	return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final ExternalCmdCacheHandler ME = new ExternalCmdCacheHandler();
+        static final CmdCacheHandler ME = new CmdCacheHandler();
     }
 }
