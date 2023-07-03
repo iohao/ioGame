@@ -20,7 +20,7 @@
 package com.iohao.game.bolt.broker.core.message;
 
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
-import com.iohao.game.common.kit.MurmurHash3;
+import com.iohao.game.common.kit.HashKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -77,7 +77,7 @@ public class BrokerClientModuleMessage implements Serializable {
 
     public BrokerClientModuleMessage setId(String id) {
         this.id = id;
-        this.idHash = MurmurHash3.hash32(id);
+        this.idHash = HashKit.hash32(id);
         return this;
     }
 

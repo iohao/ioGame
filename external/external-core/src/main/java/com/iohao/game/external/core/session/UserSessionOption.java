@@ -43,7 +43,7 @@ public interface UserSessionOption {
      *     所有与该游戏逻辑服相关的请求都将被分配给已绑定的游戏逻辑服处理。
      *     即使启动了多个同类型的游戏逻辑服，该请求仍将被分配给已绑定的游戏逻辑服处理。
      *
-     *     see {@link com.iohao.game.common.kit.MurmurHash3#hash32(String)}
+     *     see {@link com.iohao.game.common.kit.HashKit#hash32(String)}
      * </pre>
      */
     AttrOption<Set<Integer>> bindingLogicServerIdSet = AttrOption.valueOf("bindingLogicServerIdSet");

@@ -70,7 +70,7 @@ public final class HeadMetadata implements Serializable {
      *     比如是对外服发起的请求，这个来源就是对外服的 clientId
      *     clientId 指的是 服务器的唯一id
      *
-     *     see {@link com.iohao.game.common.kit.MurmurHash3}
+     *     see {@link com.iohao.game.common.kit.HashKit}
      * </pre>
      */
     int sourceClientId;
@@ -85,7 +85,7 @@ public final class HeadMetadata implements Serializable {
      *
      *     endPointClientId 指的是 服务器的唯一id
      *
-     *     see {@link com.iohao.game.common.kit.MurmurHash3}
+     *     see {@link com.iohao.game.common.kit.HashKit}
      * </pre>
      */
     int endPointClientId;

@@ -29,7 +29,7 @@ import com.iohao.game.bolt.broker.core.client.config.BrokerClientStatusConfig;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
-import com.iohao.game.common.kit.MurmurHash3;
+import com.iohao.game.common.kit.HashKit;
 import com.iohao.game.common.kit.NetworkKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -265,7 +265,7 @@ public class BrokerClientBuilder {
         simpleServerInfo.setId(this.id);
         simpleServerInfo.setName(this.appName);
         simpleServerInfo.setTag(this.tag);
-        simpleServerInfo.setIdHash(MurmurHash3.hash32(this.id));
+        simpleServerInfo.setIdHash(HashKit.hash32(this.id));
         simpleServerInfo.setBrokerClientType(this.brokerClientType.name());
         simpleServerInfo.setStartTime(System.currentTimeMillis());
         simpleServerInfo.setStatus(this.status);

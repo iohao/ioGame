@@ -63,7 +63,7 @@ public sealed class PulseSignalMessage implements Serializable permits PulseSign
     /**
      * 来源逻辑服 client id
      * <pre>
-     *     see {@link com.iohao.game.common.kit.MurmurHash3}
+     *     see {@link com.iohao.game.common.kit.HashKit}
      * </pre>
      */
     int sourceClientId;

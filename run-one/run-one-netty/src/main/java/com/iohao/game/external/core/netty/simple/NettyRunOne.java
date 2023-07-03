@@ -27,7 +27,7 @@ import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.common.kit.ExecutorKit;
-import com.iohao.game.common.kit.MurmurHash3;
+import com.iohao.game.common.kit.HashKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.core.ExternalServer;
 import lombok.AccessLevel;
@@ -61,9 +61,8 @@ import java.util.concurrent.TimeUnit;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class NettyRunOne {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     final ExecutorService executorService = ExecutorKit.newCacheThreadPool(NettyRunOne.class.toString());
-    final int withNo = MurmurHash3.hash32(UUID.randomUUID().toString());
+    final int withNo = HashKit.hash32(UUID.randomUUID().toString());
     /** 游戏对外服列表 */
     List<ExternalServer> externalServerList;
     /** 游戏逻辑服 */

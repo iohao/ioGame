@@ -27,7 +27,7 @@ import com.iohao.game.bolt.broker.client.external.session.UserSessionAttr;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.common.kit.CollKit;
-import com.iohao.game.common.kit.MurmurHash3;
+import com.iohao.game.common.kit.HashKit;
 
 import java.util.List;
 import java.util.Objects;
@@ -64,7 +64,7 @@ public class EndPointLogicServerMessageExternalProcessor extends AbstractAsyncUs
         }
 
         // 到对外服在转 hash32，以防之后需要这个逻辑服的id（string）
-        int endPointLogicServerId = MurmurHash3.hash32(logicServerId);
+        int endPointLogicServerId = HashKit.hash32(logicServerId);
 
         // true 绑定逻辑服id，false 清除绑定的逻辑服id
         boolean binding = operation != EndPointOperationEnum.CLEAR;

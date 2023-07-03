@@ -30,7 +30,7 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.common.CommonConst;
 import com.iohao.game.common.kit.CollKit;
-import com.iohao.game.common.kit.MurmurHash3;
+import com.iohao.game.common.kit.HashKit;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.message.ExternalMessageCmdCode;
@@ -218,6 +218,6 @@ public class ExternalKit {
      * @return hash
      */
     public int getCacheCondition(byte[] data) {
-        return Objects.nonNull(data) ? MurmurHash3.hash32(data) : 1;
+        return Objects.nonNull(data) ? HashKit.hash32(data) : 1;
     }
 }

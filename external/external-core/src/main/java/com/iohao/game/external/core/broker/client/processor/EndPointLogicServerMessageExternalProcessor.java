@@ -25,7 +25,7 @@ import com.iohao.game.action.skeleton.protocol.processor.EndPointLogicServerMess
 import com.iohao.game.action.skeleton.protocol.processor.EndPointOperationEnum;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.common.kit.CollKit;
-import com.iohao.game.common.kit.MurmurHash3;
+import com.iohao.game.common.kit.HashKit;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.session.UserSessionOption;
 import com.iohao.game.external.core.session.UserSessions;
@@ -89,7 +89,7 @@ public final class EndPointLogicServerMessageExternalProcessor extends AbstractA
 
         return logicServerIdSet
                 .stream()
-                .map(MurmurHash3::hash32)
+                .map(HashKit::hash32)
                 .toList();
     }
 
