@@ -50,36 +50,31 @@ public final class CmdCacheOption {
         this.expireCheckTime = expireCheckTime;
     }
 
-    public int getCacheTime() {
-        return (int) this.expireTime.getSeconds();
-    }
-
     public static CmdCacheOption.Builder newBuilder() {
         return new Builder();
     }
 
     @Setter
     @Accessors(chain = true)
+    @FieldDefaults(level = AccessLevel.PRIVATE)
     public final static class Builder {
         /** 过期时间 */
         Duration expireTime = Duration.ofHours(1);
 
         /**
-         * 缓存数量
+         * 缓存数量（同一个 action 的缓存数量上限）
          * <pre>
-         *     因为游戏对外服缓存支持对应条件与缓存数据关联，
-         *     所以这里有必要做个缓存数据上限，
-         *     目的是防止客户端恶意制造无效的查询条件
+         *     因为游戏对外服缓存支持对应条件与缓存数据关联，所以这里有必要做个缓存数据上限，目的是防止客户端恶意制造无效的查询条件
          * </pre>
          */
-        int cacheLimit = 512;
+        int cacheLimit = 256;
 
         /**
          * 缓存过期检测时间
          * <pre>
          *     间隔多久做一次缓存过期检测
          *
-         *     默认是每 30 秒做一次缓存数据的检测
+         *     默认是每 120 秒做一次缓存数据的检测
          *
          *     注意事项：
          *     检测时间是为了避免频繁的对缓存做检测。
@@ -89,14 +84,14 @@ public final class CmdCacheOption {
          *     如果你想很精准的控制缓存时间，可以设置为每秒做一次检测。
          * </pre>
          */
-        Duration expireCheckTime = Duration.ofSeconds(30);
+        Duration expireCheckTime = Duration.ofMinutes(2);
 
         public CmdCacheOption build() {
 
             Objects.requireNonNull(expireTime);
 
             if (cacheLimit <= 0) {
-                throw new IllegalArgumentException("cacheLimit 必须 > 0");
+                cacheLimit = 256;
             }
 
             return new CmdCacheOption(this.expireTime, this.cacheLimit, this.expireCheckTime);
