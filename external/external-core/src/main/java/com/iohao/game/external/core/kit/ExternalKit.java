@@ -20,6 +20,7 @@
 package com.iohao.game.external.core.kit;
 
 import com.alipay.remoting.rpc.RpcCommandType;
+import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
@@ -148,6 +149,19 @@ public class ExternalKit {
         return externalMessage;
     }
 
+    public ExternalMessage createExternalMessage(CmdInfo cmdInfo, byte[] data) {
+        return createExternalMessage(cmdInfo.getCmd(), cmdInfo.getSubCmd(), data);
+    }
+
+    public ExternalMessage createExternalMessage(CmdInfo cmdInfo, Object object) {
+        return createExternalMessage(cmdInfo.getCmd(), cmdInfo.getSubCmd(), object);
+    }
+
+    public ExternalMessage createExternalMessage(CmdInfo cmdInfo) {
+        ExternalMessage externalMessage = ExternalKit.createExternalMessage();
+        externalMessage.setCmdMerge(cmdInfo.getCmdMerge());
+        return externalMessage;
+    }
 
     public ExternalMessage createExternalMessage(int cmd, int subCmd) {
         ExternalMessage externalMessage = ExternalKit.createExternalMessage();

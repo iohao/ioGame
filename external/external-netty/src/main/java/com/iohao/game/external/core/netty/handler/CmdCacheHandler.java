@@ -22,12 +22,9 @@ package com.iohao.game.external.core.netty.handler;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.hook.cache.ExternalCmdCache;
 import com.iohao.game.external.core.message.ExternalMessage;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 import java.util.Objects;
 
@@ -37,9 +34,7 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2023-07-02
  */
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@ChannelHandler.Sharable
 public class CmdCacheHandler extends SimpleChannelInboundHandler<ExternalMessage> {
 
     @Override
@@ -75,7 +70,7 @@ public class CmdCacheHandler extends SimpleChannelInboundHandler<ExternalMessage
     }
 
     public static CmdCacheHandler me() {
-    	return Holder.ME;
+        return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
