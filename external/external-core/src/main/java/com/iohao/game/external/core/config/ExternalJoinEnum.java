@@ -63,7 +63,7 @@ public enum ExternalJoinEnum {
      *     如果没有这方面需求的，不需要使用该方法。
      * </pre>
      *
-     * @param port 端口
+     * @param port 端口，玩家连接的端口
      * @return 协定变化的端口
      */
     public int cocPort(int port) {
