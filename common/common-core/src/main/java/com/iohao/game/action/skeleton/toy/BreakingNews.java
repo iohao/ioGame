@@ -45,7 +45,8 @@ class BreakingNews {
     private News random() {
         List<News> list = new ArrayList<>();
 
-        list.add(new News("代码组织与约定", "https://www.yuque.com/iohao/game/keyrxn"));
+        list.add(new News("支持者名单", "https://www.yuque.com/iohao/game/backers"));
+        list.add(new News("模拟客户端请求（真实网络环境）", "https://www.yuque.com/iohao/game/tc83ud"));
 
         // 授权相关
         list.add(new News("项目成本分析", "https://www.yuque.com/iohao/game/gd5l3b0y0h027kcv#aSk5x"));
@@ -56,11 +57,15 @@ class BreakingNews {
         list.add(new News("框架版本更新日志", "https://www.yuque.com/iohao/game/ab15oe"));
         list.add(new News("需要给到游戏前端的", "https://www.yuque.com/iohao/game/zfg3ci"));
 
-        // 常见问题
-        list.add(new News("多服单进程、多服多进程的启动方式", "https://www.yuque.com/iohao/game/qni8eqlzsxk7gabm"));
+        // 整体、架构相关
+        list.add(new News("架构简介", "https://www.yuque.com/iohao/game/dqf0he"));
+        list.add(new News("ioGame 架构多样性", "https://www.yuque.com/iohao/game/zqgdv3g9if8w37vr"));
+        list.add(new News("与传统架构的对比", "https://www.yuque.com/iohao/game/cklv8p"));
+
         list.add(new News("ioGame 请求的处理流程", "https://www.yuque.com/iohao/game/ibwgawdy4al6o389"));
         list.add(new News("ioGame 线程相关", "https://www.yuque.com/iohao/game/eixd6x"));
-        list.add(new News("ioGame 架构多样性", "https://www.yuque.com/iohao/game/zqgdv3g9if8w37vr"));
+        list.add(new News("多服单进程、多服多进程的启动方式", "https://www.yuque.com/iohao/game/qni8eqlzsxk7gabm"));
+        list.add(new News("代码组织与约定", "https://www.yuque.com/iohao/game/keyrxn"));
 
         // 游戏逻辑服
         list.add(new News("动态绑定游戏逻辑服", "https://www.yuque.com/iohao/game/idl1wm"));
@@ -69,6 +74,7 @@ class BreakingNews {
 
         // 游戏对外服
         list.add(new News("新游戏对外服设计", "https://www.yuque.com/iohao/game/wotnhl"));
+        list.add(new News("新游戏对外服使用", "https://www.yuque.com/iohao/game/ea6geg"));
         list.add(new News("心跳设置与心跳钩子", "https://www.yuque.com/iohao/game/uueq3i"));
         list.add(new News("用户上线、下线钩子", "https://www.yuque.com/iohao/game/hv5qqh"));
         list.add(new News("路由访问权限控制", "https://www.yuque.com/iohao/game/nap5y8p5fevhv99y"));

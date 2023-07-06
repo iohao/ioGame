@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -20,13 +20,10 @@
 package com.iohao.game.external.core.netty.simple;
 
 import com.iohao.game.action.skeleton.core.ActionCommandRegionGlobalCheckKit;
-import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
-import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
-import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.core.ExternalServer;
 import lombok.AccessLevel;
@@ -37,7 +34,6 @@ import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -77,13 +73,8 @@ import java.util.concurrent.TimeUnit;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class NettyClusterSimpleRunOne {
     static final Logger log = IoGameLoggerFactory.getLoggerCommon();
+    final InternalRunOne runOne = new InternalRunOne();
 
-    final ExecutorService executorService = ExecutorKit.newCacheThreadPool(NettyClusterSimpleRunOne.class.toString());
-
-    /** 对外服 */
-    ExternalServer externalServer;
-    /** 逻辑服 */
-    List<AbstractBrokerClientStartup> logicServerList;
     /** true 在本地启动 broker （游戏网关）集群 */
     boolean runBrokerServerCluster = true;
 
@@ -119,10 +110,48 @@ public final class NettyClusterSimpleRunOne {
         }
 
         // 启动逻辑服、对外服
-        startupLogic();
+        this.runOne.startupLogic();
 
         // 全局重复路由检测工具
         ActionCommandRegionGlobalCheckKit.checkGlobalExistSubCmd();
+    }
+
+    /**
+     * set 游戏逻辑服列表
+     *
+     * @param logicServerList 游戏逻辑服列表
+     * @return this
+     */
+    public NettyClusterSimpleRunOne setLogicServerList(List<AbstractBrokerClientStartup> logicServerList) {
+        this.runOne.setLogicServerList(logicServerList);
+        return this;
+    }
+
+    /**
+     * 添加游戏对外服
+     *
+     * @param externalServer 游戏对外服
+     * @return this
+     */
+    public NettyClusterSimpleRunOne setExternalServer(ExternalServer externalServer) {
+        this.runOne.setExternalServer(externalServer);
+        return this;
+    }
+
+    /**
+     * set 游戏对外服列表
+     *
+     * @param externalServerList 游戏对外服列表
+     * @return this
+     */
+    public NettyClusterSimpleRunOne setExternalServerList(List<ExternalServer> externalServerList) {
+        this.runOne.setExternalServerList(externalServerList);
+        return this;
+    }
+
+    public NettyClusterSimpleRunOne setOpenWithNo(boolean openWithNo) {
+        this.runOne.setOpenWithNo(openWithNo);
+        return this;
     }
 
     /**
@@ -139,27 +168,6 @@ public final class NettyClusterSimpleRunOne {
     public NettyClusterSimpleRunOne disableBrokerServerCluster() {
         this.runBrokerServerCluster = false;
         return this;
-    }
-
-    private void startupLogic() {
-        if (Objects.nonNull(this.logicServerList)) {
-            // 启动游戏逻辑服
-            this.executorService.execute(() -> this.logicServerList.forEach(BrokerClientApplication::start));
-        }
-
-        if (Objects.nonNull(this.externalServer)) {
-            // 启动游戏对外服
-            this.executorService.execute(() -> this.externalServer.startup());
-        }
-
-        try {
-            TimeUnit.MILLISECONDS.sleep(500);
-        } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
-
-        // 生成游戏文档
-        executorService.execute(BarSkeletonDoc.me()::buildDoc);
     }
 
     private void clusterBrokerServer() {
@@ -218,19 +226,20 @@ public final class NettyClusterSimpleRunOne {
         BrokerServer brokerServer = NettyClusterSimpleHelper.createBrokerServer(seedAddress, gossipListenPort, port);
 
         // 启动游戏网关
-        executorService.execute(brokerServer::startup);
+        brokerServer.setWithNo(this.runOne.getWithNo());
+        this.runOne.execute(brokerServer::startup);
     }
 
     private void banner() {
 
         int num = 0;
 
-        if (Objects.nonNull(this.logicServerList)) {
-            num += this.logicServerList.size();
+        if (Objects.nonNull(this.runOne.logicServerList)) {
+            num += this.runOne.logicServerList.size();
         }
 
-        if (Objects.nonNull(this.externalServer)) {
-            num++;
+        if (Objects.nonNull(this.runOne.externalServerList)) {
+            num += this.runOne.externalServerList.size();
         }
 
         if (this.runBrokerServerCluster) {
