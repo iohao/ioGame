@@ -49,6 +49,7 @@
         <module>external/external-core</module>
         <module>external/external-netty</module>
         <module>run-one/run-one-netty</module>
+        <module>widget/light-client</module>
 
     </modules>
 
