@@ -17,22 +17,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.core;
+package com.iohao.game.external.client.input;
 
+import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+
+import java.util.Objects;
 
 /**
  * @author 渔民小镇
- * @date 2023-05-29
+ * @date 2023-07-08
  */
-@Slf4j
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PUBLIC)
-final class ClientRequest {
+public class CommandCallback {
     int msgId;
-    ExternalMessage externalMessage;
-    /** 发送请求后，睡眠 N 时间 */
-    long sleepMilliseconds;
+    Class<?> responseClass;
+
+    InputCallback callback;
+
+    void callback(ExternalMessage externalMessage) {
+
+        CommandResult commandResult = new CommandResult();
+        commandResult.externalMessage = externalMessage;
+
+        byte[] data = externalMessage.getData();
+        if (Objects.nonNull(this.responseClass) && ArrayKit.notEmpty(data)) {
+            commandResult.value = DataCodecKit.decode(data, responseClass);
+        }
+
+        if (Objects.nonNull(callback)) {
+            callback.callback(commandResult);
+        }
+    }
 }

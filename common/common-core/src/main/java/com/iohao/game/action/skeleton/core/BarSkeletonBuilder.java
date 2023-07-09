@@ -54,7 +54,7 @@ public final class BarSkeletonBuilder {
     /** handler 列表 */
     final List<Handler> handlerList = new LinkedList<>();
     /** ActionCommand 执行前与执行后的逻辑钩子类 */
-    final Map<Class<?>, ActionMethodInOut> inOutMap = new HashMap<>();
+    final List<ActionMethodInOut> inOutList = new LinkedList<>();
     /** action class */
     final List<Class<?>> actionControllerClazzList = new LinkedList<>();
     /** action send class */
@@ -180,8 +180,7 @@ public final class BarSkeletonBuilder {
      */
     public BarSkeletonBuilder addInOut(ActionMethodInOut inOut) {
         Objects.requireNonNull(inOut);
-        Class<? extends ActionMethodInOut> key = inOut.getClass();
-        this.inOutMap.put(key, inOut);
+        this.inOutList.add(inOut);
         return this;
     }
 
@@ -197,8 +196,7 @@ public final class BarSkeletonBuilder {
     }
 
     private void extractedInOut(BarSkeleton barSkeleton) {
-        List<ActionMethodInOut> list = this.inOutMap.values().stream().toList();
-        var inOutManager = new InOutManager(this.setting, list);
+        var inOutManager = new InOutManager(this.setting, this.inOutList);
         barSkeleton.setInOutManager(inOutManager);
     }
 

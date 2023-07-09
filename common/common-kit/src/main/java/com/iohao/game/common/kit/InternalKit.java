@@ -26,7 +26,7 @@ import lombok.experimental.UtilityClass;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 内部工具类，开发者不要使用
+ * 内部工具类，开发者不要用在耗时 io 的任务上
  *
  * @author 渔民小镇
  * @date 2023-06-30

@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.core;
+package com.iohao.game.external.client.input;
 
 import com.alipay.remoting.rpc.RpcCommandType;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
@@ -31,6 +31,8 @@ import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
+
 /**
  * 交给 client action 处理
  *
@@ -39,8 +41,13 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @UtilityClass
-class ClientActionProcess {
-    void action(ExternalMessage externalMessage, BarSkeleton barSkeleton) {
+public class ClientActionProcess {
+    public void action(ExternalMessage externalMessage, BarSkeleton barSkeleton) {
+
+        if (Objects.isNull(barSkeleton)) {
+            log.error("因为业务框架不存在，ExternalMessage 无法处理 {}", externalMessage);
+            return;
+        }
 
         RequestMessage request = ClientActionProcess.mapper(externalMessage);
 

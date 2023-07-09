@@ -23,6 +23,8 @@ import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
 import com.iohao.game.action.skeleton.core.BarSkeletonBuilderParamConfig;
 import lombok.experimental.UtilityClass;
 
+import java.util.Scanner;
+
 /**
  * 模拟客户端工具
  *
@@ -31,6 +33,8 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class ClientKit {
+    public final Scanner scanner = new Scanner(System.in);
+
     public BarSkeletonBuilder newBarSkeletonBuilder(Class<?> actionControllerClass) {
         // 业务框架构建器 配置
         var config = new BarSkeletonBuilderParamConfig()

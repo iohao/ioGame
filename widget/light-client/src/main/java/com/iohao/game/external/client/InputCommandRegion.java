@@ -17,41 +17,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.core;
-
-import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.action.skeleton.core.CmdKit;
-import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.external.core.message.ExternalMessage;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+package com.iohao.game.external.client;
 
 /**
+ * 命令域
+ *
  * @author 渔民小镇
- * @date 2023-06-29
+ * @date 2023-07-09
  */
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PACKAGE)
-public class ClientCommandResult {
-    ExternalMessage externalMessage;
-    int msgId;
-    CmdInfo cmdInfo;
-    /** 业务对象 */
-    Object data;
-
-    @SuppressWarnings("unchecked")
-    public <T> T data() {
-        return (T) data;
-    }
-
-    @Override
-    public String toString() {
-        return StrKit.format("msgId:{} - {} \n{}"
-                , msgId
-                , CmdKit.mergeToShort(cmdInfo.getCmdMerge())
-                , data);
-    }
+public interface InputCommandRegion {
+    void initInputCommand();
 }

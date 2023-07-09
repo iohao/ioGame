@@ -101,6 +101,10 @@ public class ArrayKit {
         return array != null && array.length != 0;
     }
 
+    public boolean notEmpty(byte[] array) {
+        return !isEmpty(array);
+    }
+
     public boolean isEmpty(byte[] array) {
         return array == null || array.length == 0;
     }

@@ -23,8 +23,8 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
-import com.iohao.game.external.client.ClientMessageCreate;
-import com.iohao.game.external.client.core.ClientCommands;
+import com.iohao.game.external.client.input.ClientChannelInfo;
+import com.iohao.game.external.client.input.ExecuteCommandKit;
 import com.iohao.game.external.client.join.handler.ClientMessageHandler;
 import com.iohao.game.external.core.netty.handler.codec.TcpExternalCodec;
 import io.netty.bootstrap.Bootstrap;
@@ -49,11 +49,7 @@ class TcpClientStartup implements ClientConnect {
 
     @Override
     public void connect(ClientConnectOption option) {
-
-        ClientMessageCreate clientMessageCreate = option.getClientMessageCreate();
-
         BarSkeleton barSkeleton = option.getBarSkeleton();
-
         ClientMessageHandler clientMessageHandler = new ClientMessageHandler(barSkeleton);
 
         EventLoopGroup group = new NioEventLoopGroup();
@@ -93,12 +89,9 @@ class TcpClientStartup implements ClientConnect {
 
         try {
             Channel channel = channelFuture.sync().channel();
-            ClientCommands.clientChannel = channel::writeAndFlush;
+            ClientChannelInfo.clientChannel = channel::writeAndFlush;
 
-            InternalKit.newTimeout(timeout -> {
-                clientMessageCreate.requestMessagePipeline();
-                ClientCommands.startup();
-            }, 100, TimeUnit.MILLISECONDS);
+            InternalKit.newTimeout(timeout -> ExecuteCommandKit.startup(), 100, TimeUnit.MILLISECONDS);
 
             channel.closeFuture().await();
         } catch (InterruptedException e) {

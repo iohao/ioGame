@@ -38,6 +38,5 @@ public class ClientConnectOption {
     String wsUrl;
     InetSocketAddress socketAddress;
 
-    ClientMessageCreate clientMessageCreate;
     BarSkeleton barSkeleton;
 }

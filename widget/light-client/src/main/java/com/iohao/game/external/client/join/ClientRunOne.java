@@ -24,8 +24,8 @@ import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
-import com.iohao.game.external.client.ClientMessageCreate;
 import com.iohao.game.external.client.CreateBarSkeleton;
+import com.iohao.game.external.client.InputCommandRegion;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
 import lombok.AccessLevel;
@@ -36,6 +36,7 @@ import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,8 +52,8 @@ import java.util.concurrent.TimeUnit;
 public final class ClientRunOne {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     final ExecutorService executorService = ExecutorKit.newSingleThreadExecutor("client");
+    List<InputCommandRegion> inputCommandRegions;
     CreateBarSkeleton createBarSkeleton;
-    ClientMessageCreate clientMessageCreate;
 
     /** 服务器连接端口 */
     int connectPort = ExternalGlobalConfig.externalPort;
@@ -64,7 +65,9 @@ public final class ClientRunOne {
 
     public void startup() {
 
-        Objects.requireNonNull(this.clientMessageCreate, "请设置需要发送的消息");
+        Objects.requireNonNull(this.inputCommandRegions, "请设置需要发送的请求消息");
+
+        this.inputCommandRegions.forEach(InputCommandRegion::initInputCommand);
 
         ClientConnectOption option = getOption();
 
@@ -110,8 +113,6 @@ public final class ClientRunOne {
 
             option.setBarSkeleton(barSkeleton);
         });
-
-        PresentKit.ifNull(option.getClientMessageCreate(), () -> option.setClientMessageCreate(this.clientMessageCreate));
 
         return option;
     }

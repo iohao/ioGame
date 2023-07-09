@@ -17,45 +17,51 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.core;
+package com.iohao.game.external.client.input;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.core.CmdKit;
+import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Objects;
-import java.util.function.Consumer;
-
 /**
- * 请求回调
- *
  * @author 渔民小镇
- * @date 2023-06-29
+ * @date 2023-07-08
  */
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PUBLIC)
-class ClientCallback {
-    int msgId;
-    Class<?> responseClass;
-    Consumer<ClientCommandResult> responseCallback;
+@FieldDefaults(level = AccessLevel.PACKAGE)
+public class CommandResult {
+    ExternalMessage externalMessage;
+    /** 业务对象 */
+    Object value;
 
-    void callback(ExternalMessage externalMessage) {
+    @SuppressWarnings("unchecked")
+    public <T> T getValue() {
+        return (T) value;
+    }
+
+    public int getMsgId() {
+        return externalMessage.getMsgId();
+    }
+
+    public CmdInfo getCmdInfo() {
         int cmdMerge = externalMessage.getCmdMerge();
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(cmdMerge);
+        return CmdInfo.getCmdInfo(cmdMerge);
+    }
 
-        ClientCommandResult result = new ClientCommandResult();
-        result.msgId = externalMessage.getMsgId();
-        result.externalMessage = externalMessage;
-        result.cmdInfo = cmdInfo;
-        result.data = DataCodecKit.decode(externalMessage.getData(), responseClass);
+    public byte[] getBytes() {
+        return externalMessage.getData();
+    }
 
-        if (Objects.nonNull(this.responseCallback)) {
-            responseCallback.accept(result);
-        }
+    @Override
+    public String toString() {
+
+        CmdInfo cmdInfo = getCmdInfo();
+
+        return StrKit.format("msgId:{} - {} \n{}"
+                , getMsgId()
+                , CmdKit.mergeToShort(cmdInfo.getCmdMerge())
+                , value);
     }
 }

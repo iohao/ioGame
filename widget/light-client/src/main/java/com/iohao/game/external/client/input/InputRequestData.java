@@ -17,29 +17,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.join.handler;
-
-import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.external.client.input.ExecuteCommandKit;
-import com.iohao.game.external.core.message.ExternalMessage;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+package com.iohao.game.external.client.input;
 
 /**
+ * 输入请求数据
+ *
  * @author 渔民小镇
- * @date 2023-05-31
+ * @date 2023-07-09
  */
-@ChannelHandler.Sharable
-public class ClientMessageHandler extends SimpleChannelInboundHandler<ExternalMessage> {
-    final BarSkeleton barSkeleton;
+public interface InputRequestData {
+    /**
+     * 创建请求参数
+     *
+     * @return 请求参数
+     */
+    Object createRequestData();
 
-    public ClientMessageHandler(BarSkeleton barSkeleton) {
-        this.barSkeleton = barSkeleton;
-    }
-
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage externalMessage) {
-        ExecuteCommandKit.read(externalMessage, barSkeleton);
+    default Class<?> requestDataClass() {
+        return null;
     }
 }

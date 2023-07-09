@@ -21,10 +21,11 @@ package com.iohao.game.external.client.join;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
-import com.iohao.game.external.client.ClientMessageCreate;
-import com.iohao.game.external.client.core.ClientCommands;
+import com.iohao.game.external.client.input.ClientChannelInfo;
+import com.iohao.game.external.client.input.ExecuteCommandKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
@@ -35,6 +36,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author 渔民小镇
@@ -46,7 +48,6 @@ class WebSocketClientStartup implements ClientConnect {
     @Override
     public void connect(ClientConnectOption option) {
         String wsUrl = option.getWsUrl();
-        ClientMessageCreate clientMessageCreate = option.getClientMessageCreate();
         BarSkeleton barSkeleton = option.getBarSkeleton();
 
         URI uri = null;
@@ -56,13 +57,12 @@ class WebSocketClientStartup implements ClientConnect {
             log.error(e.getMessage(), e);
         }
 
+        InternalKit.newTimeout(timeout -> ExecuteCommandKit.startup(), 100, TimeUnit.MILLISECONDS);
+
         // 连接游戏服务器的地址
         WebSocketClient webSocketClient = new WebSocketClient(Objects.requireNonNull(uri), new Draft_6455()) {
             @Override
             public void onOpen(ServerHandshake handshakedata) {
-                // 连续多次发送请求命令到游戏服务器
-                clientMessageCreate.requestMessagePipeline();
-                ClientCommands.startup();
             }
 
             @Override
@@ -83,11 +83,11 @@ class WebSocketClientStartup implements ClientConnect {
                 byte[] dataContent = byteBuffer.array();
                 ExternalMessage externalMessage = DataCodecKit.decode(dataContent, ExternalMessage.class);
 
-                ClientCommands.read(externalMessage, barSkeleton);
+                ExecuteCommandKit.read(externalMessage, barSkeleton);
             }
         };
 
-        ClientCommands.clientChannel = externalMessage -> {
+        ClientChannelInfo.clientChannel = externalMessage -> {
             byte[] bytes = DataCodecKit.encode(externalMessage);
             webSocketClient.send(bytes);
         };

@@ -17,29 +17,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.join.handler;
+package com.iohao.game.external.client;
 
-import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.external.client.input.ExecuteCommandKit;
-import com.iohao.game.external.core.message.ExternalMessage;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import com.iohao.game.common.kit.attr.AttrOptionDynamic;
+import com.iohao.game.common.kit.attr.AttrOptions;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 /**
  * @author 渔民小镇
- * @date 2023-05-31
+ * @date 2023-07-09
  */
-@ChannelHandler.Sharable
-public class ClientMessageHandler extends SimpleChannelInboundHandler<ExternalMessage> {
-    final BarSkeleton barSkeleton;
+@Setter
+@Getter
+public class ClientUser implements AttrOptionDynamic {
+    final AttrOptions options = new AttrOptions();
+    long userId;
 
-    public ClientMessageHandler(BarSkeleton barSkeleton) {
-        this.barSkeleton = barSkeleton;
+    private ClientUser() {
+
     }
 
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage externalMessage) {
-        ExecuteCommandKit.read(externalMessage, barSkeleton);
+    public static ClientUser me() {
+        return Holder.ME;
+    }
+
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final ClientUser ME = new ClientUser();
     }
 }
