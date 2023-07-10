@@ -19,6 +19,7 @@
  */
 package com.iohao.game.action.skeleton.core;
 
+import com.iohao.game.action.skeleton.core.doc.ActionSendDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionSendDocs;
 import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
@@ -159,6 +160,11 @@ public final class BarSkeletonBuilder {
     public BarSkeletonBuilder addActionSend(Class<?> actionSend) {
         Objects.requireNonNull(actionSend);
         this.actionSendClazzList.add(actionSend);
+        return this;
+    }
+
+    public BarSkeletonBuilder addActionSendDoc(ActionSendDoc actionSendDoc) {
+        this.actionSendDocs.add(actionSendDoc);
         return this;
     }
 

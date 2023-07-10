@@ -22,6 +22,7 @@ package com.iohao.game.external.client.input;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.external.core.kit.ExternalKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.experimental.UtilityClass;
@@ -29,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.net.InetSocketAddress;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
@@ -47,13 +49,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ExecuteCommandKit {
     final AtomicBoolean starting = new AtomicBoolean();
     final AtomicInteger msgIdSeq = new AtomicInteger(1);
-    final Map<Integer, CommandCallback> listenBroadcastMap = new NonBlockingHashMap<>();
+    final Map<Integer, ListenBroadcastCommand> listenBroadcastMap = new LinkedHashMap<>();
     final BlockingQueue<CommandRequest> blockingQueue = new LinkedBlockingQueue<>();
     /** 回调 */
     final Map<Integer, CommandCallback> callbackMap = new NonBlockingHashMap<>();
     ClientChannelRead channelRead = new DefaultChannelRead();
 
-    public void request(InputCommand inputCommand) {
+    void request(InputCommand inputCommand) {
         CmdInfo cmdInfo = inputCommand.getCmdInfo();
         // 生成请求参数
         Object requestData = inputCommand.getRequestData();
@@ -124,6 +126,44 @@ public class ExecuteCommandKit {
         ClientChannelInfo.clientChannel.accept(externalMessage);
     }
 
+    /**
+     * 广播监听
+     * <pre>
+     *     监听游戏服务器广播的消息
+     * </pre>
+     *
+     * @param cmdInfo       监听的路由
+     * @param responseClass 响应后使用这个 class 来解析 data 数据
+     * @param callback      结果回调（游戏服务器回传的结果）
+     * @param description   广播描述
+     */
+    public void listenBroadcast(CmdInfo cmdInfo
+            , Class<?> responseClass
+            , InputCallback callback
+            , String description
+    ) {
+
+        // 回调
+        CommandCallback commandCallback = new CommandCallback();
+        commandCallback.responseClass = responseClass;
+        commandCallback.callback = callback;
+
+        int cmdMerge = cmdInfo.getCmdMerge();
+
+        if (listenBroadcastMap.containsKey(cmdMerge)) {
+            throw new RuntimeException("相同的广播路由，只能监听一个");
+        }
+
+        ListenBroadcastCommand broadcastCommand = new ListenBroadcastCommand(cmdInfo);
+        broadcastCommand.setCommandCallback(commandCallback);
+
+        if (StrKit.isNotEmpty(description)) {
+            broadcastCommand.setDescription(description);
+        }
+
+        listenBroadcastMap.put(cmdMerge, broadcastCommand);
+    }
+
     class DefaultChannelRead implements ClientChannelRead {
         @Override
         public void read(ExternalMessage externalMessage, BarSkeleton barSkeleton) {
@@ -149,10 +189,12 @@ public class ExecuteCommandKit {
             }
 
             // 有广播监听的，
-            CommandCallback clientCallback = listenBroadcastMap.get(cmdMerge);
-            if (Objects.nonNull(clientCallback)) {
+            ListenBroadcastCommand broadcastCommand = listenBroadcastMap.get(cmdMerge);
+
+            if (Objects.nonNull(broadcastCommand)) {
                 // 如果配置了广播监听，优先在这处理
-                clientCallback.callback(externalMessage);
+                CommandCallback commandCallback = broadcastCommand.getCommandCallback();
+                commandCallback.callback(externalMessage);
                 return;
             }
 

@@ -19,17 +19,34 @@
  */
 package com.iohao.game.external.client.input;
 
+import com.iohao.game.action.skeleton.core.CmdInfo;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
 /**
- * 输入请求数据
+ * 广播监听
  *
  * @author 渔民小镇
  * @date 2023-07-09
  */
-public interface InputRequestData {
-    /**
-     * 创建请求参数
-     *
-     * @return 请求参数
-     */
-    Object createRequestData();
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ListenBroadcastCommand {
+    final CmdInfo cmdInfo;
+    final String name;
+    String description = "... ...";
+    CommandCallback commandCallback;
+
+    public ListenBroadcastCommand(CmdInfo cmdInfo) {
+        this.name = InputCommands.toInputName(cmdInfo);
+        this.cmdInfo = cmdInfo;
+    }
+
+    @Override
+    public String toString() {
+        return name + "    :    " + description;
+    }
 }

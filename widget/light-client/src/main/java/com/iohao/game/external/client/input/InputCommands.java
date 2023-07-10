@@ -24,8 +24,8 @@ import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.external.client.kit.ClientKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.jctools.maps.NonBlockingHashMap;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,15 +37,19 @@ import java.util.Objects;
 @UtilityClass
 public class InputCommands {
 
-    Map<String, InputCommand> inputCommandMap = new NonBlockingHashMap<>();
+    Map<String, InputCommand> inputCommandMap = new LinkedHashMap<>();
 
-    public void addCommand(InputCommand inputCommand) {
+    private void addCommand(InputCommand inputCommand) {
 
         Objects.requireNonNull(inputCommand);
         String inputName = inputCommand.getInputName();
 
         // 验证输入命令的正确性
         inputCommandMap.put(inputName, inputCommand);
+    }
+
+    public String toInputName(CmdInfo cmdInfo) {
+        return cmdInfo.getCmd() + "-" + cmdInfo.getSubCmd();
     }
 
     public InputCommand createCommand(CmdInfo cmdInfo) {
@@ -58,9 +62,47 @@ public class InputCommands {
         return inputCommandMap.get(inputName);
     }
 
+    /**
+     * 向服务器发起请求
+     *
+     * @param cmdInfo 请求路由
+     */
+    public void request(CmdInfo cmdInfo) {
+        String inputName = toInputName(cmdInfo);
+        request(inputName);
+    }
+
+    /**
+     * 向服务器发起请求
+     *
+     * @param inputName 请求命令
+     */
+    public void request(String inputName) {
+        InputCommand inputCommand = InputCommands.getInputCommand(inputName);
+        if (Objects.isNull(inputCommand)) {
+            System.err.printf("【%s】命令不存在\n", inputName);
+            return;
+        }
+
+        System.out.println(inputCommand);
+
+        try {
+            // 发起请求
+            ExecuteCommandKit.request(inputCommand);
+        } catch (Throwable e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
     public void help() {
         System.out.println("---------- cmd help ----------");
         inputCommandMap.forEach((s, inputCommand) -> System.out.println(inputCommand.toString()));
+        System.out.println("------------------------------");
+    }
+
+    public void listenHelp() {
+        System.out.println("---------- 广播监听 help ----------");
+        ExecuteCommandKit.listenBroadcastMap.values().forEach(System.out::println);
         System.out.println("------------------------------");
     }
 
@@ -79,36 +121,30 @@ public class InputCommands {
                 continue;
             }
 
-            InputCommand inputCommand = getInputCommand(input);
-
-            if (Objects.isNull(inputCommand)) {
+            if (Objects.equals(input, "help") || Objects.equals(input, ".")) {
                 help();
                 continue;
             }
 
-            System.out.println(inputCommand);
-
-            try {
-                // 发起请求
-                ExecuteCommandKit.request(inputCommand);
-            } catch (Throwable e) {
-                log.error(e.getMessage(), e);
+            if (Objects.equals(input, "..")) {
+                listenHelp();
+                continue;
             }
+
+            if (Objects.equals(input, "...")) {
+                help();
+                listenHelp();
+                continue;
+            }
+
+            if (Objects.equals(input, "q")) {
+                System.out.println("88，老哥！顺便帮忙关注一下组织 https://github.com/game-town");
+                System.exit(-1);
+                continue;
+            }
+
+            // 发起模拟请求
+            request(input);
         }
     }
-
-    public static void main(String[] args) {
-
-        InputCommand inputCommand0 = new InputCommand(126, 0);
-        inputCommand0.setDescription("登录");
-
-        InputCommand inputCommand1 = new InputCommand(126, 1);
-        inputCommand1.setDescription("添加好友");
-
-        addCommand(inputCommand0);
-        addCommand(inputCommand1);
-
-        start();
-    }
-
 }

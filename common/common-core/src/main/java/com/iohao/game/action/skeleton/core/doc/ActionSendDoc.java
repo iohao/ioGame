@@ -49,4 +49,11 @@ public class ActionSendDoc {
         this.dataClass = docActionSend.dataClass();
         this.description = docActionSend.description();
     }
+
+    public ActionSendDoc(int cmd, int subCmd, Class<?> dataClass, String description) {
+        this.cmd = cmd;
+        this.subCmd = subCmd;
+        this.dataClass = dataClass;
+        this.description = description;
+    }
 }

@@ -23,6 +23,7 @@ import com.iohao.game.action.skeleton.core.CmdInfo;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Objects;
@@ -35,6 +36,7 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InputCommand {
 
@@ -65,23 +67,21 @@ public class InputCommand {
     Class<?> responseClass;
 
     public InputCommand(CmdInfo cmdInfo) {
-        this.inputName = cmdInfo.getCmd() + "-" + cmdInfo.getSubCmd();
+        this.inputName = InputCommands.toInputName(cmdInfo);
         this.cmdInfo = cmdInfo;
     }
 
-    public InputCommand(int cmd, int subCmd) {
-        this(CmdInfo.getCmdInfo(cmd, subCmd));
+    public InputCommand callback(InputCallback callback) {
+        return this.callback(null, callback);
     }
 
-    public void callback(InputCallback callback) {
-        this.callback(null, callback);
-    }
-
-    public void callback(Class<?> responseClass, InputCallback callback) {
+    public InputCommand callback(Class<?> responseClass, InputCallback callback) {
         this.callback = callback;
         if (Objects.nonNull(responseClass)) {
             this.responseClass = responseClass;
         }
+
+        return this;
     }
 
     public Object getRequestData() {

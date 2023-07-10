@@ -21,10 +21,15 @@ package com.iohao.game.external.client.input;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdKit;
+import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author 渔民小镇
@@ -39,6 +44,17 @@ public class CommandResult {
     @SuppressWarnings("unchecked")
     public <T> T getValue() {
         return (T) value;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> List<T> toList(Class<? extends T> clazz) {
+        if (value instanceof ByteValueList byteValueList) {
+            return (List<T>) byteValueList.values.stream()
+                    .map(bytes -> DataCodecKit.decode(bytes, clazz))
+                    .toList();
+        }
+
+        return Collections.emptyList();
     }
 
     public int getMsgId() {
