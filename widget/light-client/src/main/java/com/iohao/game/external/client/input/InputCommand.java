@@ -20,6 +20,9 @@
 package com.iohao.game.external.client.input;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
+import com.iohao.game.external.core.kit.ExternalKit;
+import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -71,10 +74,6 @@ public class InputCommand {
         this.cmdInfo = cmdInfo;
     }
 
-    public InputCommand callback(InputCallback callback) {
-        return this.callback(null, callback);
-    }
-
     public InputCommand callback(Class<?> responseClass, InputCallback callback) {
         this.callback = callback;
         if (Objects.nonNull(responseClass)) {
@@ -91,6 +90,22 @@ public class InputCommand {
         }
 
         return requestData;
+    }
+
+    public void request(long value) {
+        LongValue longValue = LongValue.of(value);
+        this.request(longValue);
+    }
+
+    /**
+     * 向服务器发起请求
+     *
+     * @param requestData 请求业务参数
+     */
+    public void request(Object requestData) {
+        // 请求参数
+        ExternalMessage externalMessage = ExternalKit.createExternalMessage(cmdInfo, requestData);
+        ExecuteCommandKit.request(externalMessage, this.responseClass, this.callback);
     }
 
     @Override

@@ -19,8 +19,6 @@
  */
 package com.iohao.game.external.client.kit;
 
-import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
-import com.iohao.game.action.skeleton.core.BarSkeletonBuilderParamConfig;
 import lombok.experimental.UtilityClass;
 
 import java.util.Scanner;
@@ -32,21 +30,21 @@ import java.util.Scanner;
  * @date 2023-07-04
  */
 @UtilityClass
-public class ClientKit {
+public class ScannerKit {
     public final Scanner scanner = new Scanner(System.in);
 
-    public BarSkeletonBuilder newBarSkeletonBuilder(Class<?> actionControllerClass) {
-        // 业务框架构建器 配置
-        var config = new BarSkeletonBuilderParamConfig()
-                // 扫描 action 类所在包
-                .scanActionPackage(actionControllerClass);
-
-        // 业务框架构建器
-        var builder = config.createBuilder();
-
-        builder.setActionAfter(flowContext -> {
-        });
-
-        return builder;
+    public String nextLine() {
+        return scanner.nextLine();
     }
+
+    public long nextLong() {
+        String s = ScannerKit.scanner.nextLine();
+        return Long.parseLong(s);
+    }
+
+    public int nextInt() {
+        String s = ScannerKit.scanner.nextLine();
+        return Integer.parseInt(s);
+    }
+
 }

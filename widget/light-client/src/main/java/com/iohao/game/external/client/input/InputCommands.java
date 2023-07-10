@@ -21,7 +21,8 @@ package com.iohao.game.external.client.input;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.external.client.kit.ClientKit;
+import com.iohao.game.external.client.ClientUser;
+import com.iohao.game.external.client.kit.ScannerKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,6 +63,11 @@ public class InputCommands {
         return inputCommandMap.get(inputName);
     }
 
+    public InputCommand getInputCommand(CmdInfo cmdInfo) {
+        String inputName = toInputName(cmdInfo);
+        return inputCommandMap.get(inputName);
+    }
+
     /**
      * 向服务器发起请求
      *
@@ -95,13 +101,13 @@ public class InputCommands {
     }
 
     public void help() {
-        System.out.println("---------- cmd help ----------");
+        System.out.println("---------- cmd help ----------" + ClientUser.me().getUserId());
         inputCommandMap.forEach((s, inputCommand) -> System.out.println(inputCommand.toString()));
         System.out.println("------------------------------");
     }
 
     public void listenHelp() {
-        System.out.println("---------- 广播监听 help ----------");
+        System.out.println("---------- 广播监听 help ----------" + ClientUser.me().getUserId());
         ExecuteCommandKit.listenBroadcastMap.values().forEach(System.out::println);
         System.out.println("------------------------------");
     }
@@ -114,7 +120,7 @@ public class InputCommands {
 
             System.out.println("提示：[命令执行 : cmd-subCmd] [退出 : q] [帮助 : help]");
 
-            input = ClientKit.scanner.nextLine();
+            input = ScannerKit.scanner.nextLine();
             input = input.trim();
 
             if (StrKit.isEmpty(input)) {

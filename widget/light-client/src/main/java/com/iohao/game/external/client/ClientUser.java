@@ -21,10 +21,8 @@ package com.iohao.game.external.client;
 
 import com.iohao.game.common.kit.attr.AttrOptionDynamic;
 import com.iohao.game.common.kit.attr.AttrOptions;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 /**
  * @author 渔民小镇
@@ -35,6 +33,9 @@ import lombok.experimental.FieldDefaults;
 public class ClientUser implements AttrOptionDynamic {
     final AttrOptions options = new AttrOptions();
     long userId;
+    /** 昵称 */
+    String nickname;
+    String jwt;
 
     private ClientUser() {
 

@@ -20,10 +20,12 @@
 package com.iohao.game.external.client;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
 import com.iohao.game.external.client.input.*;
 import com.iohao.game.external.client.kit.AssertKit;
-import com.iohao.game.external.client.kit.ClientKit;
+import com.iohao.game.external.client.kit.ScannerKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Objects;
 
 /**
+ * 模块输入命令域
+ *
  * @author 渔民小镇
  * @date 2023-07-09
  */
@@ -46,6 +50,13 @@ public class InputCommandCreate {
         return CmdInfo.getCmdInfo(cmd, subCmd);
     }
 
+    public InputCommand getInputCommand(int subCmd) {
+        CmdInfo cmdInfo = getCmdInfo(subCmd);
+        InputCommand inputCommand = InputCommands.getInputCommand(cmdInfo);
+        Objects.requireNonNull(inputCommand, "没有对应的请求配置");
+        return inputCommand;
+    }
+
     /**
      * 向服务器发起请求
      *
@@ -56,17 +67,28 @@ public class InputCommandCreate {
         InputCommands.request(cmdInfo);
     }
 
-    public InputCommand createInputCommand(int subCmd, String desc) {
-        return createInputCommand(subCmd, desc, null);
+    /**
+     * 创建模拟命令
+     *
+     * @param subCmd 子路由
+     * @return InputCommand
+     */
+    public InputCommand createInputCommand(int subCmd) {
+        return createInputCommand(subCmd, null);
     }
 
-    public InputCommand createInputCommand(int subCmd,
-                                           String desc,
-                                           InputRequestData inputRequestData) {
+    private InputCommand createInputCommand(int subCmd, InputRequestData inputRequestData) {
 
         CmdInfo cmdInfo = getCmdInfo(subCmd);
 
-        // 先检查命令是否存在
+        // 唯一性路由命令检测，先检查命令是否存在
+        extractedChecked(cmdInfo);
+
+        return InputCommands.createCommand(cmdInfo)
+                .setInputRequestData(inputRequestData);
+    }
+
+    private void extractedChecked(CmdInfo cmdInfo) {
         if (uniqueInputCommand) {
             var inputName = InputCommands.toInputName(cmdInfo);
             InputCommand inputCommand = InputCommands.getInputCommand(inputName);
@@ -74,29 +96,69 @@ public class InputCommandCreate {
                 throw new RuntimeException("存在重复的路由命令 : " + cmdInfo);
             }
         }
-
-        return InputCommands.createCommand(cmdInfo)
-                .setDescription(desc)
-                .setInputRequestData(inputRequestData);
     }
 
-    public InputCommand createInputCommandLong(int subCmd, String desc) {
-        InputRequestData inputRequestData = createNextUserId();
-        return createInputCommand(subCmd, desc, inputRequestData);
+    /**
+     * 创建模拟命令，在使用命令时需要在控制台输入 long 类型的请求参数
+     *
+     * @param subCmd 子路由
+     * @return InputCommand
+     */
+    public InputCommand createInputCommandLong(int subCmd) {
+        InputRequestData inputRequestData = nextParamLong("参数");
+
+        return createInputCommand(subCmd, inputRequestData);
     }
 
-    public InputRequestData createNextUserId() {
-        return createNextLong("对方的 userId");
+    /**
+     * 创建模拟命令，在使用命令时需要在控制台输入 long 类型的 userId 请求参数
+     *
+     * @param subCmd 子路由
+     * @return InputCommand
+     */
+    public InputCommand createInputCommandUserId(int subCmd) {
+        InputRequestData inputRequestData = nextParamLong("对方的 userId");
+        return createInputCommand(subCmd, inputRequestData);
     }
 
-    public InputRequestData createNextLong(String requestDataDescription) {
+    public InputRequestData nextParamLong(String paramTips) {
         return () -> {
             String info = "请输入{} | 参数类型 : {}";
-            log.info(info, requestDataDescription, long.class);
+            log.info(info, paramTips, long.class);
 
-            String s = ClientKit.scanner.nextLine();
-            long longValue = Long.parseLong(s);
+            long longValue = ScannerKit.nextLong();
             return LongValue.of(longValue);
+        };
+    }
+
+    public InputCommand createInputCommandInt(int subCmd) {
+        InputRequestData inputRequestData = nextParamInt("参数");
+        return createInputCommand(subCmd, inputRequestData);
+    }
+
+    public InputRequestData nextParamInt(String paramTips) {
+        return () -> {
+            String info = "请输入{} | 参数类型 : {}";
+            log.info(info, paramTips, int.class);
+
+            int intValue = ScannerKit.nextInt();
+            return IntValue.of(intValue);
+        };
+    }
+
+    public InputCommand createInputCommandString(int subCmd) {
+        InputRequestData inputRequestData = nextParamString("参数");
+        return createInputCommand(subCmd, inputRequestData);
+    }
+
+    public InputRequestData nextParamString(String paramTips) {
+        return () -> {
+            String info = "请输入{} | 参数类型 : {}";
+            log.info(info, paramTips, String.class);
+            String s = ScannerKit.nextLine();
+            Objects.requireNonNull(s);
+
+            return StringValue.of(s);
         };
     }
 
@@ -114,19 +176,5 @@ public class InputCommandCreate {
     public void listenBroadcast(Class<?> responseClass, InputCallback callback, int subCmd, String description) {
         CmdInfo cmdInfo = getCmdInfo(subCmd);
         ExecuteCommandKit.listenBroadcast(cmdInfo, responseClass, callback, description);
-    }
-
-    /**
-     * 广播监听
-     * <pre>
-     *     监听游戏服务器广播的消息
-     * </pre>
-     *
-     * @param subCmd        子路由
-     * @param responseClass 响应后使用这个 class 来解析 data 数据
-     * @param callback      结果回调（游戏服务器回传的结果）
-     */
-    public void listenBroadcast(Class<?> responseClass, InputCallback callback, int subCmd) {
-        listenBroadcast(responseClass, callback, subCmd, null);
     }
 }
