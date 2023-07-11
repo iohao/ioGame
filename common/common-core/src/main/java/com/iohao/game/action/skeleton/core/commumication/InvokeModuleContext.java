@@ -44,8 +44,8 @@ public interface InvokeModuleContext {
      * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
      * <pre>
      *     相关文档
-     *     https://www.yuque.com/iohao/game/nelwuz#gtdrv
-     *     https://www.yuque.com/iohao/game/anguu6#cZfdx
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -60,8 +60,8 @@ public interface InvokeModuleContext {
      * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
      * <pre>
      *     相关文档
-     *     https://www.yuque.com/iohao/game/nelwuz#gtdrv
-     *     https://www.yuque.com/iohao/game/anguu6#cZfdx
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -74,8 +74,8 @@ public interface InvokeModuleContext {
      * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
      * <pre>
      *     相关文档
-     *     https://www.yuque.com/iohao/game/nelwuz#gtdrv
-     *     https://www.yuque.com/iohao/game/anguu6#cZfdx
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
      * </pre>
      *
      * @param requestMessage requestMessage
@@ -86,8 +86,8 @@ public interface InvokeModuleContext {
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
      * <pre>
      *     相关文档
-     *     https://www.yuque.com/iohao/game/nelwuz#L9TAJ
-     *     https://www.yuque.com/iohao/game/anguu6
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -107,8 +107,8 @@ public interface InvokeModuleContext {
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
      * <pre>
      *     相关文档
-     *     https://www.yuque.com/iohao/game/nelwuz#L9TAJ
-     *     https://www.yuque.com/iohao/game/anguu6
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -124,8 +124,8 @@ public interface InvokeModuleContext {
      * 根据 RequestMessage 来请求其他子服务器（其他逻辑服）的数据
      * <pre>
      *     相关文档
-     *     https://www.yuque.com/iohao/game/nelwuz#L9TAJ
-     *     https://www.yuque.com/iohao/game/anguu6
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
      * </pre>
      *
      * @param requestMessage RequestMessage
@@ -145,8 +145,8 @@ public interface InvokeModuleContext {
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
      * <pre>
      *     相关文档
-     *     https://www.yuque.com/iohao/game/nelwuz#L9TAJ
-     *     https://www.yuque.com/iohao/game/anguu6
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -163,8 +163,8 @@ public interface InvokeModuleContext {
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
      * <pre>
      *     相关文档
-     *     https://www.yuque.com/iohao/game/nelwuz#L9TAJ
-     *     https://www.yuque.com/iohao/game/anguu6
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -178,7 +178,7 @@ public interface InvokeModuleContext {
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
      * <pre>
      *     相关文档
-     *     https://www.yuque.com/iohao/game/anguu6
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
      * </pre>
      *
      * @param requestMessage requestMessage
@@ -193,8 +193,8 @@ public interface InvokeModuleContext {
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     具体的意思可以参考文档中的说明
-     *     https://www.yuque.com/iohao/game/nelwuz#gSdya
-     *     https://www.yuque.com/iohao/game/rf9rb9
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gSdya">游戏逻辑服与同类型多个游戏逻辑服通信请求（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -216,8 +216,8 @@ public interface InvokeModuleContext {
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     具体的意思可以参考文档中的说明
-     *     https://www.yuque.com/iohao/game/nelwuz#gSdya
-     *     https://www.yuque.com/iohao/game/rf9rb9
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gSdya">游戏逻辑服与同类型多个游戏逻辑服通信请求（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -235,8 +235,8 @@ public interface InvokeModuleContext {
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     具体的意思可以参考文档中的说明
-     *     https://www.yuque.com/iohao/game/nelwuz#gSdya
-     *     https://www.yuque.com/iohao/game/rf9rb9
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gSdya">游戏逻辑服与同类型多个游戏逻辑服通信请求（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
      * </pre>
      *
      * @param requestMessage requestMessage

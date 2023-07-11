@@ -39,8 +39,8 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
      * @param subCmd 子路由
      * @return InputCommand
      */
-    protected InputCommand createCommand(int subCmd) {
-        return this.inputCommandCreate.createInputCommand(subCmd);
+    protected InputCommand ofCommand(int subCmd) {
+        return this.inputCommandCreate.ofInputCommand(subCmd);
     }
 
     /**
@@ -49,8 +49,8 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
      * @param subCmd 子路由
      * @return InputCommand
      */
-    protected InputCommand createCommandLong(int subCmd) {
-        return this.inputCommandCreate.createInputCommandLong(subCmd);
+    protected InputCommand ofCommandLong(int subCmd) {
+        return this.inputCommandCreate.ofInputCommandLong(subCmd);
     }
 
     /**
@@ -59,8 +59,8 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
      * @param subCmd 子路由
      * @return InputCommand
      */
-    protected InputCommand createCommandUserId(int subCmd) {
-        return this.inputCommandCreate.createInputCommandUserId(subCmd);
+    protected InputCommand ofCommandUserId(int subCmd) {
+        return this.inputCommandCreate.ofInputCommandUserId(subCmd);
     }
 
     /**
@@ -69,8 +69,8 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
      * @param subCmd 子路由
      * @return InputCommand
      */
-    protected InputCommand createCommandInt(int subCmd) {
-        return inputCommandCreate.createInputCommandInt(subCmd);
+    protected InputCommand ofCommandInt(int subCmd) {
+        return inputCommandCreate.ofInputCommandInt(subCmd);
     }
 
     /**
@@ -79,8 +79,8 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
      * @param subCmd 子路由
      * @return InputCommand
      */
-    protected InputCommand createCommandString(int subCmd) {
-        return this.inputCommandCreate.createInputCommandString(subCmd);
+    protected InputCommand ofCommandString(int subCmd) {
+        return this.inputCommandCreate.ofInputCommandString(subCmd);
     }
 
 

@@ -53,7 +53,7 @@ public class InputCommands {
         return cmdInfo.getCmd() + "-" + cmdInfo.getSubCmd();
     }
 
-    public InputCommand createCommand(CmdInfo cmdInfo) {
+    public InputCommand ofCommand(CmdInfo cmdInfo) {
         InputCommand inputCommand = new InputCommand(cmdInfo);
         addCommand(inputCommand);
         return inputCommand;

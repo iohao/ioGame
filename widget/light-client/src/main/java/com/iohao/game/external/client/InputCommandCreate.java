@@ -73,18 +73,18 @@ public class InputCommandCreate {
      * @param subCmd 子路由
      * @return InputCommand
      */
-    public InputCommand createInputCommand(int subCmd) {
-        return createInputCommand(subCmd, null);
+    public InputCommand ofInputCommand(int subCmd) {
+        return ofInputCommand(subCmd, null);
     }
 
-    private InputCommand createInputCommand(int subCmd, InputRequestData inputRequestData) {
+    private InputCommand ofInputCommand(int subCmd, InputRequestData inputRequestData) {
 
         CmdInfo cmdInfo = getCmdInfo(subCmd);
 
         // 唯一性路由命令检测，先检查命令是否存在
         extractedChecked(cmdInfo);
 
-        return InputCommands.createCommand(cmdInfo)
+        return InputCommands.ofCommand(cmdInfo)
                 .setInputRequestData(inputRequestData);
     }
 
@@ -104,10 +104,10 @@ public class InputCommandCreate {
      * @param subCmd 子路由
      * @return InputCommand
      */
-    public InputCommand createInputCommandLong(int subCmd) {
+    public InputCommand ofInputCommandLong(int subCmd) {
         InputRequestData inputRequestData = nextParamLong("参数");
 
-        return createInputCommand(subCmd, inputRequestData);
+        return ofInputCommand(subCmd, inputRequestData);
     }
 
     /**
@@ -116,9 +116,9 @@ public class InputCommandCreate {
      * @param subCmd 子路由
      * @return InputCommand
      */
-    public InputCommand createInputCommandUserId(int subCmd) {
+    public InputCommand ofInputCommandUserId(int subCmd) {
         InputRequestData inputRequestData = nextParamLong("对方的 userId");
-        return createInputCommand(subCmd, inputRequestData);
+        return ofInputCommand(subCmd, inputRequestData);
     }
 
     public InputRequestData nextParamLong(String paramTips) {
@@ -131,9 +131,9 @@ public class InputCommandCreate {
         };
     }
 
-    public InputCommand createInputCommandInt(int subCmd) {
+    public InputCommand ofInputCommandInt(int subCmd) {
         InputRequestData inputRequestData = nextParamInt("参数");
-        return createInputCommand(subCmd, inputRequestData);
+        return ofInputCommand(subCmd, inputRequestData);
     }
 
     public InputRequestData nextParamInt(String paramTips) {
@@ -146,9 +146,9 @@ public class InputCommandCreate {
         };
     }
 
-    public InputCommand createInputCommandString(int subCmd) {
+    public InputCommand ofInputCommandString(int subCmd) {
         InputRequestData inputRequestData = nextParamString("参数");
-        return createInputCommand(subCmd, inputRequestData);
+        return ofInputCommand(subCmd, inputRequestData);
     }
 
     public InputRequestData nextParamString(String paramTips) {
