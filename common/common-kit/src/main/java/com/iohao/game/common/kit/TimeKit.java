@@ -1,0 +1,99 @@
+/*
+ * ioGame
+ * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
+ * # iohao.com . 渔民小镇
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+package com.iohao.game.common.kit;
+
+import io.netty.util.Timeout;
+import io.netty.util.TimerTask;
+import lombok.experimental.UtilityClass;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+/**
+ * 时间工具
+ *
+ * @author 渔民小镇
+ * @date 2023-07-12
+ */
+@UtilityClass
+public class TimeKit {
+    public ZoneId defaultZoneId = ZoneId.systemDefault();
+    public DateTimeFormatter defaultFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public volatile long currentTime = System.currentTimeMillis();
+
+    static {
+        InternalKit.newTimeoutSeconds(new TimerTask() {
+            @Override
+            public void run(Timeout timeout) {
+                TimeKit.currentTime = System.currentTimeMillis();
+                InternalKit.newTimeoutSeconds(this);
+            }
+        });
+    }
+
+    public int toSecond(LocalDateTime localDateTime) {
+        // 获取毫秒数
+        return (int) toInstant(localDateTime).getEpochSecond();
+    }
+
+    public long toMilli(LocalDateTime localDateTime) {
+        // 获取毫秒数
+        return toInstant(localDateTime).toEpochMilli();
+    }
+
+    public Instant toInstant(LocalDateTime localDateTime) {
+        return localDateTime
+                .atZone(defaultZoneId)
+                .toInstant();
+    }
+
+    public LocalDateTime toLocalDateTime(long milliseconds) {
+        Instant instant = Instant.ofEpochMilli(milliseconds);
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        return zonedDateTime.toLocalDateTime();
+    }
+
+    public String formatter(LocalDateTime localDateTime) {
+        return localDateTime.format(defaultFormatter);
+    }
+
+    public String formatter(long milliseconds) {
+        LocalDateTime localDateTime = toLocalDateTime(milliseconds);
+        return localDateTime.format(defaultFormatter);
+    }
+
+    /**
+     * 过期检测
+     * <pre>
+     *     与当前时间做比较，查看是否过期
+     * </pre>
+     *
+     * @param milliseconds 需要检测的时间
+     * @return true milliseconds 已经过期
+     */
+    public boolean expire(long milliseconds) {
+        // 时间 - 当前时间
+        return (milliseconds - TimeKit.currentTime) <= 0;
+    }
+}

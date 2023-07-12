@@ -26,18 +26,25 @@ import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * 回调结果
+ *
  * @author 渔民小镇
  * @date 2023-07-08
  */
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class CommandResult {
     ExternalMessage externalMessage;
+    /** 请求参数 */
+    @Getter
+    Object requestData;
+
     /** 业务对象 */
     Object value;
 

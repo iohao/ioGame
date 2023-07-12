@@ -60,15 +60,16 @@ public class ExecuteCommandKit {
         // 生成请求参数
         Object requestData = inputCommand.getRequestData();
 
-        ExternalMessage externalMessage = ExternalKit.createExternalMessage(cmdInfo, requestData);
 
         Class<?> responseClass = inputCommand.getResponseClass();
         InputCallback callback = inputCommand.getCallback();
-        request(externalMessage, responseClass, callback);
+        request(cmdInfo, requestData, responseClass, callback);
     }
 
-    public void request(ExternalMessage externalMessage, Class<?> responseClass, InputCallback callback) {
+    public void request(CmdInfo cmdInfo, Object requestData, Class<?> responseClass, InputCallback callback) {
         int msgId = msgIdSeq.incrementAndGet();
+
+        ExternalMessage externalMessage = ExternalKit.createExternalMessage(cmdInfo, requestData);
         externalMessage.setMsgId(msgId);
 
         // 请求命令
@@ -80,6 +81,8 @@ public class ExecuteCommandKit {
         commandCallback.msgId = msgId;
         commandCallback.responseClass = responseClass;
         commandCallback.callback = callback;
+        commandCallback.requestData = requestData;
+
         callbackMap.put(msgId, commandCallback);
     }
 

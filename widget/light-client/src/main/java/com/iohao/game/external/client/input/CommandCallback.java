@@ -39,15 +39,19 @@ import java.util.Objects;
 public class CommandCallback {
     int msgId;
     Class<?> responseClass;
-
+    /** 回调 */
     InputCallback callback;
+    /** 请求参数 */
+    Object requestData;
 
     void callback(ExternalMessage externalMessage) {
 
         CommandResult commandResult = new CommandResult();
         commandResult.externalMessage = externalMessage;
+        commandResult.requestData = requestData;
 
         byte[] data = externalMessage.getData();
+        // 解码服务器响应的业务数据
         if (Objects.nonNull(this.responseClass) && ArrayKit.notEmpty(data)) {
             commandResult.value = DataCodecKit.decode(data, responseClass);
         }
