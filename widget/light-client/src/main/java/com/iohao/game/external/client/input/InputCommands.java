@@ -21,7 +21,6 @@ package com.iohao.game.external.client.input;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.external.client.ClientUser;
 import com.iohao.game.external.client.kit.ScannerKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -101,13 +100,13 @@ public class InputCommands {
     }
 
     public void help() {
-        System.out.println("---------- cmd help ----------" + ClientUser.me().getUserId());
+        System.out.println("---------- cmd help ----------");
         inputCommandMap.forEach((s, inputCommand) -> System.out.println(inputCommand.toString()));
         System.out.println("------------------------------");
     }
 
     public void listenHelp() {
-        System.out.println("---------- 广播监听 help ----------" + ClientUser.me().getUserId());
+        System.out.println("---------- 广播监听 help ----------");
         ExecuteCommandKit.listenBroadcastMap.values().forEach(System.out::println);
         System.out.println("------------------------------");
     }

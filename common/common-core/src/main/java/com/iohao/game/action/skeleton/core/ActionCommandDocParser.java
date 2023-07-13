@@ -21,9 +21,7 @@ package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
-import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
-import com.iohao.game.action.skeleton.core.doc.ActionCommandDocKit;
-import com.iohao.game.action.skeleton.core.doc.JavaClassDocInfo;
+import com.iohao.game.action.skeleton.core.doc.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashMap;
@@ -44,7 +42,7 @@ final class ActionCommandDocParser {
 
     final Map<Integer, ActionCommandDoc> actionCommandDocMap = new NonBlockingHashMap<>();
 
-    ActionCommandDoc emptyActionCommandDoc = new ActionCommandDoc();
+    final ActionCommandDoc emptyActionCommandDoc = new ActionCommandDoc();
 
     ActionCommandDocParser(ActionCommandParser actionCommandParser, List<Class<?>> controllerList, boolean parseDoc) {
         this.actionCommandParser = actionCommandParser;
@@ -67,9 +65,12 @@ final class ActionCommandDocParser {
             // 主路由 (类上的路由)
             int cmd = controllerClazz.getAnnotation(ActionController.class).value();
 
-            var actionCommandRegion = actionCommandRegions.getActionCommandRegion(cmd);
-            actionCommandRegion.setActionControllerClazz(controllerClazz);
-            actionCommandRegion.setJavaClassDocInfo(javaClassDocInfo);
+            // 过期的方法，将来需要删除的部分
+            extractedDeprecated(actionCommandRegions, controllerClazz, javaClassDocInfo, cmd);
+
+            // action 文档
+            ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
+            actionDoc.setJavaClassDocInfo(javaClassDocInfo);
 
             this.actionCommandParser.getMethodStream(controllerClazz).forEach(method -> {
                 ActionCommandDoc actionCommandDoc = getActionCommandDoc(javaClassDocInfo, method);
@@ -79,8 +80,15 @@ final class ActionCommandDocParser {
                 int cmdMerge = CmdKit.merge(cmd, subCmd);
                 // 将数据保存在这里。
                 actionCommandDocMap.put(cmdMerge, actionCommandDoc);
+                actionDoc.addActionCommandDoc(actionCommandDoc);
             });
         });
+    }
+
+    private static void extractedDeprecated(ActionCommandRegions actionCommandRegions, Class<?> controllerClazz, JavaClassDocInfo javaClassDocInfo, int cmd) {
+        var actionCommandRegion = actionCommandRegions.getActionCommandRegion(cmd);
+        actionCommandRegion.setActionControllerClazz(controllerClazz);
+        actionCommandRegion.setJavaClassDocInfo(javaClassDocInfo);
     }
 
     ActionCommandDoc getActionCommandDoc(int cmd, int subCmd) {

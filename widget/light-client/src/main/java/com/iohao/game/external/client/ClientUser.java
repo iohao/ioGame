@@ -25,6 +25,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 客户端的用户（玩家）
+ * <pre>
+ *     开发者可以通过动态属性来扩展业务，比如可以在动态属性中保存货币、战力值、血条 ...等
+ * </pre>
+ *
  * @author 渔民小镇
  * @date 2023-07-09
  */
@@ -36,17 +41,4 @@ public class ClientUser implements AttrOptionDynamic {
     /** 昵称 */
     String nickname;
     String jwt;
-
-    private ClientUser() {
-
-    }
-
-    public static ClientUser me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final ClientUser ME = new ClientUser();
-    }
 }

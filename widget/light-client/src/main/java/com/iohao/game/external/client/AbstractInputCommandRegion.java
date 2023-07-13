@@ -32,6 +32,14 @@ import lombok.experimental.FieldDefaults;
 public abstract class AbstractInputCommandRegion implements InputCommandRegion {
     /** 模块域 */
     InputCommandCreate inputCommandCreate = new InputCommandCreate();
+    ClientUser clientUser;
+    long userId;
+
+    @Override
+    public void setClientUser(ClientUser clientUser) {
+        this.userId = clientUser.getUserId();
+        this.clientUser = clientUser;
+    }
 
     /**
      * 创建模拟命令

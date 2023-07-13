@@ -40,16 +40,21 @@ public class TimeKit {
     public ZoneId defaultZoneId = ZoneId.systemDefault();
     public DateTimeFormatter defaultFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public volatile long currentTime = System.currentTimeMillis();
+    private volatile long currentTimeMillis = System.currentTimeMillis();
 
     static {
+        // 每秒更新一次时间
         InternalKit.newTimeoutSeconds(new TimerTask() {
             @Override
             public void run(Timeout timeout) {
-                TimeKit.currentTime = System.currentTimeMillis();
+                TimeKit.currentTimeMillis = System.currentTimeMillis();
                 InternalKit.newTimeoutSeconds(this);
             }
         });
+    }
+
+    public long currentTimeMillis() {
+        return currentTimeMillis;
     }
 
     public int toSecond(LocalDateTime localDateTime) {
@@ -94,6 +99,6 @@ public class TimeKit {
      */
     public boolean expire(long milliseconds) {
         // 时间 - 当前时间
-        return (milliseconds - TimeKit.currentTime) <= 0;
+        return (milliseconds - TimeKit.currentTimeMillis) <= 0;
     }
 }

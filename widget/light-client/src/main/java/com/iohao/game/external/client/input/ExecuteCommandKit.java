@@ -60,9 +60,10 @@ public class ExecuteCommandKit {
         // 生成请求参数
         Object requestData = inputCommand.getRequestData();
 
-
+        // 回调相关
         Class<?> responseClass = inputCommand.getResponseClass();
         InputCallback callback = inputCommand.getCallback();
+
         request(cmdInfo, requestData, responseClass, callback);
     }
 
@@ -103,7 +104,6 @@ public class ExecuteCommandKit {
         ExecutorKit.newSingleThreadExecutor(simpleName).execute(() -> {
 
             for (; ; ) {
-
                 try {
                     var commandRequest = blockingQueue.take();
                     // 发送请求到游戏服务器

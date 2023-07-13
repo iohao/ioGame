@@ -12,8 +12,6 @@
 
     <artifactId>light-timer-task</artifactId>
 
-
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.cache2k/cache2k-core -->
         <dependency>

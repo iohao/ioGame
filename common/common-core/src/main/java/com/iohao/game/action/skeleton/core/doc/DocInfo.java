@@ -73,6 +73,10 @@ class DocInfo {
         if (subBehavior.isThrowException()) {
             paramMap.put("error", "");
         }
+
+        paramMap.put("methodParamComment", actionCommandDoc.getMethodParamComment());
+        paramMap.put("methodReturnComment", actionCommandDoc.getMethodReturnComment());
+
     }
 
     private String paramInfoToString(ActionCommand.ParamInfo paramInfo) {
@@ -132,13 +136,13 @@ class DocInfo {
 
             // 方法参数
             if (StrKit.isNotEmpty(paramMap.get("methodParam"))) {
-                format = StrKit.format("    方法参数: {methodParam}", paramMap);
+                format = StrKit.format("    方法参数: {methodParam} {methodParamComment}", paramMap);
                 lineList.add(format);
             }
 
             // 方法返回值
             if (StrKit.isNotEmpty(paramMap.get("returnTypeClazz"))) {
-                format = StrKit.format("    方法返回值: {returnTypeClazz}", paramMap);
+                format = StrKit.format("    方法返回值: {returnTypeClazz} {methodReturnComment}", paramMap);
                 lineList.add(format);
             }
 

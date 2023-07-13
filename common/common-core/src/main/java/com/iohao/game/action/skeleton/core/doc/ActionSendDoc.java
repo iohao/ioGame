@@ -20,6 +20,7 @@
 package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.action.skeleton.annotation.DocActionSend;
+import com.iohao.game.action.skeleton.core.CmdInfo;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
@@ -44,10 +45,11 @@ public class ActionSendDoc {
     boolean read;
 
     public ActionSendDoc(DocActionSend docActionSend) {
-        this.cmd = docActionSend.cmd();
-        this.subCmd = docActionSend.subCmd();
-        this.dataClass = docActionSend.dataClass();
-        this.description = docActionSend.description();
+        this(docActionSend.cmd(), docActionSend.subCmd(), docActionSend.dataClass(), docActionSend.description());
+    }
+
+    public ActionSendDoc(CmdInfo cmdInfo, Class<?> dataClass, String description) {
+        this(cmdInfo.getCmd(), cmdInfo.getSubCmd(), dataClass, description);
     }
 
     public ActionSendDoc(int cmd, int subCmd, Class<?> dataClass, String description) {

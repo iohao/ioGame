@@ -19,7 +19,12 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import lombok.Data;
+import com.iohao.game.action.skeleton.core.ActionCommand;
+import com.thoughtworks.qdox.model.JavaMethod;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 /**
  * action command 文档
@@ -30,13 +35,22 @@ import lombok.Data;
  * @author 渔民小镇
  * @date 2022-01-22
  */
-@Data
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActionCommandDoc {
+    int subCmd;
+    JavaMethod javaMethod;
+    ActionCommand actionCommand;
+
     int classLineNumber = 1;
     String classComment = "";
 
     /** 代码所在行 */
     int lineNumber = 1;
-
     String comment = "";
+
+    /** 方法返回值描述 */
+    String methodReturnComment = "";
+    String methodParamComment = "";
 }

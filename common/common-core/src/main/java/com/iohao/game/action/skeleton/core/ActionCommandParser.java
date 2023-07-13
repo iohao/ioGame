@@ -25,6 +25,8 @@ import com.esotericsoftware.reflectasm.MethodAccess;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
+import com.iohao.game.action.skeleton.core.doc.ActionDoc;
+import com.iohao.game.action.skeleton.core.doc.ActionDocs;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -87,6 +89,8 @@ final class ActionCommandParser {
             // action 类的实例化对象
             var actionClassInstance = constructorAccess.newInstance();
 
+            ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
+
             // 遍历所有方法上有 ActionMethod 注解的方法对象
             this.getMethodStream(controllerClazz).forEach(method -> {
 
@@ -131,6 +135,7 @@ final class ActionCommandParser {
 
                 // 子路由映射
                 actionCommandRegion.add(command);
+                actionDoc.addActionCommand(command);
             });
 
         });

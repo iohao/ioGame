@@ -114,7 +114,6 @@ public class ProtoJavaAnalyse {
             ProtoJavaRegion protoJavaRegion = this.getProtoJavaRegion(regionKey);
             protoJavaRegion.addProtoJava(protoJava);
 
-
             return protoJava;
         }).collect(Collectors.toList());
     }

@@ -95,6 +95,24 @@ public class BarSkeletonDoc {
         // 加上游戏文档格式说明
         this.gameDocURLDescription(docContentList);
 
+        ActionDocs.stream().forEach(actionDoc -> {
+            DocInfo docInfo = new DocInfo();
+            docInfo.actionSendDocsRegion = actionSendDocsRegion;
+
+            actionDoc.stream()
+                    .map(ActionCommandDoc::getActionCommand)
+                    .filter(Objects::nonNull)
+                    .forEach(subBehavior -> {
+                        docInfo.setHead(subBehavior);
+                        docInfo.add(subBehavior);
+                    });
+
+            String render = docInfo.render();
+            docContentList.add(render);
+
+        });
+
+
         Consumer<ActionCommand[][]> consumer = behaviors -> {
 
             for (ActionCommand[] subBehaviors : behaviors) {
@@ -123,7 +141,8 @@ public class BarSkeletonDoc {
         skeletonList.parallelStream()
                 .map(BarSkeleton::getActionCommandRegions)
                 .map(ActionCommandRegions::getActionCommands)
-                .forEach(consumer);
+//                .forEach(consumer)
+        ;
 
         // 生成文档 - 广播（推送）文档
         extractedActionSend(actionSendDocsRegion, docContentList);

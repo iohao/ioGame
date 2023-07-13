@@ -19,6 +19,10 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.iohao.game.action.skeleton.annotation.ActionMethod;
+import com.iohao.game.common.kit.CollKit;
+import com.iohao.game.common.kit.StrKit;
+import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 
@@ -46,9 +50,11 @@ public class JavaClassDocInfo {
 
     public ActionCommandDoc createActionCommandDoc(Method method) {
         JavaMethod javaMethod = javaMethodMap.get(method.toString());
+        int subCmd = method.getAnnotation(ActionMethod.class).value();
 
         ActionCommandDoc actionCommandDoc = new ActionCommandDoc();
-
+        actionCommandDoc.setSubCmd(subCmd);
+        actionCommandDoc.setJavaMethod(javaMethod);
         actionCommandDoc.setClassComment(this.javaClass.getComment());
         actionCommandDoc.setClassLineNumber(this.javaClass.getLineNumber());
         actionCommandDoc.setComment(javaMethod.getComment());
@@ -62,7 +68,33 @@ public class JavaClassDocInfo {
             actionCommandDoc.setComment("");
         }
 
+        methodParamReturnComment(actionCommandDoc);
+
         return actionCommandDoc;
+    }
+
+    private void methodParamReturnComment(ActionCommandDoc actionCommandDoc) {
+        JavaMethod javaMethod = actionCommandDoc.getJavaMethod();
+        List<DocletTag> tags = javaMethod.getTags();
+
+        if (CollKit.isEmpty(tags)) {
+            return;
+        }
+
+        for (DocletTag tag : tags) {
+            String value = tag.getValue();
+            if (StrKit.isEmpty(value) || value.contains("flowContext")) {
+                continue;
+            }
+
+            String name = tag.getName();
+            if ("return".equals(name)) {
+                actionCommandDoc.setMethodReturnComment(value);
+                continue;
+            }
+
+            actionCommandDoc.setMethodParamComment(value);
+        }
     }
 
     public String getComment() {

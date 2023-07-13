@@ -27,4 +27,6 @@ package com.iohao.game.external.client;
  */
 public interface InputCommandRegion {
     void initInputCommand();
+
+    void setClientUser(ClientUser clientUser);
 }

@@ -24,6 +24,7 @@ import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
+import com.iohao.game.external.client.ClientUser;
 import com.iohao.game.external.client.CreateBarSkeleton;
 import com.iohao.game.external.client.InputCommandRegion;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
@@ -54,6 +55,7 @@ public final class ClientRunOne {
     final ExecutorService executorService = ExecutorKit.newSingleThreadExecutor("client");
     List<InputCommandRegion> inputCommandRegions;
     CreateBarSkeleton createBarSkeleton;
+    ClientUser clientUser;
 
     /** 服务器连接端口 */
     int connectPort = ExternalGlobalConfig.externalPort;
@@ -65,9 +67,13 @@ public final class ClientRunOne {
 
     public void startup() {
 
+        Objects.requireNonNull(this.clientUser, "请设置 clientUser");
         Objects.requireNonNull(this.inputCommandRegions, "请设置需要发送的请求消息");
 
-        this.inputCommandRegions.forEach(InputCommandRegion::initInputCommand);
+        this.inputCommandRegions.forEach(inputCommandRegion -> {
+            inputCommandRegion.setClientUser(clientUser);
+            inputCommandRegion.initInputCommand();
+        });
 
         ClientConnectOption option = getOption();
 
