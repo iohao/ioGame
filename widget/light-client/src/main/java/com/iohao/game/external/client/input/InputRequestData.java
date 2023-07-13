@@ -20,7 +20,7 @@
 package com.iohao.game.external.client.input;
 
 /**
- * 输入请求数据
+ * 动态请求参数生成
  *
  * @author 渔民小镇
  * @date 2023-07-09

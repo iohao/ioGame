@@ -44,7 +44,6 @@ public class InputCommands {
         Objects.requireNonNull(inputCommand);
         String inputName = inputCommand.getInputName();
 
-        // 验证输入命令的正确性
         inputCommandMap.put(inputName, inputCommand);
     }
 

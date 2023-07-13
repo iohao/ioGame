@@ -19,6 +19,8 @@
  */
 package com.iohao.game.external.client;
 
+import com.iohao.game.external.client.user.ClientUser;
+
 /**
  * 命令域
  *

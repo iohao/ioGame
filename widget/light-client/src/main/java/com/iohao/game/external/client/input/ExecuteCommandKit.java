@@ -47,8 +47,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @UtilityClass
 public class ExecuteCommandKit {
+    public final AtomicInteger msgIdSeq = new AtomicInteger(1);
+
     final AtomicBoolean starting = new AtomicBoolean();
-    final AtomicInteger msgIdSeq = new AtomicInteger(1);
     final Map<Integer, ListenBroadcastCommand> listenBroadcastMap = new LinkedHashMap<>();
     final BlockingQueue<CommandRequest> blockingQueue = new LinkedBlockingQueue<>();
     /** 回调 */

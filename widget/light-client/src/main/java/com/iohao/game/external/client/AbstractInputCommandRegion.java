@@ -21,6 +21,7 @@ package com.iohao.game.external.client;
 
 import com.iohao.game.external.client.input.InputCallback;
 import com.iohao.game.external.client.input.InputCommand;
+import com.iohao.game.external.client.user.ClientUser;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 

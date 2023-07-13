@@ -23,6 +23,7 @@ import io.netty.util.HashedWheelTimer;
 import io.netty.util.TimerTask;
 import lombok.experimental.UtilityClass;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class InternalKit {
     /** 时间精度为 1 秒钟，执行一些没有 io 操作的逻辑 */
     public final HashedWheelTimer timerSeconds = new HashedWheelTimer(1, TimeUnit.SECONDS);
+    final ExecutorService executor = ExecutorKit.newCacheThreadPool("InternalKit");
 
     public void newTimeoutSeconds(TimerTask task) {
         timerSeconds.newTimeout(task, 0, TimeUnit.SECONDS);
@@ -43,4 +45,9 @@ public class InternalKit {
     public void newTimeout(TimerTask task, long delay, TimeUnit unit) {
         timerSeconds.newTimeout(task, delay, unit);
     }
+
+    public void execute(Runnable command) {
+        executor.execute(command);
+    }
+
 }

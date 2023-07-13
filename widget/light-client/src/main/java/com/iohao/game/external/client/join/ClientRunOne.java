@@ -20,11 +20,11 @@
 package com.iohao.game.external.client.join;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
-import com.iohao.game.external.client.ClientUser;
+import com.iohao.game.external.client.user.ClientUser;
 import com.iohao.game.external.client.CreateBarSkeleton;
 import com.iohao.game.external.client.InputCommandRegion;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,7 +51,6 @@ import java.util.concurrent.TimeUnit;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class ClientRunOne {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-    final ExecutorService executorService = ExecutorKit.newSingleThreadExecutor("client");
     List<InputCommandRegion> inputCommandRegions;
     CreateBarSkeleton createBarSkeleton;
     ClientUser clientUser;
@@ -83,7 +81,7 @@ public final class ClientRunOne {
             return;
         }
 
-        executorService.execute(() -> clientConnect.connect(option));
+        InternalKit.execute(() -> clientConnect.connect(option));
 
         try {
             log.info("启动成功");

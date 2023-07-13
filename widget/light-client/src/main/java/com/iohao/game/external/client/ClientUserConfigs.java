@@ -19,26 +19,19 @@
  */
 package com.iohao.game.external.client;
 
-import com.iohao.game.common.kit.attr.AttrOptionDynamic;
-import com.iohao.game.common.kit.attr.AttrOptions;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.experimental.UtilityClass;
 
 /**
- * 客户端的用户（玩家）
- * <pre>
- *     开发者可以通过动态属性来扩展业务，比如可以在动态属性中保存货币、战力值、血条 ...等
- * </pre>
- *
  * @author 渔民小镇
- * @date 2023-07-09
+ * @date 2023-07-13
  */
-@Setter
-@Getter
-public class ClientUser implements AttrOptionDynamic {
-    final AttrOptions options = new AttrOptions();
-    long userId;
-    /** 昵称 */
-    String nickname;
-    String jwt;
+@UtilityClass
+public class ClientUserConfigs {
+    /**
+     * true 表示不能存在相同的模拟命令
+     * <pre>
+     *     默认为 false，不做任何检测
+     * </pre>
+     */
+    public boolean uniqueInputCommand;
 }

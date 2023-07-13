@@ -54,7 +54,6 @@ public class JavaClassDocInfo {
 
         ActionCommandDoc actionCommandDoc = new ActionCommandDoc();
         actionCommandDoc.setSubCmd(subCmd);
-        actionCommandDoc.setJavaMethod(javaMethod);
         actionCommandDoc.setClassComment(this.javaClass.getComment());
         actionCommandDoc.setClassLineNumber(this.javaClass.getLineNumber());
         actionCommandDoc.setComment(javaMethod.getComment());
@@ -68,15 +67,13 @@ public class JavaClassDocInfo {
             actionCommandDoc.setComment("");
         }
 
-        methodParamReturnComment(actionCommandDoc);
+        methodParamReturnComment(actionCommandDoc, javaMethod);
 
         return actionCommandDoc;
     }
 
-    private void methodParamReturnComment(ActionCommandDoc actionCommandDoc) {
-        JavaMethod javaMethod = actionCommandDoc.getJavaMethod();
+    private void methodParamReturnComment(ActionCommandDoc actionCommandDoc, JavaMethod javaMethod) {
         List<DocletTag> tags = javaMethod.getTags();
-
         if (CollKit.isEmpty(tags)) {
             return;
         }

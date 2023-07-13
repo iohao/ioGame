@@ -26,7 +26,6 @@ import lombok.Setter;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -95,6 +94,7 @@ public class BarSkeletonDoc {
         // 加上游戏文档格式说明
         this.gameDocURLDescription(docContentList);
 
+        // 生成文档 - action
         ActionDocs.stream().forEach(actionDoc -> {
             DocInfo docInfo = new DocInfo();
             docInfo.actionSendDocsRegion = actionSendDocsRegion;
@@ -111,38 +111,6 @@ public class BarSkeletonDoc {
             docContentList.add(render);
 
         });
-
-
-        Consumer<ActionCommand[][]> consumer = behaviors -> {
-
-            for (ActionCommand[] subBehaviors : behaviors) {
-                if (Objects.isNull(subBehaviors)) {
-                    continue;
-                }
-
-                DocInfo docInfo = new DocInfo();
-                docInfo.actionSendDocsRegion = actionSendDocsRegion;
-
-                for (ActionCommand subBehavior : subBehaviors) {
-                    if (Objects.isNull(subBehavior)) {
-                        continue;
-                    }
-
-                    docInfo.setHead(subBehavior);
-                    docInfo.add(subBehavior);
-                }
-
-                String render = docInfo.render();
-                docContentList.add(render);
-            }
-        };
-
-        // 生成文档 - action
-        skeletonList.parallelStream()
-                .map(BarSkeleton::getActionCommandRegions)
-                .map(ActionCommandRegions::getActionCommands)
-//                .forEach(consumer)
-        ;
 
         // 生成文档 - 广播（推送）文档
         extractedActionSend(actionSendDocsRegion, docContentList);

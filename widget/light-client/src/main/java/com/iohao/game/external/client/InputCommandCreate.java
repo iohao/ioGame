@@ -43,7 +43,7 @@ import java.util.Objects;
 public class InputCommandCreate {
     int cmd = -1;
     /** true 相同路由的 InputCommand 只能存在一个 */
-    boolean uniqueInputCommand = true;
+    boolean uniqueInputCommand = ClientUserConfigs.uniqueInputCommand;
 
     public CmdInfo getCmdInfo(int subCmd) {
         AssertKit.assertTrue(cmd >= 0, "cmd 不能小于 0");
