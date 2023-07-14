@@ -19,6 +19,7 @@
  */
 package com.iohao.game.external.client.kit;
 
+import com.iohao.game.action.skeleton.core.CmdInfo;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @UtilityClass
 public class InputCommandKit {
+    public String toInputName(CmdInfo cmdInfo) {
+        return cmdInfo.getCmd() + "-" + cmdInfo.getSubCmd();
+    }
+
 //
 //    public InputCommand createInputCommand(CmdInfo cmdInfo, String desc) {
 //        return createInputCommand(cmdInfo, desc, null);

@@ -20,6 +20,7 @@
 package com.iohao.game.external.client;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.external.client.user.ClientUser;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,4 +39,5 @@ public class ClientConnectOption {
     String wsUrl;
     InetSocketAddress socketAddress;
     BarSkeleton barSkeleton;
+    ClientUser clientUser;
 }

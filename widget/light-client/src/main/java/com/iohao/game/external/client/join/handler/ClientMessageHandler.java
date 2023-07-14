@@ -20,7 +20,8 @@
 package com.iohao.game.external.client.join.handler;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.external.client.input.ExecuteCommandKit;
+import com.iohao.game.external.client.input.ClientUserChannel;
+import com.iohao.game.external.client.user.ClientUser;
 import com.iohao.game.external.core.message.ExternalMessage;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -34,12 +35,15 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class ClientMessageHandler extends SimpleChannelInboundHandler<ExternalMessage> {
     final BarSkeleton barSkeleton;
 
-    public ClientMessageHandler(BarSkeleton barSkeleton) {
+    final ClientUserChannel clientUserChannel;
+
+    public ClientMessageHandler(BarSkeleton barSkeleton, ClientUser clientUser) {
         this.barSkeleton = barSkeleton;
+        this.clientUserChannel = clientUser.getClientUserChannel();
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage externalMessage) {
-        ExecuteCommandKit.read(externalMessage, barSkeleton);
+        clientUserChannel.read(externalMessage, barSkeleton);
     }
 }

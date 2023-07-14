@@ -17,21 +17,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.input;
+package com.iohao.game.external.client.kit;
 
-import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.experimental.UtilityClass;
-
-import java.net.InetSocketAddress;
-import java.util.function.Consumer;
 
 /**
  * @author 渔民小镇
- * @date 2023-07-08
+ * @date 2023-07-13
  */
 @UtilityClass
-public class ClientChannelInfo {
-    public Consumer<ExternalMessage> clientChannel;
-    /** 目标 ip （服务器 ip） */
-    public InetSocketAddress inetSocketAddress;
+public class ClientKit {
+
 }

@@ -19,19 +19,13 @@
  */
 package com.iohao.game.external.client.user;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.external.core.message.ExternalMessage;
 
 /**
- * 玩家命令执行器
- *
  * @author 渔民小镇
- * @date 2023-07-13
+ * @date 2023-07-08
  */
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClientUserCommand {
+public interface ClientChannelRead {
+    void read(ExternalMessage externalMessage, BarSkeleton barSkeleton);
 }

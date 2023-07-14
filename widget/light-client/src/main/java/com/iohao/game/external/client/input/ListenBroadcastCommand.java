@@ -20,6 +20,7 @@
 package com.iohao.game.external.client.input;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.external.client.kit.InputCommandKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,7 +42,7 @@ public class ListenBroadcastCommand {
     CommandCallback commandCallback;
 
     public ListenBroadcastCommand(CmdInfo cmdInfo) {
-        this.name = InputCommands.toInputName(cmdInfo);
+        this.name = InputCommandKit.toInputName(cmdInfo);
         this.cmdInfo = cmdInfo;
     }
 

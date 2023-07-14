@@ -21,23 +21,40 @@ package com.iohao.game.external.client.input;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.external.client.kit.InputCommandKit;
 import com.iohao.game.external.client.kit.ScannerKit;
-import lombok.experimental.UtilityClass;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
+ * 玩家模拟命令管理器
+ * <p>
+ * 职责
+ * <pre>
+ *     添加模拟请求
+ *     执行请求
+ * </pre>
+ *
  * @author 渔民小镇
  * @date 2023-07-08
  */
 @Slf4j
-@UtilityClass
-public class InputCommands {
+public class ClientUserInputCommands {
+    final AtomicBoolean starting = new AtomicBoolean();
+    @Getter
+    final ClientUserChannel clientUserChannel;
+
 
     Map<String, InputCommand> inputCommandMap = new LinkedHashMap<>();
+
+    public ClientUserInputCommands(ClientUserChannel clientUserChannel) {
+        this.clientUserChannel = clientUserChannel;
+    }
 
     private void addCommand(InputCommand inputCommand) {
 
@@ -48,7 +65,7 @@ public class InputCommands {
     }
 
     public String toInputName(CmdInfo cmdInfo) {
-        return cmdInfo.getCmd() + "-" + cmdInfo.getSubCmd();
+        return InputCommandKit.toInputName(cmdInfo);
     }
 
     public InputCommand ofCommand(CmdInfo cmdInfo) {
@@ -66,13 +83,13 @@ public class InputCommands {
         return inputCommandMap.get(inputName);
     }
 
-    /**
-     * 向服务器发起请求
-     *
-     * @param cmdInfo 请求路由
-     */
+    public RequestCommand ofRequestCommand(CmdInfo cmdInfo) {
+        InputCommand inputCommand = this.getInputCommand(cmdInfo);
+        return new RequestCommand(inputCommand, this);
+    }
+
     public void request(CmdInfo cmdInfo) {
-        String inputName = toInputName(cmdInfo);
+        String inputName = InputCommandKit.toInputName(cmdInfo);
         request(inputName);
     }
 
@@ -81,8 +98,8 @@ public class InputCommands {
      *
      * @param inputName 请求命令
      */
-    public void request(String inputName) {
-        InputCommand inputCommand = InputCommands.getInputCommand(inputName);
+    void request(String inputName) {
+        InputCommand inputCommand = this.getInputCommand(inputName);
         if (Objects.isNull(inputCommand)) {
             System.err.printf("【%s】命令不存在\n", inputName);
             return;
@@ -92,7 +109,7 @@ public class InputCommands {
 
         try {
             // 发起请求
-            ExecuteCommandKit.request(inputCommand);
+            clientUserChannel.request(inputCommand);
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
         }
@@ -106,12 +123,28 @@ public class InputCommands {
 
     public void listenHelp() {
         System.out.println("---------- 广播监听 help ----------");
-        ExecuteCommandKit.listenBroadcastMap.values().forEach(System.out::println);
+        clientUserChannel.getListenBroadcastMap().values().forEach(System.out::println);
         System.out.println("------------------------------");
     }
 
     public void start() {
+        if (starting.get()) {
+            return;
+        }
 
+        if (!starting.compareAndSet(false, true)) {
+            return;
+        }
+
+        // 启动通信 channel
+        clientUserChannel.startup();
+
+//        InternalKit.execute(this::extracted);
+        String simpleName = this.getClass().getSimpleName();
+//        ExecutorKit.newSingleThreadExecutor(simpleName).execute(this::extracted);
+    }
+
+    private void extracted() {
         String input = "";
 
         while (!input.equalsIgnoreCase("q")) {

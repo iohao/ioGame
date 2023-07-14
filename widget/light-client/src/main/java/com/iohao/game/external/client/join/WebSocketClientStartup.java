@@ -21,11 +21,10 @@ package com.iohao.game.external.client.join;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
-import com.iohao.game.external.client.input.ClientChannelInfo;
-import com.iohao.game.external.client.input.ExecuteCommandKit;
+import com.iohao.game.external.client.input.ClientUserChannel;
+import com.iohao.game.external.client.user.ClientUser;
 import com.iohao.game.external.core.message.ExternalMessage;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
@@ -36,7 +35,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author 渔民小镇
@@ -47,6 +45,9 @@ class WebSocketClientStartup implements ClientConnect {
 
     @Override
     public void connect(ClientConnectOption option) {
+        ClientUser clientUser = option.getClientUser();
+        ClientUserChannel clientUserChannel = clientUser.getClientUserChannel();
+
         String wsUrl = option.getWsUrl();
         BarSkeleton barSkeleton = option.getBarSkeleton();
 
@@ -56,8 +57,6 @@ class WebSocketClientStartup implements ClientConnect {
         } catch (URISyntaxException e) {
             log.error(e.getMessage(), e);
         }
-
-        InternalKit.newTimeout(timeout -> ExecuteCommandKit.startup(), 100, TimeUnit.MILLISECONDS);
 
         // 连接游戏服务器的地址
         WebSocketClient webSocketClient = new WebSocketClient(Objects.requireNonNull(uri), new Draft_6455()) {
@@ -83,14 +82,16 @@ class WebSocketClientStartup implements ClientConnect {
                 byte[] dataContent = byteBuffer.array();
                 ExternalMessage externalMessage = DataCodecKit.decode(dataContent, ExternalMessage.class);
 
-                ExecuteCommandKit.read(externalMessage, barSkeleton);
+                clientUserChannel.read(externalMessage, barSkeleton);
             }
         };
 
-        ClientChannelInfo.clientChannel = externalMessage -> {
+        clientUserChannel.setClientChannel(externalMessage -> {
             byte[] bytes = DataCodecKit.encode(externalMessage);
             webSocketClient.send(bytes);
-        };
+        });
+
+        clientUser.getClientUserInputCommands().start();
 
         // 开始连接服务器
         webSocketClient.connect();

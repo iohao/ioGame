@@ -44,7 +44,7 @@ public class CommandCallback {
     /** 请求参数 */
     Object requestData;
 
-    void callback(ExternalMessage externalMessage) {
+    public void callback(ExternalMessage externalMessage) {
 
         CommandResult commandResult = new CommandResult();
         commandResult.externalMessage = externalMessage;

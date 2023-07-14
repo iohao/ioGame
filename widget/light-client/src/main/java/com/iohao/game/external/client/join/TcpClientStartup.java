@@ -20,12 +20,11 @@
 package com.iohao.game.external.client.join;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
-import com.iohao.game.external.client.input.ClientChannelInfo;
-import com.iohao.game.external.client.input.ExecuteCommandKit;
 import com.iohao.game.external.client.join.handler.ClientMessageHandler;
+import com.iohao.game.external.client.user.ClientUser;
+import com.iohao.game.external.client.input.ClientUserChannel;
 import com.iohao.game.external.core.netty.handler.codec.TcpExternalCodec;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -36,7 +35,6 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import org.slf4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author 渔民小镇
@@ -49,8 +47,9 @@ class TcpClientStartup implements ClientConnect {
 
     @Override
     public void connect(ClientConnectOption option) {
+        ClientUser clientUser = option.getClientUser();
         BarSkeleton barSkeleton = option.getBarSkeleton();
-        ClientMessageHandler clientMessageHandler = new ClientMessageHandler(barSkeleton);
+        ClientMessageHandler clientMessageHandler = new ClientMessageHandler(barSkeleton, clientUser);
 
         EventLoopGroup group = new NioEventLoopGroup();
         var bootstrap = new Bootstrap();
@@ -89,9 +88,11 @@ class TcpClientStartup implements ClientConnect {
 
         try {
             Channel channel = channelFuture.sync().channel();
-            ClientChannelInfo.clientChannel = channel::writeAndFlush;
 
-            InternalKit.newTimeout(timeout -> ExecuteCommandKit.startup(), 100, TimeUnit.MILLISECONDS);
+            ClientUserChannel userChannel = clientUser.getClientUserChannel();
+            userChannel.setClientChannel(channel::writeAndFlush);
+
+            clientUser.getClientUserInputCommands().start();
 
             channel.closeFuture().await();
         } catch (InterruptedException e) {

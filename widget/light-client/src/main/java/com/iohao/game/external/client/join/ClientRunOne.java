@@ -118,6 +118,8 @@ public final class ClientRunOne {
             option.setBarSkeleton(barSkeleton);
         });
 
+        PresentKit.ifNull(option.getClientUser(), () -> option.setClientUser(clientUser));
+
         return option;
     }
 }

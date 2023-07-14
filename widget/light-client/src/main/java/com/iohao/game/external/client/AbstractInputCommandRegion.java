@@ -19,8 +19,11 @@
  */
 package com.iohao.game.external.client;
 
+import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.external.client.input.ClientUserInputCommands;
 import com.iohao.game.external.client.input.InputCallback;
 import com.iohao.game.external.client.input.InputCommand;
+import com.iohao.game.external.client.input.RequestCommand;
 import com.iohao.game.external.client.user.ClientUser;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -40,6 +43,9 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
     public void setClientUser(ClientUser clientUser) {
         this.userId = clientUser.getUserId();
         this.clientUser = clientUser;
+
+        ClientUserInputCommands clientUserInputCommands = clientUser.getClientUserInputCommands();
+        inputCommandCreate.setClientUserInputCommands(clientUserInputCommands);
     }
 
     /**
@@ -92,7 +98,6 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
         return this.inputCommandCreate.ofInputCommandString(subCmd);
     }
 
-
     /**
      * 广播监听
      * <pre>
@@ -108,16 +113,9 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
         this.inputCommandCreate.listenBroadcast(responseClass, callback, subCmd, description);
     }
 
-    /**
-     * 向服务器发起请求
-     *
-     * @param subCmd 请求子路由
-     */
-    protected void request(int subCmd) {
-        this.inputCommandCreate.request(subCmd);
-    }
-
-    public InputCommand getInputCommand(int subCmd) {
-        return inputCommandCreate.getInputCommand(subCmd);
+    public RequestCommand ofRequestCommand(int subCmd) {
+        CmdInfo cmdInfo = this.inputCommandCreate.getCmdInfo(subCmd);
+        ClientUserInputCommands clientUserInputCommands = this.inputCommandCreate.clientUserInputCommands;
+        return clientUserInputCommands.ofRequestCommand(cmdInfo);
     }
 }

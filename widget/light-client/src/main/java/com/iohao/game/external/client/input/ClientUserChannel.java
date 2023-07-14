@@ -23,9 +23,13 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.external.client.user.ClientChannelRead;
 import com.iohao.game.external.core.kit.ExternalKit;
 import com.iohao.game.external.core.message.ExternalMessage;
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -37,26 +41,38 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
- * 执行客户端请求命令
+ * 玩家通信 channel
+ * <pre>
+ *     发送请求，接收服务器响应
+ * </pre>
  *
  * @author 渔民小镇
- * @date 2023-07-08
+ * @date 2023-07-13
  */
 @Slf4j
-@UtilityClass
-public class ExecuteCommandKit {
-    public final AtomicInteger msgIdSeq = new AtomicInteger(1);
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ClientUserChannel {
+    final AtomicInteger msgIdSeq = new AtomicInteger(1);
 
     final AtomicBoolean starting = new AtomicBoolean();
     final Map<Integer, ListenBroadcastCommand> listenBroadcastMap = new LinkedHashMap<>();
     final BlockingQueue<CommandRequest> blockingQueue = new LinkedBlockingQueue<>();
     /** 回调 */
     final Map<Integer, CommandCallback> callbackMap = new NonBlockingHashMap<>();
+
     ClientChannelRead channelRead = new DefaultChannelRead();
 
-    void request(InputCommand inputCommand) {
+
+    public Consumer<ExternalMessage> clientChannel;
+    /** 目标 ip （服务器 ip） */
+    public InetSocketAddress inetSocketAddress;
+
+    public void request(InputCommand inputCommand) {
         CmdInfo cmdInfo = inputCommand.getCmdInfo();
         // 生成请求参数
         Object requestData = inputCommand.getRequestData();
@@ -92,7 +108,7 @@ public class ExecuteCommandKit {
         channelRead.read(externalMessage, barSkeleton);
     }
 
-    public void startup() {
+    void startup() {
         if (starting.get()) {
             return;
         }
@@ -101,9 +117,8 @@ public class ExecuteCommandKit {
             return;
         }
 
-        String simpleName = ExecuteCommandKit.class.getSimpleName();
+        String simpleName = this.getClass().getSimpleName();
         ExecutorKit.newSingleThreadExecutor(simpleName).execute(() -> {
-
             for (; ; ) {
                 try {
                     var commandRequest = blockingQueue.take();
@@ -115,19 +130,18 @@ public class ExecuteCommandKit {
             }
         });
 
-        InputCommands.start();
     }
 
     private void writeAndFlush(CommandRequest clientRequest) {
         ExternalMessage externalMessage = clientRequest.externalMessage();
 
-        InetSocketAddress inetSocketAddress = ClientChannelInfo.inetSocketAddress;
+        InetSocketAddress inetSocketAddress = this.inetSocketAddress;
         if (Objects.nonNull(inetSocketAddress)) {
             externalMessage.setOther(inetSocketAddress);
         }
 
         // 发送数据到游戏服务器
-        ClientChannelInfo.clientChannel.accept(externalMessage);
+        this.clientChannel.accept(externalMessage);
     }
 
     /**

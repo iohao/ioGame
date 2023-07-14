@@ -21,6 +21,8 @@ package com.iohao.game.external.client.user;
 
 import com.iohao.game.common.kit.attr.AttrOptionDynamic;
 import com.iohao.game.common.kit.attr.AttrOptions;
+import com.iohao.game.external.client.input.ClientUserChannel;
+import com.iohao.game.external.client.input.ClientUserInputCommands;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,6 +39,10 @@ import lombok.Setter;
 @Getter
 public class ClientUser implements AttrOptionDynamic {
     final AttrOptions options = new AttrOptions();
+    /** 通信 channel 用于读写 */
+    final ClientUserChannel clientUserChannel = new ClientUserChannel();
+    final ClientUserInputCommands clientUserInputCommands = new ClientUserInputCommands(clientUserChannel);
+
     long userId;
     /** 昵称 */
     String nickname;

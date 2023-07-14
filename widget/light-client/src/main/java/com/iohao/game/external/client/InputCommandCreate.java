@@ -25,8 +25,12 @@ import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
 import com.iohao.game.external.client.input.*;
 import com.iohao.game.external.client.kit.AssertKit;
+import com.iohao.game.external.client.kit.InputCommandKit;
 import com.iohao.game.external.client.kit.ScannerKit;
+import com.iohao.game.external.client.input.ClientUserChannel;
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,11 +43,15 @@ import java.util.Objects;
  * @date 2023-07-09
  */
 @Slf4j
+@Setter
+@Getter
 @FieldDefaults(level = AccessLevel.PUBLIC)
 public class InputCommandCreate {
     int cmd = -1;
     /** true 相同路由的 InputCommand 只能存在一个 */
     boolean uniqueInputCommand = ClientUserConfigs.uniqueInputCommand;
+
+    ClientUserInputCommands clientUserInputCommands;
 
     public CmdInfo getCmdInfo(int subCmd) {
         AssertKit.assertTrue(cmd >= 0, "cmd 不能小于 0");
@@ -52,19 +60,9 @@ public class InputCommandCreate {
 
     public InputCommand getInputCommand(int subCmd) {
         CmdInfo cmdInfo = getCmdInfo(subCmd);
-        InputCommand inputCommand = InputCommands.getInputCommand(cmdInfo);
+        InputCommand inputCommand = clientUserInputCommands.getInputCommand(cmdInfo);
         Objects.requireNonNull(inputCommand, "没有对应的请求配置");
         return inputCommand;
-    }
-
-    /**
-     * 向服务器发起请求
-     *
-     * @param subCmd 请求子路由
-     */
-    public void request(int subCmd) {
-        CmdInfo cmdInfo = getCmdInfo(subCmd);
-        InputCommands.request(cmdInfo);
     }
 
     /**
@@ -84,14 +82,14 @@ public class InputCommandCreate {
         // 唯一性路由命令检测，先检查命令是否存在
         extractedChecked(cmdInfo);
 
-        return InputCommands.ofCommand(cmdInfo)
+        return clientUserInputCommands.ofCommand(cmdInfo)
                 .setInputRequestData(inputRequestData);
     }
 
     private void extractedChecked(CmdInfo cmdInfo) {
         if (uniqueInputCommand) {
-            var inputName = InputCommands.toInputName(cmdInfo);
-            InputCommand inputCommand = InputCommands.getInputCommand(inputName);
+            var inputName = InputCommandKit.toInputName(cmdInfo);
+            InputCommand inputCommand = clientUserInputCommands.getInputCommand(inputName);
             if (Objects.nonNull(inputCommand)) {
                 throw new RuntimeException("存在重复的路由命令 : " + cmdInfo);
             }
@@ -106,7 +104,6 @@ public class InputCommandCreate {
      */
     public InputCommand ofInputCommandLong(int subCmd) {
         InputRequestData inputRequestData = nextParamLong("参数");
-
         return ofInputCommand(subCmd, inputRequestData);
     }
 
@@ -175,6 +172,7 @@ public class InputCommandCreate {
      */
     public void listenBroadcast(Class<?> responseClass, InputCallback callback, int subCmd, String description) {
         CmdInfo cmdInfo = getCmdInfo(subCmd);
-        ExecuteCommandKit.listenBroadcast(cmdInfo, responseClass, callback, description);
+        ClientUserChannel clientUserChannel = clientUserInputCommands.getClientUserChannel();
+        clientUserChannel.listenBroadcast(cmdInfo, responseClass, callback, description);
     }
 }
