@@ -17,14 +17,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client;
-
-import com.iohao.game.action.skeleton.core.BarSkeleton;
+package com.iohao.game.external.client.command;
 
 /**
+ * 动态请求参数生成
+ *
  * @author 渔民小镇
- * @date 2023-07-04
+ * @date 2023-07-09
  */
-public interface CreateBarSkeleton {
-    BarSkeleton createBarSkeleton();
+public interface InputRequestData {
+    /**
+     * 创建请求参数
+     *
+     * @return 请求参数
+     */
+    Object createRequestData();
 }

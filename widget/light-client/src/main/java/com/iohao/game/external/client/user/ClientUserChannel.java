@@ -17,13 +17,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.input;
+package com.iohao.game.external.client.user;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.external.client.user.ClientChannelRead;
+import com.iohao.game.external.client.command.*;
+import com.iohao.game.external.client.kit.ClientUserConfigs;
+import com.iohao.game.external.client.kit.ClientKit;
 import com.iohao.game.external.core.kit.ExternalKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.AccessLevel;
@@ -67,10 +69,15 @@ public class ClientUserChannel {
 
     ClientChannelRead channelRead = new DefaultChannelRead();
 
+    final ClientUser clientUser;
 
     public Consumer<ExternalMessage> clientChannel;
     /** 目标 ip （服务器 ip） */
     public InetSocketAddress inetSocketAddress;
+
+    public ClientUserChannel(ClientUser clientUser) {
+        this.clientUser = clientUser;
+    }
 
     public void request(InputCommand inputCommand) {
         CmdInfo cmdInfo = inputCommand.getCmdInfo();
@@ -121,7 +128,18 @@ public class ClientUserChannel {
         ExecutorKit.newSingleThreadExecutor(simpleName).execute(() -> {
             for (; ; ) {
                 try {
-                    var commandRequest = blockingQueue.take();
+                    CommandRequest commandRequest = blockingQueue.take();
+
+                    if (ClientUserConfigs.openLogRequestCommand) {
+                        long userId = clientUser.getUserId();
+                        ExternalMessage externalMessage = commandRequest.externalMessage();
+                        CmdInfo cmdInfo = CmdInfo.getCmdInfo(externalMessage.getCmdMerge());
+                        ClientUserInputCommands inputCommands = clientUser.getClientUserInputCommands();
+                        InputCommand inputCommand = inputCommands.getInputCommand(cmdInfo);
+
+                        log.info("玩家[{}] 向服务器发送请求 【{}】", userId, inputCommand);
+                    }
+
                     // 发送请求到游戏服务器
                     writeAndFlush(commandRequest);
                 } catch (InterruptedException e) {
@@ -129,7 +147,6 @@ public class ClientUserChannel {
                 }
             }
         });
-
     }
 
     private void writeAndFlush(CommandRequest clientRequest) {
@@ -201,26 +218,43 @@ public class ClientUserChannel {
                 // 如果有 callback ，优先交给 callback 处理
                 CommandCallback commandCallback = callbackMap.get(msgId);
                 if (Objects.nonNull(commandCallback)) {
+
+                    if (ClientUserConfigs.openLogRequestCallback) {
+                        // 玩家接收服务器的响应数据
+                        long userId = clientUser.getUserId();
+                        ClientUserInputCommands inputCommands = clientUser.getClientUserInputCommands();
+                        InputCommand inputCommand = inputCommands.getInputCommand(cmdInfo);
+                        log.info("玩家[{}] 的请求回调【{}】", userId, inputCommand);
+                    }
+
                     commandCallback.callback(externalMessage);
                     return;
                 }
             }
 
-            // 有广播监听的，
+            // 如果配置了广播监听，优先在这处理
             ListenBroadcastCommand broadcastCommand = listenBroadcastMap.get(cmdMerge);
-
             if (Objects.nonNull(broadcastCommand)) {
-                // 如果配置了广播监听，优先在这处理
+
+                if (ClientUserConfigs.openLogListenBroadcast) {
+                    log.info("触发广播监听回调 : {}", broadcastCommand);
+                }
+
                 CommandCallback commandCallback = broadcastCommand.getCommandCallback();
                 commandCallback.callback(externalMessage);
                 return;
+            }
+
+            if (ClientUserConfigs.openLogAction) {
+                String inputName = ClientKit.toInputName(cmdInfo);
+                log.info("action : {}", inputName);
             }
 
             /*
              * 没有回调的，交给 client action 处理
              * 没有 msgId 的，一般是广播消息，交给 client action 处理
              */
-            ClientActionProcess.action(externalMessage, barSkeleton);
+//            ClientActionProcess.action(externalMessage, barSkeleton);
         }
     }
 }

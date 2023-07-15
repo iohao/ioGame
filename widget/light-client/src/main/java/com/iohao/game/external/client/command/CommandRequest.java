@@ -17,13 +17,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.input;
+package com.iohao.game.external.client.command;
+
+import com.iohao.game.external.core.message.ExternalMessage;
 
 /**
+ * 请求命令
+ *
  * @author 渔民小镇
  * @date 2023-07-08
  */
-@FunctionalInterface
-public interface InputCallback {
-    void callback(CommandResult result);
+public record CommandRequest(int msgId, ExternalMessage externalMessage) {
 }

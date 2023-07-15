@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.input;
+package com.iohao.game.external.client.other;
 
 import com.alipay.remoting.rpc.RpcCommandType;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
@@ -45,7 +45,7 @@ public class ClientActionProcess {
     public void action(ExternalMessage externalMessage, BarSkeleton barSkeleton) {
 
         if (Objects.isNull(barSkeleton)) {
-            log.error("因为业务框架不存在，ExternalMessage 无法处理 {}", externalMessage);
+            log.error("因为业务框架不存在，无法处理 ExternalMessage {}", externalMessage);
             return;
         }
 

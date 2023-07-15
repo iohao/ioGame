@@ -20,7 +20,7 @@
 package com.iohao.game.external.client.join.handler;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.external.client.input.ClientUserChannel;
+import com.iohao.game.external.client.user.ClientUserChannel;
 import com.iohao.game.external.client.user.ClientUser;
 import com.iohao.game.external.core.message.ExternalMessage;
 import io.netty.channel.ChannelHandler;

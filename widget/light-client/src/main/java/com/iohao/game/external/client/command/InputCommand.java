@@ -17,10 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.input;
+package com.iohao.game.external.client.command;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.external.client.kit.InputCommandKit;
+import com.iohao.game.external.client.kit.ClientKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +30,7 @@ import lombok.experimental.FieldDefaults;
 import java.util.Objects;
 
 /**
- * 输入类的命令
+ * 模拟命令
  *
  * @author 渔民小镇
  * @date 2023-07-08
@@ -68,12 +68,13 @@ public class InputCommand {
     Class<?> responseClass;
 
     public InputCommand(CmdInfo cmdInfo) {
-        this.inputName = InputCommandKit.toInputName(cmdInfo);
+        this.inputName = ClientKit.toInputName(cmdInfo);
         this.cmdInfo = cmdInfo;
     }
 
     public InputCommand callback(Class<?> responseClass, InputCallback callback) {
         this.callback = callback;
+
         if (Objects.nonNull(responseClass)) {
             this.responseClass = responseClass;
         }
@@ -89,7 +90,6 @@ public class InputCommand {
 
         return requestData;
     }
-
 
     @Override
     public String toString() {

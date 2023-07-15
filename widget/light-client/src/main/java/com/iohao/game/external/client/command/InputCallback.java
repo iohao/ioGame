@@ -17,21 +17,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client;
-
-import lombok.experimental.UtilityClass;
+package com.iohao.game.external.client.command;
 
 /**
  * @author 渔民小镇
- * @date 2023-07-13
+ * @date 2023-07-08
  */
-@UtilityClass
-public class ClientUserConfigs {
-    /**
-     * true 表示不能存在相同的模拟命令
-     * <pre>
-     *     默认为 false，不做任何检测
-     * </pre>
-     */
-    public boolean uniqueInputCommand;
+@FunctionalInterface
+public interface InputCallback {
+    void callback(CommandResult result);
 }

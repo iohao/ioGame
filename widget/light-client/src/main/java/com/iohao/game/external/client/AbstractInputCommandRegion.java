@@ -20,10 +20,10 @@
 package com.iohao.game.external.client;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.external.client.input.ClientUserInputCommands;
-import com.iohao.game.external.client.input.InputCallback;
-import com.iohao.game.external.client.input.InputCommand;
-import com.iohao.game.external.client.input.RequestCommand;
+import com.iohao.game.external.client.user.ClientUserInputCommands;
+import com.iohao.game.external.client.command.InputCallback;
+import com.iohao.game.external.client.command.InputCommand;
+import com.iohao.game.external.client.command.RequestCommand;
 import com.iohao.game.external.client.user.ClientUser;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

@@ -23,7 +23,7 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
-import com.iohao.game.external.client.input.ClientUserChannel;
+import com.iohao.game.external.client.user.ClientUserChannel;
 import com.iohao.game.external.client.user.ClientUser;
 import com.iohao.game.external.core.message.ExternalMessage;
 import org.java_websocket.client.WebSocketClient;

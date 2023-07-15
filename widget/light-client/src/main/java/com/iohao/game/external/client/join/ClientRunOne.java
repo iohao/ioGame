@@ -25,7 +25,7 @@ import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.user.ClientUser;
-import com.iohao.game.external.client.CreateBarSkeleton;
+import com.iohao.game.external.client.other.CreateBarSkeleton;
 import com.iohao.game.external.client.InputCommandRegion;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.config.ExternalJoinEnum;

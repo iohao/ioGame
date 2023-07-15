@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.input;
+package com.iohao.game.external.client.command;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdKit;

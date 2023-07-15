@@ -17,11 +17,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.iohao.game.external.client.input;
+package com.iohao.game.external.client.user;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.external.client.kit.InputCommandKit;
+import com.iohao.game.external.client.command.InputCommand;
+import com.iohao.game.external.client.command.RequestCommand;
+import com.iohao.game.external.client.kit.ClientUserConfigs;
+import com.iohao.game.external.client.kit.ClientKit;
 import com.iohao.game.external.client.kit.ScannerKit;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +53,6 @@ public class ClientUserInputCommands {
     @Getter
     final ClientUserChannel clientUserChannel;
 
-
     Map<String, InputCommand> inputCommandMap = new LinkedHashMap<>();
 
     public ClientUserInputCommands(ClientUserChannel clientUserChannel) {
@@ -65,7 +68,7 @@ public class ClientUserInputCommands {
     }
 
     public String toInputName(CmdInfo cmdInfo) {
-        return InputCommandKit.toInputName(cmdInfo);
+        return ClientKit.toInputName(cmdInfo);
     }
 
     public InputCommand ofCommand(CmdInfo cmdInfo) {
@@ -89,7 +92,7 @@ public class ClientUserInputCommands {
     }
 
     public void request(CmdInfo cmdInfo) {
-        String inputName = InputCommandKit.toInputName(cmdInfo);
+        String inputName = ClientKit.toInputName(cmdInfo);
         request(inputName);
     }
 
@@ -139,20 +142,30 @@ public class ClientUserInputCommands {
         // 启动通信 channel
         clientUserChannel.startup();
 
-//        InternalKit.execute(this::extracted);
-        String simpleName = this.getClass().getSimpleName();
-//        ExecutorKit.newSingleThreadExecutor(simpleName).execute(this::extracted);
+        InternalKit.execute(this::extracted);
     }
 
     private void extracted() {
+
+        if (ClientUserConfigs.closeScanner) {
+            // 在压测下，建议关闭
+            return;
+        }
+
         String input = "";
 
         while (!input.equalsIgnoreCase("q")) {
 
             System.out.println("提示：[命令执行 : cmd-subCmd] [退出 : q] [帮助 : help]");
 
-            input = ScannerKit.scanner.nextLine();
-            input = input.trim();
+            try {
+                input = ScannerKit.nextLine();
+                input = input.trim();
+            } catch (Exception e) {
+                log.info("在压测下，建议将 ScannerKit.closeScanner 设置为 true，关闭控制台输入！");
+                log.error(e.getMessage(), e);
+                break;
+            }
 
             if (StrKit.isEmpty(input)) {
                 continue;

@@ -28,11 +28,23 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class AssertKit {
+    public void assertTrue(boolean value) {
+        assertTrue(value, "error");
+    }
+
     public void assertTrue(boolean value, String errorMsg) {
         if (!value) {
             throw new MsgException(0, errorMsg);
         }
     }
 
+    public void assertTrueThrow(boolean value) {
+        assertTrueThrow(value, "error");
+    }
 
+    public void assertTrueThrow(boolean value, String errorMsg) {
+        if (value) {
+            throw new MsgException(0, errorMsg);
+        }
+    }
 }

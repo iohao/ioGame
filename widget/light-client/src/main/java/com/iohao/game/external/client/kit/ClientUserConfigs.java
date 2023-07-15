@@ -19,16 +19,43 @@
  */
 package com.iohao.game.external.client.kit;
 
-import com.iohao.game.action.skeleton.core.CmdInfo;
 import lombok.experimental.UtilityClass;
 
 /**
+ * 模拟客户端相关的配置
+ *
  * @author 渔民小镇
  * @date 2023-07-15
  */
 @UtilityClass
-public class ClientKit {
-    public String toInputName(CmdInfo cmdInfo) {
-        return cmdInfo.getCmd() + "-" + cmdInfo.getSubCmd();
-    }
+public class ClientUserConfigs {
+    /**
+     * 关闭控制台输入配置
+     * <pre>
+     *     在压测时建议关闭，也就是将该属性设置为 true。
+     *
+     *     当开启关闭控制台输入配置时，也就是将该属性设置为 true 时，控制台输入相关的将失效。
+     * </pre>
+     */
+    public boolean closeScanner;
+
+    /** true 开启广播监听触发日志 */
+    public boolean openLogListenBroadcast = true;
+
+    /** true 开启 client action 回调日志 */
+    public boolean openLogAction = true;
+
+    /** true 开启客户端向服务器发送请求的日志 */
+    public boolean openLogRequestCommand = true;
+
+    /** true 开启请求回调的日志 */
+    public boolean openLogRequestCallback = true;
+
+    /**
+     * true 表示不能存在相同的模拟命令
+     * <pre>
+     *     默认为 false，不做任何检测
+     * </pre>
+     */
+    public boolean uniqueInputCommand;
 }

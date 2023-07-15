@@ -23,11 +23,15 @@ import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
-import com.iohao.game.external.client.input.*;
+import com.iohao.game.external.client.command.InputCallback;
+import com.iohao.game.external.client.command.InputCommand;
+import com.iohao.game.external.client.command.InputRequestData;
 import com.iohao.game.external.client.kit.AssertKit;
-import com.iohao.game.external.client.kit.InputCommandKit;
+import com.iohao.game.external.client.kit.ClientUserConfigs;
+import com.iohao.game.external.client.kit.ClientKit;
 import com.iohao.game.external.client.kit.ScannerKit;
-import com.iohao.game.external.client.input.ClientUserChannel;
+import com.iohao.game.external.client.user.ClientUserChannel;
+import com.iohao.game.external.client.user.ClientUserInputCommands;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +58,7 @@ public class InputCommandCreate {
     ClientUserInputCommands clientUserInputCommands;
 
     public CmdInfo getCmdInfo(int subCmd) {
-        AssertKit.assertTrue(cmd >= 0, "cmd 不能小于 0");
+        AssertKit.assertTrueThrow(cmd < 0, "cmd 不能小于 0");
         return CmdInfo.getCmdInfo(cmd, subCmd);
     }
 
@@ -88,7 +92,7 @@ public class InputCommandCreate {
 
     private void extractedChecked(CmdInfo cmdInfo) {
         if (uniqueInputCommand) {
-            var inputName = InputCommandKit.toInputName(cmdInfo);
+            var inputName = ClientKit.toInputName(cmdInfo);
             InputCommand inputCommand = clientUserInputCommands.getInputCommand(inputName);
             if (Objects.nonNull(inputCommand)) {
                 throw new RuntimeException("存在重复的路由命令 : " + cmdInfo);

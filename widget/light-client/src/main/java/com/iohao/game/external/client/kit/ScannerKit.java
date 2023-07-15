@@ -31,18 +31,110 @@ import java.util.Scanner;
  */
 @UtilityClass
 public class ScannerKit {
-    public final Scanner scanner = new Scanner(System.in);
 
+    final Scanner scanner = new Scanner(System.in);
+
+    /**
+     * 当开启关闭控制台输入配置时，将不执行 runnable
+     *
+     * @param runnable runnable
+     */
+    public void log(Runnable runnable) {
+        if (ClientUserConfigs.closeScanner) {
+            return;
+        }
+
+        runnable.run();
+    }
+
+    /**
+     * 控制台输入 String 值
+     * <pre>
+     *     如果开启了关闭了控制台输入的配置，将使用 value 做为默认值返回
+     * </pre>
+     *
+     * @param defaultValue 当开启了关闭了控制台输入，value 将作为默认值返回
+     * @return String value
+     */
+    public String nextLine(String defaultValue) {
+        if (ClientUserConfigs.closeScanner) {
+            return defaultValue;
+        }
+
+        return nextLine();
+    }
+
+    /**
+     * 控制台输入 String 值
+     *
+     * @return String value
+     */
     public String nextLine() {
+        if (ClientUserConfigs.closeScanner) {
+            throw new RuntimeException("不支持控制台输入");
+        }
+
         return scanner.nextLine();
     }
 
+    /**
+     * 控制台输入 long 值
+     * <pre>
+     *     如果开启了关闭了控制台输入的配置，将使用 value 做为默认值返回
+     * </pre>
+     *
+     * @param defaultValue 当开启了关闭了控制台输入，value 将作为默认值返回
+     * @return long value
+     */
+    public long nextLong(long defaultValue) {
+        if (ClientUserConfigs.closeScanner) {
+            return defaultValue;
+        }
+
+        return nextLong();
+    }
+
+    /**
+     * 控制台输入 long 值
+     *
+     * @return long value
+     */
     public long nextLong() {
+        if (ClientUserConfigs.closeScanner) {
+            throw new RuntimeException("不支持控制台输入");
+        }
+
         String s = ScannerKit.scanner.nextLine();
         return Long.parseLong(s);
     }
 
+    /**
+     * 控制台输入 int 值
+     * <pre>
+     *     如果开启了关闭了控制台输入的配置，将使用 value 做为默认值返回
+     * </pre>
+     *
+     * @param defaultValue 当开启了关闭了控制台输入，value 将作为默认值返回
+     * @return int value
+     */
+    public int nextInt(int defaultValue) {
+        if (ClientUserConfigs.closeScanner) {
+            return defaultValue;
+        }
+
+        return nextInt();
+    }
+
+    /**
+     * 控制台输入 int 值
+     *
+     * @return int value
+     */
     public int nextInt() {
+        if (ClientUserConfigs.closeScanner) {
+            throw new RuntimeException("不支持控制台输入");
+        }
+
         String s = ScannerKit.scanner.nextLine();
         return Integer.parseInt(s);
     }
