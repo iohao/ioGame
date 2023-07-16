@@ -35,8 +35,8 @@ import java.util.concurrent.TimeUnit;
 @UtilityClass
 public class InternalKit {
     /** 时间精度为 1 秒钟，执行一些没有 io 操作的逻辑 */
-    public final HashedWheelTimer timerSeconds = new HashedWheelTimer(1, TimeUnit.SECONDS);
-    final ExecutorService executor = ExecutorKit.newCacheThreadPool("InternalKit");
+    private final HashedWheelTimer timerSeconds = new HashedWheelTimer(1, TimeUnit.SECONDS);
+    private final ExecutorService executor = ExecutorKit.newCacheThreadPool("InternalKit");
 
     public void newTimeoutSeconds(TimerTask task) {
         timerSeconds.newTimeout(task, 0, TimeUnit.SECONDS);

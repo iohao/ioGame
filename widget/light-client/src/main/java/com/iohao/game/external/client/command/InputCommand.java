@@ -82,6 +82,15 @@ public class InputCommand {
         return this;
     }
 
+    /**
+     * 获取请求参数
+     * <pre>
+     *     当配置了 inputRequestData 动态请求参数生成时，优先动态生成；
+     *     否则使用配置时的 requestData 对象
+     * </pre>
+     *
+     * @return 请求参数
+     */
     public Object getRequestData() {
 
         if (Objects.nonNull(inputRequestData)) {

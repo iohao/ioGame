@@ -25,6 +25,7 @@ import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.InputCommandRegion;
 import com.iohao.game.external.client.user.ClientUser;
+import com.iohao.game.external.client.user.ClientUsers;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
 import lombok.AccessLevel;
@@ -64,6 +65,8 @@ public final class ClientRunOne {
 
         Objects.requireNonNull(this.clientUser, "请设置 clientUser");
         Objects.requireNonNull(this.inputCommandRegions, "请设置需要发送的请求消息");
+
+        ClientUsers.addClientUser(clientUser);
 
         this.inputCommandRegions.forEach(inputCommandRegion -> {
             inputCommandRegion.setClientUser(clientUser);

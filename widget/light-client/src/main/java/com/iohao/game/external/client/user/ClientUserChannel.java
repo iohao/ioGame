@@ -69,13 +69,13 @@ public class ClientUserChannel {
 
     ClientChannelRead channelRead = new DefaultChannelRead();
 
-    final ClientUser clientUser;
+    final DefaultClientUser clientUser;
 
     public Consumer<ExternalMessage> clientChannel;
     /** 目标 ip （服务器 ip） */
     public InetSocketAddress inetSocketAddress;
 
-    public ClientUserChannel(ClientUser clientUser) {
+    public ClientUserChannel(DefaultClientUser clientUser) {
         this.clientUser = clientUser;
     }
 

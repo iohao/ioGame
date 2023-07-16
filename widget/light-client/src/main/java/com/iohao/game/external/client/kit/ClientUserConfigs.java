@@ -58,4 +58,11 @@ public class ClientUserConfigs {
      * </pre>
      */
     public boolean uniqueInputCommand;
+
+    public void closeLog() {
+        openLogListenBroadcast = false;
+        openLogAction = false;
+        openLogRequestCommand = false;
+        openLogRequestCallback = false;
+    }
 }

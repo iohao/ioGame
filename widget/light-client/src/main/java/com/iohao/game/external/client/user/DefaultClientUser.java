@@ -19,27 +19,36 @@
  */
 package com.iohao.game.external.client.user;
 
-import com.iohao.game.common.kit.attr.AttrOptionDynamic;
+import com.iohao.game.common.kit.attr.AttrOptions;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 /**
+ * 客户端的用户（玩家）
+ * <pre>
+ *     开发者可以通过动态属性来扩展业务，比如可以在动态属性中保存货币、战力值、血条 ...等
+ *
+ *     也可以通过继承的方式来扩展 ClientUser。
+ * </pre>
+ *
  * @author 渔民小镇
- * @date 2023-07-15
+ * @date 2023-07-09
  */
-public interface ClientUser extends AttrOptionDynamic {
+@Setter
+@Getter
+@FieldDefaults(level = AccessLevel.PROTECTED)
+public class DefaultClientUser implements ClientUser {
+    final AttrOptions options = new AttrOptions();
+    /** 通信 channel 用于读写 */
+    final ClientUserChannel clientUserChannel = new ClientUserChannel(this);
+    final ClientUserInputCommands clientUserInputCommands = new ClientUserInputCommands(clientUserChannel);
+    /** true 已经登录成功 */
+    boolean loginSuccess;
 
-    ClientUserChannel getClientUserChannel();
-
-    ClientUserInputCommands getClientUserInputCommands();
-
-    long getUserId();
-
-    void setUserId(long userId);
-
-    String getNickname();
-
-    void setNickname(String nickname);
-
-    String getJwt();
-
-    void setJwt(String jwt);
+    long userId;
+    /** 昵称 */
+    String nickname;
+    String jwt;
 }

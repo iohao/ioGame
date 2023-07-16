@@ -59,4 +59,17 @@ public record RequestCommand(InputCommand inputCommand, ClientUserInputCommands 
         ClientUserChannel clientUserChannel = clientUserInputCommands.getClientUserChannel();
         clientUserChannel.request(cmdInfo, requestData, responseClass, callback);
     }
+
+    /**
+     * 向服务器发起请求，会根据模拟请求配置来生成请求参数
+     * <pre>
+     *     当对应的模拟请求当配置了 inputRequestData 动态请求参数生成时，优先动态生成；
+     *     否则使用配置时的 requestData 对象
+     * </pre>
+     */
+    public void requestInput() {
+        // 动态请求参数生成
+        Object requestData = inputCommand.getRequestData();
+        request(requestData);
+    }
 }

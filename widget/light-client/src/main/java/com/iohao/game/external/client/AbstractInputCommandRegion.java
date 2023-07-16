@@ -20,11 +20,11 @@
 package com.iohao.game.external.client;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.external.client.user.ClientUserInputCommands;
 import com.iohao.game.external.client.command.InputCallback;
 import com.iohao.game.external.client.command.InputCommand;
 import com.iohao.game.external.client.command.RequestCommand;
 import com.iohao.game.external.client.user.ClientUser;
+import com.iohao.game.external.client.user.ClientUserInputCommands;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -113,6 +113,12 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
         this.inputCommandCreate.listenBroadcast(responseClass, callback, subCmd, description);
     }
 
+    /**
+     * 创建请求命令执行
+     *
+     * @param subCmd 子路由
+     * @return 请求命令执行
+     */
     public RequestCommand ofRequestCommand(int subCmd) {
         CmdInfo cmdInfo = this.inputCommandCreate.getCmdInfo(subCmd);
         ClientUserInputCommands clientUserInputCommands = this.inputCommandCreate.clientUserInputCommands;

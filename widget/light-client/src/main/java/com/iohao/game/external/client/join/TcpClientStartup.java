@@ -24,6 +24,7 @@ import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.join.handler.ClientMessageHandler;
 import com.iohao.game.external.client.user.ClientUser;
+import com.iohao.game.external.client.user.DefaultClientUser;
 import com.iohao.game.external.client.user.ClientUserChannel;
 import com.iohao.game.external.core.netty.handler.codec.TcpExternalCodec;
 import io.netty.bootstrap.Bootstrap;
