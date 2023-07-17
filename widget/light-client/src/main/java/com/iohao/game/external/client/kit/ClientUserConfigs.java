@@ -59,6 +59,9 @@ public class ClientUserConfigs {
      */
     public boolean uniqueInputCommand;
 
+    /** true 开启心跳回调的日志 */
+    public boolean openLogIdle = false;
+
     /**
      * 关闭模拟请求相关日志
      */

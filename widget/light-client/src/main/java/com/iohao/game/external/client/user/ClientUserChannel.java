@@ -28,6 +28,7 @@ import com.iohao.game.external.client.kit.ClientUserConfigs;
 import com.iohao.game.external.client.kit.ClientKit;
 import com.iohao.game.external.core.kit.ExternalKit;
 import com.iohao.game.external.core.message.ExternalMessage;
+import com.iohao.game.external.core.message.ExternalMessageCmdCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -151,6 +152,13 @@ public class ClientUserChannel {
 
     private void writeAndFlush(CommandRequest clientRequest) {
         ExternalMessage externalMessage = clientRequest.externalMessage();
+        writeAndFlush(externalMessage);
+    }
+
+    public void writeAndFlush(ExternalMessage externalMessage) {
+        if (Objects.isNull(this.clientChannel)) {
+            return;
+        }
 
         InetSocketAddress inetSocketAddress = this.inetSocketAddress;
         if (Objects.nonNull(inetSocketAddress)) {
@@ -209,6 +217,14 @@ public class ClientUserChannel {
 
             if (responseStatus != 0) {
                 log.error("错误码:{} {} {}", responseStatus, externalMessage.getValidMsg(), cmdInfo);
+                return;
+            }
+
+            if (externalMessage.getCmdCode() == ExternalMessageCmdCode.idle) {
+                if (ClientUserConfigs.openLogIdle) {
+                    log.info("接收服务器心跳回调 : {}", externalMessage);
+                }
+
                 return;
             }
 

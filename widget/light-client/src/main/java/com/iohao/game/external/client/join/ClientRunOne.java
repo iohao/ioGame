@@ -115,9 +115,7 @@ public final class ClientRunOne {
             externalMessage.setCmdCode(ExternalMessageCmdCode.idle);
 
             ClientUserChannel clientUserChannel = clientUser.getClientUserChannel();
-            if (Objects.nonNull(clientUserChannel.clientChannel)) {
-                clientUserChannel.clientChannel.accept(externalMessage);
-            }
+            clientUserChannel.writeAndFlush(externalMessage);
 
         }, 1, idlePeriod, TimeUnit.SECONDS);
 
