@@ -59,6 +59,9 @@ public class ClientUserConfigs {
      */
     public boolean uniqueInputCommand;
 
+    /**
+     * 关闭模拟请求相关日志
+     */
     public void closeLog() {
         openLogListenBroadcast = false;
         openLogAction = false;

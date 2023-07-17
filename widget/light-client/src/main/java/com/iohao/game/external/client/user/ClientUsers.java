@@ -67,18 +67,24 @@ public class ClientUsers {
                 }
             }
 
-            InternalKit.execute(() -> {
-                log.info("{} 个玩家全部登录完成，开始执行任务[{}]", clientUsers.size(), runnableQueue.size());
+            extractedExecute();
+        });
+    }
 
-                while (true) {
-                    try {
-                        Runnable take = runnableQueue.take();
-                        InternalKit.execute(take);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+    private void extractedExecute() {
+        InternalKit.execute(() -> {
+            if (clientUsers.size() > 1) {
+                log.info("{} 个玩家全部登录完成，开始执行任务[{}]", clientUsers.size(), runnableQueue.size());
+            }
+
+            while (true) {
+                try {
+                    Runnable take = runnableQueue.take();
+                    InternalKit.execute(take);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-            });
+            }
         });
     }
 

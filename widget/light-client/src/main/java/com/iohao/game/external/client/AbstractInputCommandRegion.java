@@ -124,4 +124,16 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
         ClientUserInputCommands clientUserInputCommands = this.inputCommandCreate.clientUserInputCommands;
         return clientUserInputCommands.ofRequestCommand(cmdInfo);
     }
+
+    /**
+     * 创建请求命令执行
+     *
+     * @param cmdInfo 路由信息
+     * @return 请求命令执行
+     */
+    public RequestCommand ofRequestCommand(CmdInfo cmdInfo) {
+        ClientUserInputCommands clientUserInputCommands = this.inputCommandCreate.clientUserInputCommands;
+        return clientUserInputCommands.ofRequestCommand(cmdInfo);
+    }
+
 }

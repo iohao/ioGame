@@ -19,15 +19,21 @@
  */
 package com.iohao.game.external.client.join;
 
+import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.InputCommandRegion;
 import com.iohao.game.external.client.user.ClientUser;
+import com.iohao.game.external.client.user.ClientUserChannel;
 import com.iohao.game.external.client.user.ClientUsers;
+import com.iohao.game.external.client.user.DefaultClientUser;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
+import com.iohao.game.external.core.message.ExternalMessage;
+import com.iohao.game.external.core.message.ExternalMessageCmdCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,8 +68,10 @@ public final class ClientRunOne {
     ClientConnectOption option;
 
     public void startup() {
+        if (Objects.isNull(this.clientUser)) {
+            this.clientUser = new DefaultClientUser();
+        }
 
-        Objects.requireNonNull(this.clientUser, "请设置 clientUser");
         Objects.requireNonNull(this.inputCommandRegions, "请设置需要发送的请求消息");
 
         ClientUsers.addClientUser(clientUser);
@@ -89,6 +97,31 @@ public final class ClientRunOne {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 启动定时器发送心跳
+     * <pre>
+     *     该方法建议只调用一次
+     * </pre>
+     *
+     * @param idlePeriod 心跳周期（秒）
+     * @return this
+     */
+    public ClientRunOne idle(int idlePeriod) {
+
+        ExecutorKit.newSingleScheduled("idle").scheduleAtFixedRate(() -> {
+            ExternalMessage externalMessage = new ExternalMessage();
+            externalMessage.setCmdCode(ExternalMessageCmdCode.idle);
+
+            ClientUserChannel clientUserChannel = clientUser.getClientUserChannel();
+            if (Objects.nonNull(clientUserChannel.clientChannel)) {
+                clientUserChannel.clientChannel.accept(externalMessage);
+            }
+
+        }, 1, idlePeriod, TimeUnit.SECONDS);
+
+        return this;
     }
 
     private ClientConnectOption getOption() {

@@ -43,7 +43,7 @@ public class InputCommand {
 
     final String inputName;
     final CmdInfo cmdInfo;
-
+    /** 模拟请求命令的描述 */
     String description = "... ...";
 
     /** 默认的请求参数 */

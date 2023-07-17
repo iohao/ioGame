@@ -22,7 +22,7 @@ package com.iohao.game.external.client.command;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
+import com.iohao.game.action.skeleton.protocol.wrapper.*;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.AccessLevel;
@@ -59,6 +59,22 @@ public class CommandResult {
             return (List<T>) byteValueList.values.stream()
                     .map(bytes -> DataCodecKit.decode(bytes, clazz))
                     .toList();
+        }
+
+        if (value instanceof StringValueList stringValueList) {
+            return (List<T>) stringValueList.values;
+        }
+
+        if (value instanceof LongValueList longValueList) {
+            return (List<T>) longValueList.values;
+        }
+
+        if (value instanceof IntValueList intValueList) {
+            return (List<T>) intValueList.values;
+        }
+
+        if (value instanceof BoolValueList boolValueList) {
+            return (List<T>) boolValueList.values;
         }
 
         return Collections.emptyList();
