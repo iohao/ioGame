@@ -36,10 +36,12 @@
         <module>widget/light-profile</module>
         <!-- 小部件 : jprotobuf 增强 -->
         <module>widget/light-jprotobuf</module>
-        <!-- 小部件 ： 基于redis实现的分布式锁-->
+        <!-- 小部件 ： 基于redis实现的分布式锁 -->
         <module>widget/light-redis-lock</module>
         <!-- 小部件 ： 基于redis实现的分布式锁 for springBootStarter -->
         <module>widget/light-redis-lock-spring-boot-starter</module>
+        <!-- 小部件 ： 压测&模拟客户端请求 -->
+        <module>widget/light-client</module>
         <!-- 小部件 : 日志 -->
         <module>widget/light-log</module>
         <module>widget/other-tool</module>
@@ -49,7 +51,7 @@
         <module>external/external-core</module>
         <module>external/external-netty</module>
         <module>run-one/run-one-netty</module>
-        <module>widget/light-client</module>
+
 
     </modules>
 
