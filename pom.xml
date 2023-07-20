@@ -198,8 +198,8 @@
 
     <licenses>
         <license>
-            <name>GPL2.0</name>
-            <url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html</url>
+            <name>GNU Affero General Public License v3.0</name>
+            <url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
         </license>
     </licenses>
 

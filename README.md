@@ -42,8 +42,8 @@
 		<img src="https://img.shields.io/badge/JDK-17-green.svg" alt="JDK 17" />
 	</a>
 	<br>
-	<a target="_blank" href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">
-		<img src="https://img.shields.io/:license-GPL2.0-blue.svg" alt="GPL2.0" />
+	<a target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.txt">
+		<img src="https://img.shields.io/:license-AGPL3.0-blue.svg" alt="AGPL3.0" />
 	</a>
 	<br />
 	<a target="_blank" href='https://gitee.com/iohao/ioGame'>
@@ -78,7 +78,7 @@
 
 ```text
 
-ioGame 使用的是 GPL2.0 开源协议。由于 ioGame 遵循过去、现在、将来都不会有商业版本，所有功能全部开源的原则，使得我们很难找到盈利点，现在使用授权的方式；
+ioGame 使用的是 AGPL3.0 开源协议。由于 ioGame 遵循过去、现在、将来都不会有商业版本，所有功能全部开源的原则，使得我们很难找到盈利点，现在使用授权的方式；
 
 ### 闭源授权说明
 1.授权费用：2799 人民币每年。
