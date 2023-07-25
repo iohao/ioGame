@@ -51,7 +51,6 @@ final class ToyTableRegion {
 
             this.counter(line);
         }
-
     }
 
     void putAll(Map<?, ?> map) {
@@ -59,7 +58,6 @@ final class ToyTableRegion {
             this.putLine(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
         }
     }
-
 
     void render() {
         var tableRender = table.tableRender;
@@ -89,10 +87,9 @@ final class ToyTableRegion {
             int appendNum = this.keyMaxLen + this.valueMaxLen
                     + this.prefix.length() + this.suffix.length()
                     + 2;
+
             append(bodyBuilder, fill, appendNum);
-
         }
-
     }
 
     String renderHead() {
@@ -138,5 +135,4 @@ final class ToyTableRegion {
             this.keyLine();
         }
     }
-
 }

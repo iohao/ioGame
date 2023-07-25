@@ -140,8 +140,9 @@ public final class IoGameBanner {
     }
 
     private void extractedAdv() {
-        String builder = "| adv      | %s%n";
-        System.out.printf(builder, "启动项广告位招租");
+        String s = BreakingNews.randomAdvText();
+        String builder = "| adv      | %s - %s%n";
+        System.out.printf(builder, "启动项广告位招租", s);
         System.out.println("+----------+--------------------------------------------------------------------------------------");
     }
 

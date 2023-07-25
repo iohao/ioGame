@@ -67,9 +67,10 @@ public class ActionDoc {
     public void addActionCommand(ActionCommand actionCommand) {
         CmdInfo cmdInfo = actionCommand.getCmdInfo();
         int subCmd = cmdInfo.getSubCmd();
-        ActionCommandDoc actionCommandDoc = actionCommandDocMap.get(subCmd);
-
-        actionCommandDoc.setActionCommand(actionCommand);
+        if (actionCommandDocMap.containsKey(subCmd)) {
+            ActionCommandDoc actionCommandDoc = actionCommandDocMap.get(subCmd);
+            actionCommandDoc.setActionCommand(actionCommand);
+        }
     }
 
     Stream<ActionCommandDoc> stream() {

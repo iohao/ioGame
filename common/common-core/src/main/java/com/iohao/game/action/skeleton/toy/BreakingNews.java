@@ -41,11 +41,22 @@ class BreakingNews {
         return String.format("%s - %s", news.title, news.url);
     }
 
+    public String randomAdvText() {
+        News news = randomAdv();
+        return String.format("%s - %s", news.title, news.url);
+    }
+
+    private News randomAdv() {
+        List<News> list = new ArrayList<>();
+        list.add(new News("回合制网络游戏 MMO", "https://www.yuque.com/iohao/game/sw08q89x3x7kiuhx"));
+        return RandomKit.randomEle(list);
+    }
+
     private News random() {
         List<News> list = new ArrayList<>();
 
         list.add(new News("支持者名单", "https://www.yuque.com/iohao/game/backers"));
-        list.add(new News("模拟客户端请求（真实网络环境）", "https://www.yuque.com/iohao/game/tc83ud"));
+        list.add(new News("压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
 
         // 授权相关
         list.add(new News("项目成本分析", "https://www.yuque.com/iohao/game/gd5l3b0y0h027kcv#aSk5x"));
