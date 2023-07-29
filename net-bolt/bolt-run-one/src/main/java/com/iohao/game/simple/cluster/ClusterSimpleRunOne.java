@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -68,10 +68,15 @@ import java.util.concurrent.TimeUnit;
  *     127.0.0.1:30058
  * </pre>
  *
+ * <pre>
+ *     已经废弃，请使用<a href="https://www.yuque.com/iohao/game/vu0hrkn8xqq0x9a5">新版游戏对外服</a>
+ * </pre>
+ *
  * @author 渔民小镇
  * @date 2022-05-15
  */
 @Setter
+@Deprecated
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class ClusterSimpleRunOne {

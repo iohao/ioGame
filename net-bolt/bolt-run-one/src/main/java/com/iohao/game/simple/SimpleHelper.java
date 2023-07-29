@@ -37,9 +37,14 @@ import java.util.List;
  *          当然如果打算开发单体应用，这种方式是很合适的。
  * </pre>
  *
+ * <pre>
+ *     已经废弃，请使用<a href="https://www.yuque.com/iohao/game/vu0hrkn8xqq0x9a5">新版游戏对外服</a>
+ * </pre>
+ *
  * @author 渔民小镇
  * @date 2022-02-24
  */
+@Deprecated
 @UtilityClass
 public class SimpleHelper {
 

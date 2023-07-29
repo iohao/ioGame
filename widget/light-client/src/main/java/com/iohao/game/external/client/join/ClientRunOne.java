@@ -18,7 +18,6 @@
  */
 package com.iohao.game.external.client.join;
 
-import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.PresentKit;
@@ -74,6 +73,7 @@ public final class ClientRunOne {
         Objects.requireNonNull(this.inputCommandRegions, "请设置需要发送的请求消息");
 
         ClientUsers.addClientUser(clientUser);
+        clientUser.setInputCommandRegions(this.inputCommandRegions);
 
         this.inputCommandRegions.forEach(inputCommandRegion -> {
             inputCommandRegion.setClientUser(clientUser);

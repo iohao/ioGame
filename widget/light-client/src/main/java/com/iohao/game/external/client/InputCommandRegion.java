@@ -27,7 +27,29 @@ import com.iohao.game.external.client.user.ClientUser;
  * @date 2023-07-09
  */
 public interface InputCommandRegion {
+    /**
+     * 初始化模拟命令
+     */
     void initInputCommand();
 
+    /**
+     * 设置 clientUser
+     * <pre>
+     *     会在客户端启动时，自动赋值
+     * </pre>
+     *
+     * @param clientUser clientUser
+     */
     void setClientUser(ClientUser clientUser);
+
+    /**
+     * 玩家登录成功后的回调
+     * <pre>
+     *     see {@link ClientUser#callbackInputCommandRegion()}
+     * </pre>
+     *
+     */
+    default void loginSuccessCallback() {
+
+    }
 }

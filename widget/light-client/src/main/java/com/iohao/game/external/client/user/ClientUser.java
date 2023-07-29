@@ -19,6 +19,9 @@
 package com.iohao.game.external.client.user;
 
 import com.iohao.game.common.kit.attr.AttrOptionDynamic;
+import com.iohao.game.external.client.InputCommandRegion;
+
+import java.util.List;
 
 /**
  * @author 渔民小镇
@@ -29,6 +32,8 @@ public interface ClientUser extends AttrOptionDynamic {
     ClientUserChannel getClientUserChannel();
 
     ClientUserInputCommands getClientUserInputCommands();
+
+    void setInputCommandRegions(List<InputCommandRegion> inputCommandRegions);
 
     long getUserId();
 
@@ -41,4 +46,12 @@ public interface ClientUser extends AttrOptionDynamic {
     String getJwt();
 
     void setJwt(String jwt);
+
+    /**
+     * 登录成功后，调用 InputCommandRegion 回调
+     * <pre>
+     *     需要开发者主动调用触发，一般在登录模拟请求的回调中主动的调用。
+     * </pre>
+     */
+    void callbackInputCommandRegion();
 }

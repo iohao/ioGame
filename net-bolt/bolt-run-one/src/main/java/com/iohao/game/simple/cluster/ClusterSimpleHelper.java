@@ -37,9 +37,14 @@ import java.util.List;
  *          这个工具只适合单机的开发或本地一体化的开发，对于生产不适合。
  * </pre>
  *
+ * <pre>
+ *     已经废弃，请使用<a href="https://www.yuque.com/iohao/game/vu0hrkn8xqq0x9a5">新版游戏对外服</a>
+ * </pre>
+ *
  * @author 渔民小镇
  * @date 2022-05-15
  */
+@Deprecated
 @UtilityClass
 public class ClusterSimpleHelper {
 

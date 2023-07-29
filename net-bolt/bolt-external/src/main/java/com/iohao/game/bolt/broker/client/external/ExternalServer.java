@@ -37,10 +37,14 @@ import java.util.Objects;
 
 /**
  * 对外的服务器
+ * <pre>
+ *     已经废弃，请使用<a href="https://www.yuque.com/iohao/game/vu0hrkn8xqq0x9a5">新版游戏对外服</a>
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2022-01-09
  */
+@Deprecated
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class ExternalServer {
     static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();

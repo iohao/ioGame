@@ -19,10 +19,14 @@
 package com.iohao.game.external.client.user;
 
 import com.iohao.game.common.kit.attr.AttrOptions;
+import com.iohao.game.external.client.InputCommandRegion;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 客户端的用户（玩家）
@@ -43,6 +47,8 @@ public class DefaultClientUser implements ClientUser {
     /** 通信 channel 用于读写 */
     final ClientUserChannel clientUserChannel = new ClientUserChannel(this);
     final ClientUserInputCommands clientUserInputCommands = new ClientUserInputCommands(clientUserChannel);
+    List<InputCommandRegion> inputCommandRegions;
+
     /** true 已经登录成功 */
     boolean loginSuccess;
 
@@ -50,4 +56,13 @@ public class DefaultClientUser implements ClientUser {
     /** 昵称 */
     String nickname;
     String jwt;
+
+    @Override
+    public void callbackInputCommandRegion() {
+        if (Objects.isNull(this.inputCommandRegions)) {
+            return;
+        }
+
+        this.inputCommandRegions.forEach(InputCommandRegion::loginSuccessCallback);
+    }
 }
