@@ -152,6 +152,7 @@ public class ClientUserInputCommands {
         }
 
         String input = "";
+        String lastInput = "+";
 
         while (!input.equalsIgnoreCase("q")) {
 
@@ -190,6 +191,13 @@ public class ClientUserInputCommands {
                 System.out.println("88，老哥！顺便帮忙关注一下组织 https://github.com/game-town");
                 System.exit(-1);
                 continue;
+            }
+
+            //  重复上一次命令
+            if ("+".equals(input)) {
+                input = lastInput;
+            } else {
+                lastInput = input;
             }
 
             // 发起模拟请求

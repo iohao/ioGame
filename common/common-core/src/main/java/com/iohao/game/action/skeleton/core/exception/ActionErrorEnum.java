@@ -26,7 +26,7 @@ import lombok.experimental.FieldDefaults;
  * action 错误码
  * <pre>
  *     关于异常机制的解释可以参考这里:
- *     https://www.yuque.com/iohao/game/avlo99
+ *     <a href="https://www.yuque.com/iohao/game/avlo99">异常机制</a>
  * </pre>
  *
  * @author 渔民小镇
