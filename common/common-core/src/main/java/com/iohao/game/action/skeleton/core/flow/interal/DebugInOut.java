@@ -259,7 +259,7 @@ public final class DebugInOut implements ActionMethodInOut {
         for (ActionCommand.ParamInfo paramInfo : paramInfos) {
             Class<?> paramClazz = paramInfo.getParamClazz();
 
-            if (FlowContext.class.equals(paramClazz)) {
+            if (FlowContext.class.isAssignableFrom(paramClazz)) {
                 continue;
             }
 
