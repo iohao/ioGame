@@ -50,5 +50,4 @@ public class MsgException extends RuntimeException {
     public MsgException(MsgExceptionInfo msgExceptionInfo) {
         this(msgExceptionInfo.getCode(), msgExceptionInfo.getMsg());
     }
-
 }

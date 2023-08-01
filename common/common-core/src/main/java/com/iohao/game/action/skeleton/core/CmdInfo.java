@@ -67,6 +67,8 @@ public final class CmdInfo {
      * 获取 cmdInfo
      * <pre>
      *     内部使用享元工厂来获取 cmdInfo
+     *
+     *     请使用 of 系列方法来代替此方法
      * </pre>
      *
      * @param cmd    主路由
@@ -74,7 +76,36 @@ public final class CmdInfo {
      * @return 路由信息
      */
     public static CmdInfo getCmdInfo(int cmd, int subCmd) {
-        return CmdInfoFlyweightFactory.getCmdInfo(cmd, subCmd);
+        return of(cmd, subCmd);
+    }
+
+    /**
+     * 获取 cmdInfo
+     * <pre>
+     *     内部使用享元工厂来获取 cmdInfo
+     *
+     *     请使用 of 系列方法来代替此方法
+     * </pre>
+     *
+     * @param cmdMerge cmd-subCmd {@link CmdKit#merge(int, int)}
+     * @return 路由信息
+     */
+    public static CmdInfo getCmdInfo(int cmdMerge) {
+        return of(cmdMerge);
+    }
+
+    /**
+     * 获取 cmdInfo
+     * <pre>
+     *     内部使用享元工厂来获取 cmdInfo
+     * </pre>
+     *
+     * @param cmd    主路由
+     * @param subCmd 子路由
+     * @return 路由信息
+     */
+    public static CmdInfo of(int cmd, int subCmd) {
+        return CmdInfoFlyweightFactory.of(cmd, subCmd);
     }
 
     /**
@@ -86,8 +117,8 @@ public final class CmdInfo {
      * @param cmdMerge cmd-subCmd {@link CmdKit#merge(int, int)}
      * @return 路由信息
      */
-    public static CmdInfo getCmdInfo(int cmdMerge) {
-        return CmdInfoFlyweightFactory.getCmdInfo(cmdMerge);
+    public static CmdInfo of(int cmdMerge) {
+        return CmdInfoFlyweightFactory.of(cmdMerge);
     }
 
     @Override

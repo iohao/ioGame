@@ -19,8 +19,11 @@
 package com.iohao.game.action.skeleton.core.flow;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
+import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import lombok.experimental.UtilityClass;
 
 import java.util.Objects;
@@ -31,6 +34,10 @@ import java.util.Objects;
  */
 @UtilityClass
 public class FlowContextKit {
+
+    /** rpc oneway request */
+    static final byte REQUEST_ONEWAY = (byte) 0x02;
+
     /**
      * FlowContext 自身属性赋值
      *
@@ -70,6 +77,19 @@ public class FlowContextKit {
             request.settingCommonAttr(responseMessage);
 
             flowContext.setResponse(responseMessage);
+        }
+    }
+
+    public ChannelContext getChannelContext(FlowContext flowContext) {
+        ResponseMessage response = flowContext.getResponse();
+        HeadMetadata headMetadata = response.getHeadMetadata();
+
+        byte rpcCommandType = headMetadata.getRpcCommandType();
+
+        if (rpcCommandType == REQUEST_ONEWAY) {
+            return flowContext.option(FlowAttr.brokerClientContext);
+        } else {
+            return flowContext.option(FlowAttr.channelContext);
         }
     }
 }

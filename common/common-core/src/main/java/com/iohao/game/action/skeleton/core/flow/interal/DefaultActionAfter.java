@@ -22,27 +22,23 @@ import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.flow.ActionAfter;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 
 /**
- * 默认的ActionAfter
+ * 默认的 ActionAfter
  *
  * @author 渔民小镇
  * @date 2021-12-20
  */
 public final class DefaultActionAfter implements ActionAfter {
-    /** rpc oneway request */
-    static final byte REQUEST_ONEWAY = (byte) 0x02;
-
     @Override
     public void execute(final FlowContext flowContext) {
-        final ResponseMessage response = flowContext.getResponse();
 
-        ChannelContext channelContext = getChannelContext(flowContext);
+        ChannelContext channelContext = FlowContextKit.getChannelContext(flowContext);
 
         // 有错误就响应给调用方
+        final ResponseMessage response = flowContext.getResponse();
         if (response.hasError()) {
             channelContext.sendResponse(response);
             return;
@@ -56,18 +52,5 @@ public final class DefaultActionAfter implements ActionAfter {
 
         // 将数据回传给调用方
         channelContext.sendResponse(response);
-    }
-
-    private ChannelContext getChannelContext(FlowContext flowContext) {
-        ResponseMessage response = flowContext.getResponse();
-        HeadMetadata headMetadata = response.getHeadMetadata();
-
-        byte rpcCommandType = headMetadata.getRpcCommandType();
-
-        if (rpcCommandType == REQUEST_ONEWAY) {
-            return flowContext.option(FlowAttr.brokerClientContext);
-        } else {
-            return flowContext.option(FlowAttr.channelContext);
-        }
     }
 }

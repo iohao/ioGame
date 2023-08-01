@@ -58,6 +58,41 @@ public interface MsgExceptionInfo {
     }
 
     /**
+     * 断言为 true, 就抛出异常
+     *
+     * @param v1  断言值
+     * @param msg 自定义消息
+     * @throws MsgException e
+     */
+    default void assertTrueThrows(boolean v1, String msg) throws MsgException {
+        if (v1) {
+            int code = this.getCode();
+            throw new MsgException(code, msg);
+        }
+    }
+
+    /**
+     * 断言值 value 不能为 null, 否则就抛出异常
+     *
+     * @param value 断言值
+     * @param msg   自定义消息
+     * @throws MsgException e
+     */
+    default void assertNonNull(Object value, String msg) throws MsgException {
+        assertTrue(Objects.nonNull(value), msg);
+    }
+
+    /**
+     * 断言值 value 不能为 null, 否则就抛出异常
+     *
+     * @param value 断言值
+     * @throws MsgException e
+     */
+    default void assertNonNull(Object value) throws MsgException {
+        assertTrue(Objects.nonNull(value));
+    }
+
+    /**
      * 断言必须是 true, 否则抛出异常
      *
      * @param v1 断言值
@@ -71,15 +106,6 @@ public interface MsgExceptionInfo {
         throw new MsgException(this);
     }
 
-    /**
-     * 断言必须是 非null, 否则抛出异常
-     *
-     * @param value 断言值
-     * @throws MsgException e
-     */
-    default void assertNonNull(Object value) throws MsgException {
-        assertTrue(Objects.nonNull(value));
-    }
 
     /**
      * 断言必须是 false, 否则抛出异常

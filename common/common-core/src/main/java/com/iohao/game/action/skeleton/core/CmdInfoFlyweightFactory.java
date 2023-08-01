@@ -40,23 +40,59 @@ public final class CmdInfoFlyweightFactory {
 
     /**
      * 获取路由信息
+     * <pre>
+     *     将在下个版本移除，请使用 of 系列代替
+     * </pre>
      *
      * @param cmd    主路由
      * @param subCmd 子路由
      * @return 路由信息
      */
+    @Deprecated
     public static CmdInfo getCmdInfo(int cmd, int subCmd) {
-        int cmdMerge = CmdKit.merge(cmd, subCmd);
-        return getCmdInfo(cmdMerge);
+        return of(cmd, subCmd);
     }
 
     /**
      * 获取路由信息
+     * <pre>
+     *     将在下个版本移除，请使用 of 系列代替
+     * </pre>
      *
      * @param cmdMerge 主路由(高16) + 子路由(低16)
      * @return 路由信息
      */
+    @Deprecated
     public static CmdInfo getCmdInfo(int cmdMerge) {
+        return of(cmdMerge);
+    }
+
+
+    /**
+     * 获取路由信息
+     * <pre>
+     *     如果不存在，就新建
+     * </pre>
+     *
+     * @param cmd    主路由
+     * @param subCmd 子路由
+     * @return 路由信息
+     */
+    public static CmdInfo of(int cmd, int subCmd) {
+        int cmdMerge = CmdKit.merge(cmd, subCmd);
+        return of(cmdMerge);
+    }
+
+    /**
+     * 获取路由信息
+     * <pre>
+     *     如果不存在，就新建
+     * </pre>
+     *
+     * @param cmdMerge 主路由(高16) + 子路由(低16)
+     * @return 路由信息
+     */
+    public static CmdInfo of(int cmdMerge) {
 
         CmdInfo cmdInfo = cmdInfoMap.get(cmdMerge);
 

@@ -215,7 +215,7 @@ public class ClientUserChannel {
             CmdInfo cmdInfo = CmdInfo.getCmdInfo(cmdMerge);
 
             if (responseStatus != 0) {
-                log.error("错误码:{} {} {}", responseStatus, externalMessage.getValidMsg(), cmdInfo);
+                log.error("[错误码:{}] - [消息:{}] - {}", responseStatus, externalMessage.getValidMsg(), cmdInfo);
                 return;
             }
 
