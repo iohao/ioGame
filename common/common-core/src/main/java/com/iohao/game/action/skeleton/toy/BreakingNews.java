@@ -57,6 +57,7 @@ class BreakingNews {
 
         list.add(new News("支持者名单", "https://www.yuque.com/iohao/game/backers"));
         list.add(new News("压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
+        list.add(new News("25行代码，做个网页聊天室", "https://www.yuque.com/iohao/game/we9eppym4yno9hq2"));
 
         // 授权相关
         list.add(new News("项目成本分析", "https://www.yuque.com/iohao/game/gd5l3b0y0h027kcv#aSk5x"));
@@ -89,6 +90,7 @@ class BreakingNews {
         list.add(new News("用户上线、下线钩子", "https://www.yuque.com/iohao/game/hv5qqh"));
         list.add(new News("路由访问权限控制", "https://www.yuque.com/iohao/game/nap5y8p5fevhv99y"));
         list.add(new News("游戏对外服缓存", "https://www.yuque.com/iohao/game/khg23pvbh59a7spm"));
+        list.add(new News("ws token 鉴权、校验", "https://www.yuque.com/iohao/game/tb1126szmgfu6u55"));
 
         // 通讯方式
         list.add(new News("脉冲通讯方式", "https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn"));
