@@ -58,4 +58,10 @@ public record DefaultPipelineContext(Channel channel, DefaultExternalCoreSetting
             pipeline.addLast(name, channelHandler);
         }
     }
+
+    @Override
+    public void remove(String name) {
+        ChannelPipeline pipeline = channel.pipeline();
+        pipeline.remove(name);
+    }
 }

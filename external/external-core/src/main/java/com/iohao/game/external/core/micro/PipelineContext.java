@@ -64,4 +64,11 @@ public interface PipelineContext {
      * @param handler 处理器
      */
     void addLast(String name, Object handler);
+
+    /**
+     * 移除指定处理器
+     *
+     * @param name 处理器的名称
+     */
+    void remove(String name);
 }

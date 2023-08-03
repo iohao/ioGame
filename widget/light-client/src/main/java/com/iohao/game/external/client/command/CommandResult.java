@@ -85,7 +85,7 @@ public class CommandResult {
 
     public CmdInfo getCmdInfo() {
         int cmdMerge = externalMessage.getCmdMerge();
-        return CmdInfo.getCmdInfo(cmdMerge);
+        return CmdInfo.of(cmdMerge);
     }
 
     public byte[] getBytes() {

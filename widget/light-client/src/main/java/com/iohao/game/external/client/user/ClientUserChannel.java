@@ -133,7 +133,7 @@ public class ClientUserChannel {
                     if (ClientUserConfigs.openLogRequestCommand) {
                         long userId = clientUser.getUserId();
                         ExternalMessage externalMessage = commandRequest.externalMessage();
-                        CmdInfo cmdInfo = CmdInfo.getCmdInfo(externalMessage.getCmdMerge());
+                        CmdInfo cmdInfo = CmdInfo.of(externalMessage.getCmdMerge());
                         ClientUserInputCommands inputCommands = clientUser.getClientUserInputCommands();
                         InputCommand inputCommand = inputCommands.getInputCommand(cmdInfo);
 
@@ -212,7 +212,7 @@ public class ClientUserChannel {
             // 表示有异常消息;统一异常处理
             int responseStatus = externalMessage.getResponseStatus();
             int cmdMerge = externalMessage.getCmdMerge();
-            CmdInfo cmdInfo = CmdInfo.getCmdInfo(cmdMerge);
+            CmdInfo cmdInfo = CmdInfo.of(cmdMerge);
 
             if (responseStatus != 0) {
                 log.error("[错误码:{}] - [消息:{}] - {}", responseStatus, externalMessage.getValidMsg(), cmdInfo);

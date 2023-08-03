@@ -21,6 +21,7 @@ package com.iohao.game.external.core.netty.micro;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.netty.handler.codec.WebSocketExternalCodec;
 import com.iohao.game.external.core.micro.PipelineContext;
+import com.iohao.game.external.core.netty.handler.ws.WebSocketVerifyHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -28,6 +29,8 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolConfig;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
+
+import java.util.Objects;
 
 /**
  * websocket 与真实玩家连接服务器的启动流程
@@ -53,22 +56,32 @@ public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
 
     @Override
     public void pipelineCodec(PipelineContext context) {
-        /*
-         * 将请求和应答消息解码为HTTP消息
-         * 将字节码解码为 HttpRequest,HttpContent和LastHttpContent.
-         * 并将 HttpRequest, HttpContent和LastHttpContent 编码为字节码
-         */
-        context.addLast("http-codec", new HttpServerCodec());
+        // 添加 http 相关 handler
+        this.httpHandler(context);
 
-        /*
-         * 将一个 HttpMessage 和跟随它的多个 HttpContent 聚合为
-         * 单个 FullHTTPRequest 或者 FullHTTPResponse(取决于它是被用来处理请求还是响应).
-         *
-         * 安装了这个之后, ChannelPipeline 中的下一个 ChannelHandler 将只会接收
-         * 到完整的 Http 请求或响应
-         */
-        context.addLast("aggregator", new HttpObjectAggregator(65536));
+        // 建立连接前的验证 handler
+        this.verifyHandler(context);
 
+        // 添加 websocket 相关 handler
+        this.websocketHandler(context);
+
+        // websocket 编解码
+        context.addLast("codec", WebSocketExternalCodec.me());
+    }
+
+    private void verifyHandler(PipelineContext context) {
+        WebSocketVerifyHandler verifyHandler = this.createVerifyHandler();
+        if (Objects.nonNull(verifyHandler)) {
+            context.addLast("WebSocketVerifyHandler", verifyHandler);
+        }
+    }
+
+    protected WebSocketVerifyHandler createVerifyHandler() {
+        // ws verify 验证; 参考 https://www.yuque.com/iohao/game/tb1126szmgfu6u55
+        return null;
+    }
+
+    protected void websocketHandler(PipelineContext context) {
         // WebSocket 数据压缩
         context.addLast("compression", new WebSocketServerCompressionHandler());
 
@@ -96,8 +109,23 @@ public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
                 .build();
 
         context.addLast("WebSocketServerProtocolHandler", new WebSocketServerProtocolHandler(config));
+    }
 
-        // websocket 编解码
-        context.addLast("codec", WebSocketExternalCodec.me());
+    protected void httpHandler(PipelineContext context) {
+        /*
+         * 将请求和应答消息解码为HTTP消息
+         * 将字节码解码为 HttpRequest,HttpContent和LastHttpContent.
+         * 并将 HttpRequest, HttpContent和LastHttpContent 编码为字节码
+         */
+        context.addLast("http-codec", new HttpServerCodec());
+
+        /*
+         * 将一个 HttpMessage 和跟随它的多个 HttpContent 聚合为
+         * 单个 FullHTTPRequest 或者 FullHTTPResponse(取决于它是被用来处理请求还是响应).
+         *
+         * 安装了这个之后, ChannelPipeline 中的下一个 ChannelHandler 将只会接收
+         * 到完整的 Http 请求或响应
+         */
+        context.addLast("aggregator", new HttpObjectAggregator(65536));
     }
 }

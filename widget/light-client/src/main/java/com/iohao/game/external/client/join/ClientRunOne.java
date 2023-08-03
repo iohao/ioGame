@@ -61,6 +61,7 @@ public final class ClientRunOne {
     int connectPort = ExternalGlobalConfig.externalPort;
     String connectAddress = "127.0.0.1";
     String websocketPath = ExternalGlobalConfig.CoreOption.websocketPath;
+    String websocketVerify = "";
 
     ExternalJoinEnum joinEnum = ExternalJoinEnum.WEBSOCKET;
     ClientConnectOption option;
@@ -128,7 +129,7 @@ public final class ClientRunOne {
         }
 
         PresentKit.ifNull(option.getWsUrl(), () -> {
-            String wsUrl = String.format("ws://%s:%d%s", connectAddress, connectPort, websocketPath);
+            String wsUrl = String.format("ws://%s:%d%s%s", connectAddress, connectPort, websocketPath, websocketVerify);
             option.setWsUrl(wsUrl);
         });
 
