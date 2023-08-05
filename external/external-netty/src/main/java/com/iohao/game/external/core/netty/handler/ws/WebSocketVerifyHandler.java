@@ -64,6 +64,7 @@ public class WebSocketVerifyHandler extends ChannelInboundHandlerAdapter
                 // 验证失败，关闭连接或返回错误响应
                 FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.UNAUTHORIZED);
                 ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+                return;
             }
         }
 
