@@ -39,9 +39,9 @@ import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.kit.ExecutorKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.kit.log.IoGameLogName;
 import com.iohao.game.core.common.cmd.CmdRegions;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,9 +54,9 @@ import java.util.stream.Collectors;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserProcessor<BrokerClientModuleMessage>
         implements BrokerServerAware, BrokerClientModulesAware, CmdRegionsAware {
-    private static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     BrokerServer brokerServer;
     BrokerClientModules brokerClientModules;
     CmdRegions cmdRegions;

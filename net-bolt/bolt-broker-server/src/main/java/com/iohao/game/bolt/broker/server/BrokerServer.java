@@ -26,7 +26,7 @@ import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.kit.log.IoGameLogName;
 import com.iohao.game.core.common.cmd.CmdRegions;
 import com.iohao.game.core.common.cmd.DefaultCmdRegions;
 import lombok.AccessLevel;
@@ -34,7 +34,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Broker Server （游戏网关服）
@@ -48,9 +48,9 @@ import org.slf4j.Logger;
 @Getter
 @Accessors(chain = true)
 @Setter(AccessLevel.PACKAGE)
+@Slf4j(topic = IoGameLogName.CommonStdout)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerServer implements GroupWith {
-    private static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     final BalancedManager balancedManager = new BalancedManager(this);
     final CmdRegions cmdRegions = new DefaultCmdRegions();
 

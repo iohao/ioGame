@@ -9,7 +9,9 @@
     <!-- 日志 encode -->
     <property scope="local" name="LOG_ENCODE" value="${com.iohao.game.common.log.encode}"/>
     <!-- 彩色日志 -->
-    <property name="log.pattern" value="%cyan(%d{HH:mm:ss.SSS}) %green([%thread]) %highlight(%-5level) %cyan(%logger{50}.%method) %cyan(\\(%file:%line\\)) - %msg%n" />
+<!--    <property name="log.pattern" value="%cyan(%d{HH:mm:ss.SSS}) %green([%thread]) %highlight(%-5level) %cyan(%logger{50}.%method) %cyan(\\(%file:%line\\)) - %msg%n" />-->
+    <property name="log.pattern"
+              value="%d{HH:mm:ss} %green([%thread]) %highlight(%-5level) %cyan(%logger{50}) %green(\(%file:%line\)) - %msg%n"/>
 
     <!-- appenders -->
     <appender name="CommonDefaultAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">

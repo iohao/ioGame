@@ -65,14 +65,17 @@ class WebSocketClientStartup implements ClientConnect {
 
             @Override
             public void onMessage(String s) {
+                log.info("onMessage : {}", s);
             }
 
             @Override
             public void onClose(int i, String s, boolean b) {
+                log.info("onClose : {}", s);
             }
 
             @Override
             public void onError(Exception e) {
+                log.error(e.getMessage(), e);
             }
 
             @Override
