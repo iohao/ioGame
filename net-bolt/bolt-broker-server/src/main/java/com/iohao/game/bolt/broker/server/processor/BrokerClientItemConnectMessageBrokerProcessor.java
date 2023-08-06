@@ -22,9 +22,9 @@ import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.message.BrokerClientItemConnectMessage;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.Setter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * BrokerClientItemConnect 首次连接到游戏网关
@@ -33,10 +33,8 @@ import org.slf4j.Logger;
  * @date 2022-05-16
  */
 @Setter
+@Slf4j(topic = IoGameLogName.ConnectionTopic)
 public class BrokerClientItemConnectMessageBrokerProcessor extends AbstractAsyncUserProcessor<BrokerClientItemConnectMessage> {
-
-    static final Logger log = IoGameLoggerFactory.getLoggerConnection();
-
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientItemConnectMessage request) {
         log.debug("bizCtx.getRemoteAddress() : {}", bizCtx.getRemoteAddress());

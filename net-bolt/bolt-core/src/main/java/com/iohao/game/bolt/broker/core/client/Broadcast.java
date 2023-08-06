@@ -24,8 +24,8 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastOrderMessage;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import com.iohao.game.common.consts.IoGameLogName;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 
@@ -35,9 +35,8 @@ import java.util.Collection;
  * @author 渔民小镇
  * @date 2022-01-29
  */
+@Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public record Broadcast(BrokerClientItem brokerClientItem) {
-    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
-
     /**
      * 广播消息给单个用户
      *

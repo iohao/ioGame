@@ -19,7 +19,7 @@
 package com.iohao.game.external.core.netty.micro;
 
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.system.OsInfo;
 import com.iohao.game.external.core.micro.MicroBootstrapFlow;
 import com.iohao.game.external.core.netty.micro.auto.GroupChannelOption;
@@ -32,7 +32,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.ServerChannel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 与真实玩家连接的服务器，处理 tcp、websocket 的 netty 服务器。
@@ -43,9 +43,8 @@ import org.slf4j.Logger;
  * @date 2023-05-27
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j(topic = IoGameLogName.ExternalTopic)
 public final class SocketMicroBootstrap extends AbstractMicroBootstrap {
-    static final Logger log = IoGameLoggerFactory.getLoggerExternal();
-
     @Override
     public void startup() {
         // 线程组相关

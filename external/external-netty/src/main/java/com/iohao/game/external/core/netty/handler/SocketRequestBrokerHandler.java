@@ -22,7 +22,7 @@ import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.kit.ExternalKit;
 import com.iohao.game.external.core.message.ExternalMessage;
@@ -32,17 +32,16 @@ import com.iohao.game.external.core.session.UserSessions;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 渔民小镇
  * @date 2023-02-19
  */
 @ChannelHandler.Sharable
+@Slf4j(topic = IoGameLogName.ExternalTopic)
 public final class SocketRequestBrokerHandler extends SimpleChannelInboundHandler<ExternalMessage>
         implements UserSessionsAware, BrokerClientAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerExternal();
-
     BrokerClient brokerClient;
     SocketUserSessions userSessions;
 

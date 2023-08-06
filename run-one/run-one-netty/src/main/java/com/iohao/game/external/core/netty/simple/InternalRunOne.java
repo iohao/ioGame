@@ -24,11 +24,10 @@ import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.HashKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.core.ExternalServer;
 import lombok.AccessLevel;
 import lombok.Setter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +40,9 @@ import java.util.concurrent.TimeUnit;
  * @author 渔民小镇
  * @date 2023-07-06
  */
+@Slf4j
 @Setter(AccessLevel.PACKAGE)
 class InternalRunOne {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     final ExecutorService executorService = ExecutorKit.newCacheThreadPool("InternalRunOne");
     final int withNo = HashKit.hash32(UUID.randomUUID().toString());
     /** 游戏对外服列表 */

@@ -18,24 +18,23 @@
  */
 package com.iohao.game.external.core.netty.handler;
 
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.netty.session.SocketUserSessions;
 import com.iohao.game.external.core.session.UserSessions;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 渔民小镇
  * @date 2023-02-19
  */
 @ChannelHandler.Sharable
+@Slf4j(topic = IoGameLogName.ExternalTopic)
 public final class SocketUserSessionHandler extends ChannelInboundHandlerAdapter
         implements UserSessionsAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerExternal();
-
     SocketUserSessions userSessions;
 
     @Override

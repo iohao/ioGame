@@ -19,17 +19,16 @@
 package com.iohao.game.common.kit;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import org.junit.Test;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.function.Predicate;
 
+@Slf4j
 public class ClassScannerTest {
-    Logger log = IoGameLoggerFactory.getLogger("Stdout");
 
     //    @Test
     public void scan() {

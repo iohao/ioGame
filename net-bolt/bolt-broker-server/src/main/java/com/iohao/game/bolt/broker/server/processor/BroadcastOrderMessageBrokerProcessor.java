@@ -25,10 +25,10 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BroadcastOrderMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.ExecutorKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -43,9 +43,9 @@ import java.util.concurrent.ExecutorService;
  * @date 2022-07-14
  */
 @Setter
+@Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public class BroadcastOrderMessageBrokerProcessor extends AsyncUserProcessor<BroadcastOrderMessage>
         implements BrokerServerAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
     BrokerServer brokerServer;
     final ExecutorService executorService = ExecutorKit.newSingleThreadExecutor("BroadcastOrderBroker");
 

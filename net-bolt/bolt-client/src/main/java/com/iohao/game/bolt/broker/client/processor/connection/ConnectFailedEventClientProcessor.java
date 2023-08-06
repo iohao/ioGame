@@ -22,16 +22,15 @@ import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.ConnectionEventType;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import com.iohao.game.common.consts.IoGameLogName;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 渔民小镇
  * @date 2022-05-16
  */
+@Slf4j(topic = IoGameLogName.ConnectionTopic)
 public class ConnectFailedEventClientProcessor implements ConnectionEventProcessor {
-    static final Logger log = IoGameLoggerFactory.getLoggerConnection();
-
     @Override
     public void onEvent(String remoteAddress, Connection connection) {
         if (IoGameGlobalConfig.openLog) {

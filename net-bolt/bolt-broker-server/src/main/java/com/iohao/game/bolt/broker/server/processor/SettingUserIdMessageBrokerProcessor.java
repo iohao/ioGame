@@ -29,9 +29,8 @@ import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 设置用户 id
@@ -42,10 +41,9 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Slf4j
 public class SettingUserIdMessageBrokerProcessor extends AbstractAsyncUserProcessor<SettingUserIdMessage>
         implements BrokerServerAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     @Setter
     BrokerServer brokerServer;
 

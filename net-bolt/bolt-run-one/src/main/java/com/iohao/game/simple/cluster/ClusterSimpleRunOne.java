@@ -26,13 +26,13 @@ import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.client.external.ExternalServer;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.ExecutorKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
@@ -79,9 +79,8 @@ import java.util.concurrent.TimeUnit;
 @Deprecated
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public final class ClusterSimpleRunOne {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     final ExecutorService executorService = ExecutorKit.newCacheThreadPool(ClusterSimpleRunOne.class.toString());
 
     /** 对外服 */

@@ -26,9 +26,9 @@ import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.Setter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -40,9 +40,8 @@ import java.util.concurrent.atomic.LongAdder;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Slf4j(topic = IoGameLogName.ConnectionTopic)
 public class ConnectEventClientProcessor implements ConnectionEventProcessor, BrokerClientItemAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerConnection();
-
     private final AtomicBoolean connected = new AtomicBoolean();
     private final AtomicInteger connectTimes = new AtomicInteger();
     private Connection connection;

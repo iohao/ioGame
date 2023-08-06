@@ -34,13 +34,12 @@ import com.iohao.game.bolt.broker.core.aware.AwareInject;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.List;
@@ -61,13 +60,12 @@ import java.util.function.Supplier;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Slf4j
 @Getter
 @Setter(value = AccessLevel.PROTECTED)
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerClient implements BrokerClientContext, GroupWith {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     /** 服务器唯一标识 */
     String id;
     /**

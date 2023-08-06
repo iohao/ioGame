@@ -18,10 +18,10 @@
  */
 package com.iohao.game.common.kit.abc;
 
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +30,8 @@ import java.util.Map;
  * @author 渔民小镇
  * @date 2022-12-23
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public class StrTest {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     @Test
     public void test() {
         log.info("args : hello");

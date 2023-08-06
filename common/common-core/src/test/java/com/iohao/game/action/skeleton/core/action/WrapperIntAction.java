@@ -21,8 +21,8 @@ package com.iohao.game.action.skeleton.core.action;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import com.iohao.game.common.consts.IoGameLogName;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,10 +34,9 @@ import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.Wrappe
  * @author 渔民小镇
  * @date 2022-06-26
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 @ActionController(WrapperIntActionCmd.cmd)
 public class WrapperIntAction {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     @ActionMethod(WrapperIntActionCmd.intValue2Void)
     public void intValue2Void(IntValue intValue) {
         log.info("intValue : {}", intValue);

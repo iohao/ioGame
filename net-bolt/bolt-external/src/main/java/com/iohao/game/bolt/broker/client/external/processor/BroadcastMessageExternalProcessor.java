@@ -24,8 +24,8 @@ import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import com.iohao.game.common.consts.IoGameLogName;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 接收并处理 来自网关的广播消息
@@ -33,9 +33,8 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2022-01-16
  */
+@Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public class BroadcastMessageExternalProcessor extends AbstractAsyncUserProcessor<BroadcastMessage> {
-    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
-
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BroadcastMessage message) {
         if (IoGameGlobalConfig.isExternalLog()) {

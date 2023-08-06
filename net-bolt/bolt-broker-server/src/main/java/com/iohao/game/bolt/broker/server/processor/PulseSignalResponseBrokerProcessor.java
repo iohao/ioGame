@@ -28,8 +28,7 @@ import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.LogicBrokerClientLoadBalanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
@@ -37,11 +36,9 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2023-04-22
  */
+@Slf4j
 public class PulseSignalResponseBrokerProcessor extends AbstractAsyncUserProcessor<PulseSignalResponse>
         implements BrokerServerAware {
-
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     BrokerServer brokerServer;
 
     @Override

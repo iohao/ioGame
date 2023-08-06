@@ -21,8 +21,7 @@ package com.iohao.game.action.skeleton.core.flow.interal;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgException;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodExceptionProcess;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * default 异常处理
@@ -30,9 +29,8 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2021-12-20
  */
+@Slf4j
 public final class DefaultActionMethodExceptionProcess implements ActionMethodExceptionProcess {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     @Override
     public MsgException processException(final Throwable e) {
 

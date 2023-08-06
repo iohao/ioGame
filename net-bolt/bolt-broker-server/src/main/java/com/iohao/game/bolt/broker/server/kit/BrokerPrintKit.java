@@ -21,7 +21,7 @@ package com.iohao.game.bolt.broker.server.kit;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
-import com.iohao.game.common.kit.log.IoGameLogName;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,10 +31,9 @@ import java.util.stream.Collectors;
  * @author 渔民小镇
  * @date 2022-05-12
  */
-@Slf4j(topic = IoGameLogName.CommonStdout)
 @UtilityClass
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public class BrokerPrintKit {
-
     public void print(BrokerServer brokerServer) {
         if (!IoGameGlobalConfig.openLog) {
             return;
@@ -78,6 +77,5 @@ public class BrokerPrintKit {
                     ", tag:'" + tag + '\'' +
                     '}';
         }
-
     }
 }

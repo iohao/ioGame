@@ -24,11 +24,11 @@ import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.session.UserChannelId;
 import com.iohao.game.external.core.session.UserSessions;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 设置 userId 的处理器
@@ -36,9 +36,9 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2023-02-21
  */
+@Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public final class SettingUserIdMessageExternalProcessor extends AbstractAsyncUserProcessor<SettingUserIdMessage>
         implements UserSessionsAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
     UserSessions<?, ?> userSessions;
 
     @Override

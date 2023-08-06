@@ -21,11 +21,10 @@ package com.iohao.game.bolt.broker.client.external.bootstrap.handler;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 负责把游戏端的请求 转发给 Broker（游戏网关）
@@ -36,10 +35,9 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2023-02-14
  */
+@Slf4j
 @ChannelHandler.Sharable
 public final class RequestBrokerHandler extends SimpleChannelInboundHandler<ExternalMessage> {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage message) {
         // 将 message 转换成 RequestMessage

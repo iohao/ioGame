@@ -18,13 +18,13 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.ClassScanner;
 import com.iohao.game.common.kit.io.FileKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import lombok.experimental.UtilityClass;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,9 +39,8 @@ import java.util.Map;
  * @date 2022-01-28
  */
 @UtilityClass
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public class ActionCommandDocKit {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     /**
      * java class doc map
      * <pre>

@@ -18,9 +18,9 @@
  */
 package com.iohao.game.common.kit;
 
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
+import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashSet;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,9 +40,8 @@ import java.util.jar.JarFile;
  * @author 渔民小镇
  * @date 2021-12-12
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public class ClassScanner {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     /** 需要扫描的包名 */
     final String packagePath;
     /** 存放扫描过的 clazz */

@@ -32,8 +32,8 @@ import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.common.processor.hook.RequestMessageClientProcessorHook;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import com.iohao.game.common.consts.IoGameLogName;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 客户端请求处理器
@@ -44,10 +44,9 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<RequestMessage>
         implements BrokerClientAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     BrokerClient brokerClient;
     RequestMessageClientProcessorHook requestMessageClientProcessorHook;
 

@@ -24,7 +24,7 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.kit.ExternalKit;
@@ -32,7 +32,7 @@ import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.session.UserChannelId;
 import com.iohao.game.external.core.session.UserSession;
 import com.iohao.game.external.core.session.UserSessions;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -46,9 +46,9 @@ import java.util.Optional;
  * @author 渔民小镇
  * @date 2023-02-21
  */
+@Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public final class ResponseMessageExternalProcessor extends AbstractAsyncUserProcessor<ResponseMessage>
         implements UserSessionsAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
     final UserChannelId emptyUserChannelId = new UserChannelId("empty");
     UserSessions<?, ?> userSessions;
 

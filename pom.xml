@@ -19,6 +19,10 @@
         <module>common/common-validation</module>
         <!-- 网络游戏框架 - 网络通信 -->
         <module>net-bolt/bolt-core</module>
+        <!-- 新版游戏对外服 -->
+        <module>external/external-core</module>
+        <module>external/external-netty</module>
+        <module>run-one/run-one-netty</module>
         <!-- Broker （游戏网关） -->
         <module>net-bolt/bolt-broker-server</module>
         <!-- BrokerClient （逻辑服） -->
@@ -42,17 +46,10 @@
         <module>widget/light-redis-lock-spring-boot-starter</module>
         <!-- 小部件 ： 压测&模拟客户端请求 -->
         <module>widget/light-client</module>
-        <!-- 小部件 : 日志 -->
-        <module>widget/light-log</module>
         <module>widget/other-tool</module>
 
         <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
         <module>widget/light-game-room</module>
-        <module>external/external-core</module>
-        <module>external/external-netty</module>
-        <module>run-one/run-one-netty</module>
-
-
     </modules>
 
     <!--统一管理版本 的一个父 pom-->

@@ -19,8 +19,8 @@
 package com.iohao.game.bolt.broker.cluster;
 
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.NetworkKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import io.scalecube.cluster.Cluster;
 import io.scalecube.cluster.ClusterImpl;
 import io.scalecube.net.Address;
@@ -30,7 +30,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
@@ -48,8 +48,8 @@ import java.util.Map;
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j(topic = IoGameLogName.ClusterTopic)
 public final class BrokerClusterManager {
-    static final Logger log = IoGameLoggerFactory.getLoggerCluster();
     /** broker （游戏网关）唯一 id */
     String brokerId;
     /** broker 端口（游戏网关端口） */

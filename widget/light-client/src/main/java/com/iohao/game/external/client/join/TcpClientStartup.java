@@ -19,11 +19,10 @@
 package com.iohao.game.external.client.join;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.join.handler.ClientMessageHandler;
 import com.iohao.game.external.client.user.ClientUser;
-import com.iohao.game.external.client.user.DefaultClientUser;
 import com.iohao.game.external.client.user.ClientUserChannel;
 import com.iohao.game.external.core.netty.handler.codec.TcpExternalCodec;
 import io.netty.bootstrap.Bootstrap;
@@ -32,7 +31,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 
@@ -40,9 +39,8 @@ import java.net.InetSocketAddress;
  * @author 渔民小镇
  * @date 2023-07-05
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 class TcpClientStartup implements ClientConnect {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     static int PACKAGE_MAX_SIZE = 1024 * 1024;
 
     @Override

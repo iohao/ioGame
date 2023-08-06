@@ -22,14 +22,14 @@ import com.iohao.game.action.skeleton.core.ActionCommandRegionGlobalCheckKit;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.server.BrokerServer;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.ExternalServer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
@@ -50,8 +50,8 @@ import java.util.Objects;
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public final class NettyRunOne {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     @Getter(AccessLevel.PRIVATE)
     final InternalRunOne runOne = new InternalRunOne();
     /** broker 游戏网关 */

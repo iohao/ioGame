@@ -20,15 +20,15 @@ package com.iohao.game.external.client.join;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.user.ClientUser;
 import com.iohao.game.external.client.user.ClientUserChannel;
 import com.iohao.game.external.core.message.ExternalMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
-import org.slf4j.Logger;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -39,9 +39,8 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2023-07-04
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 class WebSocketClientStartup implements ClientConnect {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     @Override
     public void connect(ClientConnectOption option) {
         ClientUser clientUser = option.getClientUser();

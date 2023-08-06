@@ -34,10 +34,10 @@ import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.core.common.cmd.BrokerClientId;
 import com.iohao.game.core.common.cmd.CmdRegions;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -49,10 +49,9 @@ import java.util.function.Consumer;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Slf4j(topic = IoGameLogName.ConnectionTopic)
 public class CloseConnectionEventBrokerProcessor implements ConnectionEventProcessor,
         BrokerServerAware, BrokerClientModulesAware, CmdRegionsAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerConnection();
-
     private final AtomicInteger disConnectTimes = new AtomicInteger();
     private final AtomicBoolean dicConnected = new AtomicBoolean();
     BrokerServer brokerServer;

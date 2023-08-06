@@ -28,9 +28,8 @@ import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.RequestBrokerClientModuleMessage;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 收到网关请求模块信息
@@ -41,10 +40,9 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2022-05-16
  */
+@Slf4j
 public class RequestBrokerClientModuleMessageClientProcessor extends AsyncUserProcessor<RequestBrokerClientModuleMessage>
         implements BrokerClientItemAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     @Setter
     BrokerClientItem brokerClientItem;
 

@@ -20,9 +20,9 @@ package com.iohao.game.common.kit;
 
 import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.experimental.UtilityClass;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
@@ -31,9 +31,8 @@ import java.util.Objects;
  * @date 2022-01-11
  */
 @UtilityClass
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public class ProtoKit {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     /**
      * 将对象转为 pb 字节数组
      *

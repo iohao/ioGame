@@ -46,13 +46,12 @@ import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.InnerModuleMessage;
 import com.iohao.game.bolt.broker.core.message.InnerModuleVoidMessage;
 import com.iohao.game.common.kit.CollKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -69,13 +68,12 @@ import java.util.concurrent.TimeUnit;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Slf4j
 @Getter
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerClientItem implements CommunicationAggregationContext, AwareInject {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     public enum Status {
         /** 活跃 */
         ACTIVE,

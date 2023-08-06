@@ -28,7 +28,7 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
-import com.iohao.game.common.CommonConst;
+import com.iohao.game.common.consts.CommonConst;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.HashKit;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;

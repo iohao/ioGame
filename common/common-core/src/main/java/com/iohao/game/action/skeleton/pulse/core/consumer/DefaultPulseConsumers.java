@@ -21,11 +21,10 @@ package com.iohao.game.action.skeleton.pulse.core.consumer;
 import com.iohao.game.action.skeleton.pulse.core.PulseTransmit;
 import com.iohao.game.action.skeleton.pulse.message.PulseSignalRequest;
 import com.iohao.game.action.skeleton.pulse.message.PulseSignalResponse;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
-import org.slf4j.Logger;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -35,9 +34,9 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2023-04-20
  */
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class DefaultPulseConsumers implements PulseConsumers {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
     final Map<String, PulseConsumer<?>> map = new NonBlockingHashMap<>();
     PulseTransmit pulseTransmit;
 

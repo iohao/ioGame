@@ -25,9 +25,8 @@ import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Setter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -41,9 +40,9 @@ import java.util.stream.Stream;
  * @author 渔民小镇
  * @date 2022-05-15
  */
+@Slf4j
 @Setter
 public class ClusterMessageListenerImpl implements ClusterMessageListener {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
     BrokerServer brokerServer;
 
     @Override

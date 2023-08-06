@@ -18,10 +18,10 @@
  */
 package com.iohao.game.external.client.join;
 
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.PresentKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.InputCommandRegion;
 import com.iohao.game.external.client.user.ClientUser;
@@ -37,7 +37,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -52,8 +52,8 @@ import java.util.concurrent.TimeUnit;
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public final class ClientRunOne {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     List<InputCommandRegion> inputCommandRegions;
     ClientUser clientUser;
 

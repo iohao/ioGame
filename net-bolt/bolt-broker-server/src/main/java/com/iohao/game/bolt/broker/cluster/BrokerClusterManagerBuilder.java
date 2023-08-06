@@ -21,10 +21,10 @@ package com.iohao.game.bolt.broker.cluster;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.cluster.ClusterMessageListenerImpl;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
@@ -42,8 +42,8 @@ import java.util.Objects;
 
 @Setter
 @Accessors(fluent = true)
+@Slf4j(topic = IoGameLogName.ClusterTopic)
 public class BrokerClusterManagerBuilder {
-    static final Logger log = IoGameLoggerFactory.getLoggerCluster();
     /**
      * 种子节点地址
      * <pre>

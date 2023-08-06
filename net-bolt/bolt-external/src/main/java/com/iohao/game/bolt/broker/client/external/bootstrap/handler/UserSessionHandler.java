@@ -20,11 +20,10 @@ package com.iohao.game.bolt.broker.client.external.bootstrap.handler;
 
 import com.iohao.game.bolt.broker.client.external.session.UserSession;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 管理 UserSession 的 Handler
@@ -32,10 +31,9 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2023-02-14
  */
+@Slf4j
 @ChannelHandler.Sharable
 public final class UserSessionHandler extends ChannelInboundHandlerAdapter {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         // 加入到 session 管理

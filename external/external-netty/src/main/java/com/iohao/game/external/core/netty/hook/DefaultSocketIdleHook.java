@@ -19,13 +19,13 @@
 package com.iohao.game.external.core.netty.hook;
 
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.kit.ExternalKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.session.UserSession;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * tcp、websocket 心跳钩子
@@ -33,9 +33,8 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2023-02-18
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public final class DefaultSocketIdleHook implements SocketIdleHook {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     @Override
     public boolean callback(UserSession userSession, IdleStateEvent event) {
         IdleState state = event.state();

@@ -23,11 +23,11 @@ import com.alipay.remoting.BizContext;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.kit.ExternalKit;
 import com.iohao.game.external.core.session.UserSessions;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 接收并处理 来自网关的广播消息
@@ -35,10 +35,9 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2023-02-21
  */
+@Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public final class BroadcastMessageExternalProcessor extends AbstractAsyncUserProcessor<BroadcastMessage>
         implements UserSessionsAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
-
     UserSessions<?, ?> userSessions;
 
     @Override

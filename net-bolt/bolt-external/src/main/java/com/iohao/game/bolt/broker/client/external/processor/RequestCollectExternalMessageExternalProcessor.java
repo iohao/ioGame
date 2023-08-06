@@ -28,8 +28,7 @@ import com.iohao.game.bolt.broker.client.external.ext.ExternalBizRegion;
 import com.iohao.game.bolt.broker.client.external.ext.ExternalBizRegionContext;
 import com.iohao.game.bolt.broker.client.external.ext.ExternalBizRegions;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -40,9 +39,8 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-07-27
  */
+@Slf4j
 public class RequestCollectExternalMessageExternalProcessor extends AbstractAsyncUserProcessor<RequestCollectExternalMessage> {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestCollectExternalMessage request) {
 

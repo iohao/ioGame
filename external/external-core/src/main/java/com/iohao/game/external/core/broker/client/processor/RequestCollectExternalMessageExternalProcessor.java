@@ -25,13 +25,13 @@ import com.iohao.game.action.skeleton.core.exception.MsgException;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalItemMessage;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegion;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegionContext;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegions;
 import com.iohao.game.external.core.session.UserSessions;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -42,9 +42,9 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2023-02-21
  */
+@Slf4j(topic = IoGameLogName.ExternalTopic)
 public final class RequestCollectExternalMessageExternalProcessor extends AbstractAsyncUserProcessor<RequestCollectExternalMessage>
         implements UserSessionsAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerExternal();
     UserSessions<?, ?> userSessions;
 
     @Override

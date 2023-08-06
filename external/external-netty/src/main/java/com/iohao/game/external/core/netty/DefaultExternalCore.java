@@ -19,8 +19,8 @@
 package com.iohao.game.external.core.netty;
 
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.PresentKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.core.ExternalCore;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
 import com.iohao.game.external.core.hook.UserHook;
@@ -30,7 +30,7 @@ import com.iohao.game.external.core.micro.join.ExternalJoinSelector;
 import com.iohao.game.external.core.micro.join.ExternalJoinSelectors;
 import com.iohao.game.external.core.session.UserSessionOption;
 import com.iohao.game.external.core.session.UserSessions;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -41,8 +41,8 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2023-02-19
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public final class DefaultExternalCore implements ExternalCore {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     final DefaultExternalCoreSetting setting;
 
     DefaultExternalCore(DefaultExternalCoreSetting setting) {

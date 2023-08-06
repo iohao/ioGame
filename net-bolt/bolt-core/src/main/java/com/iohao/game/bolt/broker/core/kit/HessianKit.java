@@ -20,17 +20,17 @@ package com.iohao.game.bolt.broker.core.kit;
 
 import com.alipay.remoting.exception.CodecException;
 import com.alipay.remoting.serialization.HessianSerializer;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.experimental.UtilityClass;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 渔民小镇
  * @date 2023-01-18
  */
 @UtilityClass
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public class HessianKit {
-    final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
     final HessianSerializer hessianSerializer = new HessianSerializer();
 
     public byte[] serialize(Object obj) {

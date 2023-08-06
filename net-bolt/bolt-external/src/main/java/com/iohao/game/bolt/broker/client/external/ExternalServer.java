@@ -25,12 +25,12 @@ import com.iohao.game.bolt.broker.client.external.simple.ExternalBrokerClientSta
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;
@@ -45,9 +45,9 @@ import java.util.Objects;
  * @date 2022-01-09
  */
 @Deprecated
+@Slf4j(topic = IoGameLogName.CommonStdout)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class ExternalServer {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
     /** netty 服务器，与真实用户对接 */
     final ServerBootstrap bootstrap;

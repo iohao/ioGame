@@ -19,11 +19,11 @@
 package com.iohao.game.common.kit.log;
 
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.common.log.LoggerSpaceManager;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -34,6 +34,8 @@ import java.io.File;
  * @author 渔民小镇
  * @date 2023-01-16
  */
+@Slf4j
+@Deprecated
 @UtilityClass
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IoGameLoggerFactory {
@@ -99,11 +101,12 @@ public class IoGameLoggerFactory {
     }
 
     public Logger getLogger(String name) {
-        if (name == null || name.isEmpty()) {
-            return LoggerSpaceManager.getLoggerBySpace("", GAME_LOG_SPACE);
-        }
-
-        return LoggerSpaceManager.getLoggerBySpace(name, GAME_LOG_SPACE);
+        return log;
+//        if (name == null || name.isEmpty()) {
+//            return LoggerSpaceManager.getLoggerBySpace("", GAME_LOG_SPACE);
+//        }
+//
+//        return LoggerSpaceManager.getLoggerBySpace(name, GAME_LOG_SPACE);
     }
 
     public Logger getLoggerConnection() {

@@ -25,9 +25,9 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.Setter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 把逻辑服的广播转发到对外服
@@ -36,10 +36,9 @@ import org.slf4j.Logger;
  * @date 2022-05-14
  */
 @Setter
+@Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public class BroadcastMessageBrokerProcessor extends AbstractAsyncUserProcessor<BroadcastMessage>
         implements BrokerServerAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerMsg();
-
     BrokerServer brokerServer;
 
     @Override

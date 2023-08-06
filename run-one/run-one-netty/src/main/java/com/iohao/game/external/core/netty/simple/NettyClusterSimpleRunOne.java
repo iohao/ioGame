@@ -23,13 +23,12 @@ import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import com.iohao.game.external.core.ExternalServer;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,11 +66,11 @@ import java.util.concurrent.TimeUnit;
  * @author 渔民小镇
  * @date 2023-04-28
  */
+@Slf4j
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class NettyClusterSimpleRunOne {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
     final InternalRunOne runOne = new InternalRunOne();
 
     /** true 在本地启动 broker （游戏网关）集群 */

@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.common.kit.log;
+package com.iohao.game.common.consts;
 
 /**
  * @author 渔民小镇
  * @date 2023-08-05
  */
 public interface IoGameLogName {
+    /** CommonStdout */
     String CommonStdout = "CommonStdout";
     String ExternalTopic = "ExternalTopic";
     String ClusterTopic = "ClusterTopic";

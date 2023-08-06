@@ -20,15 +20,15 @@ package com.iohao.game.bolt.broker.cluster;
 
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerMessage;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import io.scalecube.cluster.Cluster;
 import io.scalecube.cluster.ClusterMessageHandler;
 import io.scalecube.cluster.Member;
 import io.scalecube.cluster.membership.MembershipEvent;
 import io.scalecube.cluster.transport.api.Message;
 import io.scalecube.net.Address;
+import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
-import org.slf4j.Logger;
 import reactor.core.publisher.Sinks;
 
 import java.util.Collection;
@@ -44,8 +44,8 @@ import java.util.stream.Collectors;
  * @author 渔民小镇
  * @date 2023-05-27
  */
+@Slf4j(topic = IoGameLogName.ClusterTopic)
 final class BrokerClusterMessageHandler implements ClusterMessageHandler, Function<Cluster, ClusterMessageHandler> {
-    static final Logger log = IoGameLoggerFactory.getLoggerCluster();
     final String name;
     final Broker localBroker;
     final ClusterMessageListener clusterMessageListener;

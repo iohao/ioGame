@@ -26,7 +26,7 @@ import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
-import com.iohao.game.common.kit.log.IoGameLogName;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.core.common.cmd.CmdRegions;
 import com.iohao.game.core.common.cmd.DefaultCmdRegions;
 import lombok.AccessLevel;

@@ -18,12 +18,12 @@
  */
 package com.iohao.game.external.core.hook.internal;
 
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.hook.UserHook;
 import com.iohao.game.external.core.session.UserSession;
 import com.iohao.game.external.core.session.UserSessions;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 上线下线钩子实现类
@@ -31,9 +31,8 @@ import org.slf4j.Logger;
  * @author 渔民小镇
  * @date 2023-02-20
  */
+@Slf4j(topic = IoGameLogName.CommonStdout)
 public class DefaultUserHook implements UserHook, UserSessionsAware {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     UserSessions<?, ?> userSessions;
 
     @Override

@@ -18,10 +18,9 @@ package com.iohao.game.common.validation;
 
 import com.iohao.game.common.kit.ClassScanner;
 import com.iohao.game.common.kit.io.ResourceKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -36,10 +35,9 @@ import java.util.stream.Collectors;
  * @author shenjk
  * @date 2022-09-26
  */
+@Slf4j
 @UtilityClass
 public class Validation {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     final String fileName = "META-INF/ioGame/com.iohao.game.common.validation.Validator";
     final String defaultValidator = "com.iohao.game.common.validation.support.JakartaValidator";
 

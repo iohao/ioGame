@@ -26,9 +26,8 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.experimental.UtilityClass;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
@@ -42,10 +41,9 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-01-19
  */
+@Slf4j
 @UtilityClass
 public class UserIdSettingKit {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     /**
      * 设置用户的 userId
      * <pre>

@@ -27,9 +27,8 @@ import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.ExternalBrokerClientLoadBalanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.experimental.UtilityClass;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -41,10 +40,9 @@ import java.util.stream.Stream;
  * @author 渔民小镇
  * @date 2022-05-28
  */
+@Slf4j
 @UtilityClass
 public class BrokerExternalKit {
-    private static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     /**
      * 将数据发送给游戏对外服
      *

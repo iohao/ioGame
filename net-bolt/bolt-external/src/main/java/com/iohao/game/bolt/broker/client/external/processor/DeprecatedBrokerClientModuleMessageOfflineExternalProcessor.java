@@ -22,18 +22,16 @@ import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessageOffline;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 修补 #132
  * @author 渔民小镇
  * @date 2023-05-26
  */
+@Slf4j
 @Deprecated
 public class DeprecatedBrokerClientModuleMessageOfflineExternalProcessor extends AbstractAsyncUserProcessor<BrokerClientModuleMessageOffline> {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientModuleMessageOffline messageOffline) {
 //        log.debug("修补 #132 : {}", messageOffline);

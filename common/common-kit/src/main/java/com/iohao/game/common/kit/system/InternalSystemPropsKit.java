@@ -18,9 +18,9 @@
  */
 package com.iohao.game.common.kit.system;
 
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.experimental.UtilityClass;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * copy from hutool
@@ -29,8 +29,8 @@ import org.slf4j.Logger;
  * @date 2023-01-19
  */
 @UtilityClass
+@Slf4j(topic = IoGameLogName.CommonStdout)
 class InternalSystemPropsKit {
-    Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
 
     /**
      * 取得系统属性，如果因为Java安全的限制而失败，则将错误打在Log中，然后返回 {@code null}

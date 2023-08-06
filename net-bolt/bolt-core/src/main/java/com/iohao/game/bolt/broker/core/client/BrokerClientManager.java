@@ -27,12 +27,11 @@ import com.iohao.game.bolt.broker.core.loadbalance.ElementSelector;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelectorFactory;
 import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
 import com.iohao.game.common.kit.ExecutorKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
-import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -51,12 +50,11 @@ import java.util.function.Supplier;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Slf4j
 @Getter
 @Setter
 @Accessors(chain = true)
 public final class BrokerClientManager {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     /**
      * <pre>
      *     key : address ，broker 的地址，格式：ip:port

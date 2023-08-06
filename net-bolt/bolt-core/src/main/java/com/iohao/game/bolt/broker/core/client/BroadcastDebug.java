@@ -24,26 +24,27 @@ import com.iohao.game.action.skeleton.core.commumication.BroadcastContext;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastOrderMessage;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
-import org.slf4j.Logger;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author 渔民小镇
  * @date 2022-05-19
  */
 @UtilityClass
+@Slf4j(topic = IoGameLogName.CommonStdout)
 class BroadcastDebug {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     final Map<String, Class<?>> classMap = new NonBlockingHashMap<>();
 
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");

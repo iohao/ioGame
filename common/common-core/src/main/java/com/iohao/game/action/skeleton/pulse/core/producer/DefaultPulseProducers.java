@@ -22,11 +22,10 @@ import com.iohao.game.action.skeleton.pulse.core.PulseTransmit;
 import com.iohao.game.action.skeleton.pulse.message.PulseSignalRequest;
 import com.iohao.game.action.skeleton.pulse.message.PulseSignalResponse;
 import com.iohao.game.common.kit.ExecutorKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -42,10 +41,9 @@ import java.util.function.Consumer;
  * @author 渔民小镇
  * @date 2023-04-20
  */
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class DefaultPulseProducers implements PulseProducers {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     final ScheduledExecutorService executor = ExecutorKit.newSingleScheduled(DefaultPulseProducers.class.getSimpleName());
     final Map<String, PulseProducer<?>> map = new NonBlockingHashMap<>();
     final List<PulseTask> taskList = new CopyOnWriteArrayList<>();

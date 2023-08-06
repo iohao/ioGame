@@ -37,11 +37,10 @@ import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
 import com.iohao.game.common.kit.CompletableFutureKit;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -63,12 +62,10 @@ import java.util.concurrent.CompletableFuture;
  * @author 渔民小镇
  * @date 2022-05-22
  */
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InnerModuleRequestCollectMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestCollectMessage>
         implements BrokerServerAware {
-
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     @Setter
     BrokerServer brokerServer;
 

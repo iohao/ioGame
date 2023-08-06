@@ -21,10 +21,8 @@ package com.iohao.game.bolt.broker.core.common;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.concurrent.DaemonThreadFactory;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -37,9 +35,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author 渔民小镇
  * @date 2022-11-11
  */
+@Slf4j
 class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrategy {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommon();
-
     final AtomicInteger id = new AtomicInteger();
     final Executor commonExecutor;
 

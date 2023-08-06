@@ -26,13 +26,12 @@ import com.iohao.game.action.skeleton.core.action.group.Update;
 import com.iohao.game.action.skeleton.core.action.pojo.BeeApple;
 import com.iohao.game.action.skeleton.core.action.pojo.BirdValid;
 import com.iohao.game.action.skeleton.core.action.pojo.DogValid;
-import com.iohao.game.common.kit.log.IoGameLoggerFactory;
-import org.slf4j.Logger;
+import com.iohao.game.common.consts.IoGameLogName;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j(topic = IoGameLogName.CommonStdout)
 @ActionController(ExampleActionCmd.BeeActionCmd.cmd)
 public class BeeAction {
-    static final Logger log = IoGameLoggerFactory.getLoggerCommonStdout();
-
     /**
      * <pre>
      *     打招呼

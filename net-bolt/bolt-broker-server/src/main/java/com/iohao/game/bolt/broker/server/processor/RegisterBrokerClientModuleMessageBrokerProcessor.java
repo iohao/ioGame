@@ -39,7 +39,7 @@ import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.kit.ExecutorKit;
-import com.iohao.game.common.kit.log.IoGameLogName;
+import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.core.common.cmd.CmdRegions;
 import lombok.extern.slf4j.Slf4j;
 
