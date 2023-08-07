@@ -18,6 +18,8 @@
  */
 package com.iohao.game.common.kit;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Objects;
 
 /**
@@ -26,28 +28,53 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2021-12-20
  */
+@UtilityClass
 public class SafeKit {
-    public static int getInt(Integer value) {
+    public int getInt(Integer value) {
         return getInt(value, 0);
     }
 
-    public static int getInt(Integer value, int defaultValue) {
+    public int getInt(Integer value, int defaultValue) {
         return value == null ? defaultValue : value;
     }
 
-    public static long getLong(Long value) {
+    public int getInt(String value, int defaultValue) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public long getLong(Long value) {
         return getLong(value, 0);
     }
 
-    public static long getLong(Long value, long defaultValue) {
+    public long getLong(Long value, long defaultValue) {
         return Objects.isNull(value) ? defaultValue : value;
     }
 
-    public static boolean getBoolean(Boolean value) {
+    public long getLong(String value, long defaultValue) {
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public boolean getBoolean(Boolean value) {
         return getBoolean(value, false);
     }
 
-    public static boolean getBoolean(Boolean value, boolean defaultValue) {
+    public boolean getBoolean(Boolean value, boolean defaultValue) {
         return Objects.isNull(value) ? defaultValue : value;
+    }
+
+    public String getString(String value, String defaultValue) {
+        if (StrKit.isEmpty(value)) {
+            return defaultValue;
+        }
+
+        return value;
     }
 }
