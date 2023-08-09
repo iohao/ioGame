@@ -74,21 +74,10 @@ final class ActionCommandParser {
 
         // action 类的 stream
         this.getActionControllerStream(controllerList).forEach(controllerClazz -> {
-            // true 表示交付给容器来管理 如 spring 等
-            boolean deliveryContainer = this.deliveryContainer(controllerClazz);
-
-            // 方法访问器: 获取类中自己定义的方法
-            var methodAccess = MethodAccess.get(controllerClazz);
-            var constructorAccess = ConstructorAccess.get(controllerClazz);
-
             // 主路由 (类上的路由)
             int cmd = controllerClazz.getAnnotation(ActionController.class).value();
             // 子路由 map
             var actionCommandRegion = this.actionCommandRegions.getActionCommandRegion(cmd);
-            // action 类的实例化对象
-            var actionClassInstance = constructorAccess.newInstance();
-
-            ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
 
             // 遍历所有方法上有 ActionMethod 注解的方法对象
             this.getMethodStream(controllerClazz).forEach(method -> {
@@ -97,12 +86,14 @@ final class ActionCommandParser {
                 int subCmd = method.getAnnotation(ActionMethod.class).value();
                 // 方法名
                 String methodName = method.getName();
+
+                // 方法访问器: 获取类中自己定义的方法
+                var methodAccess = MethodAccess.get(controllerClazz);
+                var constructorAccess = ConstructorAccess.get(controllerClazz);
                 // 方法下标
                 int methodIndex = methodAccess.getIndex(methodName);
                 // 方法返回值类型
                 Class<?> returnType = methodAccess.getReturnTypes()[methodIndex];
-                // source doc
-                ActionCommandDoc actionCommandDoc = doc.getActionCommandDoc(cmd, subCmd);
 
                 // 新建一个命令构建器
                 var builder = new ActionCommand.Builder()
@@ -115,10 +106,17 @@ final class ActionCommandParser {
                         .setActionMethodIndex(methodIndex)
                         .setActionMethodAccess(methodAccess)
                         .setReturnTypeClazz(returnType)
-                        .setActionCommandDoc(actionCommandDoc)
-                        .setDeliveryContainer(deliveryContainer)
-                        .setCreateSingleActionCommandController(this.setting.createSingleActionCommandController)
-                        .setActionController(actionClassInstance);
+                        .setActionCommandDoc(doc.getActionCommandDoc(cmd, subCmd))
+                        .setDeliveryContainer(this.deliveryContainer(controllerClazz))
+                        .setCreateSingleActionCommandController(this.setting.createSingleActionCommandController);
+
+                Object actionClassInstance;
+                if (builder.createSingleActionCommandController && builder.deliveryContainer) {
+                    actionClassInstance = DependencyInjectionPart.me().getBean(builder.build());
+                } else {
+                    actionClassInstance = constructorAccess.newInstance();
+                }
+                builder.setActionController(actionClassInstance);
 
                 // 检测路由是否重复
                 checkExistSubCmd(controllerClazz, subCmd, actionCommandRegion);
@@ -134,6 +132,8 @@ final class ActionCommandParser {
 
                 // 子路由映射
                 actionCommandRegion.add(command);
+
+                ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
                 actionDoc.addActionCommand(command);
             });
 
