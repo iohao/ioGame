@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.protocol.external;
 
+import com.iohao.game.common.kit.CollKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 游戏逻辑服访问游戏对外服，同时访问多个游戏对外服 - 响应
@@ -67,4 +69,18 @@ public final class ResponseCollectExternalMessage implements Serializable {
         return false;
     }
 
+    /**
+     * 获取一个没有错误码的 ResponseCollectExternalItemMessage
+     *
+     * @return ResponseCollectExternalItemMessage
+     */
+    public Optional<ResponseCollectExternalItemMessage> optionalAnySuccess() {
+        if (CollKit.isEmpty(messageList)) {
+            return Optional.empty();
+        }
+
+        return this.messageList.stream()
+                .filter(ResponseCollectExternalItemMessage::success)
+                .findAny();
+    }
 }

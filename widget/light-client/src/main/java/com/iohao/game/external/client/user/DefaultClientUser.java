@@ -63,6 +63,9 @@ public class DefaultClientUser implements ClientUser {
             return;
         }
 
-        this.inputCommandRegions.forEach(InputCommandRegion::loginSuccessCallback);
+        this.inputCommandRegions.forEach(inputCommandRegion -> {
+            inputCommandRegion.setClientUser(this);
+            inputCommandRegion.loginSuccessCallback();
+        });
     }
 }

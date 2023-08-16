@@ -53,6 +53,8 @@ public class InputCommandCreate {
     int cmd = -1;
     /** true 相同路由的 InputCommand 只能存在一个 */
     boolean uniqueInputCommand = ClientUserConfigs.uniqueInputCommand;
+    /** 模块描述的前缀 */
+    String cmdName = "";
 
     ClientUserInputCommands clientUserInputCommands;
 
@@ -86,6 +88,7 @@ public class InputCommandCreate {
         extractedChecked(cmdInfo);
 
         return clientUserInputCommands.ofCommand(cmdInfo)
+                .setCmdName(this.cmdName)
                 .setInputRequestData(inputRequestData);
     }
 

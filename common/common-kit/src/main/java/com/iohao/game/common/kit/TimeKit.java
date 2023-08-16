@@ -82,6 +82,10 @@ public class TimeKit {
         return localDateTime.format(defaultFormatter);
     }
 
+    public String formatter() {
+        return formatter(currentTimeMillis);
+    }
+
     public String formatter(long milliseconds) {
         LocalDateTime localDateTime = toLocalDateTime(milliseconds);
         return localDateTime.format(defaultFormatter);

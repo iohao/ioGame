@@ -19,6 +19,7 @@
 package com.iohao.game.external.client.command;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.external.client.kit.ClientKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,7 +45,8 @@ public class InputCommand {
     final CmdInfo cmdInfo;
     /** 模拟请求命令的描述 */
     String description = "... ...";
-
+    /** 描述的前缀 */
+    String cmdName = "";
     /** 默认的请求参数 */
     Object requestData;
     /**
@@ -101,6 +103,12 @@ public class InputCommand {
 
     @Override
     public String toString() {
-        return inputName + "    :    " + description;
+        if (StrKit.isEmpty(cmdName)) {
+            var format = "%s    :    %s";
+            return String.format(format, inputName, description);
+        }
+
+        var format = "%s    :    [%s] - %s";
+        return String.format(format, inputName, cmdName, description);
     }
 }

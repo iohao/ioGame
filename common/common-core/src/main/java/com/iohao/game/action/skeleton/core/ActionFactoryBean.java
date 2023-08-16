@@ -44,4 +44,14 @@ public interface ActionFactoryBean<T> {
      * @return action 类的实例化对象
      */
     T getBean(ActionCommand actionCommand);
+
+    /**
+     * 通过 action class 得到对应 bean
+     *
+     * @param actionControllerClazz action class
+     * @return action 类的实例化对象
+     */
+    default T getBean(Class<?> actionControllerClazz) {
+        return null;
+    }
 }

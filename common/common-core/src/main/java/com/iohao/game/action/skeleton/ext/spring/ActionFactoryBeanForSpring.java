@@ -49,9 +49,13 @@ public class ActionFactoryBeanForSpring<T> implements ActionFactoryBean<T>, Appl
     boolean spring;
 
     @Override
-
     public T getBean(ActionCommand actionCommand) {
         Class<?> actionControllerClazz = actionCommand.getActionControllerClazz();
+        return (T) this.applicationContext.getBean(actionControllerClazz);
+    }
+
+    @Override
+    public T getBean(Class<?> actionControllerClazz) {
         return (T) this.applicationContext.getBean(actionControllerClazz);
     }
 

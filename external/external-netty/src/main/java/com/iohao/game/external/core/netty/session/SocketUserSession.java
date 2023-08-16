@@ -19,6 +19,7 @@
 package com.iohao.game.external.core.netty.session;
 
 import com.iohao.game.external.core.session.UserChannelId;
+import com.iohao.game.external.core.session.UserSessionOption;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 
@@ -56,7 +57,14 @@ public final class SocketUserSession extends AbstractUserSession {
 
     @Override
     public String getIp() {
-        InetSocketAddress inetSocketAddress = (InetSocketAddress) channel.remoteAddress();
-        return inetSocketAddress.getHostString();
+
+        String realIp = this.option(UserSessionOption.realIp);
+
+        if (realIp.isEmpty()) {
+            InetSocketAddress inetSocketAddress = (InetSocketAddress) channel.remoteAddress();
+            return inetSocketAddress.getHostString();
+        }
+
+        return realIp;
     }
 }

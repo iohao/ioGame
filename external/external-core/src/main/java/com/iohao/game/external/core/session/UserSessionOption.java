@@ -56,4 +56,6 @@ public interface UserSessionOption {
     AttrOption<int[]> bindingLogicServerIdArray = AttrOption.valueOf("bindingLogicServerIdArray");
     /** 连接方式 */
     AttrOption<ExternalJoinEnum> externalJoin = AttrOption.valueOf("externalJoin");
+    /** 玩家真实 ip */
+    AttrOption<String> realIp = AttrOption.valueOf("realIp", "");
 }

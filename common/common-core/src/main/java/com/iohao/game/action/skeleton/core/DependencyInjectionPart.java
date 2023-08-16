@@ -67,6 +67,11 @@ public final class DependencyInjectionPart {
         return (T) actionFactoryBean.getBean(actionCommand);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getBean(Class<?> actionControllerClazz) {
+        return (T) actionFactoryBean.getBean(actionControllerClazz);
+    }
+
     private DependencyInjectionPart() {
 
     }

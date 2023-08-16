@@ -134,5 +134,4 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
         ClientUserInputCommands clientUserInputCommands = this.inputCommandCreate.clientUserInputCommands;
         return clientUserInputCommands.ofRequestCommand(cmdInfo);
     }
-
 }

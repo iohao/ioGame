@@ -74,9 +74,6 @@ final class ActionCommandParser {
 
         // action 类的 stream
         this.getActionControllerStream(controllerList).forEach(controllerClazz -> {
-            // true 表示交付给容器来管理 如 spring 等
-            boolean deliveryContainer = this.deliveryContainer(controllerClazz);
-
             // 方法访问器: 获取类中自己定义的方法
             var methodAccess = MethodAccess.get(controllerClazz);
             var constructorAccess = ConstructorAccess.get(controllerClazz);
@@ -85,10 +82,11 @@ final class ActionCommandParser {
             int cmd = controllerClazz.getAnnotation(ActionController.class).value();
             // 子路由 map
             var actionCommandRegion = this.actionCommandRegions.getActionCommandRegion(cmd);
-            // action 类的实例化对象
-            var actionClassInstance = constructorAccess.newInstance();
 
-            ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
+            // true 表示交付给容器来管理 如 spring 等
+            boolean deliveryContainer = this.deliveryContainer(controllerClazz);
+            // action 类的实例化对象
+            Object actionControllerInstance = ofActionInstance(controllerClazz);
 
             // 遍历所有方法上有 ActionMethod 注解的方法对象
             this.getMethodStream(controllerClazz).forEach(method -> {
@@ -118,7 +116,7 @@ final class ActionCommandParser {
                         .setActionCommandDoc(actionCommandDoc)
                         .setDeliveryContainer(deliveryContainer)
                         .setCreateSingleActionCommandController(this.setting.createSingleActionCommandController)
-                        .setActionController(actionClassInstance);
+                        .setActionController(actionControllerInstance);
 
                 // 检测路由是否重复
                 checkExistSubCmd(controllerClazz, subCmd, actionCommandRegion);
@@ -134,6 +132,8 @@ final class ActionCommandParser {
 
                 // 子路由映射
                 actionCommandRegion.add(command);
+
+                ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
                 actionDoc.addActionCommand(command);
             });
 
@@ -243,5 +243,19 @@ final class ActionCommandParser {
 
             throw new RuntimeException(message);
         }
+    }
+
+    private Object ofActionInstance(Class<?> controllerClazz) {
+        // 如果 actionController 交给容器管理了，就从容器中获取实例，否则就 newInstance
+        boolean deliveryContainer = this.deliveryContainer(controllerClazz);
+
+        var actionInstance = deliveryContainer
+                ? DependencyInjectionPart.me().getBean(controllerClazz)
+                : ConstructorAccess.get(controllerClazz).newInstance();
+
+        // 正常来说不会为 null，除非是开发者在集成其他容器时，没有实现 getBean 方法
+        Objects.requireNonNull(actionInstance);
+
+        return actionInstance;
     }
 }
