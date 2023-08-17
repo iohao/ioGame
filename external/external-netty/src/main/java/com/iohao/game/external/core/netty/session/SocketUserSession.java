@@ -58,6 +58,7 @@ public final class SocketUserSession extends AbstractUserSession {
     @Override
     public String getIp() {
 
+        // 优先拿玩家真实 ip
         String realIp = this.option(UserSessionOption.realIp);
 
         if (realIp.isEmpty()) {

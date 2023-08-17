@@ -19,7 +19,6 @@
 package com.iohao.game.external.core.netty.handler.ws;
 
 import com.iohao.game.external.core.aware.UserSessionsAware;
-import com.iohao.game.external.core.netty.session.SocketUserSession;
 import com.iohao.game.external.core.netty.session.SocketUserSessions;
 import com.iohao.game.external.core.session.UserSessionOption;
 import com.iohao.game.external.core.session.UserSessions;
@@ -27,28 +26,35 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaders;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
 
 /**
  * 获取玩家真实 ip
  * <pre>
- *     nginx 配置
+ * nginx 配置
  *
- *     proxy_http_version 1.1;
- *     proxy_set_header Upgrade websocket;
- *     proxy_set_header Connection "Upgrade";
- *     # 将客户端的 Host 和 IP 信息一并转发到对应节点
- *     proxy_set_header X-Real-IP $remote_addr;
- *     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
- *     proxy_set_header Host $http_host;
+ * server {
+ *     location /websocket {
+ *         proxy_http_version 1.1;
+ *         proxy_set_header Upgrade $http_upgrade;
+ *         proxy_set_header Connection "Upgrade";
+ *         proxy_set_header X-Real-IP $remote_addr;
+ *         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ *         proxy_set_header Host $host;
+ *     }
+ * }
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-08-16
  */
-public class HttpRealIpHandler extends ChannelInboundHandlerAdapter
+@Slf4j
+public final class HttpRealIpHandler extends ChannelInboundHandlerAdapter
         implements UserSessionsAware {
 
-    protected SocketUserSessions userSessions;
+    SocketUserSessions userSessions;
 
     @Override
     public void setUserSessions(UserSessions<?, ?> userSessions) {
@@ -59,10 +65,11 @@ public class HttpRealIpHandler extends ChannelInboundHandlerAdapter
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpRequest request) {
             HttpHeaders headers = request.headers();
-
+            // 保存真实 ip
             String realIp = headers.get("X-Real-IP");
-            SocketUserSession userSession = userSessions.getUserSession(ctx);
-            userSession.option(UserSessionOption.realIp, realIp);
+            Optional.ofNullable(userSessions.getUserSession(ctx))
+                    .ifPresent(session -> session.option(UserSessionOption.realIp, realIp));
+
             ctx.pipeline().remove(this);
         }
 
