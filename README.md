@@ -182,7 +182,7 @@ ioGame 是轻量级的网络游戏服务器框架，ioGame 没有中间件的强
 <dependency>
     <groupId>com.iohao.game</groupId>
     <artifactId>run-one-netty</artifactId>
-    <version>17.1.53</version>
+    <version>17.1.54</version>
 </dependency>
 ```
 
@@ -192,7 +192,7 @@ ioGame 是轻量级的网络游戏服务器框架，ioGame 没有中间件的强
 
 ### ioGame 使用趋势数据
 
-关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 2023-07 月统计数据；
+关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 2023-08 月统计数据；
 
 
 
@@ -222,7 +222,7 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/26356013/253505354-36cfc9fb-4dc3-43da-b874-6618c702a8a6.png)
+![](https://user-images.githubusercontent.com/26356013/261309115-31257cfb-ac1b-49e9-a9d4-381177eff404.png)
 
 
 

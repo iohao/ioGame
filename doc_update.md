@@ -1,6 +1,497 @@
 更新日志在线文档
 https://www.yuque.com/iohao/game/ab15oe
 
+#### 2023-08-18 17.1.54
+
+[[#174](https://github.com/game-town/ioGame/pull/174)]  **fix action 交给容器管理时，实例化两次的问题**
+
+
+
+[获取游戏对外服的数据与扩展](https://www.yuque.com/iohao/game/ivxsw5)，获取ResponseCollectExternalMessage 新增 optionalAnySuccess 方法，方便得到成功的 optional
+
+```java
+    public String getUserIp() {
+
+        ResponseCollectExternalMessage message = ...
+
+        return message
+                .optionalAnySuccess()
+                // 得到返回值
+                .map(ResponseCollectExternalItemMessage::getData)
+                // 将为 String
+                .map(Objects::toString)
+                // 如果没获取到给个空串，调用方就不需要做 null 判断了。
+                .orElse("");
+    }
+```
+
+
+
+[压测&模拟客户端请求](https://www.yuque.com/iohao/game/tc83ud)模块，新增模块名标识
+
+```java
+public class BagInputCommandRegion extends AbstractInputCommandRegion {
+    @Override
+    public void initInputCommand() {
+        this.inputCommandCreate.cmd = BagCmd.cmd;
+        this.inputCommandCreate.cmdName = "背包模块";
+    }
+}
+```
+
+
+
+[新游戏对外服](https://www.yuque.com/iohao/game/ea6geg)新增 HttpRealIpHandler，用于获取玩家真实 ip 支持
+
+游戏对外服 webSocket 使用 nginx 代理，也能获取真实的玩家 ip
+
+
+
+```java
+public class MyExternalServer {
+    ... ...省略部分代码
+    public ExternalServer createExternalServer(int externalPort) {
+    	... ...省略部分代码
+        // 游戏对外服 - 构建器
+        DefaultExternalServerBuilder builder = ...
+
+        builder.setting().setMicroBootstrapFlow(new WebSocketMicroBootstrapFlow() {
+            @Override
+            protected void httpHandler(PipelineContext context) {
+                super.httpHandler(context);
+                /*
+                 * HttpRealIpHandler 是框架内置的一个 handler。
+                 * 添加上后，即使是通过 nginx 转发，也可以得到玩家真实的 ip
+                 */
+                context.addLast("HttpRealIpHandler", new HttpRealIpHandler());
+            }
+        });
+
+        // 构建游戏对外服 https://www.yuque.com/iohao/game/ea6geg
+        return builder.build();
+    }
+}
+```
+
+
+
+#### 2023-08-07 17.1.52
+
+详细 https://github.com/game-town/ioGame/releases/tag/17.1.52
+
+
+
+[[#172](https://github.com/game-town/ioGame/issues/172)] **新增 webSocket token 鉴权、校验支持**
+
+有时，我们需要在 WebSocket 建立连接前做 token 相关鉴权、校验的业务。ioGame 支持此类业务的扩展，我们可以在游戏对外服部分做相关扩展；
+
+
+
+简单的说，如果校验没通过，我们就不建立 ws 连接了，在 http 阶段就结束所有流程，可以有效的减少恶意长连接。
+
+
+
+相关文档与使用示例 https://www.yuque.com/iohao/game/tb1126szmgfu6u55
+
+
+
+**日志相关调整**
+移除 light-log 模块，统一使用 lombok slf4j 相关注解
+
+
+
+**压测&模拟客户端增强**
+
+新增 SplitParam，方便模拟测试时，解析控制台输入参数的获取
+
+```java
+    private void useRequest() {
+        InputRequestData inputRequestData = () -> {
+            ScannerKit.log(() -> log.info("输入需要使用的背包物品，格式 [背包物品id-数量]"));
+            String inputType = ScannerKit.nextLine("1-1");
+
+            SplitParam param = new SplitParam(inputType);
+            // 得到下标 0 的值
+            String id = param.getString(0);
+            // 得到下标 1 的值，如果值不存在，则使用默认的 1 代替
+            int quantity = param.getInt(1, 1);
+
+            ... 省略部分代码
+        };
+
+        ofCommand(BagCmd.use).callback(BoolValue.class, result -> {
+            var value = result.getValue();
+            log.info("value : {}", value);
+        }).setDescription("使用背包物品").setInputRequestData(inputRequestData);
+    }
+```
+
+
+
+#### 2023-08-01 17.1.50
+
+详细 https://github.com/game-town/ioGame/releases/tag/17.1.50
+
+
+
+1 DebugInout 在自定义 FlowContext 时的打印优化。
+
+
+
+2 cmdInfo 新增 of 系列方法，用于代替 getCmdInfo 系列方法
+
+
+
+3 异常机制接口 MsgExceptionInfo，新增方法
+
+// 断言为 true, 就抛出异常，可自定义消息
+
+void assertTrueThrows(boolean v1, String msg)
+
+// 断言值 value 不能为 null, 否则就抛出异常，可自定义消息
+
+void assertNonNull(Object value, String msg)
+
+
+
+4 将旧版的游戏对外服标记为过时的
+
+请使用[新游戏对外服](https://www.yuque.com/iohao/game/ea6geg)
+
+
+
+5 模拟客户端新增成功回调触发，模拟命令域 InputCommandRegion 新增 loginSuccessCallback 成功回调方法，当模拟玩家登录成功后会调用此方法
+
+```java
+public class MapInputCommandRegion extends AbstractInputCommandRegion {
+    ... ... 省略部分代码
+
+    @Override
+    public void loginSuccessCallback() {
+        // 进入地图，根据地图 id
+        EnterMapReq enterMapReq = new EnterMapReq();
+        enterMapReq.mapId = 1;
+        ofRequestCommand(MapCmd.enterMap).request(enterMapReq);
+    }
+}
+```
+
+
+
+6 ClientUser 新增 callbackInputCommandRegion 方法。一般在登录模拟请求的回调中主动的调用，开发者可在登录成功后，调用此方法。使其触发所有的 InputCommandRegion.loginSuccessCallback 方法；
+
+```java
+@Slf4j
+public class LoginInputCommandRegion extends AbstractInputCommandRegion {
+    ... ... 省略部分代码
+    @Override
+    public void initInputCommand() {
+        InputRequestData inputRequestData = () -> {
+            LoginVerify loginVerify = new LoginVerify();
+            loginVerify.jwt = clientUser.getJwt();
+            return loginVerify;
+        };
+        
+        ofCommand(LoginCmd.loginVerify).callback(UserInfo.class, result -> {
+            UserInfo userInfo = result.getValue();
+            log.info("登录成功 : {}", userInfo);
+            clientUser.setUserId(userInfo.id);
+            clientUser.setNickname(userInfo.nickname);
+            // ------------ 关键代码 ------------
+            clientUser.callbackInputCommandRegion();
+        }).setDescription("登录").setInputRequestData(inputRequestData);
+    }
+}
+```
+
+
+
+7 [压测&模拟客户端请求](https://www.yuque.com/iohao/game/tc83ud)
+
+新增重复上一次命令的支持
+
+
+
+
+#### 2023-07-28 17.1.48
+
+文档生成增强，增加 action 参数注释说明.
+
+文档生成增强，返回值注释说明.
+
+fix 在 pom 中引入本地 jar 时，文档解析的错误。
+
+
+
+#### 2023-07-21 17.1.47
+
+[[160](https://github.com/game-town/ioGame/issues/160)] **轻量小部件 - 压测&模拟客户端请求模块**
+
+文档：https://www.yuque.com/iohao/game/tc83ud
+
+
+
+**介绍**
+
+此模块是用于模拟客户端，简化模拟工作量，只需要编写对应请求与回调。
+
+使用该模块后，当我们与前端同学联调某个功能时，不需要跟前端哥们说：在点一下、在点一下、在点一下了。这种“在点一下”的交流联调方式将成为过去式。
+
+除了可以模拟简单的请求外，通常还可以做一些复杂的请求编排，并支持复杂业务的压测。模拟测试的过程是可互动的，但也支持测试自动化。
+
+与单元测试不同的是，该模块可以模拟真实的网络环境，并且在模拟测试的过程中与服务器交互是可持续的、可互动的。
+
+可互动模式是用于调试测试某些功能。在互动的过程中，开发者可以在控制台中指定执行某个模拟请求命令，并且支持在控制台中输入一些动态的请求参数，从而让我们轻松的测试不同的业务逻辑走向。
+
+
+
+**特点**
+
+- 使用简单
+- 压测支持
+- 可以模拟客户端请求
+- 可以模拟真实的网络环境
+- 可以编排复杂的业务请求
+- 同样的模拟测试用例，支持在多种连接方式下工作（tcp、udp、websocket）
+- 可持续的与服务器交互，模拟测试的过程是可互动的，但也支持测试自动化
+
+
+
+**其他优化**
+
+文档生成增强，增加 action 参数注释说明、返回值注释说明。
+
+
+
+#### 2023-07-07 17.1.45
+[[#159](https://github.com/iohao/ioGame/issues/159)] **同进程同时支持多种连接方式方式的技巧**
+
+```java
+public class MyApplication {
+    ... ... 省略部分代码
+    static int externalCorePort = 10100;
+
+    public static void main(String[] args) {
+        // 游戏对外服列表
+        List<ExternalServer> externalServerList = listExternalServer();
+        new NettyRunOne()
+                .setExternalServerList(externalServerList)
+                .startup();
+    }
+
+    static List<ExternalServer> listExternalServer() {
+        return List.of(
+                // 连接方式；WEBSOCKET
+                createExternalServer(ExternalJoinEnum.WEBSOCKET)
+                // 连接方式；TCP
+                , createExternalServer(ExternalJoinEnum.TCP)
+                // 连接方式；UDP
+                , createExternalServer(ExternalJoinEnum.UDP)
+        );
+    }
+
+    static ExternalServer createExternalServer(ExternalJoinEnum join) {
+        int port = externalCorePort;
+        port = join.cocPort(port);
+        DefaultExternalServerBuilder builder = DefaultExternalServer
+                .newBuilder(port)
+                // 连接方式
+                .externalJoinEnum(join)
+                // 与 Broker （游戏网关）的连接地址
+                .brokerAddress(new BrokerAddress("127.0.0.1", IoGameGlobalConfig.brokerPort));
+
+        return builder.build();
+    }
+}
+```
+
+
+
+[[#157](https://github.com/iohao/ioGame/issues/157)] fix **默认心跳钩子问题**
+
+[[#122](https://github.com/iohao/ioGame/issues/122)] **同进程亲和性**
+
+文档：https://www.yuque.com/iohao/game/unp26u
+
+
+
+同进程内不同 Netty 实例通信时，是通过内存进行传输的，不需要经过网络传输，数据传输速度极快。也就是说，如果我们将游戏对外服、Broker（游戏网关）、游戏逻辑服部署在同一个进程中（也就是单体应用），那么各服务器之间是在内存中通信的。甚至可以简单的理解为在同一 JVM 中的 a 方法调用了 b 方法，b 方法调用了 c 方法。
+
+
+
+同进程亲和性是 ioGame 的特性之一，可以让同一进程内的 Netty 实例拥有相互访问优先权。说人话就是，如果你在同一进程内启动了游戏对外服、Broker（游戏网关）、游戏逻辑服，当有请求需要处理时：
+
+- 即使你启动了多个 Broker（游戏网关），游戏对外服会优先将请求交给同进程内的 Broker（游戏网关）来处理。
+- 即使你启动了多个相同的游戏逻辑服，Broker（游戏网关）会优先将请求交给同进程的游戏逻辑服来处理。
+- 同样的，游戏逻辑服处理完请求后，会优先将响应交给同进程内的 Broker（游戏网关）。
+
+
+
+#### 2023-06-14 17.1.44
+
+[[#138](https://github.com/iohao/ioGame/issues/138)] **提供协议碎片的工具类，方便协议碎片在广播时的使用**
+
+代码中演示了协议碎片相关的使用，通过工具类，可以让一些基础类型在使用上更简便。
+对应的包装类中，都提供了静态 of 方法；
+
+框架支持的包装类可到 [框架支持的自动装箱、拆箱基础类型](https://www.yuque.com/iohao/game/ieimzn#EJVsp) 查询。
+
+```java
+... ... 省略部分代码
+private static void test() {
+  // 给客户端广播一个 int 值 : 1
+  var bizData = WrapperKit.of(1);
+
+  // 广播上下文
+  CmdInfo cmdInfo = CmdInfo.getCmdInfo(DemoBroadcastCmd.cmd, DemoBroadcastCmd.broadcastMsg);
+  BroadcastContext broadcastContext = BrokerClientHelper.getBroadcastContext();
+  broadcastContext.broadcast(cmdInfo, bizData);
+
+  // 给客户端广播一个 bool 值 : true
+  var bizDataBoolean = WrapperKit.of(true);
+  broadcastContext.broadcast(cmdInfo, bizDataBoolean);
+
+  // 对象列表演示
+  DemoBroadcastMessage broadcastMessage = new DemoBroadcastMessage();
+  broadcastMessage.msg = "broadcast hello，" + counter.longValue();
+  List<DemoBroadcastMessage> list = new ArrayList<>();
+  list.add(broadcastMessage);
+  var bizDataList = WrapperKit.ofListByteValue(list);
+  broadcastContext.broadcast(cmdInfo, bizDataList);
+
+  // int 列表
+  var bizDataIntList = IntValueList.of(List.of(1, 3, 5, 7));
+  broadcastContext.broadcast(cmdInfo, bizDataIntList);
+
+  ... ... 省略部分代码
+  其他类同，不全部介绍了。
+}
+```
+
+
+
+[[#133](https://github.com/iohao/ioGame/issues/133)] **向指定对外服上的用户广播数据**
+
+```java
+... ...省略部分代码
+private static void extracted(String externalId) {
+    var bizData = new DemoBroadcastMessage();
+    broadcastMessage.msg = "broadcast hello！" ;
+
+    // 广播消息的路由
+    CmdInfo cmdInfo = ...;
+    ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
+    
+    // 指定游戏对外服广播
+    HeadMetadata headMetadata = responseMessage.getHeadMetadata();
+    int sourceClientId = MurmurHash3.hash32(externalId);
+    headMetadata.setSourceClientId(sourceClientId);
+
+    // 广播上下文
+    BroadcastContext broadcastContext = BrokerClientHelper.getBroadcastContext();
+    broadcastContext.broadcast(responseMessage);
+}
+```
+
+
+
+容错设置
+
+IoGameGlobalConfig.brokerSniperToggleAK47 = boolean；
+
+```plain
+Broker（游戏网关）转发消息容错配置
+      游戏逻辑服与游戏对外服通信时，如果没有明确指定要通信游戏对外服，游戏网关则会将消息转发到所有的游戏对外服上。
+      如果指定了游戏对外服的，游戏网关则会将消息转发到该游戏对外服上，而不会将消息转发到所有的对外服上。
+ 
+      当为 true 时，开启容错机制
+          表示开发者在发送消息时，如果指定了游戏对外服的，
+          但【游戏网关】中没有找到所指定的【游戏对外服】，则会将消息转发到所有的游戏对外服上，
+          这么做的目的是，即使开发者填错了指定的游戏对外服，也能保证消息可以送达到游戏对外服。
+ 
+      当为 false 时，关闭容错机制
+          表示在【游戏网关】中找不到指定的【游戏对外服】时，则不管了。
+ 
+      支持的通讯方式场景
+          广播、推送 
+          获取游戏对外服的数据与扩展 
+  
+另一种叙述版本
+      作用：
+          在游戏逻辑服发送广播时，支持指定游戏对外服来广播；
+          如果你能事先知道所要广播的游戏对外服，那么在广播时通过指定游戏对外服，可以避免一些无效的转发。
+ 
+          为了更好的理解的这个配置的作用，这里将作一些比喻：
+          1. 将广播时指定的游戏对外服，看作是目标
+          2. 将发送广播的游戏逻辑服，看作是命令
+          3. 而 Broker（游戏网关）职责是对消息做转发，可看成是一名射击员；射击员手上有两把枪，分别是狙击枪和 AK47。
+ 
+          狙击枪的作用是单点目标，而 AK47 的作用则是扫射多个目标（就是所有的游戏对外服）。
+ 
+      场景一：
+          当设置为 true 时，表示射击员可以将手中的狙击切换为 AK47，什么意思呢？
+          意思就是如果在【游戏网关】中没有找到所指定的【游戏对外服】，则将广播数据发送给【所有的游戏对外服】。（换 AK 来扫射）
+          这么做的目的是，即使开发者填错了指定的游戏对外服，也能保证消息可以送达到游戏对外服。
+ 
+      场景二：
+          当设置为 false 时，表示找不到指定的【游戏对外服】时，则不管了。
+```
+
+
+
+[[#131](https://github.com/iohao/ioGame/issues/131)] **获取指定对外服上数据的接口**
+
+参考使用示例，通过 RequestCollectExternalMessage 请求对象，可以指定游戏对外服id；
+
+```java
+@UtilityClass
+public class ExternalCommunicationKit {
+    /**
+     * 设置元信息到游戏对外服
+     * 
+<pre>
+     *     之后所有 action 的 FlowContext 中会携带上这个元信息对象，
+     *     不建议在元信息保存过多的信息，因为会每次传递。
+     * </pre>
+*
+     * @param attachment  元信息
+     * @param flowContext flowContext
+     */
+    public void setAttachment(Attachment attachment, FlowContext flowContext) {
+        // 不做 null 判断，只做个 userId 的检测
+        long userId = attachment.getUserId();
+
+        if (userId <= 0) {
+            throw new RuntimeException("userId <= 0");
+        }
+
+        // 得到游戏对外服 id
+        RequestMessage request = flowContext.getRequest();
+        HeadMetadata headMetadata = request.getHeadMetadata();
+        int sourceClientId = headMetadata.getSourceClientId();
+
+        var requestCollectExternalMessage = new RequestCollectExternalMessage()
+                // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （AttachmentDataExternalBizRegion）
+                .setBizCode(ExternalBizCodeCont.attachment)
+                // 元信息
+                .setData(attachment)
+                // 指定游戏对外服
+                .setSourceClientId(sourceClientId);
+
+        BrokerClientHelper
+                // 【游戏逻辑服】与【游戏对外服】通讯上下文
+                .getInvokeExternalModuleContext()
+                .invokeExternalModuleCollectMessage(requestCollectExternalMessage);
+    }
+}
+```
+
+
+
+容错设置
+
+IoGameGlobalConfig.brokerSniperToggleAK47 = boolean；
+
 
 
 #### 2023-06-08 17.1.43（重要版本）
@@ -374,7 +865,7 @@ public class HallAction {
 
         return ProtoKit.toBytes(data);
     }
-
+    
     ... 省略部分代码
 }</pre><p id="u932c9f85" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><p id="u4ec3c8c9" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">将自定义的，添加到框架中</span></p><p id="u2e4f885a" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><pre data-language="java" id="96d4e3d3" class="ne-codeblock language-java" style="border: 1px solid #e8e8e8; border-radius: 2px; background: #f9f9f9; padding: 16px; font-size: 13px; color: #595959">// 设置自定义的编解码。如果不做设置，默认使用 jprotobuf
 IoGameGlobalSetting.setDataCodec(new MyProtoDataCodec());</pre><p id="ube57b01c" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><p id="u9ff96ed5" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><span class="ne-text">action byte[] 使用展示</span></p><p id="u93f9b4ba" class="ne-p" style="margin: 0; padding: 0; min-height: 24px"><br></p><pre data-language="java" id="3e546c5d" class="ne-codeblock language-java" style="border: 1px solid #e8e8e8; border-radius: 2px; background: #f9f9f9; padding: 16px; font-size: 13px; color: #595959">@Slf4j
@@ -389,7 +880,7 @@ public class DemoAction {
         helloReq.name = "to byte[]";
         helloReqData = DataCodecKit.encode(helloReq);
     }
-
+    
     @ActionMethod(4)
     public byte[] testByte(int id) {
         return helloReqData;
