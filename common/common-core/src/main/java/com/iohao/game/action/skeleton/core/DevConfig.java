@@ -29,14 +29,15 @@ import java.util.Map;
  * @author 渔民小镇
  * @date 2022-05-19
  */
-@Getter
+
 public final class DevConfig {
     /**
      * true 打印广播日志，默认不打印
-     *
-     * @see {@link BarSkeletonBuilderParamConfig#createBuilder()}
+     * <p>
+     * see {@link BarSkeletonBuilderParamConfig#createBuilder()}
      */
-    boolean broadcastLog;
+    @Getter
+    static boolean broadcastLog;
 
     /**
      * cmd 路由对应的响应数据类型信息
@@ -52,16 +53,39 @@ public final class DevConfig {
      *
      * </pre>
      */
-    Map<Integer, Class<?>> cmdDataClassMap = new NonBlockingHashMap<>();
+    static Map<Integer, Class<?>> cmdDataClassMap = new NonBlockingHashMap<>();
 
-    public Class<?> getCmdDataClass(int cmdMerge) {
-        return this.cmdDataClassMap.get(cmdMerge);
+    public static Class<?> getCmdDataClass(int cmdMerge) {
+        return cmdDataClassMap.get(cmdMerge);
+    }
+
+    public static void put(Integer cmdMerge, Class<?> dataClass) {
+        cmdDataClassMap.putIfAbsent(cmdMerge, dataClass);
+    }
+
+    /**
+     * 请使用 DevConfig.put 方法
+     *
+     * @return map
+     */
+    @Deprecated
+    public static Map<Integer, Class<?>> getCmdDataClassMap() {
+        return cmdDataClassMap;
     }
 
     private DevConfig() {
 
     }
 
+    /**
+     * 已经标记过期，将在下个大版本移除
+     * <pre>
+     *     请直接使用静态方法代替； DevConfig.xxx
+     * </pre>
+     *
+     * @return me
+     */
+    @Deprecated
     public static DevConfig me() {
         return Holder.ME;
     }

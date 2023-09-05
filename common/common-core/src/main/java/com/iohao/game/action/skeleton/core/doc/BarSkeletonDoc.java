@@ -225,7 +225,7 @@ public class BarSkeletonDoc {
                     ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = actionCommand.getActionMethodReturnInfo();
                     Class<?> dataClass = actionMethodReturnInfo.getActualTypeArgumentClazz();
                     // cmd 路由对应的响应数据类型信息
-                    DevConfig.me().getCmdDataClassMap().putIfAbsent(cmdInfo.getCmdMerge(), dataClass);
+                    DevConfig.put(cmdInfo.getCmdMerge(), dataClass);
                 });
     }
 

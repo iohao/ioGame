@@ -94,7 +94,7 @@ public record Broadcast(BrokerClientItem brokerClientItem) {
             log.error(e.getMessage(), e);
         }
 
-        if (DevConfig.me().isBroadcastLog()) {
+        if (DevConfig.isBroadcastLog()) {
             // 打印广播日志
             BroadcastDebug.print(broadcastMessage);
         }

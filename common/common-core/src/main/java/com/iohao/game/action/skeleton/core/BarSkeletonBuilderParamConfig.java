@@ -91,7 +91,7 @@ public final class BarSkeletonBuilderParamConfig {
         this.getMsgExceptionInfoList().forEach(builder::addMsgExceptionInfo);
 
         // true 打印广播日志，默认不打印
-        DevConfig.me().broadcastLog = this.broadcastLog;
+        DevConfig.broadcastLog = this.broadcastLog;
 
         extracted();
 

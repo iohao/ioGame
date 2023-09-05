@@ -40,6 +40,14 @@ public class IoGameGlobalSetting {
     private IoGameGlobalSetting() {
     }
 
+    /**
+     * 已经标记过期，将在下个大版本移除
+     * <pre>
+     *     请直接使用静态方法代替； IoGameGlobalSetting.xxx
+     * </pre>
+     *
+     * @return me
+     */
     @Deprecated
     public static IoGameGlobalSetting me() {
         return Holder.ME;
