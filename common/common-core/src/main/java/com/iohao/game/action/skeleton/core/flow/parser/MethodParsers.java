@@ -46,11 +46,16 @@ public final class MethodParsers {
      *     如 int 与对应的包装类 Integer 在这里规划为基础类型
      * </pre>
      */
-    final Map<Class<?>, MethodParser> methodParserMap = new HashMap<>();
-    final Map<Class<?>, Supplier<?>> paramSupplierMap = new HashMap<>();
+    static final Map<Class<?>, MethodParser> methodParserMap = new HashMap<>();
+    static final Map<Class<?>, Supplier<?>> paramSupplierMap = new HashMap<>();
+
     /** action 业务方法参数的默认解析器 */
     @Setter
-    MethodParser methodParser = DefaultMethodParser.me();
+    static MethodParser methodParser = DefaultMethodParser.me();
+
+    static {
+        init();
+    }
 
     /**
      * 临时兼容
@@ -65,96 +70,97 @@ public final class MethodParsers {
     @Deprecated
     public static void tempCompatibility() {
         // 表示在 action 参数中，遇见 int 类型的参数，用 IntPbMethodParser 来解析
-        me().mapping(int.class, IntPbMethodParser.me());
-        me().mapping(Integer.class, IntPbMethodParser.me());
+        mapping(int.class, IntPbMethodParser.me());
+        mapping(Integer.class, IntPbMethodParser.me());
         // 表示在 action 参数中，遇见 long 类型的参数，用 LongPbMethodParser 来解析
-        me().mapping(long.class, LongPbMethodParser.me());
-        me().mapping(Long.class, LongPbMethodParser.me());
+        mapping(long.class, LongPbMethodParser.me());
+        mapping(Long.class, LongPbMethodParser.me());
 
-        me().mapping(IntPb.class, DefaultMethodParser.me(), IntPb::new);
-        me().mapping(IntListPb.class, DefaultMethodParser.me(), IntListPb::new);
+        mapping(IntPb.class, DefaultMethodParser.me(), IntPb::new);
+        mapping(IntListPb.class, DefaultMethodParser.me(), IntListPb::new);
 
-        me().mapping(LongPb.class, DefaultMethodParser.me(), LongPb::new);
-        me().mapping(LongListPb.class, DefaultMethodParser.me(), LongListPb::new);
+        mapping(LongPb.class, DefaultMethodParser.me(), LongPb::new);
+        mapping(LongListPb.class, DefaultMethodParser.me(), LongListPb::new);
     }
 
-    public void mappingParamSupplier(Class<?> paramClass, Supplier<?> supplier) {
-        this.paramSupplierMap.put(paramClass, supplier);
+    public static void mappingParamSupplier(Class<?> paramClass, Supplier<?> supplier) {
+        paramSupplierMap.put(paramClass, supplier);
     }
 
-    public void mapping(Class<?> paramClass, MethodParser methodParamParser) {
-        this.methodParserMap.put(paramClass, methodParamParser);
+    public static void mapping(Class<?> paramClass, MethodParser methodParamParser) {
+        methodParserMap.put(paramClass, methodParamParser);
     }
 
-    public MethodParser getMethodParser(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo) {
+    public static MethodParser getMethodParser(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo) {
         Class<?> methodResultClass = actionMethodReturnInfo.getActualTypeArgumentClazz();
         return getMethodParser(methodResultClass);
     }
 
-    public MethodParser getMethodParser(ActionCommand.ParamInfo paramInfo) {
+    public static MethodParser getMethodParser(ActionCommand.ParamInfo paramInfo) {
         Class<?> actualTypeArgumentClazz = paramInfo.getActualTypeArgumentClazz();
         return getMethodParser(actualTypeArgumentClazz);
     }
 
-    public MethodParser getMethodParser(Class<?> paramClazz) {
-        return this.methodParserMap.getOrDefault(paramClazz, this.methodParser);
+    public static MethodParser getMethodParser(Class<?> paramClazz) {
+        return methodParserMap.getOrDefault(paramClazz, methodParser);
     }
 
-    public void clear() {
-        this.methodParserMap.clear();
-        this.paramSupplierMap.clear();
+    public static void clear() {
+        methodParserMap.clear();
+        paramSupplierMap.clear();
     }
 
-    public boolean containsKey(Class<?> clazz) {
-        return this.methodParserMap.containsKey(clazz);
+    public static boolean containsKey(Class<?> clazz) {
+        return methodParserMap.containsKey(clazz);
     }
 
-    public Set<Class<?>> keySet() {
-        return this.methodParserMap.keySet();
+    public static Set<Class<?>> keySet() {
+        return methodParserMap.keySet();
     }
 
-    private MethodParsers() {
+
+    private static void init() {
         // 表示在 action 参数中，遇见 int 类型的参数，用 IntValueMethodParser 来解析
-        this.mapping(int.class, IntValueMethodParser.me());
-        this.mapping(Integer.class, IntValueMethodParser.me());
+        mapping(int.class, IntValueMethodParser.me());
+        mapping(Integer.class, IntValueMethodParser.me());
 
         // 表示在 action 参数中，遇见 long 类型的参数，用 LongValueMethodParser 来解析
-        this.mapping(long.class, LongValueMethodParser.me());
-        this.mapping(Long.class, LongValueMethodParser.me());
+        mapping(long.class, LongValueMethodParser.me());
+        mapping(Long.class, LongValueMethodParser.me());
 
         // 表示在 action 参数中，遇见 String 类型的参数，用 StringValueMethodParser 来解析
-        this.mapping(String.class, StringValueMethodParser.me());
+        mapping(String.class, StringValueMethodParser.me());
 
         // 表示在 action 参数中，遇见 boolean 类型的参数，用 BoolValueMethodParser 来解析
-        this.mapping(boolean.class, BoolValueMethodParser.me());
-        this.mapping(Boolean.class, BoolValueMethodParser.me());
+        mapping(boolean.class, BoolValueMethodParser.me());
+        mapping(Boolean.class, BoolValueMethodParser.me());
 
         /*
          * 这里注册是为了顺便使用 containsKey 方法，因为生成文档的时候要用到短名字
          * 当然也可以使用 instanceof 来做这些，但似乎没有这种方式优雅
          */
-        this.mapping(IntValue.class, DefaultMethodParser.me(), IntValue::new);
-        this.mapping(IntValueList.class, DefaultMethodParser.me(), IntValueList::new);
+        mapping(IntValue.class, DefaultMethodParser.me(), IntValue::new);
+        mapping(IntValueList.class, DefaultMethodParser.me(), IntValueList::new);
 
-        this.mapping(LongValue.class, DefaultMethodParser.me(), LongValue::new);
-        this.mapping(LongValueList.class, DefaultMethodParser.me(), LongValueList::new);
+        mapping(LongValue.class, DefaultMethodParser.me(), LongValue::new);
+        mapping(LongValueList.class, DefaultMethodParser.me(), LongValueList::new);
 
-        this.mapping(BoolValue.class, DefaultMethodParser.me(), BoolValue::new);
-        this.mapping(BoolValueList.class, DefaultMethodParser.me(), BoolValueList::new);
+        mapping(BoolValue.class, DefaultMethodParser.me(), BoolValue::new);
+        mapping(BoolValueList.class, DefaultMethodParser.me(), BoolValueList::new);
 
-        this.mapping(StringValue.class, DefaultMethodParser.me(), StringValue::new);
-        this.mapping(StringValueList.class, DefaultMethodParser.me(), StringValueList::new);
+        mapping(StringValue.class, DefaultMethodParser.me(), StringValue::new);
+        mapping(StringValueList.class, DefaultMethodParser.me(), StringValueList::new);
     }
 
-    Object newObject(Class<?> paramClass) {
-        if (this.paramSupplierMap.containsKey(paramClass)) {
-            return this.paramSupplierMap.get(paramClass).get();
+    static Object newObject(Class<?> paramClass) {
+        if (paramSupplierMap.containsKey(paramClass)) {
+            return paramSupplierMap.get(paramClass).get();
         }
 
         return null;
     }
 
-    private void mapping(Class<?> paramClass, MethodParser methodParamParser, Supplier<?> supplier) {
+    private static void mapping(Class<?> paramClass, MethodParser methodParamParser, Supplier<?> supplier) {
         mapping(paramClass, methodParamParser);
 
         /*
@@ -166,6 +172,18 @@ public final class MethodParsers {
         mappingParamSupplier(paramClass, supplier);
     }
 
+    private MethodParsers() {
+    }
+
+    /**
+     * 已经标记过期，将在下个大版本移除
+     * <pre>
+     *     请直接使用静态方法代替； MethodParsers.xxx
+     * </pre>
+     *
+     * @return MethodParsers
+     */
+    @Deprecated
     public static MethodParsers me() {
         return Holder.ME;
     }

@@ -67,7 +67,7 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
             }
 
             // 得到方法参数解析器，把字节解析成 action 业务参数
-            var methodParser = MethodParsers.me().getMethodParser(paramClazz);
+            var methodParser = MethodParsers.getMethodParser(paramClazz);
             var param = methodParser.parseParam(request.getData(), paramInfo);
             params[i] = param;
 

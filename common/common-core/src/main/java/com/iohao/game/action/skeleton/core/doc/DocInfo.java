@@ -80,13 +80,13 @@ class DocInfo {
 
     private String paramInfoToString(ActionCommand.ParamInfo paramInfo) {
         Class<?> actualClazz = paramInfo.getActualClazz();
-        boolean isCustomList = paramInfo.isList() && !MethodParsers.me().containsKey(actualClazz);
+        boolean isCustomList = paramInfo.isList() && !MethodParsers.containsKey(actualClazz);
         return paramResultInfoToString(actualClazz, isCustomList);
     }
 
     private String returnToString(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo) {
         Class<?> actualClazz = actionMethodReturnInfo.getActualClazz();
-        boolean isCustomList = actionMethodReturnInfo.isList() && !MethodParsers.me().containsKey(actualClazz);
+        boolean isCustomList = actionMethodReturnInfo.isList() && !MethodParsers.containsKey(actualClazz);
         return paramResultInfoToString(actualClazz, isCustomList);
     }
 

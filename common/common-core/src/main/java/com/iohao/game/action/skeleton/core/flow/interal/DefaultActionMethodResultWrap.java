@@ -67,7 +67,7 @@ public final class DefaultActionMethodResultWrap implements ActionMethodResultWr
         }
 
         // 得到 action 返回值的解析器，将解析后的结果保存到 flowContext 中
-        MethodParser paramParser = MethodParsers.me().getMethodParser(actionMethodReturnInfo);
+        MethodParser paramParser = MethodParsers.getMethodParser(actionMethodReturnInfo);
         Object methodResult = paramParser.parseResult(actionMethodReturnInfo, result);
         flowContext.setMethodResult(methodResult);
 

@@ -102,8 +102,6 @@ public class FlowContext implements FlowOptionDynamic {
      */
     public <T> T getAttachment(Class<T> clazz) {
         byte[] attachmentData = this.request.getHeadMetadata().getAttachmentData();
-
-        // 默认使用 pb 来序列化
         return DataCodecKit.decode(attachmentData, clazz);
     }
 

@@ -18,7 +18,10 @@
  */
 package com.iohao.game.action.skeleton.core.codec;
 
+import com.iohao.game.common.consts.CommonConst;
 import com.iohao.game.common.kit.ProtoKit;
+
+import java.util.Objects;
 
 /**
  * 业务参数的 proto 编解码器
@@ -34,7 +37,12 @@ public final class ProtoDataCodec implements DataCodec {
     }
 
     @Override
-    public <T> T decode(byte[] data, Class<?> dataClass) {
+    public <T> T decode(final byte[] data, Class<?> dataClass) {
+
+        if (Objects.isNull(data)) {
+            return (T) ProtoKit.parseProtoByte(CommonConst.EMPTY_BYTES, dataClass);
+        }
+
         return (T) ProtoKit.parseProtoByte(data, dataClass);
     }
 

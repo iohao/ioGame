@@ -279,7 +279,7 @@ public final class ActionCommand {
                 this.list = false;
             }
 
-            MethodParser methodParser = MethodParsers.me().getMethodParser(this);
+            MethodParser methodParser = MethodParsers.getMethodParser(this);
             this.actualClazz = methodParser.getActualClazz(this);
             this.customMethodParser = methodParser.isCustomMethodParser();
 
@@ -321,7 +321,7 @@ public final class ActionCommand {
          */
         @Deprecated
         public String getMethodParamClassName() {
-            if (this.isCustomMethodParser() || MethodParsers.me().containsKey(this.actualClazz)) {
+            if (this.isCustomMethodParser() || MethodParsers.containsKey(this.actualClazz)) {
                 return this.actualClazz.getSimpleName();
             }
 
@@ -329,7 +329,7 @@ public final class ActionCommand {
         }
 
         public String toString(boolean fullName) {
-            boolean isCustomList = this.list && !MethodParsers.me().containsKey(this.actualClazz);
+            boolean isCustomList = this.list && !MethodParsers.containsKey(this.actualClazz);
 
             if (isCustomList) {
                 String simpleNameParamClazz = this.paramClazz.getSimpleName();
@@ -412,7 +412,7 @@ public final class ActionCommand {
                 this.list = false;
             }
 
-            MethodParser methodParser = MethodParsers.me().getMethodParser(this);
+            MethodParser methodParser = MethodParsers.getMethodParser(this);
             this.actualClazz = methodParser.getActualClazz(this);
             this.customMethodParser = methodParser.isCustomMethodParser();
         }
@@ -433,7 +433,7 @@ public final class ActionCommand {
          */
         @Deprecated
         public String getReturnTypeClazzName() {
-            if (this.isCustomMethodParser() || MethodParsers.me().containsKey(this.actualClazz)) {
+            if (this.isCustomMethodParser() || MethodParsers.containsKey(this.actualClazz)) {
                 return this.actualClazz.getSimpleName();
             }
 
@@ -446,7 +446,7 @@ public final class ActionCommand {
         }
 
         public String toString(boolean fullName) {
-            boolean isCustomList = this.list && !MethodParsers.me().containsKey(this.actualClazz);
+            boolean isCustomList = this.list && !MethodParsers.containsKey(this.actualClazz);
 
             if (isCustomList) {
                 String simpleNameReturnTypeClazz = this.returnTypeClazz.getSimpleName();

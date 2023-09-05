@@ -63,7 +63,7 @@ class DefaultMethodParser implements MethodParser {
 
         if (Objects.isNull(data)) {
             // 如果配置了 action 参数类型的 Supplier，则通过 Supplier 来创建对象
-            var o = MethodParsers.me().newObject(actualTypeArgumentClazz);
+            var o = MethodParsers.newObject(actualTypeArgumentClazz);
             if (Objects.nonNull(o)) {
                 return o;
             }
