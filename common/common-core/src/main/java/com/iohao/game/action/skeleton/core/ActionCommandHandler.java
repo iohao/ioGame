@@ -20,6 +20,7 @@ package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 该handler用于执行 {@link ActionCommand} 对象
@@ -27,16 +28,21 @@ import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
  * @author 渔民小镇
  * @date 2021-12-12
  */
-sealed class ActionCommandHandler implements Handler permits ActionCommandTryHandler {
+@Slf4j
+class ActionCommandHandler implements Handler {
 
     @Override
     public boolean handler(final FlowContext flowContext) {
 
-        // 设置 flowContext 的一些属性
-        this.settingFlowContext(flowContext);
-
-        // actionCommand 命令流程执行器
-        DefaultActionCommandFlowExecute.me().execute(flowContext);
+        try {
+            // 设置 flowContext 的一些属性
+            this.settingFlowContext(flowContext);
+            // actionCommand 命令流程执行器
+            DefaultActionCommandFlowExecute.me().execute(flowContext);
+        } catch (Throwable e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
 
         return true;
     }
