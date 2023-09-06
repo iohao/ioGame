@@ -159,7 +159,6 @@ ioGame 在内存占用、启动速度、打包等方面也是优秀的。
 
 | 地址                                                         | 描述                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [idea-ioGame-插件](https://www.yuque.com/iohao/game/aw9a0eic6auwing1) | 通过该 idea 插件，可以进一步提高生产力，减少工作量。         |
 | [ioGame 快速理解篇](https://www.yuque.com/iohao/game/le48p1go9gkdqgih) | 快速掌握 ioGame 的概念                                       |
 | [技术栈推荐与其它参考文档](https://www.yuque.com/iohao/game/swt3ls) | 游戏开发的技术栈建议，大家可以参考一下。                     |
 | [更多游戏服务器框架推荐](https://www.yuque.com/iohao/game/ytrfic) | 如果 ioGame 不能很好的满足你的需要，请别担心，这里还有更多的 java 游戏服务器框架推荐给你。 |
