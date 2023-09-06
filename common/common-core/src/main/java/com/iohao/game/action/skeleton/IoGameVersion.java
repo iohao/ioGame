@@ -26,7 +26,7 @@ public final class IoGameVersion {
     public static final String VERSION;
 
     static {
-        String internalVersion = "<version>17.1.54</version>";
+        String internalVersion = "<version>17.1.55</version>";
 
         VERSION = internalVersion
                 .replace("<version>", "")
