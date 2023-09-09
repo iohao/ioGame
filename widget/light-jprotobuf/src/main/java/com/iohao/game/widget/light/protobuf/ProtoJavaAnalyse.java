@@ -24,6 +24,7 @@ import com.iohao.game.common.kit.ClassScanner;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import lombok.extern.slf4j.Slf4j;
@@ -80,14 +81,24 @@ public class ProtoJavaAnalyse {
 
         Collection<JavaClass> javaClassCollection = javaProjectBuilder.getClasses();
         for (JavaClass javaClass : javaClassCollection) {
-            if (javaClass.getAnnotations().size() < 2) {
+            List<JavaAnnotation> annotations = javaClass.getAnnotations();
+
+            if (annotations.size() < 2) {
+                continue;
+            }
+
+            long count = annotations.stream().filter(annotation -> {
+                String string = annotation.getType().toString();
+                return string.contains(ProtobufClass.class.getName())
+                        || string.contains(ProtoFileMerge.class.getName());
+            }).count();
+
+            if (count < 2) {
                 continue;
             }
 
             protoJavaSourceFileMap.put(javaClass.toString(), javaClass);
             log.info("javaClass: {}", javaClass);
-
-
         }
     }
 
