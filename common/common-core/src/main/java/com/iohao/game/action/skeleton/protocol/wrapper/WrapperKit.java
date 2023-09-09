@@ -52,9 +52,7 @@ public class WrapperKit {
     }
 
     public LongValue of(long value) {
-        var theValue = new LongValue();
-        theValue.value = value;
-        return theValue;
+        return LongValue.of(value);
     }
 
     public LongValueList ofListLongValue(List<Long> values) {
@@ -62,9 +60,7 @@ public class WrapperKit {
     }
 
     public StringValue of(String value) {
-        var theValue = new StringValue();
-        theValue.value = value;
-        return theValue;
+        return StringValue.of(value);
     }
 
     public StringValueList ofListStringValue(List<String> values) {

@@ -35,4 +35,10 @@ public final class BoolValue {
     /** bool 值 */
     @Protobuf(fieldType = FieldType.BOOL, order = 1)
     public boolean value;
+
+    public static BoolValue of(boolean value) {
+        var theValue = new BoolValue();
+        theValue.value = value;
+        return theValue;
+    }
 }
