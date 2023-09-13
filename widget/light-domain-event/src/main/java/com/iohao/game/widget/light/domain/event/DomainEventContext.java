@@ -67,15 +67,23 @@ public class DomainEventContext {
 
         Set<DomainEventHandler<?>> domainEventHandlerSet = param.domainEventHandlerSet;
         domainEventHandlerSet.stream().collect(Collectors.groupingBy(o -> {
-            // 一个key对应多个value. key 是从领域事件中的接口类型中查找领域实体类型
+            // 一个 key 对应多个 value. key 是从领域事件中的接口类型中查找领域实体类型
             ParameterizedType parameterizedType = (ParameterizedType) o.getClass().getGenericInterfaces()[0];
             Type type = parameterizedType.getActualTypeArguments()[0];
+            String typeName = type.getTypeName();
 
             try {
-                String name = type.getTypeName();
-                return Class.forName(name);
+                return Class.forName(typeName);
             } catch (ClassNotFoundException e) {
-                log.error(e.getMessage(), e);
+
+                try {
+                    // 尝试从当前线程的类加载器中加载；#194
+                    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+                    return Class.forName(typeName, true, contextClassLoader);
+                } catch (ClassNotFoundException e1) {
+                    log.error(e1.getMessage(), e1);
+                }
+
                 return null;
             }
         })).forEach((Class<?> topic, List<DomainEventHandler<?>> eventHandlers) -> {
