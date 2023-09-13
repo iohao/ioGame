@@ -289,19 +289,32 @@ public class FlowContext implements FlowOptionDynamic {
         return invokeModuleCollectMessage(cmdInfo, null);
     }
 
+    /**
+     * 创建一个 request 对象，并使用当前 FlowContext HeadMetadata 部分属性。
+     * <pre>
+     *     HeadMetadata 对象以下属性不会赋值，如有需要，请自行赋值
+     *       sourceClientId
+     *       endPointClientId
+     *       rpcCommandType
+     *       msgId
+     * </pre>
+     *
+     * @param cmdInfo 路由
+     * @param data    业务参数
+     * @return request
+     */
     protected RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
-        RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo, data);
-        /*
-         * 通过 flowContext 上下文创建的 RequestMessage 把userId、headMetadata 添加上
-         * 理论上内部模块通讯也很少用得上这些信息
-         */
-        HeadMetadata headMetadata = this.request.getHeadMetadata();
 
-        requestMessage.getHeadMetadata()
-                .setUserId(this.getUserId())
-                .setAttachmentData(headMetadata.getAttachmentData())
-                .setChannelId(headMetadata.getChannelId())
-        ;
+        HeadMetadata headMetadata = this.request.getHeadMetadata()
+                .cloneHeadMetadata()
+                .setCmdInfo(cmdInfo);
+
+        RequestMessage requestMessage = new RequestMessage();
+        requestMessage.setHeadMetadata(headMetadata);
+
+        if (Objects.nonNull(data)) {
+            requestMessage.setData(data);
+        }
 
         return requestMessage;
     }

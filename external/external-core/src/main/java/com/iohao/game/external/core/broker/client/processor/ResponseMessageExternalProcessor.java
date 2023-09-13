@@ -77,7 +77,9 @@ public final class ResponseMessageExternalProcessor extends AbstractAsyncUserPro
         }
 
         // 响应结果给用户
-        Optional.ofNullable(userSession).ifPresent(session -> session.writeAndFlush(externalMessage));
+        if (userSession != null) {
+            userSession.writeAndFlush(externalMessage);
+        }
 
         // 游戏对外服缓存
         int cacheCondition = headMetadata.getCacheCondition();

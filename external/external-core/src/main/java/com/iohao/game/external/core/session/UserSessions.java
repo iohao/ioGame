@@ -81,14 +81,11 @@ public interface UserSessions<SessionContext, Session extends UserSession> exten
     /**
      * 如果 UserSession 存在，则使用该值执行给定操作，否则不执行任何操作。
      *
-     * @param userIdList userIdList
+     * @param userIdList userIdList 不能为 null
      * @param consumer   如果 UserSession 存在，则要执行的动作
      */
     default void ifPresent(Collection<Long> userIdList, Consumer<Session> consumer) {
-        if (CollKit.isEmpty(userIdList)) {
-            return;
-        }
-
+        // 不做 null 判断了，让调用方保证
         userIdList.stream()
                 .map(this::getUserSession)
                 .filter(Objects::nonNull)
