@@ -231,7 +231,7 @@ public class ClientUserChannel {
             int msgId = externalMessage.getMsgId();
             if (msgId != 0) {
                 // 如果有 callback ，优先交给 callback 处理
-                CommandCallback commandCallback = callbackMap.get(msgId);
+                CommandCallback commandCallback = callbackMap.remove(msgId);
                 if (Objects.nonNull(commandCallback)) {
 
                     if (ClientUserConfigs.openLogRequestCallback) {

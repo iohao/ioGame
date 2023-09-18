@@ -76,7 +76,7 @@ public class TcpExternalCodec extends MessageToMessageCodec<ByteBuf, ExternalMes
     }
 
     public static TcpExternalCodec me() {
-    	return Holder.ME;
+        return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */

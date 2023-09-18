@@ -215,7 +215,7 @@ public class ExternalKit {
     public void employError(ExternalMessage message, MsgExceptionInfo exceptionInfo) {
         message.setResponseStatus(exceptionInfo.getCode());
         message.setValidMsg(exceptionInfo.getMsg());
-        message.setData(CommonConst.EMPTY_BYTES);
+        message.setData(CommonConst.emptyBytes);
     }
 
     /**

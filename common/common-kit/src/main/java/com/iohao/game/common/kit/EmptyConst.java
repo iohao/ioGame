@@ -18,13 +18,17 @@
  */
 package com.iohao.game.common.kit;
 
+import com.iohao.game.common.consts.CommonConst;
+
 /**
+ * 请使用 {@link CommonConst} 代替
+ *
  * @author 渔民小镇
  * @date 2023-06-07
  */
+@Deprecated
 public interface EmptyConst {
-    byte[] emptyBytes = new byte[0];
-    int[] emptyInt = new int[0];
-
-    Object[] emptyObjects = new Object[0];
+    byte[] emptyBytes = CommonConst.emptyBytes;
+    int[] emptyInt = CommonConst.emptyInt;
+    Object[] emptyObjects = CommonConst.emptyObjects;
 }

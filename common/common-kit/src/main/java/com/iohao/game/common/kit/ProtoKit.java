@@ -20,6 +20,7 @@ package com.iohao.game.common.kit;
 
 import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
+import com.iohao.game.common.consts.CommonConst;
 import com.iohao.game.common.consts.IoGameLogName;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ public class ProtoKit {
     public byte[] toBytes(Object data) {
 
         if (Objects.isNull(data)) {
-            return EmptyConst.emptyBytes;
+            return CommonConst.emptyBytes;
         }
 
         Class clazz = data.getClass();
@@ -55,7 +56,7 @@ public class ProtoKit {
             log.error(e.getMessage(), e);
         }
 
-        return EmptyConst.emptyBytes;
+        return CommonConst.emptyBytes;
     }
 
     /**

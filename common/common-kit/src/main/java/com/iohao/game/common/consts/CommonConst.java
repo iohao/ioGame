@@ -23,5 +23,9 @@ package com.iohao.game.common.consts;
  * @date 2023-05-01
  */
 public interface CommonConst {
-    byte[] EMPTY_BYTES = new byte[0];
+    byte[] emptyBytes = new byte[0];
+    int[] emptyInt = new int[0];
+    Object[] emptyObjects = new Object[0];
+    @Deprecated
+    byte[] EMPTY_BYTES = emptyBytes;
 }

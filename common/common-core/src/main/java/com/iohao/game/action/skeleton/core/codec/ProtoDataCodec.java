@@ -40,7 +40,7 @@ public final class ProtoDataCodec implements DataCodec {
     public <T> T decode(final byte[] data, Class<?> dataClass) {
 
         if (Objects.isNull(data)) {
-            return (T) ProtoKit.parseProtoByte(CommonConst.EMPTY_BYTES, dataClass);
+            return (T) ProtoKit.parseProtoByte(CommonConst.emptyBytes, dataClass);
         }
 
         return (T) ProtoKit.parseProtoByte(data, dataClass);
