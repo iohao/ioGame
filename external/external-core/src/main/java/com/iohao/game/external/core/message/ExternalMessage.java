@@ -69,6 +69,7 @@ public final class ExternalMessage {
     /** 验证信息（错误消息、异常消息） */
     @Protobuf(fieldType = FieldType.STRING, order = 5)
     String validMsg;
+    /** 业务数据 */
     @Protobuf(fieldType = FieldType.BYTES, order = 6)
     byte[] data;
     /** 消息标记号；由前端请求时设置，服务器响应时会携带上 */
@@ -77,6 +78,15 @@ public final class ExternalMessage {
     /** 预留 */
     @Ignore
     transient Object other;
+    /**
+     * 实验性：预留给开发者的字段
+     * <pre>
+     *     具备透传，服务器响应时会携带上
+     *     需要注意的是，目前该字段是不会序列化到客户端的
+     * </pre>
+     */
+    @Ignore
+    transient byte[] customData;
 
     /**
      * 业务数据

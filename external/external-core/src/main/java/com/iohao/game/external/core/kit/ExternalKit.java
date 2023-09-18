@@ -90,7 +90,8 @@ public class ExternalKit {
                 .setCmdMerge(cmdMerge)
                 .setRpcCommandType(RpcCommandType.REQUEST_ONEWAY)
                 .setSourceClientId(idHash)
-                .setMsgId(externalMessage.getMsgId());
+                .setMsgId(externalMessage.getMsgId())
+                .setCustomData(externalMessage.getCustomData());
 
         byte[] data = externalMessage.getData();
 
@@ -122,6 +123,8 @@ public class ExternalKit {
         externalMessage.setValidMsg(responseMessage.getValidatorMsg());
         // 消息标记号；由前端请求时设置，服务器响应时会携带上
         externalMessage.setMsgId(headMetadata.getMsgId());
+        // 开发者自定义数据
+        externalMessage.setCustomData(headMetadata.getCustomData());
 
         return externalMessage;
     }

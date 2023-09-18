@@ -305,7 +305,8 @@ public class FlowContext implements FlowOptionDynamic {
      */
     protected RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
 
-        HeadMetadata headMetadata = this.request.getHeadMetadata()
+        HeadMetadata headMetadata = this.request
+                .getHeadMetadata()
                 .cloneHeadMetadata()
                 .setCmdInfo(cmdInfo);
 

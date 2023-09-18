@@ -148,6 +148,15 @@ public final class HeadMetadata implements Serializable {
     int[] bindingLogicServerIds;
     /** 框架自用字段。将来变化可能较大，开发者请不要使用。 */
     int cacheCondition;
+    /**
+     * 自定义数据，专为开发者预留的一个字段，开发者可以利用该字段来传递自定义数据
+     * <pre>
+     *     该字段由开发者自己定义，框架不会对数据做任何处理，也不会做任何检查，
+     *     开发者可以利用该字段来传递任何数据，包括自定义对象。
+     * </pre>
+     */
+    byte[] customData;
+
     /** 临时变量 */
     transient Object other;
     transient int withNo;
