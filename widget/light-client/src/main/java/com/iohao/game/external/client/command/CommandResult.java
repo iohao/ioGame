@@ -26,10 +26,12 @@ import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 回调结果
@@ -39,19 +41,51 @@ import java.util.List;
  */
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class CommandResult {
-    ExternalMessage externalMessage;
+    @Getter
+    final ExternalMessage externalMessage;
     /** 请求参数 */
     @Getter
+    @Deprecated
     Object requestData;
-
+    @Setter
+    @Deprecated
+    Class<?> responseClass;
     /** 业务对象 */
     Object value;
 
+    public CommandResult(ExternalMessage externalMessage) {
+        this.externalMessage = externalMessage;
+    }
+
+    /**
+     * <pre>
+     *     请使用 {@code this.getValue(Class)} 代替
+     * </pre>
+     *
+     * @param <T>
+     * @return
+     */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public <T> T getValue() {
+
+        if (Objects.isNull(value)) {
+            this.value = this.getValue(this.responseClass);
+        }
+
         return (T) value;
     }
 
+    /**
+     * <pre>
+     *     请使用 {@code  this.listValue(Class)} 代替
+     * </pre>
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public <T> List<T> toList(Class<? extends T> clazz) {
         if (value instanceof ByteValueList byteValueList) {
@@ -88,9 +122,63 @@ public class CommandResult {
         return CmdInfo.of(cmdMerge);
     }
 
+    @Deprecated
     public byte[] getBytes() {
         return externalMessage.getData();
     }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getValue(Class<? extends T> clazz) {
+        byte[] data = this.externalMessage.getData();
+
+        if (Objects.isNull(this.value)) {
+            this.value = DataCodecKit.decode(data, clazz);
+        }
+
+        return (T) value;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> List<T> listValue(Class<? extends T> clazz) {
+        return (List<T>) this.getValue(ByteValueList.class)
+                .values
+                .stream()
+                .map(v -> DataCodecKit.decode(v, clazz))
+                .toList();
+    }
+
+    public String getString() {
+        return this.getValue(StringValue.class).value;
+    }
+
+    public List<String> listString() {
+        return this.getValue(StringValueList.class).values;
+    }
+
+    public int getInt() {
+        return this.getValue(IntValue.class).value;
+    }
+
+    public List<Integer> listInt() {
+        return this.getValue(IntValueList.class).values;
+    }
+
+    public long getLong() {
+        return this.getValue(LongValue.class).value;
+    }
+
+    public List<Long> listLong() {
+        return this.getValue(LongValueList.class).values;
+    }
+
+    public boolean getBoolean() {
+        return this.getValue(BoolValue.class).value;
+    }
+
+    public List<Boolean> listBoolean() {
+        return this.getValue(BoolValueList.class).values;
+    }
+
 
     @Override
     public String toString() {

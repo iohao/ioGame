@@ -19,10 +19,12 @@
 package com.iohao.game.external.client;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.external.client.command.InputCallback;
+import com.iohao.game.external.client.command.CallbackDelegate;
 import com.iohao.game.external.client.command.InputCommand;
+import com.iohao.game.external.client.command.ListenCommand;
 import com.iohao.game.external.client.command.RequestCommand;
 import com.iohao.game.external.client.user.ClientUser;
+import com.iohao.game.external.client.user.ClientUserChannel;
 import com.iohao.game.external.client.user.ClientUserInputCommands;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -103,13 +105,45 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
      *     监听游戏服务器广播的消息
      * </pre>
      *
+     * <pre>
+     *     请使用 {@code this.ofListen} 代替
+     * </pre>
+     * example:
+     * <pre>{@code
+     *             ofListen(result -> {
+     *                 DemoBroadcastMessage value = result.getValue(DemoBroadcastMessage.class);
+     *                 log.info("broadcastMessage ========== \n{}", value);
+     *             }, DemoBroadcastCmd.broadcastMsg, "helloBroadcast1");
+     * }
+     * </pre>
+     *
      * @param subCmd        子路由
      * @param responseClass 响应后使用这个 class 来解析 data 数据
      * @param callback      结果回调（游戏服务器回传的结果）
-     * @param description   描述
+     * @param title         描述
      */
-    protected void listenBroadcast(Class<?> responseClass, InputCallback callback, int subCmd, String description) {
-        this.inputCommandCreate.listenBroadcast(responseClass, callback, subCmd, description);
+    @Deprecated
+    protected void listenBroadcast(Class<?> responseClass, CallbackDelegate callback, int subCmd, String title) {
+        ofListen(subCmd)
+                .setTitle(title)
+                .setResponseClass(responseClass)
+                .setCallback(callback);
+    }
+
+    protected void ofListen(CallbackDelegate callback, int subCmd, String title) {
+        this.ofListen(subCmd)
+                .setCallback(callback)
+                .setTitle(title);
+    }
+
+    private ListenCommand ofListen(int subCmd) {
+        CmdInfo cmdInfo = inputCommandCreate.ofCmdInfo(subCmd);
+        ListenCommand listenCommand = new ListenCommand(cmdInfo);
+
+        ClientUserChannel clientUserChannel = this.clientUser.getClientUserChannel();
+        clientUserChannel.addListen(listenCommand);
+
+        return listenCommand;
     }
 
     /**

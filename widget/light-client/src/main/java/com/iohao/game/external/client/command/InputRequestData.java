@@ -20,10 +20,14 @@ package com.iohao.game.external.client.command;
 
 /**
  * 动态请求参数生成
+ * <pre>
+ *     请使用 {@code RequestDataDelegate} 代替
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2023-07-09
  */
+@Deprecated
 public interface InputRequestData {
     /**
      * 创建请求参数

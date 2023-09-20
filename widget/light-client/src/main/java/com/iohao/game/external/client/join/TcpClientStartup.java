@@ -46,8 +46,7 @@ class TcpClientStartup implements ClientConnect {
     @Override
     public void connect(ClientConnectOption option) {
         ClientUser clientUser = option.getClientUser();
-        BarSkeleton barSkeleton = option.getBarSkeleton();
-        ClientMessageHandler clientMessageHandler = new ClientMessageHandler(barSkeleton, clientUser);
+        ClientMessageHandler clientMessageHandler = new ClientMessageHandler( clientUser);
 
         EventLoopGroup group = new NioEventLoopGroup();
         var bootstrap = new Bootstrap();

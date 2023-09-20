@@ -18,7 +18,6 @@
  */
 package com.iohao.game.external.client.user;
 
-import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.external.core.message.ExternalMessage;
 
 /**
@@ -26,5 +25,5 @@ import com.iohao.game.external.core.message.ExternalMessage;
  * @date 2023-07-08
  */
 public interface ClientChannelRead {
-    void read(ExternalMessage externalMessage, BarSkeleton barSkeleton);
+    void read(ExternalMessage externalMessage);
 }

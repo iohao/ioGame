@@ -87,7 +87,14 @@ public class ClientUserInputCommands {
 
     public RequestCommand ofRequestCommand(CmdInfo cmdInfo) {
         InputCommand inputCommand = this.getInputCommand(cmdInfo);
-        return new RequestCommand(inputCommand, this);
+
+        return new RequestCommand()
+                .setClientUserChannel(this.clientUserChannel)
+                .setTitle(inputCommand.getTitle())
+                .setCmdMerge(inputCommand.getCmdInfo().getCmdMerge())
+                .setRequestData(inputCommand.getRequestData())
+                .setCallback(inputCommand.getCallback())
+                .setResponseClass(inputCommand.getResponseClass());
     }
 
     public void request(CmdInfo cmdInfo) {
@@ -125,7 +132,7 @@ public class ClientUserInputCommands {
 
     public void listenHelp() {
         System.out.println("---------- 广播监听 help ----------");
-        clientUserChannel.getListenBroadcastMap().values().forEach(System.out::println);
+        clientUserChannel.getListenMap().values().forEach(System.out::println);
         System.out.println("------------------------------");
     }
 
@@ -137,9 +144,6 @@ public class ClientUserInputCommands {
         if (!starting.compareAndSet(false, true)) {
             return;
         }
-
-        // 启动通信 channel
-        clientUserChannel.startup();
 
         InternalKit.execute(this::extracted);
     }

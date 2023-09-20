@@ -18,7 +18,6 @@
  */
 package com.iohao.game.external.client.join;
 
-import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.client.ClientConnectOption;
@@ -47,7 +46,6 @@ class WebSocketClientStartup implements ClientConnect {
         ClientUserChannel clientUserChannel = clientUser.getClientUserChannel();
 
         String wsUrl = option.getWsUrl();
-        BarSkeleton barSkeleton = option.getBarSkeleton();
 
         URI uri = null;
         try {
@@ -83,7 +81,7 @@ class WebSocketClientStartup implements ClientConnect {
                 byte[] dataContent = byteBuffer.array();
                 ExternalMessage externalMessage = DataCodecKit.decode(dataContent, ExternalMessage.class);
 
-                clientUserChannel.read(externalMessage, barSkeleton);
+                clientUserChannel.read(externalMessage);
             }
         };
 

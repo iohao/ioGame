@@ -42,6 +42,7 @@ public class ClientUserConfigs {
     public boolean openLogListenBroadcast = true;
 
     /** true 开启 client action 回调日志 */
+    @Deprecated
     public boolean openLogAction = true;
 
     /** true 开启客户端向服务器发送请求的日志 */

@@ -18,35 +18,10 @@
  */
 package com.iohao.game.external.client.command;
 
-import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.external.client.kit.ClientKit;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-
 /**
- * 广播监听
- *
  * @author 渔民小镇
- * @date 2023-07-09
+ * @date 2023-09-19
  */
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class ListenBroadcastCommand {
-    final CmdInfo cmdInfo;
-    final String name;
-    String description = "... ...";
-    CommandCallback commandCallback;
-
-    public ListenBroadcastCommand(CmdInfo cmdInfo) {
-        this.name = ClientKit.toInputName(cmdInfo);
-        this.cmdInfo = cmdInfo;
-    }
-
-    @Override
-    public String toString() {
-        return name + "    :    " + description;
-    }
+@FunctionalInterface
+public interface CallbackDelegate extends InputCallback {
 }

@@ -18,13 +18,11 @@
  */
 package com.iohao.game.external.client.user;
 
-import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.common.kit.ExecutorKit;
-import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.action.skeleton.core.CmdKit;
+import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.external.client.command.*;
 import com.iohao.game.external.client.kit.ClientUserConfigs;
-import com.iohao.game.external.client.kit.ClientKit;
 import com.iohao.game.external.core.kit.ExternalKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.message.ExternalMessageCmdCode;
@@ -36,11 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.net.InetSocketAddress;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -62,10 +57,20 @@ public class ClientUserChannel {
     final AtomicInteger msgIdSeq = new AtomicInteger(1);
 
     final AtomicBoolean starting = new AtomicBoolean();
-    final Map<Integer, ListenBroadcastCommand> listenBroadcastMap = new LinkedHashMap<>();
-    final BlockingQueue<CommandRequest> blockingQueue = new LinkedBlockingQueue<>();
-    /** 回调 */
-    final Map<Integer, CommandCallback> callbackMap = new NonBlockingHashMap<>();
+    /**
+     * 请求回调
+     * <pre>
+     *     key : msgId
+     * </pre>
+     */
+    final Map<Integer, RequestCommand> callbackMap = new NonBlockingHashMap<>();
+    /**
+     * 广播监听
+     * <pre>
+     *     key : cmdMerge
+     * </pre>
+     */
+    final Map<Integer, ListenCommand> listenMap = new NonBlockingHashMap<>();
 
     ClientChannelRead channelRead = new DefaultChannelRead();
 
@@ -79,79 +84,70 @@ public class ClientUserChannel {
         this.clientUser = clientUser;
     }
 
+    @Deprecated
     public void request(InputCommand inputCommand) {
         CmdInfo cmdInfo = inputCommand.getCmdInfo();
         // 生成请求参数
-        Object requestData = inputCommand.getRequestData();
+        RequestDataDelegate requestData = inputCommand.getRequestData();
 
         // 回调相关
         Class<?> responseClass = inputCommand.getResponseClass();
-        InputCallback callback = inputCommand.getCallback();
+        CallbackDelegate callback = inputCommand.getCallback();
 
-        request(cmdInfo, requestData, responseClass, callback);
+        RequestCommand requestCommand = new RequestCommand()
+                .setCmdMerge(cmdInfo.getCmdMerge())
+                .setTitle(inputCommand.getTitle())
+                .setRequestData(requestData)
+                .setResponseClass(responseClass)
+                .setCallback(callback);
+
+        this.execute(requestCommand);
     }
 
-    public void request(CmdInfo cmdInfo, Object requestData, Class<?> responseClass, InputCallback callback) {
-        int msgId = msgIdSeq.incrementAndGet();
+    @Deprecated
+    public void request(CmdInfo cmdInfo, Object data, Class<?> responseClass, CallbackDelegate callback) {
+        RequestCommand requestCommand = new RequestCommand()
+                .setCmdMerge(cmdInfo.getCmdMerge())
+                .setTitle(cmdInfo.toString())
+                .setRequestData(() -> data)
+                .setResponseClass(responseClass)
+                .setCallback(callback);
 
-        ExternalMessage externalMessage = ExternalKit.createExternalMessage(cmdInfo, requestData);
+        this.execute(requestCommand);
+    }
+
+
+    public void execute(RequestCommand requestCommand) {
+        int msgId = this.msgIdSeq.incrementAndGet();
+        this.callbackMap.put(msgId, requestCommand);
+        CmdInfo cmdInfo = CmdInfo.of(requestCommand.getCmdMerge());
+
+        ExternalMessage externalMessage = ExternalKit.createExternalMessage(cmdInfo);
         externalMessage.setMsgId(msgId);
 
-        // 请求命令
-        CommandRequest commandRequest = new CommandRequest(msgId, externalMessage);
-        blockingQueue.add(commandRequest);
-
-        // 回调命令
-        CommandCallback commandCallback = new CommandCallback();
-        commandCallback.msgId = msgId;
-        commandCallback.responseClass = responseClass;
-        commandCallback.callback = callback;
-        commandCallback.requestData = requestData;
-
-        callbackMap.put(msgId, commandCallback);
-    }
-
-    public void read(ExternalMessage externalMessage, BarSkeleton barSkeleton) {
-        channelRead.read(externalMessage, barSkeleton);
-    }
-
-    void startup() {
-        if (starting.get()) {
-            return;
+        RequestDataDelegate requestData = requestCommand.getRequestData();
+        Object data = "";
+        if (Objects.nonNull(requestData)) {
+            data = requestData.createRequestData();
+            externalMessage.setData(DataCodecKit.encode(data));
         }
 
-        if (!starting.compareAndSet(false, true)) {
-            return;
+        if (ClientUserConfigs.openLogRequestCommand) {
+            long userId = clientUser.getUserId();
+            log.info("\n玩家[{}] 发起【{}】请求 - [msgId:{}] {} {}"
+                    , userId
+                    , requestCommand.getTitle()
+                    , msgId
+                    , CmdKit.mergeToShort(cmdInfo.getCmdMerge())
+                    , data
+            );
         }
 
-        String simpleName = this.getClass().getSimpleName();
-        ExecutorKit.newSingleThreadExecutor(simpleName).execute(() -> {
-            for (; ; ) {
-                try {
-                    CommandRequest commandRequest = blockingQueue.take();
-
-                    if (ClientUserConfigs.openLogRequestCommand) {
-                        long userId = clientUser.getUserId();
-                        ExternalMessage externalMessage = commandRequest.externalMessage();
-                        CmdInfo cmdInfo = CmdInfo.of(externalMessage.getCmdMerge());
-                        ClientUserInputCommands inputCommands = clientUser.getClientUserInputCommands();
-                        InputCommand inputCommand = inputCommands.getInputCommand(cmdInfo);
-
-                        log.info("玩家[{}] 向服务器发送请求 【{}】", userId, inputCommand);
-                    }
-
-                    // 发送请求到游戏服务器
-                    writeAndFlush(commandRequest);
-                } catch (InterruptedException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        });
+        this.writeAndFlush(externalMessage);
     }
 
-    private void writeAndFlush(CommandRequest clientRequest) {
-        ExternalMessage externalMessage = clientRequest.externalMessage();
-        writeAndFlush(externalMessage);
+    public void read(ExternalMessage externalMessage) {
+        channelRead.read(externalMessage);
     }
 
     public void writeAndFlush(ExternalMessage externalMessage) {
@@ -177,42 +173,37 @@ public class ClientUserChannel {
      * @param cmdInfo       监听的路由
      * @param responseClass 响应后使用这个 class 来解析 data 数据
      * @param callback      结果回调（游戏服务器回传的结果）
-     * @param description   广播描述
+     * @param title         广播描述
      */
+    @Deprecated
     public void listenBroadcast(CmdInfo cmdInfo
             , Class<?> responseClass
-            , InputCallback callback
-            , String description
+            , CallbackDelegate callback
+            , String title
     ) {
 
-        // 回调
-        CommandCallback commandCallback = new CommandCallback();
-        commandCallback.responseClass = responseClass;
-        commandCallback.callback = callback;
+        ListenCommand listenCommand = new ListenCommand(cmdInfo)
+                .setTitle(title)
+                .setResponseClass(responseClass)
+                .setCallback(callback);
 
-        int cmdMerge = cmdInfo.getCmdMerge();
+        this.addListen(listenCommand);
+    }
 
-        if (listenBroadcastMap.containsKey(cmdMerge)) {
-            throw new RuntimeException("相同的广播路由，只能监听一个");
-        }
-
-        ListenBroadcastCommand broadcastCommand = new ListenBroadcastCommand(cmdInfo);
-        broadcastCommand.setCommandCallback(commandCallback);
-
-        if (StrKit.isNotEmpty(description)) {
-            broadcastCommand.setDescription(description);
-        }
-
-        listenBroadcastMap.put(cmdMerge, broadcastCommand);
+    public void addListen(ListenCommand listenCommand) {
+        int cmdMerge = listenCommand.getCmdInfo().getCmdMerge();
+        this.listenMap.put(cmdMerge, listenCommand);
     }
 
     class DefaultChannelRead implements ClientChannelRead {
         @Override
-        public void read(ExternalMessage externalMessage, BarSkeleton barSkeleton) {
+        public void read(ExternalMessage externalMessage) {
             // 表示有异常消息;统一异常处理
             int responseStatus = externalMessage.getResponseStatus();
             int cmdMerge = externalMessage.getCmdMerge();
             CmdInfo cmdInfo = CmdInfo.of(cmdMerge);
+            int msgId = externalMessage.getMsgId();
+            RequestCommand requestCommand = callbackMap.remove(msgId);
 
             if (responseStatus != 0) {
                 log.error("[错误码:{}] - [消息:{}] - {}", responseStatus, externalMessage.getValidMsg(), cmdInfo);
@@ -227,49 +218,44 @@ public class ClientUserChannel {
                 return;
             }
 
+            CommandResult commandResult = new CommandResult(externalMessage);
+
             // 有回调的，交给回调处理
-            int msgId = externalMessage.getMsgId();
-            if (msgId != 0) {
-                // 如果有 callback ，优先交给 callback 处理
-                CommandCallback commandCallback = callbackMap.remove(msgId);
-                if (Objects.nonNull(commandCallback)) {
+            if (Objects.nonNull(requestCommand)) {
 
-                    if (ClientUserConfigs.openLogRequestCallback) {
-                        // 玩家接收服务器的响应数据
-                        long userId = clientUser.getUserId();
-                        ClientUserInputCommands inputCommands = clientUser.getClientUserInputCommands();
-                        InputCommand inputCommand = inputCommands.getInputCommand(cmdInfo);
-                        log.info("玩家[{}] 的请求回调【{}】", userId, inputCommand);
-                    }
+                if (ClientUserConfigs.openLogRequestCallback) {
+                    // 玩家接收服务器的响应数据
+                    long userId = clientUser.getUserId();
 
-                    commandCallback.callback(externalMessage);
-                    return;
-                }
-            }
-
-            // 如果配置了广播监听，优先在这处理
-            ListenBroadcastCommand broadcastCommand = listenBroadcastMap.get(cmdMerge);
-            if (Objects.nonNull(broadcastCommand)) {
-
-                if (ClientUserConfigs.openLogListenBroadcast) {
-                    log.info("触发广播监听回调 : {}", broadcastCommand);
+                    log.info("\n玩家[{}] 接收【{}】回调 - [msgId:{}] {}"
+                            , userId
+                            , requestCommand.getTitle()
+                            , msgId
+                            , CmdKit.mergeToShort(cmdInfo.getCmdMerge())
+                    );
                 }
 
-                CommandCallback commandCallback = broadcastCommand.getCommandCallback();
-                commandCallback.callback(externalMessage);
+                commandResult.setResponseClass(requestCommand.getResponseClass());
+                CallbackDelegate callback = requestCommand.getCallback();
+                callback.callback(commandResult);
+
                 return;
             }
 
-            if (ClientUserConfigs.openLogAction) {
-                String inputName = ClientKit.toInputName(cmdInfo);
-                log.info("action : {}", inputName);
-            }
+            // 广播监听
+            ListenCommand listenCommand = listenMap.get(cmdMerge);
+            if (Objects.nonNull(listenCommand)) {
+                if (ClientUserConfigs.openLogListenBroadcast) {
+                    log.info("广播监听回调[{}]通知 {}"
+                            , listenCommand.getTitle()
+                            , cmdInfo
+                    );
+                }
 
-            /*
-             * 没有回调的，交给 client action 处理
-             * 没有 msgId 的，一般是广播消息，交给 client action 处理
-             */
-//            ClientActionProcess.action(externalMessage, barSkeleton);
+                CallbackDelegate callback = listenCommand.getCallback();
+                commandResult.setResponseClass(listenCommand.getResponseClass());
+                callback.callback(commandResult);
+            }
         }
     }
 }

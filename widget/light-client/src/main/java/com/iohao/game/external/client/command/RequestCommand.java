@@ -22,7 +22,9 @@ import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import com.iohao.game.external.client.user.ClientUserChannel;
-import com.iohao.game.external.client.user.ClientUserInputCommands;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * 请求命令执行。用于请求服务器的命令，业务数据需要在调用 request 方法时传入。
@@ -30,13 +32,26 @@ import com.iohao.game.external.client.user.ClientUserInputCommands;
  * @author 渔民小镇
  * @date 2023-07-14
  */
-public record RequestCommand(InputCommand inputCommand, ClientUserInputCommands clientUserInputCommands) {
+@Getter
+@Setter
+@Accessors(chain = true)
+public class RequestCommand {
+    ClientUserChannel clientUserChannel;
+    int cmdMerge;
+    String title = "... ...";
+    /** 请求参数 */
+    RequestDataDelegate requestData;
+    CallbackDelegate callback;
+    @Deprecated
+    Class<?> responseClass;
 
+    @Deprecated
     public void request(long value) {
         LongValue longValue = LongValue.of(value);
         this.request(longValue);
     }
 
+    @Deprecated
     public void request(int value) {
         IntValue intValue = IntValue.of(value);
         this.request(intValue);
@@ -49,21 +64,24 @@ public record RequestCommand(InputCommand inputCommand, ClientUserInputCommands 
      *     否则使用配置时的 requestData 对象
      * </pre>
      */
+    @Deprecated
     public void request() {
-        Object requestData = inputCommand.getRequestData();
-        this.request(requestData);
+        Object data = requestData.createRequestData();
+        this.request(data);
     }
 
     /**
      * 向服务器发起请求
      *
-     * @param requestData 请求业务参数
+     * @param data 请求业务参数
      */
-    public void request(Object requestData) {
-        CmdInfo cmdInfo = inputCommand.getCmdInfo();
-        Class<?> responseClass = inputCommand.getResponseClass();
-        InputCallback callback = inputCommand.getCallback();
-        ClientUserChannel clientUserChannel = clientUserInputCommands.getClientUserChannel();
-        clientUserChannel.request(cmdInfo, requestData, responseClass, callback);
+    @Deprecated
+    public void request(Object data) {
+        CmdInfo cmdInfo = CmdInfo.of(this.cmdMerge);
+        clientUserChannel.request(cmdInfo, data, responseClass, callback);
+    }
+
+    public void execute() {
+        clientUserChannel.execute(this);
     }
 }

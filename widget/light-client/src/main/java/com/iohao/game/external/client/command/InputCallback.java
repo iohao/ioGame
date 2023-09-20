@@ -19,9 +19,13 @@
 package com.iohao.game.external.client.command;
 
 /**
+ * <pre>
+ *     请使用 {@link CallbackDelegate} 代替
+ * </pre>
  * @author 渔民小镇
  * @date 2023-07-08
  */
+@Deprecated
 @FunctionalInterface
 public interface InputCallback {
     void callback(CommandResult result);

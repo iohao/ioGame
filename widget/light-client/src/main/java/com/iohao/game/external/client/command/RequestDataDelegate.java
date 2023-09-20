@@ -18,13 +18,10 @@
  */
 package com.iohao.game.external.client.command;
 
-import com.iohao.game.external.core.message.ExternalMessage;
-
 /**
- * 请求命令
- *
  * @author 渔民小镇
- * @date 2023-07-08
+ * @date 2023-09-19
  */
-public record CommandRequest(int msgId, ExternalMessage externalMessage) {
+@FunctionalInterface
+public interface RequestDataDelegate extends InputRequestData {
 }

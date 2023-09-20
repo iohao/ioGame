@@ -37,6 +37,5 @@ import java.net.InetSocketAddress;
 public class ClientConnectOption {
     String wsUrl;
     InetSocketAddress socketAddress;
-    BarSkeleton barSkeleton;
     ClientUser clientUser;
 }

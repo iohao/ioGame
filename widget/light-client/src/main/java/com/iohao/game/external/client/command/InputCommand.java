@@ -31,6 +31,21 @@ import java.util.Objects;
 
 /**
  * 模拟命令
+ * example:
+ * <pre>{@code
+ *         ofCommand(DemoCmd.here).callback(result -> {
+ *             HelloReq value = result.getValue(HelloReq.class);
+ *             log.info("value : {}", value);
+ *         }).setTitle("here").setData(helloReq);
+ *
+ *         ofCommand(DemoCmd.list).callback(result -> {
+ *             // 得到 list 数据
+ *             List<HelloReq> list = result.listValue(HelloReq.class);
+ *             log.info("list : {}", list);
+ *         }).setTitle("list");
+ *
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2023-07-08
@@ -43,29 +58,43 @@ public class InputCommand {
 
     final String inputName;
     final CmdInfo cmdInfo;
+    /**
+     * 模拟请求命令的描述
+     * <pre>
+     *     请使用 {@code setTitle(String}} 代替
+     * </pre>
+     */
+    @Deprecated
+    String description;
     /** 模拟请求命令的描述 */
-    String description = "... ...";
+    String title = "... ...";
     /** 描述的前缀 */
     String cmdName = "";
-    /** 默认的请求参数 */
-    Object requestData;
     /**
      * 动态请求参数
      * <pre>
      *     如果对象存在，则会使用 createRequestData 方法的返回值来代替 this.requestData 属性
      * </pre>
+     * <pre>
+     *     请使用 requestData 代替
+     * </pre>
      */
+    @Deprecated
     InputRequestData inputRequestData;
 
+    /** 请求参数 */
+    RequestDataDelegate requestData;
     /** 回调接口 */
     @Setter(AccessLevel.PRIVATE)
-    InputCallback callback;
+    CallbackDelegate callback;
     /**
      * 回调业务数据的类型
      * <pre>
      *     如果配置了，会根据此类型来解析服务器返回的业务数据
      * </pre>
      */
+    @Deprecated
+    @Setter(AccessLevel.PRIVATE)
     Class<?> responseClass;
 
     public InputCommand(CmdInfo cmdInfo) {
@@ -73,7 +102,70 @@ public class InputCommand {
         this.cmdInfo = cmdInfo;
     }
 
-    public InputCommand callback(Class<?> responseClass, InputCallback callback) {
+
+    /**
+     * 模拟请求命令的描述
+     * <pre>
+     *     请使用 {@code setTitle(String}} 代替
+     * </pre>
+     */
+    @Deprecated
+    public InputCommand setDescription(String description) {
+        this.title = description;
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * <pre>
+     *     请使用 {@code  this.setRequestData(RequestDataDelegate)} 代替
+     * </pre>
+     *
+     * @param data
+     * @return
+     */
+    @Deprecated
+    public InputCommand setRequestData(Object data) {
+        if (data instanceof RequestDataDelegate theRequestData) {
+            this.requestData = theRequestData;
+        } else {
+            this.requestData = () -> data;
+        }
+
+        return this;
+    }
+
+    public InputCommand setRequestData(RequestDataDelegate requestData) {
+        this.requestData = requestData;
+        return this;
+    }
+
+    /**
+     * <pre>
+     *     请使用 {@code this.callback(CallbackDelegate)} 代替
+     * </pre>
+     * example:
+     * <pre>{@code
+     *         ofCommand(DemoCmd.here).callback(result -> {
+     *             HelloReq value = result.getValue(HelloReq.class);
+     *             log.info("value : {}", value);
+     *         }).setTitle("here").setData(helloReq);
+     *
+     *         ofCommand(DemoCmd.list).callback(result -> {
+     *             // 得到 list 数据
+     *             List<HelloReq> list = result.listValue(HelloReq.class);
+     *             log.info("list : {}", list);
+     *         }).setTitle("list");
+     *
+     * }
+     * </pre>
+     *
+     * @param responseClass
+     * @param callback
+     * @return
+     */
+    @Deprecated
+    public InputCommand callback(Class<?> responseClass, CallbackDelegate callback) {
         this.callback = callback;
 
         if (Objects.nonNull(responseClass)) {
@@ -83,32 +175,19 @@ public class InputCommand {
         return this;
     }
 
-    /**
-     * 获取请求参数
-     * <pre>
-     *     当配置了 inputRequestData 动态请求参数生成时，优先动态生成；
-     *     否则使用配置时的 requestData 对象
-     * </pre>
-     *
-     * @return 请求参数
-     */
-    public Object getRequestData() {
-
-        if (Objects.nonNull(inputRequestData)) {
-            return inputRequestData.createRequestData();
-        }
-
-        return requestData;
+    public InputCommand callback(CallbackDelegate callback) {
+        this.callback = callback;
+        return this;
     }
 
     @Override
     public String toString() {
         if (StrKit.isEmpty(cmdName)) {
             var format = "%s    :    %s";
-            return String.format(format, inputName, description);
+            return String.format(format, inputName, title);
         }
 
         var format = "%s    :    [%s] - %s";
-        return String.format(format, inputName, cmdName, description);
+        return String.format(format, inputName, cmdName, title);
     }
 }
