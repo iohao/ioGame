@@ -73,7 +73,7 @@
         <jctools-core.version>4.0.1</jctools-core.version>
 
         <!-- lombok 消除冗长的 Java 代码 https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-        <lombok.version>1.18.28</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
 
         <!-- redis internal : https://mvnrepository.com/artifact/org.redisson/redisson -->
         <redisson.version>3.17.7</redisson.version>

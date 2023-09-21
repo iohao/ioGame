@@ -26,6 +26,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.Objects;
+
 /**
  * 请求命令执行。用于请求服务器的命令，业务数据需要在调用 request 方法时传入。
  *
@@ -66,7 +68,12 @@ public class RequestCommand {
      */
     @Deprecated
     public void request() {
-        Object data = requestData.createRequestData();
+
+        Object data = null;
+        if (Objects.nonNull(requestData)) {
+            data = requestData.createRequestData();
+        }
+
         this.request(data);
     }
 

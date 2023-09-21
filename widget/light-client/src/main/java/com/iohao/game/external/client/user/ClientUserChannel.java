@@ -109,9 +109,16 @@ public class ClientUserChannel {
         RequestCommand requestCommand = new RequestCommand()
                 .setCmdMerge(cmdInfo.getCmdMerge())
                 .setTitle(cmdInfo.toString())
-                .setRequestData(() -> data)
                 .setResponseClass(responseClass)
                 .setCallback(callback);
+
+        if (Objects.nonNull(data)) {
+            if (data instanceof RequestDataDelegate requestDataDelegate) {
+                requestCommand.setRequestData(requestDataDelegate);
+            } else {
+                requestCommand.setRequestData(() -> data);
+            }
+        }
 
         this.execute(requestCommand);
     }
