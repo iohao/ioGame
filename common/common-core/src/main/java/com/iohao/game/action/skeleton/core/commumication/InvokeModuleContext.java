@@ -33,6 +33,50 @@ import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
  *     单个逻辑服与单个逻辑服通信请求-无响应值（可跨进程）
  *     单个逻辑服与同类型多个逻辑服通信请求（可跨进程）
  * </pre>
+ * 获取内部模块通讯上下文
+ * <pre>{@code
+ *     // 游戏逻辑服通讯上下文
+ *     InvokeModuleContext invokeModuleContext = BrokerClientHelper.getInvokeModuleContext();
+ * }
+ * </pre>
+ * 参考文档 <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+ * <pre>
+ *     默认情况下，跨服且有返回值的 action 调用，则都是同步的；
+ *     如果想要使用异步的方式，可以通过 CompletableFuture 或虚拟线程来实现。
+ * </pre>
+ * <p>
+ * example async ： 通过 CompletableFuture 实现；
+ * <pre>{@code
+ *     CompletableFuture<YourMsg> future = CompletableFuture.supplyAsync(() -> {
+ *         // 路由：这个路由是将要访问逻辑服的路由（表示你将要去的地方）
+ *         CmdInfo cmdInfo = ...
+ *         // 游戏逻辑服通讯上下文
+ *         InvokeModuleContext invokeModuleContext = ...
+ *         // 根据路由信息来请求其他子服务器（其他逻辑服）的数据
+ *         return invokeModuleContext.invokeModuleMessageData(cmdInfo, YourMsg.class);
+ *     });
+ *
+ *     ... 你的其他逻辑
+ *     var msg = future.get();
+ *     log.info("message : {} ", msg);
+ * }
+ * </pre>
+ * <p>
+ * example async ： 通过 CompletableFuture 实现的回调写法；
+ * <pre>{@code
+ *     CompletableFuture<YourMsg> future = CompletableFuture.supplyAsync(() -> {
+ *         // 路由：这个路由是将要访问逻辑服的路由（表示你将要去的地方）
+ *         CmdInfo cmdInfo = ...
+ *         // 游戏逻辑服通讯上下文
+ *         InvokeModuleContext invokeModuleContext = ...
+ *         // 根据路由信息来请求其他子服务器（其他逻辑服）的数据
+ *         return invokeModuleContext.invokeModuleMessageData(cmdInfo, YourMsg.class);
+ *     }).thenAccept(msg -> {
+ *         // 回调写法
+ *         log.info("message : {}", msg);
+ *     });
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2022-06-07
@@ -42,9 +86,18 @@ public interface InvokeModuleContext {
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
      * <pre>
-     *     相关文档
+     *     异步无阻塞的方法，因为没有返回值；
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
+     *     InvokeModuleContext invokeModuleContext = ...
+     *     // 请求房间逻辑服来创建房间，并且不需要返回值
+     *     // 路由、业务参数
+     *     invokeModuleContext.invokeModuleVoidMessage(cmdInfo, data);
+     * }
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -58,9 +111,18 @@ public interface InvokeModuleContext {
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
      * <pre>
-     *     相关文档
+     *     异步无阻塞的方法，因为没有返回值；
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
+     *     InvokeModuleContext invokeModuleContext = ...
+     *     // 请求房间逻辑服来创建房间，并且不需要返回值
+     *     // 路由、业务参数
+     *     invokeModuleContext.invokeModuleVoidMessage(cmdInfo);
+     * }
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -72,9 +134,18 @@ public interface InvokeModuleContext {
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
      * <pre>
-     *     相关文档
+     *     异步无阻塞的方法，因为没有返回值；
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
+     *     InvokeModuleContext invokeModuleContext = ...
+     *     // 请求房间逻辑服来创建房间，并且不需要返回值
+     *     // 路由、业务参数
+     *     invokeModuleContext.invokeModuleVoidMessage(requestMessage);
+     * }
      * </pre>
      *
      * @param requestMessage requestMessage
@@ -87,11 +158,26 @@ public interface InvokeModuleContext {
      *     相关文档
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
+     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     public void count() {
+     *         // 路由：这个路由是将要访问逻辑服的路由（表示你将要去的地方）
+     *         CmdInfo cmdInfo = ...
+     *         YourData data = ...
+     *         // 模块通讯上下文
+     *         InvokeModuleContext invokeModuleContext = ...
+     *         // 根据路由信息来请求其他子服务器（其他逻辑服）的数据
+     *         YourMsg msg = invokeModuleContext.invokeModuleMessageData(cmdInfo, data, YourMsg.class);
+     *         log.info("message : {} ", msg);
+     *     }
+     * }
      * </pre>
      *
      * @param cmdInfo 路由信息
      * @param data    请求参数
-     * @param clazz   pb class
+     * @param clazz   response data class
      * @param <T>     t
      * @return pb 对象
      */
@@ -108,6 +194,20 @@ public interface InvokeModuleContext {
      *     相关文档
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
+     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     public void count() {
+     *         // 路由：这个路由是将要访问逻辑服的路由（表示你将要去的地方）
+     *         CmdInfo cmdInfo = ...
+     *         // 模块通讯上下文
+     *         InvokeModuleContext invokeModuleContext = ...
+     *         // 根据路由信息来请求其他子服务器（其他逻辑服）的数据
+     *         YourMsg msg = invokeModuleContext.invokeModuleMessageData(cmdInfo, YourMsg.class);
+     *         log.info("message : {} ", msg);
+     *     }
+     * }
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -125,6 +225,19 @@ public interface InvokeModuleContext {
      *     相关文档
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
+     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     public void count() {
+     *         RequestMessage request = ...
+     *         // 模块通讯上下文
+     *         InvokeModuleContext invokeModuleContext = ...
+     *         // 根据路由信息来请求其他子服务器（其他逻辑服）的数据
+     *         YourMsg msg = invokeModuleContext.invokeModuleMessageData(request, YourMsg.class);
+     *         log.info("message : {} ", msg);
+     *     }
+     * }
      * </pre>
      *
      * @param requestMessage RequestMessage
@@ -146,6 +259,23 @@ public interface InvokeModuleContext {
      *     相关文档
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
+     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     public void count() {
+     *         // 路由：这个路由是将要访问逻辑服的路由（表示你将要去的地方）
+     *         CmdInfo cmdInfo = ...
+     *         YourData data = ...
+     *         // 模块通讯上下文
+     *         InvokeModuleContext invokeModuleContext = ...
+     *         // 根据路由信息来请求其他子服务器（其他逻辑服）的数据
+     *         ResponseMessage responseMessage = invokeModuleContext.invokeModuleMessage(cmdInfo, data);
+     *         // 得到逻辑服返回的业务数据
+     *         YourMsg msg = responseMessage.getData(YourMsg.class);
+     *         log.info("message : {} ", msg);
+     *     }
+     * }
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -164,6 +294,22 @@ public interface InvokeModuleContext {
      *     相关文档
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
+     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     public void count() {
+     *         // 路由：这个路由是将要访问逻辑服的路由（表示你将要去的地方）
+     *         CmdInfo cmdInfo = ...
+     *         // 模块通讯上下文
+     *         InvokeModuleContext invokeModuleContext = ...
+     *         // 根据路由信息来请求其他子服务器（其他逻辑服）的数据
+     *         ResponseMessage responseMessage = invokeModuleContext.invokeModuleMessage(cmdInfo);
+     *         // 得到逻辑服返回的业务数据
+     *         YourMsg msg = responseMessage.getData(YourMsg.class);
+     *         log.info("message : {} ", msg);
+     *     }
+     * }
      * </pre>
      *
      * @param cmdInfo cmdInfo
@@ -177,7 +323,23 @@ public interface InvokeModuleContext {
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
      * <pre>
      *     相关文档
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
+     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     public void count() {
+     *         RequestMessage request = ...
+     *         // 模块通讯上下文
+     *         InvokeModuleContext invokeModuleContext = ...
+     *         // 根据路由信息来请求其他子服务器（其他逻辑服）的数据
+     *         ResponseMessage responseMessage = invokeModuleContext.invokeModuleMessage(request);
+     *         // 得到逻辑服返回的业务数据
+     *         YourMsg msg = responseMessage.getData(YourMsg.class);
+     *         log.info("message : {} ", msg);
+     *     }
+     * }
      * </pre>
      *
      * @param requestMessage requestMessage
@@ -194,6 +356,30 @@ public interface InvokeModuleContext {
      *     具体的意思可以参考文档中的说明
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#gSdya">游戏逻辑服与同类型多个游戏逻辑服通信请求（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
+     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     public void count() {
+     *         // 路由：这个路由是将要访问逻辑服的路由（表示你将要去的地方）
+     *         CmdInfo cmdInfo = ...
+     *         YourData data = ...
+     *         // 模块通讯上下文
+     *         InvokeModuleContext invokeModuleContext = ...
+     *         // 根据路由信息来请求其他【同类型】的多个子服务器（其他逻辑服）数据
+     *         var responseCollectMessage = invokeModuleContext.invokeModuleCollectMessage(cmdInfo, data);
+     *
+     *         // 每个逻辑服返回的数据集合
+     *         List<ResponseCollectItemMessage> messageList = responseCollectMessage.getMessageList();
+     *
+     *         for (ResponseCollectItemMessage responseCollectItemMessage : messageList) {
+     *             ResponseMessage responseMessage = responseCollectItemMessage.getResponseMessage();
+     *             // 得到逻辑服返回的业务数据
+     *             YourMsg msg = responseMessage.getData(YourMsg.class);
+     *             log.info("message : {} ", msg);
+     *         }
+     *     }
+     * }
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -217,6 +403,29 @@ public interface InvokeModuleContext {
      *     具体的意思可以参考文档中的说明
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#gSdya">游戏逻辑服与同类型多个游戏逻辑服通信请求（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
+     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     public void count() {
+     *         // 模块通讯上下文
+     *         InvokeModuleContext invokeModuleContext = ...
+     *         // 路由：这个路由是将要访问逻辑服的路由（表示你将要去的地方）
+     *         CmdInfo cmdInfo = ...
+     *         // 根据路由信息来请求其他【同类型】的多个子服务器（其他逻辑服）数据
+     *         ResponseCollectMessage responseCollectMessage = invokeModuleContext.invokeModuleCollectMessage(cmdInfo);
+     *
+     *         // 每个逻辑服返回的数据集合
+     *         List<ResponseCollectItemMessage> messageList = responseCollectMessage.getMessageList();
+     *
+     *         for (ResponseCollectItemMessage responseCollectItemMessage : messageList) {
+     *             ResponseMessage responseMessage = responseCollectItemMessage.getResponseMessage();
+     *             // 得到逻辑服返回的业务数据
+     *             YourMsg msg = responseMessage.getData(YourMsg.class);
+     *             log.info("message : {} ", msg);
+     *        }
+     *    }
+     * }
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -236,6 +445,28 @@ public interface InvokeModuleContext {
      *     具体的意思可以参考文档中的说明
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#gSdya">游戏逻辑服与同类型多个游戏逻辑服通信请求（可跨进程）</a>
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
+     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     public void count() {
+     *         RequestMessage request = ...
+     *         // 模块通讯上下文
+     *         InvokeModuleContext invokeModuleContext = ...
+     *         // 根据路由信息来请求其他【同类型】的多个子服务器（其他逻辑服）数据
+     *         ResponseCollectMessage responseCollectMessage = invokeModuleContext.invokeModuleCollectMessage(request);
+     *
+     *         // 每个逻辑服返回的数据集合
+     *         List<ResponseCollectItemMessage> messageList = responseCollectMessage.getMessageList();
+     *
+     *         for (ResponseCollectItemMessage responseCollectItemMessage : messageList) {
+     *             ResponseMessage responseMessage = responseCollectItemMessage.getResponseMessage();
+     *             // 得到逻辑服返回的业务数据
+     *             YourMsg msg = responseMessage.getData(YourMsg.class);
+     *             log.info("message : {} ", msg);
+     *         }
+     *     }
+     * }
      * </pre>
      *
      * @param requestMessage requestMessage
