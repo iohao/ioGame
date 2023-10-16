@@ -44,28 +44,37 @@ import java.util.Map;
  * @date 2022-05-15
  */
 public class BrokerClients {
-    final Map<String, BrokerClient> brokerClientMap = new NonBlockingHashMap<>();
+    static final Map<String, BrokerClient> brokerClientMap = new NonBlockingHashMap<>();
 
-    public void put(Class<?> clazz, BrokerClient brokerClient) {
-        this.put(clazz.getName(), brokerClient);
+    public static void put(Class<?> clazz, BrokerClient brokerClient) {
+        put(clazz.getName(), brokerClient);
     }
 
-    public void put(String key, BrokerClient brokerClient) {
-        this.brokerClientMap.put(key, brokerClient);
+    public static void put(String key, BrokerClient brokerClient) {
+        brokerClientMap.put(key, brokerClient);
     }
 
-    public BrokerClientContext getBrokerClient(Class<?> clazz) {
+    public static BrokerClientContext getBrokerClient(Class<?> clazz) {
         return getBrokerClient(clazz.getName());
     }
 
-    public BrokerClientContext getBrokerClient(String key) {
-        return this.brokerClientMap.get(key);
+    public static BrokerClientContext getBrokerClient(String key) {
+        return brokerClientMap.get(key);
     }
 
     private BrokerClients() {
 
     }
 
+    /**
+     * 已经标记过期，将在下个大版本移除
+     * <pre>
+     *     请直接使用静态方法代替； BrokerClients.xxx
+     * </pre>
+     *
+     * @return BrokerClients
+     */
+    @Deprecated
     public static BrokerClients me() {
         return Holder.ME;
     }

@@ -110,6 +110,6 @@ public sealed interface BrokerClientStartup permits AbstractBrokerClientStartup 
      */
     default void startupSuccess(BrokerClient brokerClient) {
         // 对于 brokerClient 的引用使用，建议用 BrokerClientHolder
-        BrokerClients.me().put(this.getClass(), brokerClient);
+        BrokerClients.put(this.getClass(), brokerClient);
     }
 }
