@@ -30,9 +30,8 @@ import java.util.List;
  * @author 渔民小镇
  * @date 2022-02-03
  */
+@Getter
 public class ErrorCodeDocs {
-
-    @Getter
     List<ErrorCodeDoc> errorCodeDocList = new ArrayList<>();
 
     public void addMsgExceptionInfo(MsgExceptionInfo msgExceptionInfo) {
@@ -42,5 +41,4 @@ public class ErrorCodeDocs {
 
         this.errorCodeDocList.add(errorCodeDoc);
     }
-
 }
