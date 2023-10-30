@@ -28,11 +28,7 @@ package com.iohao.game.external.client.command;
  * @date 2023-07-09
  */
 @Deprecated
-public interface InputRequestData {
-    /**
-     * 创建请求参数
-     *
-     * @return 请求参数
-     */
-    Object createRequestData();
+@FunctionalInterface
+public interface InputRequestData extends RequestDataDelegate {
+
 }

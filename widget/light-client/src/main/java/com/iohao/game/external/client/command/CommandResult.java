@@ -41,8 +41,7 @@ import java.util.Objects;
  */
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class CommandResult {
-    @Getter
-    final ExternalMessage externalMessage;
+    final ExternalMessage message;
     /** 请求参数 */
     @Getter
     @Deprecated
@@ -53,8 +52,12 @@ public class CommandResult {
     /** 业务对象 */
     Object value;
 
-    public CommandResult(ExternalMessage externalMessage) {
-        this.externalMessage = externalMessage;
+    public CommandResult(ExternalMessage message) {
+        this.message = message;
+    }
+
+    public ExternalMessage getExternalMessage() {
+        return this.message;
     }
 
     /**
@@ -88,6 +91,8 @@ public class CommandResult {
     @Deprecated
     @SuppressWarnings("unchecked")
     public <T> List<T> toList(Class<? extends T> clazz) {
+        getValue();
+
         if (value instanceof ByteValueList byteValueList) {
             return (List<T>) byteValueList.values.stream()
                     .map(bytes -> DataCodecKit.decode(bytes, clazz))
@@ -114,22 +119,22 @@ public class CommandResult {
     }
 
     public int getMsgId() {
-        return externalMessage.getMsgId();
+        return message.getMsgId();
     }
 
     public CmdInfo getCmdInfo() {
-        int cmdMerge = externalMessage.getCmdMerge();
+        int cmdMerge = message.getCmdMerge();
         return CmdInfo.of(cmdMerge);
     }
 
     @Deprecated
     public byte[] getBytes() {
-        return externalMessage.getData();
+        return message.getData();
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getValue(Class<? extends T> clazz) {
-        byte[] data = this.externalMessage.getData();
+        byte[] data = this.message.getData();
 
         if (Objects.isNull(this.value)) {
             this.value = DataCodecKit.decode(data, clazz);
@@ -138,6 +143,13 @@ public class CommandResult {
         return (T) value;
     }
 
+    /**
+     * 得到
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public <T> List<T> listValue(Class<? extends T> clazz) {
         return (List<T>) this.getValue(ByteValueList.class)

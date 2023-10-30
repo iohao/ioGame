@@ -105,10 +105,28 @@ public class ClientUserChannel {
     }
 
     @Deprecated
+    public void request(RequestCommand command, Object data) {
+        RequestCommand requestCommand = new RequestCommand()
+                .setTitle(command.getTitle())
+                .setCmdMerge(command.getCmdMerge())
+                .setResponseClass(command.getResponseClass())
+                .setCallback(command.getCallback());
+
+        if (Objects.nonNull(data)) {
+            if (data instanceof RequestDataDelegate requestDataDelegate) {
+                requestCommand.setRequestData(requestDataDelegate);
+            } else {
+                requestCommand.setRequestData(() -> data);
+            }
+        }
+
+        this.execute(requestCommand);
+    }
+
+    @Deprecated
     public void request(CmdInfo cmdInfo, Object data, Class<?> responseClass, CallbackDelegate callback) {
         RequestCommand requestCommand = new RequestCommand()
                 .setCmdMerge(cmdInfo.getCmdMerge())
-                .setTitle(cmdInfo.toString())
                 .setResponseClass(responseClass)
                 .setCallback(callback);
 
@@ -122,7 +140,6 @@ public class ClientUserChannel {
 
         this.execute(requestCommand);
     }
-
 
     public void execute(RequestCommand requestCommand) {
         int msgId = this.msgIdSeq.incrementAndGet();
@@ -141,7 +158,7 @@ public class ClientUserChannel {
 
         if (ClientUserConfigs.openLogRequestCommand) {
             long userId = clientUser.getUserId();
-            log.info("\n玩家[{}] 发起【{}】请求 - [msgId:{}] {} {}"
+            log.info("玩家[{}] 发起【{}】请求 - [msgId:{}] {} {}"
                     , userId
                     , requestCommand.getTitle()
                     , msgId
@@ -153,7 +170,7 @@ public class ClientUserChannel {
         this.writeAndFlush(externalMessage);
     }
 
-    public void read(ExternalMessage externalMessage) {
+    public void readMessage(ExternalMessage externalMessage) {
         channelRead.read(externalMessage);
     }
 
@@ -234,11 +251,11 @@ public class ClientUserChannel {
                     // 玩家接收服务器的响应数据
                     long userId = clientUser.getUserId();
 
-                    log.info("\n玩家[{}] 接收【{}】回调 - [msgId:{}] {}"
+                    log.info("玩家[{}] 接收【{}】回调 - [msgId:{}] {}"
                             , userId
                             , requestCommand.getTitle()
                             , msgId
-                            , CmdKit.mergeToShort(cmdInfo.getCmdMerge())
+                            , CmdKit.mergeToShort(cmdMerge)
                     );
                 }
 
@@ -253,9 +270,9 @@ public class ClientUserChannel {
             ListenCommand listenCommand = listenMap.get(cmdMerge);
             if (Objects.nonNull(listenCommand)) {
                 if (ClientUserConfigs.openLogListenBroadcast) {
-                    log.info("广播监听回调[{}]通知 {}"
+                    log.info("广播监听回调 [{}] 通知 {}"
                             , listenCommand.getTitle()
-                            , cmdInfo
+                            , CmdKit.mergeToShort(cmdMerge)
                     );
                 }
 

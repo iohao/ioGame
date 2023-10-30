@@ -81,7 +81,7 @@ class WebSocketClientStartup implements ClientConnect {
                 byte[] dataContent = byteBuffer.array();
                 ExternalMessage externalMessage = DataCodecKit.decode(dataContent, ExternalMessage.class);
 
-                clientUserChannel.read(externalMessage);
+                clientUserChannel.readMessage(externalMessage);
             }
         };
 

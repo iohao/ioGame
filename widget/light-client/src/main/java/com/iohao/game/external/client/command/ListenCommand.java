@@ -42,6 +42,7 @@ public class ListenCommand {
     String title;
     CallbackDelegate callback;
     ClientUserChannel clientUserChannel;
+
     @Deprecated
     Class<?> responseClass;
 

@@ -23,5 +23,11 @@ package com.iohao.game.external.client.command;
  * @date 2023-09-19
  */
 @FunctionalInterface
-public interface RequestDataDelegate extends InputRequestData {
+public interface RequestDataDelegate  {
+    /**
+     * 创建请求参数
+     *
+     * @return 请求参数
+     */
+    Object createRequestData();
 }

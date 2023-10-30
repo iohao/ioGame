@@ -90,6 +90,5 @@ public sealed class RequestMessage extends BarMessage permits SyncRequestMessage
         requestMessage.setData(data);
 
         return requestMessage;
-
     }
 }

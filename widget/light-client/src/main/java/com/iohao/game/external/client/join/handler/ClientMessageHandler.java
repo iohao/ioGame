@@ -40,6 +40,6 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<ExternalMe
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage externalMessage) {
-        clientUserChannel.read(externalMessage);
+        clientUserChannel.readMessage(externalMessage);
     }
 }

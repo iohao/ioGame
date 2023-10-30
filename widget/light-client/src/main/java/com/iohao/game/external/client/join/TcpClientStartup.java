@@ -18,7 +18,6 @@
  */
 package com.iohao.game.external.client.join;
 
-import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.join.handler.ClientMessageHandler;

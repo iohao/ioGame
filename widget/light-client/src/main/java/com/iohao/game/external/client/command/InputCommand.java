@@ -91,6 +91,8 @@ public class InputCommand {
      * 回调业务数据的类型
      * <pre>
      *     如果配置了，会根据此类型来解析服务器返回的业务数据
+     *
+     *     方法已经过期，无需代替品
      * </pre>
      */
     @Deprecated
@@ -101,7 +103,6 @@ public class InputCommand {
         this.inputName = ClientKit.toInputName(cmdInfo);
         this.cmdInfo = cmdInfo;
     }
-
 
     /**
      * 模拟请求命令的描述
@@ -121,8 +122,8 @@ public class InputCommand {
      *     请使用 {@code  this.setRequestData(RequestDataDelegate)} 代替
      * </pre>
      *
-     * @param data
-     * @return
+     * @param data v
+     * @return m
      */
     @Deprecated
     public InputCommand setRequestData(Object data) {
@@ -132,6 +133,21 @@ public class InputCommand {
             this.requestData = () -> data;
         }
 
+        return this;
+    }
+
+    /**
+     * <pre>
+     *     请使用 {@code  this.setRequestData(RequestDataDelegate)} 代替
+     * </pre>
+     *
+     * @param inputRequestData inputRequestData
+     * @return m
+     */
+    @Deprecated
+    public InputCommand setInputRequestData(InputRequestData inputRequestData) {
+        this.inputRequestData = inputRequestData;
+        this.requestData = inputRequestData;
         return this;
     }
 
@@ -160,9 +176,9 @@ public class InputCommand {
      * }
      * </pre>
      *
-     * @param responseClass
-     * @param callback
-     * @return
+     * @param responseClass r
+     * @param callback      c
+     * @return m
      */
     @Deprecated
     public InputCommand callback(Class<?> responseClass, CallbackDelegate callback) {

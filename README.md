@@ -67,8 +67,6 @@
 
 提供高质量的使用文档！
 
-如果您觉得还不错，帮忙给个 star 关注
-
 
 
 > [为什么采用授权许可申请?](https://www.yuque.com/iohao/game/gd5l3b0y0h027kcv)
@@ -179,7 +177,7 @@ ioGame 已经上传到中央仓库，如果无法下载最新的框架源码，�
 
 
 
-ioGame 是轻量级的网络游戏服务器框架，ioGame 没有中间件的强依赖，即无需安装任何其他的中间件产品；此时，你只需一个依赖即可获得整个框架，并同时支持开头介绍的全部功能特性。
+ioGame 是轻量级的网络游戏服务器框架，**不依赖任何第三方**中间件或数据库**就能支持集群、分布式**，只需要 java 环境就可以运行。此时，你只需一个依赖即可获得整个框架，并同时支持开头介绍的全部功能特性。
 
 ```xml
 <dependency>
@@ -1041,7 +1039,7 @@ action 处理逻辑时，使用是就是这种通讯方式。将数据 return �
 >
 > **游戏前端**
 >
-> 游戏前端的展现可以是 [Unity](https://unity.cn/)、 [UE(虚幻)](https://www.unrealengine.com/zh-CN/)、 [Cocos](https://www.cocos.com/)或者其他的游戏引擎。这些游戏引擎只是展现游戏画面的一种形式，数据交互则由通信来完成（TCP、UDP 等）。游戏前端可以是 [Unity](https://unity.cn/)、 [UE(虚幻)](https://www.unrealengine.com/zh-CN/)、 [Cocos](https://www.cocos.com/)或者其他的游戏引擎。
+> 游戏前端的展现可以是 [Unity](https://unity.cn/)、 [UE(虚幻)](https://www.unrealengine.com/zh-CN/)、 [Cocos](https://www.cocos.com/)、[FXGL](https://github.com/AlmasB/FXGL) 或者其他的游戏引擎。这些游戏引擎只是展现游戏画面的一种形式，数据交互则由通信来完成（TCP、UDP 等）。游戏前端可以是 [Unity](https://unity.cn/)、 [UE(虚幻)](https://www.unrealengine.com/zh-CN/)、 [Cocos](https://www.cocos.com/)、[FXGL](https://github.com/AlmasB/FXGL) 或者其他的游戏引擎。
 
 
 
@@ -1223,10 +1221,6 @@ ioGame 源码内提供了一个基于 [FXGL](https://github.com/AlmasB/FXGL) 游
 运行 TankApp.java 文件就可以启动游戏了。原计划用 U3D 来做游戏示例的，但想到大伙还得安装 [u3d](https://unity.cn/) 的环境，就用  [FXGL](https://github.com/AlmasB/FXGL) 来做游戏示例了。
 
 ![img](https://oscimg.oschina.net/oscnet/up-5ae3d9516142c4e3aecd73c62d495104bed.png)
-
-**如果您觉得还不错，帮忙给个 star 关注**
-
-
 
 <br>
 
