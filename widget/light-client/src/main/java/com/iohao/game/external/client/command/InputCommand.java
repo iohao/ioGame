@@ -33,17 +33,19 @@ import java.util.Objects;
  * 模拟命令
  * example:
  * <pre>{@code
- *         ofCommand(DemoCmd.here).callback(result -> {
- *             HelloReq value = result.getValue(HelloReq.class);
- *             log.info("value : {}", value);
- *         }).setTitle("here").setData(helloReq);
+ *         ofCommand(DemoCmd.here).setTitle("here").setRequestData(() -> {
+ *             YourMsg msg = ...
+ *             return msg;
+ *         }).callback(result -> {
+ *              HelloReq value = result.getValue(HelloReq.class);
+ *              log.info("value : {}", value);
+ *          });
  *
- *         ofCommand(DemoCmd.list).callback(result -> {
+ *         ofCommand(DemoCmd.list).setTitle("list").callback(result -> {
  *             // 得到 list 数据
  *             List<HelloReq> list = result.listValue(HelloReq.class);
  *             log.info("list : {}", list);
- *         }).setTitle("list");
- *
+ *         });
  * }
  * </pre>
  *
@@ -139,6 +141,18 @@ public class InputCommand {
     /**
      * <pre>
      *     请使用 {@code  this.setRequestData(RequestDataDelegate)} 代替
+     * </pre>
+     *
+     * <pre>{@code
+     * ofCommand(cmd)
+     *         .setTitle("yourTitle")
+     *         .setRequestData(() -> {
+     *             YourMsg msg = ...
+     *
+     *             return msg;
+     *         });
+     * }
+     *
      * </pre>
      *
      * @param inputRequestData inputRequestData
