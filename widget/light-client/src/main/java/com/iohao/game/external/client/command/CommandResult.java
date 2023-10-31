@@ -191,7 +191,6 @@ public class CommandResult {
         return this.getValue(BoolValueList.class).values;
     }
 
-
     @Override
     public String toString() {
 

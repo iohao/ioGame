@@ -117,7 +117,6 @@ public final class DefaultExternalCoreSetting implements ExternalCoreSetting {
     public void setMicroBootstrapFlow(MicroBootstrapFlow<?> microBootstrapFlow) {
         this.microBootstrapFlow = microBootstrapFlow;
         this.injectObject.add(this.microBootstrapFlow);
-
     }
 
     public void setIdleProcessSetting(IdleProcessSetting idleProcessSetting) {

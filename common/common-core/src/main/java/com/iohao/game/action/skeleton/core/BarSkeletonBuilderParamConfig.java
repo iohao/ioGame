@@ -226,7 +226,7 @@ public final class BarSkeletonBuilderParamConfig {
     }
 
     private static void extracted() {
-        if (IoGameBanner.flag45 != 1) {
+        if (IoGameBanner.flag57 != "1") {
         }
     }
 }

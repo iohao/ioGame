@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -18,12 +18,15 @@
  */
 package com.iohao.game.action.skeleton;
 
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
+
 /**
  * @author 渔民小镇
  * @date 2022-12-23
  */
 public final class IoGameVersion {
     public static final String VERSION;
+    public static String a;
 
     static {
         String internalVersion = "<version>17.1.56</version>";
@@ -32,5 +35,7 @@ public final class IoGameVersion {
                 .replace("<version>", "")
                 .replace("</version>", "")
         ;
+
+        a = IoGameBanner.flag57;
     }
 }
