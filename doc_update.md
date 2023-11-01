@@ -1,6 +1,36 @@
 更新日志在线文档
 https://www.yuque.com/iohao/game/ab15oe
 
+
+
+
+
+#### 2023-09-06 - v17.1.55
+
+详细 https://github.com/game-town/ioGame/releases/tag/17.1.55
+
+
+
+[[#186](https://github.com/game-town/ioGame/issues/186)] 增强 ProtoDataCodec
+
+当 ExternalMessage.data 为 null 时，使用空数组来解析序列化；可以确保 action 参数不会为 null，使得开发者拥有更好的编码体验。
+
+将 ActionCommandTryHandler 逻辑合并到 ActionCommandHandler
+
+DevConfig.me 标记为过期，并将 DevConfig 改为静态类；
+
+把 MethodParsers.me 方法标记为过期，并将 MethodParsers 改为静态类；
+
+
+
+**其他更新**
+
+<netty.version>4.1.97.Final</netty.version>
+
+<lombok.version>1.18.28</lombok.version>
+
+
+
 #### 2023-08-18 17.1.54
 
 [[#174](https://github.com/game-town/ioGame/pull/174)]  **fix action 交给容器管理时，实例化两次的问题**

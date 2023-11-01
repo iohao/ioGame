@@ -42,9 +42,7 @@ public class WrapperKit {
     }
 
     public BoolValue of(boolean value) {
-        var theValue = new BoolValue();
-        theValue.value = value;
-        return theValue;
+        return BoolValue.of(value);
     }
 
     public BoolValueList ofListBoolValue(List<Boolean> values) {
