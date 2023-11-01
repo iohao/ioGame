@@ -74,6 +74,6 @@ public class TcpMicroBootstrapFlow extends SocketMicroBootstrapFlow {
                 0));
 
         // tcp socket 编解码
-        context.addLast("codec", TcpExternalCodec.me());
+        context.addLast("codec", new TcpExternalCodec());
     }
 }

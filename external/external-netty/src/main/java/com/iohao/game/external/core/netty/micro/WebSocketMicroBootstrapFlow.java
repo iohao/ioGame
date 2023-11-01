@@ -66,7 +66,7 @@ public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
         this.websocketHandler(context);
 
         // websocket 编解码
-        context.addLast("codec", WebSocketExternalCodec.me());
+        context.addLast("codec", new WebSocketExternalCodec());
     }
 
     private void verifyHandler(PipelineContext context) {

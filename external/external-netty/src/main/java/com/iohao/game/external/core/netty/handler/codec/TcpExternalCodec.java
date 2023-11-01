@@ -21,7 +21,6 @@ package com.iohao.game.external.core.netty.handler.codec;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 
@@ -33,7 +32,6 @@ import java.util.List;
  * @author 渔民小镇
  * @date 2023-02-21
  */
-@ChannelHandler.Sharable
 public class TcpExternalCodec extends MessageToMessageCodec<ByteBuf, ExternalMessage> {
     @Override
     protected void encode(ChannelHandlerContext ctx, ExternalMessage externalMessage, List<Object> out) throws Exception {
@@ -75,6 +73,7 @@ public class TcpExternalCodec extends MessageToMessageCodec<ByteBuf, ExternalMes
     public TcpExternalCodec() {
     }
 
+    @Deprecated
     public static TcpExternalCodec me() {
         return Holder.ME;
     }
