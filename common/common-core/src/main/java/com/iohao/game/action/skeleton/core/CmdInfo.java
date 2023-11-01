@@ -28,7 +28,7 @@ import lombok.Getter;
  *
  *     cmdInfo 的创建可以通过：
  *     1 {@link CmdInfoFlyweightFactory} 来完成
- *     2 {@link CmdInfo#getCmdInfo(int, int)} 静态方法来完成
+ *     2 {@link CmdInfo#of(int, int)} 静态方法来完成
  *
  *     其他参考：
  *     <a href="https://www.yuque.com/iohao/game/soxp4u">文档 - 路由信息</a>

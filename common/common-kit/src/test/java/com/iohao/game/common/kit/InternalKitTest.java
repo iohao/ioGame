@@ -19,7 +19,7 @@ public class InternalKitTest {
         InternalKit.newTimeoutSeconds(new TimerTask() {
             @Override
             public void run(Timeout timeout) {
-                log.info("newTimeoutSeconds : {}", timeout);
+                log.info("1-newTimeoutSeconds : {}", timeout);
                 InternalKit.newTimeoutSeconds(this);
             }
         });
@@ -27,10 +27,10 @@ public class InternalKitTest {
         InternalKit.newTimeout(new TimerTask() {
             @Override
             public void run(Timeout timeout) {
-                log.info("newTimeout : {}", timeout);
+                log.info("3-newTimeout : {}", timeout);
                 InternalKit.newTimeout(this, 3, TimeUnit.SECONDS);
             }
-        }, 5, TimeUnit.SECONDS);
+        }, 3, TimeUnit.SECONDS);
 
         TimeUnit.SECONDS.sleep(22);
     }
