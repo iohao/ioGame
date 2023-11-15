@@ -88,6 +88,20 @@ public class InternalKit {
         timerSeconds.newTimeout(task, delay, unit);
     }
 
+
+    /**
+     * 使用其他线程执行任务
+     * <p>
+     * example
+     * <pre>{@code
+     *         InternalKit.execute(()->{
+     *             log.info("你的逻辑");
+     *         });
+     * }
+     * </pre>
+     *
+     * @param command 任务
+     */
     public void execute(Runnable command) {
         executor.execute(command);
     }

@@ -58,11 +58,13 @@ class BreakingNews {
         list.add(new News("支持者名单", "https://www.yuque.com/iohao/game/backers"));
         list.add(new News("压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
         list.add(new News("28行代码，做个网页聊天室", "https://www.yuque.com/iohao/game/we9eppym4yno9hq2"));
+        list.add(new News("web 转游戏 - 示例理解篇", "https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z"));
 
-        // 授权相关
+        // 授权相关、实践类产品
         list.add(new News("项目成本分析", "https://www.yuque.com/iohao/game/gd5l3b0y0h027kcv#aSk5x"));
         list.add(new News("为什么采用授权许可申请？", "https://www.yuque.com/iohao/game/gd5l3b0y0h027kcv"));
         list.add(new News("授权成员的更多权益", "https://www.yuque.com/iohao/game/ruqkacwigfnlk129"));
+        list.add(new News("ioGameAdmin 运维监控", "https://www.yuque.com/iohao/game/xwxxcynh9yz0z8w4"));
 
         list.add(new News("ioGame 诞生、发展", "https://www.yuque.com/iohao/game/mun9gbwzfph3y5vn"));
         list.add(new News("框架版本更新日志", "https://www.yuque.com/iohao/game/ab15oe"));
@@ -74,9 +76,11 @@ class BreakingNews {
         list.add(new News("与传统架构的对比", "https://www.yuque.com/iohao/game/cklv8p"));
 
         list.add(new News("ioGame 请求的处理流程", "https://www.yuque.com/iohao/game/ibwgawdy4al6o389"));
+        list.add(new News("ioGame 消息处理流程", "https://www.yuque.com/iohao/game/dugawvczzc9f4ihg"));
         list.add(new News("ioGame 线程相关", "https://www.yuque.com/iohao/game/eixd6x"));
-        list.add(new News("多服单进程、多服多进程的启动方式", "https://www.yuque.com/iohao/game/qni8eqlzsxk7gabm"));
+        list.add(new News("单服单进程、多服单进程、多服多进程的启动方式", "https://www.yuque.com/iohao/game/qni8eqlzsxk7gabm"));
         list.add(new News("代码组织与约定", "https://www.yuque.com/iohao/game/keyrxn"));
+        list.add(new News("同进程亲和性", "https://www.yuque.com/iohao/game/unp26u"));
 
         // 游戏逻辑服
         list.add(new News("动态绑定游戏逻辑服", "https://www.yuque.com/iohao/game/idl1wm"));
@@ -84,6 +88,7 @@ class BreakingNews {
         list.add(new News("元信息-附加信息", "https://www.yuque.com/iohao/game/sw1y8u"));
 
         // 游戏对外服
+        list.add(new News("对外服协议说明", "https://www.yuque.com/iohao/game/xeokui"));
         list.add(new News("新游戏对外服设计", "https://www.yuque.com/iohao/game/wotnhl"));
         list.add(new News("新游戏对外服使用", "https://www.yuque.com/iohao/game/ea6geg"));
         list.add(new News("心跳设置与心跳钩子", "https://www.yuque.com/iohao/game/uueq3i"));

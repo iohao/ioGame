@@ -50,6 +50,7 @@
 
         <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
         <module>widget/light-game-room</module>
+        <module>common/common-micro-kit</module>
     </modules>
 
     <!--统一管理版本 的一个父 pom-->

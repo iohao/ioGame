@@ -100,38 +100,38 @@ public class ClassScanner {
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         this.classLoader = classLoader != null ? classLoader : ClassScanner.class.getClassLoader();
-
     }
 
     public List<URL> listResource() throws IOException {
         this.initClassLoad();
 
         Enumeration<URL> urlEnumeration = classLoader.getResources(packagePath);
-
-        Set<URL> urlSet = new HashSet<>();
-
+        Set<URL> set = new HashSet<>();
         while (urlEnumeration.hasMoreElements()) {
             URL url = urlEnumeration.nextElement();
-            urlSet.add(url);
+            set.add(url);
         }
 
-        return new ArrayList<>(urlSet);
+        return new ArrayList<>(set);
     }
 
     private void scanJar(URL url) throws IOException {
         URLConnection urlConn = url.openConnection();
         if (urlConn instanceof JarURLConnection jarUrlConn) {
             try (JarFile jarFile = jarUrlConn.getJarFile()) {
+
                 Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
                 while (jarEntryEnumeration.hasMoreElements()) {
                     JarEntry jarEntry = jarEntryEnumeration.nextElement();
                     String jarEntryName = jarEntry.getName();
+
                     // 扫描 packagePath 下的类
                     if (jarEntryName.endsWith(".class") && jarEntryName.startsWith(packagePath)) {
                         jarEntryName = jarEntryName.substring(0, jarEntryName.length() - 6).replace('/', '.');
                         scanClazz(jarEntryName);
                     }
                 }
+
             }
         }
     }
