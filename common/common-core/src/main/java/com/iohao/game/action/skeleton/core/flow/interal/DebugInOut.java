@@ -45,7 +45,9 @@ import java.util.function.BiConsumer;
  * debug info 开发阶段推荐, see beetlsql DebugInterceptor
  *
  * <pre>
- * 日志输出
+ *     <a href="https://www.yuque.com/iohao/game/pf3sx0">DebugInOut 插件-文档</a>
+ *
+ * 日志输出预览
  *
  * ┏━━━━━ Debug [.(ActivityAction.java:1).hello] ━━━ [cmd:1 - subCmd:0 - cmdMerge:65536]
  * ┣ userId: 当前发起请求的 userId
@@ -82,7 +84,7 @@ import java.util.function.BiConsumer;
  */
 public final class DebugInOut implements ActionMethodInOut {
 
-    final FlowOption<Long> timeKey = FlowOption.valueOf("ExecuteTimeInOutStartTime");
+    final FlowOption<Long> inOutStartTime = FlowAttr.inOutStartTime;
 
     final long time;
 
@@ -116,14 +118,14 @@ public final class DebugInOut implements ActionMethodInOut {
     @Override
     public void fuckIn(final FlowContext flowContext) {
         // 记录当前时间
-        flowContext.option(timeKey, System.currentTimeMillis());
+        flowContext.option(inOutStartTime, System.currentTimeMillis());
     }
 
     @Override
     public void fuckOut(final FlowContext flowContext) {
 
         long currentTimeMillis = System.currentTimeMillis();
-        Long time = flowContext.option(timeKey);
+        Long time = flowContext.option(inOutStartTime);
 
         long ms = currentTimeMillis - time;
 
@@ -274,5 +276,4 @@ public final class DebugInOut implements ActionMethodInOut {
             paramMap.put("paramData", bizData);
         }
     }
-
 }

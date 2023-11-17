@@ -24,6 +24,8 @@ import com.iohao.game.action.skeleton.core.ActionCommand;
 /**
  * inout 接口
  * <pre>
+ *     <a href="https://www.yuque.com/iohao/game/bsgvzglvlr5tenao">插件介绍-文档</a>
+ *
  *     {@link ActionCommand} 执行前与执行后的逻辑钩子类
  *
  *     毫无疑问的是这个类的方法名过于刺激，但并不会影响我们的发挥

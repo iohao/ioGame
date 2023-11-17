@@ -56,7 +56,7 @@ class BreakingNews {
         List<News> list = new ArrayList<>();
 
         list.add(new News("支持者名单", "https://www.yuque.com/iohao/game/backers"));
-        list.add(new News("压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
+
         list.add(new News("28行代码，做个网页聊天室", "https://www.yuque.com/iohao/game/we9eppym4yno9hq2"));
         list.add(new News("web 转游戏 - 示例理解篇", "https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z"));
 
@@ -106,6 +106,13 @@ class BreakingNews {
         // 小部件
         list.add(new News("领域事件可解决多人同一业务的并发问题", "https://www.yuque.com/iohao/game/gmfy1k"));
         list.add(new News("任务延时器", "https://www.yuque.com/iohao/game/niflk0"));
+        list.add(new News("压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
+
+        // 插件相关
+        list.add(new News("业务框架 - 插件介绍", "https://www.yuque.com/iohao/game/bsgvzglvlr5tenao"));
+        list.add(new News("业务框架 - DebugInOut 插件", "https://www.yuque.com/iohao/game/pf3sx0"));
+        list.add(new News("业务框架 - action 统计插件", "https://www.yuque.com/iohao/game/znapzm1dqgehdyw8"));
+
         return RandomKit.randomEle(list);
     }
 

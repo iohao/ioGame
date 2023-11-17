@@ -28,6 +28,44 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 内部工具类，开发者不要用在耗时 io 的任务上
+ * <pre>{@code
+ *         // 每秒执行一次
+ *         InternalKit.newTimeoutSeconds(new TimerTask() {
+ *             @Override
+ *             public void run(Timeout timeout) {
+ *                 log.info("1-newTimeoutSeconds : {}", timeout);
+ *                 InternalKit.newTimeoutSeconds(this);
+ *             }
+ *         });
+ *
+ *         // 只执行一次
+ *         InternalKit.newTimeoutSeconds(new TimerTask() {
+ *             @Override
+ *             public void run(Timeout timeout) {
+ *                 log.info("one : {}", timeout);
+ *             }
+ *         });
+ * }
+ * </pre>
+ * <pre>{@code
+ *         // 每隔 3 秒执行一次
+ *         InternalKit.newTimeout(new TimerTask() {
+ *             @Override
+ *             public void run(Timeout timeout) {
+ *                 log.info("3-newTimeout : {}", timeout);
+ *                 InternalKit.newTimeout(this, 3, TimeUnit.SECONDS);
+ *             }
+ *         }, 3, TimeUnit.SECONDS);
+ * }
+ * </pre>
+ * <p>
+ * 使用其他线程执行任务
+ * <pre>{@code
+ *         InternalKit.execute(()->{
+ *             log.info("你的逻辑");
+ *         });
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2023-06-30
@@ -38,67 +76,17 @@ public class InternalKit {
     private final HashedWheelTimer timerSeconds = new HashedWheelTimer();
     private final ExecutorService executor = ExecutorKit.newCacheThreadPool("InternalKit");
 
-    /**
-     * example
-     * <pre>{@code
-     *         // 每秒执行一次
-     *         InternalKit.newTimeoutSeconds(new TimerTask() {
-     *             @Override
-     *             public void run(Timeout timeout) {
-     *                 log.info("1-newTimeoutSeconds : {}", timeout);
-     *                 InternalKit.newTimeoutSeconds(this);
-     *             }
-     *         });
-     *
-     *         // 只执行一次
-     *         InternalKit.newTimeoutSeconds(new TimerTask() {
-     *             @Override
-     *             public void run(Timeout timeout) {
-     *                 log.info("one : {}", timeout);
-     *             }
-     *         });
-     * }
-     * </pre>
-     *
-     * @param task task
-     */
+
     public void newTimeoutSeconds(TimerTask task) {
         timerSeconds.newTimeout(task, 0, TimeUnit.SECONDS);
     }
 
-    /**
-     * example
-     * <pre>{@code
-     *         // 每隔 3 秒执行一次
-     *         InternalKit.newTimeout(new TimerTask() {
-     *             @Override
-     *             public void run(Timeout timeout) {
-     *                 log.info("3-newTimeout : {}", timeout);
-     *                 InternalKit.newTimeout(this, 3, TimeUnit.SECONDS);
-     *             }
-     *         }, 3, TimeUnit.SECONDS);
-     *
-     * }
-     * </pre>
-     *
-     * @param task  task
-     * @param delay delay
-     * @param unit  unit
-     */
     public void newTimeout(TimerTask task, long delay, TimeUnit unit) {
         timerSeconds.newTimeout(task, delay, unit);
     }
 
     /**
      * 使用其他线程执行任务
-     * <p>
-     * example
-     * <pre>{@code
-     *         InternalKit.execute(()->{
-     *             log.info("你的逻辑");
-     *         });
-     * }
-     * </pre>
      *
      * @param command 任务
      */

@@ -116,5 +116,4 @@ public interface AttrOptionDynamic {
             consumer.accept(data);
         }
     }
-
 }

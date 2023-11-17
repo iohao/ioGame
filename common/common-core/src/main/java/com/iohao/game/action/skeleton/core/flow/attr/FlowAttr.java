@@ -54,4 +54,8 @@ public interface FlowAttr {
      */
     @Deprecated
     FlowOption<Object> data = FlowOption.valueOf("data");
+
+    /** 记录 InOut 插件的开始时间 */
+    FlowOption<Long> inOutStartTime = FlowOption.valueOf("inOutStartTime");
+
 }
