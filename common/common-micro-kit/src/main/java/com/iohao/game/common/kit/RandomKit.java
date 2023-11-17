@@ -21,6 +21,7 @@ package com.iohao.game.common.kit;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -52,24 +53,45 @@ public class RandomKit {
         return ThreadLocalRandom.current().nextInt(min, max);
     }
 
+    /**
+     * 获得指定范围内的随机数
+     *
+     * @param start 开始值（包含）
+     * @param end   结束值（包含）
+     * @return 随机数
+     */
+    public int random(int start, int end) {
+        return start + ThreadLocalRandom.current().nextInt(end - start + 1);
+    }
+
+    /**
+     * 获得指定范围内的随机数 (0 ~ end)
+     *
+     * @param end 结束值（包含）
+     * @return 随机数
+     */
+    public int random(int end) {
+        return ThreadLocalRandom.current().nextInt(end + 1);
+    }
+
     public <T> T randomEle(List<T> list) {
 
         if (CollKit.isEmpty(list)) {
             return null;
         }
 
-        // 不做 null 判断了
         int size = list.size();
 
-        if (size == 0) {
-            return null;
-        }
+        return size == 1
+                ? list.get(0)
+                : list.get(randomInt(size));
+    }
 
-        if (size == 1) {
-            return list.get(0);
-        }
+    public <T> T randomEle(T[] array) {
+        Objects.requireNonNull(array);
 
-        int randomInt = ThreadLocalRandom.current().nextInt(size);
-        return list.get(randomInt);
+        return array.length == 1
+                ? array[0]
+                : array[randomInt(array.length)];
     }
 }

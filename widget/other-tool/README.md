@@ -11,4 +11,14 @@ https://gitee.com/dromara/hutool/blob/v5-master/LICENSE
 
 这个模块中文件内的 author 仅表示添加人。
 
-这个模块中只添加了 hutool 中小部分的 File 和 StrUtil.format 
+这个模块中只添加了 hutool 中小部分的 File 和 StrUtil.format
+
+
+
+```java
+open module com.iohao.game.common.kit.other.tool {
+    requires transitive lombok;
+
+    exports com.iohao.game.common.kit.hutool;
+}
+```

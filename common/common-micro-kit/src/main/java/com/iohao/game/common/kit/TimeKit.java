@@ -18,8 +18,6 @@
  */
 package com.iohao.game.common.kit;
 
-import io.netty.util.Timeout;
-import io.netty.util.TimerTask;
 import lombok.experimental.UtilityClass;
 
 import java.time.Instant;
@@ -38,22 +36,17 @@ import java.time.format.DateTimeFormatter;
 public class TimeKit {
     public ZoneId defaultZoneId = ZoneId.systemDefault();
     public DateTimeFormatter defaultFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    /** 时间更新策略 */
+    UpdateCurrentTimeMillis updateCurrentTimeMillis = () -> {
+    };
 
-    private volatile long currentTimeMillis = System.currentTimeMillis();
-
-    static {
-        // 每秒更新一次时间
-        InternalKit.newTimeoutSeconds(new TimerTask() {
-            @Override
-            public void run(Timeout timeout) {
-                TimeKit.currentTimeMillis = System.currentTimeMillis();
-                InternalKit.newTimeoutSeconds(this);
-            }
-        });
+    public void setUpdateCurrentTimeMillis(UpdateCurrentTimeMillis updateCurrentTimeMillis) {
+        TimeKit.updateCurrentTimeMillis = updateCurrentTimeMillis;
+        updateCurrentTimeMillis.init();
     }
 
     public long currentTimeMillis() {
-        return currentTimeMillis;
+        return updateCurrentTimeMillis.getCurrentTimeMillis();
     }
 
     public int toSecond(LocalDateTime localDateTime) {
@@ -83,7 +76,7 @@ public class TimeKit {
     }
 
     public String formatter() {
-        return formatter(currentTimeMillis);
+        return formatter(currentTimeMillis());
     }
 
     public String formatter(long milliseconds) {
@@ -102,6 +95,14 @@ public class TimeKit {
      */
     public boolean expire(long milliseconds) {
         // 时间 - 当前时间
-        return (milliseconds - TimeKit.currentTimeMillis) <= 0;
+        return (milliseconds - currentTimeMillis()) <= 0;
+    }
+
+    public interface UpdateCurrentTimeMillis {
+        void init();
+
+        default long getCurrentTimeMillis() {
+            return System.currentTimeMillis();
+        }
     }
 }

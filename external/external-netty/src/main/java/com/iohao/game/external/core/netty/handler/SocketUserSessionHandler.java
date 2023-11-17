@@ -57,7 +57,6 @@ public final class SocketUserSessionHandler extends ChannelInboundHandlerAdapter
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error(cause.getMessage(), cause);
         // 从 session 管理中移除
         var userSession = this.userSessions.getUserSession(ctx);
         this.userSessions.removeUserSession(userSession);

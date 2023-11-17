@@ -1,0 +1,5 @@
+open module com.iohao.game.common.kit.other.tool {
+    requires transitive lombok;
+
+    exports com.iohao.game.common.kit.hutool;
+}

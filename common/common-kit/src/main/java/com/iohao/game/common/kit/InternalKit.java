@@ -19,6 +19,7 @@
 package com.iohao.game.common.kit;
 
 import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
 import lombok.experimental.UtilityClass;
 
@@ -34,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 @UtilityClass
 public class InternalKit {
     /** 时间精度为 1 秒钟，执行一些没有 io 操作的逻辑 */
-    private final HashedWheelTimer timerSeconds = new HashedWheelTimer(1, TimeUnit.SECONDS);
+    private final HashedWheelTimer timerSeconds = new HashedWheelTimer();
     private final ExecutorService executor = ExecutorKit.newCacheThreadPool("InternalKit");
 
     /**
@@ -88,7 +89,6 @@ public class InternalKit {
         timerSeconds.newTimeout(task, delay, unit);
     }
 
-
     /**
      * 使用其他线程执行任务
      * <p>
@@ -104,5 +104,30 @@ public class InternalKit {
      */
     public void execute(Runnable command) {
         executor.execute(command);
+    }
+
+    private void enableUpdateCurrentTimeMillis() {
+        TimeKit.UpdateCurrentTimeMillis update = new TimeKit.UpdateCurrentTimeMillis() {
+            volatile long currentTimeMillis = System.currentTimeMillis();
+
+            @Override
+            public void init() {
+                // 每秒更新一次时间
+                InternalKit.newTimeoutSeconds(new TimerTask() {
+                    @Override
+                    public void run(Timeout timeout) {
+                        currentTimeMillis = System.currentTimeMillis();
+                        InternalKit.newTimeoutSeconds(this);
+                    }
+                });
+            }
+
+            @Override
+            public long getCurrentTimeMillis() {
+                return currentTimeMillis;
+            }
+        };
+
+        TimeKit.setUpdateCurrentTimeMillis(update);
     }
 }
