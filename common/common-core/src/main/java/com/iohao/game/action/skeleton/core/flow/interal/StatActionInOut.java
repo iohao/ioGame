@@ -33,55 +33,56 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 /**
- * 业务框架 action 统计插件
+ * 业务框架 action 调用统计插件
  * <pre>
- *     <a href="https://www.yuque.com/iohao/game/znapzm1dqgehdyw8">action 统计插件-文档</a>
+ *     <a href="https://www.yuque.com/iohao/game/znapzm1dqgehdyw8">action 调用统计插件-文档</a>
  *
- *     StatisticActionInOut 是 action 统计插件，可以用来统计各 action 业务方法耗时相关数据;
- *     如 action 的执行次数、总耗时、平均耗时、最大耗时等；
+ *     StatActionInOut 是 action 调用统计插件，可以用来统计各 action 调用时的相关数据，
+ *     如 action 的执行次数、总耗时、平均耗时、最大耗时、触发异常次数...等相关数据
  *     开发者可以通过这些数据来分析出项目中的热点方法、耗时方法，从而做到精准优化。
  *
- *     // 统计打印预览
- *     "StatRecord{cmd[1 - 0], 执行[1]次, 总耗时[8], 平均耗时[8], 最大耗时[8], 异常[0]次}"
+ *     // StatAction 统计记录打印预览
+ *     "StatAction{cmd[1 - 0], 执行[1]次, 总耗时[8], 平均耗时[8], 最大耗时[8], 异常[0]次}"
  * </pre>
  * <p>
  * 使用示例
  * <pre>{@code
  *         BarSkeletonBuilder builder = ...;
- *         var statisticActionInOut = new StatisticActionInOut();
- *         // 将插件添加到业务框架中
- *         builder.addInOut(statisticActionInOut);
+ *         // action 调用统计插件，将插件添加到业务框架中
+ *         var statActionInOut = new StatActionInOut();
+ *         builder.addInOut(statActionInOut);
  *
- *         // 设置统计值更新后的监听处理
- *         statisticActionInOut.setListener((record, time, flowContext) -> {
- *             // 简单打印统计记录值 StatRecord
- *             System.out.println(record);
+ *         // 设置 StatAction 统计记录更新后的监听处理
+ *         statActionInOut.setListener((statAction, time, flowContext) -> {
+ *             // 简单打印统计记录值 StatAction
+ *             System.out.println(statAction);
  *         });
  *
  *         // 统计域（统计值的管理器）
- *         StatisticActionInOut.StatRegion statRegion = statisticActionInOut.getStatRegion();
+ *         StatActionInOut.StatActionRegion region = statActionInOut.getRegion();
+ *
  *         // 遍历所有的统计数据
- *         statRegion.forEach((cmdInfo, record) -> {
- *             // 简单打印 StatRecord
- *             System.out.println(record);
- *             // 开发者可以定时的将这些数据保存到日志或 DB 中
+ *         region.forEach((cmdInfo, statAction) -> {
+ *             // 简单打印统计记录值 StatAction
+ *             System.out.println(statAction);
+ *             // 开发者可以定时的将这些数据保存到日志或 DB 中，用于后续的分析
  *         });
  * }
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-11-17
- * @see StatRecord
- * @see StatRegion
- * @see StatRecordChangeListener
+ * @see StatAction
+ * @see StatActionRegion
+ * @see StatActionChangeListener
  */
-public final class StatisticActionInOut implements ActionMethodInOut {
-    /** 统计域（管理器） */
+public final class StatActionInOut implements ActionMethodInOut {
+    /** 统计域（管理 StatAction ） */
     @Getter
-    final StatRegion statRegion = new StatRegion();
+    final StatActionRegion region = new StatActionRegion();
     /** 统计值更新后调用 */
     @Setter
-    StatRecordChangeListener listener;
+    StatActionChangeListener listener;
 
     @Override
     public void fuckIn(FlowContext flowContext) {
@@ -93,45 +94,46 @@ public final class StatisticActionInOut implements ActionMethodInOut {
     public void fuckOut(FlowContext flowContext) {
         long time = flowContext.getInOutTime();
 
-        StatRecord statRecord = this.statRegion.update(flowContext, time);
+        // StatAction 与 action 是对应关系， 1:1
+        StatAction statAction = this.region.update(flowContext, time);
 
         if (Objects.nonNull(this.listener)) {
             // 统计值更新后所执行的回调方法
-            this.listener.changed(statRecord, time, flowContext);
+            this.listener.changed(statAction, time, flowContext);
         }
     }
 
     /**
-     * 统计域，管理所有统计记录
+     * 统计域，管理所有 StatAction 统计记录
      */
-    public static final class StatRegion {
-        final Map<CmdInfo, StatRecord> map = new NonBlockingHashMap<>();
+    public static final class StatActionRegion {
+        final Map<CmdInfo, StatAction> map = new NonBlockingHashMap<>();
 
-        private StatRecord update(FlowContext flowContext, long time) {
+        private StatAction update(FlowContext flowContext, long time) {
             CmdInfo cmdInfo = flowContext.getCmdInfo();
-            StatRecord statRecord = getStatRecord(cmdInfo);
-            statRecord.update(flowContext, time);
-            return statRecord;
+            StatAction statAction = getStatAction(cmdInfo);
+            statAction.update(flowContext, time);
+            return statAction;
         }
 
-        public StatRecord getStatRecord(CmdInfo cmdInfo) {
-            StatRecord statRecord = this.map.get(cmdInfo);
+        public StatAction getStatAction(CmdInfo cmdInfo) {
+            StatAction statAction = this.map.get(cmdInfo);
 
-            if (Objects.isNull(statRecord)) {
-                statRecord = this.map.putIfAbsent(cmdInfo, new StatRecord(cmdInfo));
-                if (Objects.isNull(statRecord)) {
-                    statRecord = this.map.get(cmdInfo);
+            if (Objects.isNull(statAction)) {
+                statAction = this.map.putIfAbsent(cmdInfo, new StatAction(cmdInfo));
+                if (Objects.isNull(statAction)) {
+                    statAction = this.map.get(cmdInfo);
                 }
             }
 
-            return statRecord;
+            return statAction;
         }
 
-        public void forEach(BiConsumer<CmdInfo, StatRecord> action) {
+        public void forEach(BiConsumer<CmdInfo, StatAction> action) {
             this.map.forEach(action);
         }
 
-        public Stream<StatRecord> stream() {
+        public Stream<StatAction> stream() {
             return this.map.values().stream();
         }
 
@@ -141,9 +143,9 @@ public final class StatisticActionInOut implements ActionMethodInOut {
     }
 
     /**
-     * 统计记录，与 action 是对应关系 1:1
+     * action 统计记录，与 action 是对应关系 1:1
      */
-    public static final class StatRecord {
+    public static final class StatAction {
         @Getter
         final CmdInfo cmdInfo;
         /** action 执行次数统计 */
@@ -156,7 +158,7 @@ public final class StatisticActionInOut implements ActionMethodInOut {
         @Getter
         volatile long maxTime;
 
-        public StatRecord(CmdInfo cmdInfo) {
+        public StatAction(CmdInfo cmdInfo) {
             this.cmdInfo = cmdInfo;
         }
 
@@ -204,7 +206,7 @@ public final class StatisticActionInOut implements ActionMethodInOut {
 
         @Override
         public String toString() {
-            return "StatRecord{" +
+            return "StatAction{" +
                     CmdKit.toString(this.cmdInfo.getCmdMerge()) +
                     ", 执行[" + this.executeCount + "]次" +
                     ", 总耗时[" + this.totalTime + "]" +
@@ -216,16 +218,16 @@ public final class StatisticActionInOut implements ActionMethodInOut {
     }
 
     /**
-     * 统计记录值更新监听
+     * StatAction 更新监听
      */
-    public interface StatRecordChangeListener {
+    public interface StatActionChangeListener {
         /**
-         * 统计值更新后调用
+         * StatAction 统计记录更新后调用
          *
-         * @param record      record 统计值
+         * @param statAction  action 统计记录
          * @param time        action 调用耗时
          * @param flowContext flowContext
          */
-        void changed(StatRecord record, long time, FlowContext flowContext);
+        void changed(StatAction statAction, long time, FlowContext flowContext);
     }
 }
