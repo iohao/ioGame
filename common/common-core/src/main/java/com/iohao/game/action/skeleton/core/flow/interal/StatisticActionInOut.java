@@ -22,8 +22,6 @@ import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import lombok.Getter;
 import lombok.Setter;
 import org.jctools.maps.NonBlockingHashMap;
@@ -49,22 +47,22 @@ import java.util.stream.Stream;
  * <p>
  * 使用示例
  * <pre>{@code
- *        BarSkeletonBuilder builder = ...;
- *        StatisticActionInOut statisticActionInOut = new StatisticActionInOut();
- *         // 设置统计值更新后所执行的回调处理
- *         statisticActionInOut.setStatCallback((record, time, flowContext) -> {
- *             // 简单打印
- *             System.out.println(record);
- *         });
- *
+ *         BarSkeletonBuilder builder = ...;
+ *         var statisticActionInOut = new StatisticActionInOut();
  *         // 将插件添加到业务框架中
  *         builder.addInOut(statisticActionInOut);
  *
- *         // 统计域
+ *         // 设置统计值更新后的监听处理
+ *         statisticActionInOut.setListener((record, time, flowContext) -> {
+ *             // 简单打印统计记录值 StatRecord
+ *             System.out.println(record);
+ *         });
+ *
+ *         // 统计域（统计值的管理器）
  *         StatisticActionInOut.StatRegion statRegion = statisticActionInOut.getStatRegion();
  *         // 遍历所有的统计数据
  *         statRegion.forEach((cmdInfo, record) -> {
- *             // 简单打印
+ *             // 简单打印 StatRecord
  *             System.out.println(record);
  *             // 开发者可以定时的将这些数据保存到日志或 DB 中
  *         });
@@ -75,42 +73,39 @@ import java.util.stream.Stream;
  * @date 2023-11-17
  * @see StatRecord
  * @see StatRegion
- * @see StatCallback
+ * @see StatRecordChangeListener
  */
 public final class StatisticActionInOut implements ActionMethodInOut {
-    final FlowOption<Long> inOutStartTime = FlowAttr.inOutStartTime;
     /** 统计域（管理器） */
     @Getter
     final StatRegion statRegion = new StatRegion();
-    /** 单次完成回调，统计值更新后所执行的回调方法 */
+    /** 统计值更新后调用 */
     @Setter
-    StatCallback statCallback;
+    StatRecordChangeListener listener;
 
     @Override
     public void fuckIn(FlowContext flowContext) {
         // 记录当前时间
-        if (!flowContext.hasOption(inOutStartTime)) {
-            flowContext.option(inOutStartTime, System.currentTimeMillis());
-        }
+        flowContext.inOutStartTime();
     }
 
     @Override
     public void fuckOut(FlowContext flowContext) {
-        long startTime = flowContext.option(inOutStartTime);
-        long time = System.currentTimeMillis() - startTime;
+        long time = flowContext.getInOutTime();
+
         StatRecord statRecord = this.statRegion.update(flowContext, time);
 
-        if (Objects.nonNull(statCallback)) {
+        if (Objects.nonNull(this.listener)) {
             // 统计值更新后所执行的回调方法
-            statCallback.accept(statRecord, time, flowContext);
+            this.listener.changed(statRecord, time, flowContext);
         }
     }
 
     /**
      * 统计域，管理所有统计记录
      */
-    public static class StatRegion {
-        Map<CmdInfo, StatRecord> map = new NonBlockingHashMap<>();
+    public static final class StatRegion {
+        final Map<CmdInfo, StatRecord> map = new NonBlockingHashMap<>();
 
         private StatRecord update(FlowContext flowContext, long time) {
             CmdInfo cmdInfo = flowContext.getCmdInfo();
@@ -148,14 +143,14 @@ public final class StatisticActionInOut implements ActionMethodInOut {
     /**
      * 统计记录，与 action 是对应关系 1:1
      */
-    public static class StatRecord {
+    public static final class StatRecord {
         @Getter
         final CmdInfo cmdInfo;
         /** action 执行次数统计 */
         final LongAdder executeCount = new LongAdder();
         /** 总耗时 */
         final LongAdder totalTime = new LongAdder();
-        /** action 异常次数 */
+        /** action 异常触发次数 */
         final LongAdder errorCount = new LongAdder();
         /** 最大耗时 */
         @Getter
@@ -195,7 +190,6 @@ public final class StatisticActionInOut implements ActionMethodInOut {
             return this.getTotalTime() / this.getExecuteCount();
         }
 
-
         public long getExecuteCount() {
             return this.executeCount.sum();
         }
@@ -216,23 +210,22 @@ public final class StatisticActionInOut implements ActionMethodInOut {
                     ", 总耗时[" + this.totalTime + "]" +
                     ", 平均耗时[" + this.getAvgTime() + "]" +
                     ", 最大耗时[" + this.maxTime + "]" +
-                    ", 异常[" + this.errorCount + "]次" +
+                    ", 异常[" + this.getErrorCount() + "]次" +
                     '}';
         }
     }
 
     /**
-     * 记录值更新回调
+     * 统计记录值更新监听
      */
-    public interface StatCallback {
+    public interface StatRecordChangeListener {
         /**
-         * 回调方法
-         * <pre>单次完成回调，统计值更新后所执行的回调方法</pre>
+         * 统计值更新后调用
          *
-         * @param record      record
+         * @param record      record 统计值
          * @param time        action 调用耗时
          * @param flowContext flowContext
          */
-        void accept(StatRecord record, long time, FlowContext flowContext);
+        void changed(StatRecord record, long time, FlowContext flowContext);
     }
 }

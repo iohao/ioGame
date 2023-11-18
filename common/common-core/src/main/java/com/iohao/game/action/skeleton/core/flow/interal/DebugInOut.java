@@ -27,7 +27,6 @@ import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
@@ -83,9 +82,6 @@ import java.util.function.BiConsumer;
  * @date 2021-12-12
  */
 public final class DebugInOut implements ActionMethodInOut {
-
-    final FlowOption<Long> inOutStartTime = FlowAttr.inOutStartTime;
-
     final long time;
 
     /**
@@ -118,16 +114,13 @@ public final class DebugInOut implements ActionMethodInOut {
     @Override
     public void fuckIn(final FlowContext flowContext) {
         // 记录当前时间
-        flowContext.option(inOutStartTime, System.currentTimeMillis());
+        flowContext.inOutStartTime();
     }
 
     @Override
     public void fuckOut(final FlowContext flowContext) {
 
-        long currentTimeMillis = System.currentTimeMillis();
-        Long time = flowContext.option(inOutStartTime);
-
-        long ms = currentTimeMillis - time;
+        long ms = flowContext.getInOutTime();
 
         if (this.time > ms) {
             return;

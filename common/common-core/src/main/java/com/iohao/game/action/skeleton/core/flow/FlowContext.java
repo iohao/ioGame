@@ -83,6 +83,27 @@ public class FlowContext implements FlowOptionDynamic {
     boolean error;
     /** true 执行 ActionAfter 接口 {@link ActionAfter} */
     boolean executeActionAfter = true;
+    /**
+     * 记录 InOut 插件的开始时间
+     * <pre>
+     *     一般在 InOut 插件 fuckIn 方法中调用
+     *
+     *     由于时间记录会比较常用，所以有必要放到该类中
+     * </pre>
+     */
+    @Setter(AccessLevel.PRIVATE)
+    long inOutStartTime;
+
+    /**
+     * InOut 执行完成后所消耗的时间
+     * <pre>
+     *     一般在 InOut 插件 fuckOut 方法中调用
+     *
+     *     消耗时间 = System.currentTimeMillis - inOutStartTime
+     * </pre>
+     */
+    @Setter(AccessLevel.PRIVATE)
+    long inOutTime;
 
     public CmdInfo getCmdInfo() {
         HeadMetadata headMetadata = this.request.getHeadMetadata();
@@ -318,5 +339,37 @@ public class FlowContext implements FlowOptionDynamic {
         }
 
         return requestMessage;
+    }
+
+    /**
+     * 开始时间记录，用于 InOut 插件 fuckIn 方法的时间记录
+     * <pre>
+     *     记录 InOut 插件的开始时间
+     *
+     *     由于时间记录会比较常用，所以有必要放到该类中
+     * </pre>
+     */
+    public void inOutStartTime() {
+        if (this.inOutStartTime == 0) {
+            this.inOutStartTime = System.currentTimeMillis();
+        }
+    }
+
+    /**
+     * InOut 执行完成后所消耗的时间
+     *
+     * @return 消耗时间 = System.currentTimeMillis - inOutStartTime
+     */
+    public long getInOutTime() {
+        if (this.inOutStartTime == 0) {
+            // 表示开发者没有主动调用开始的时间记录 inOutStartTime() 方法
+            return Long.MAX_VALUE;
+        }
+
+        if (this.inOutTime == 0) {
+            this.inOutTime = System.currentTimeMillis() - this.inOutStartTime;
+        }
+
+        return inOutTime;
     }
 }
