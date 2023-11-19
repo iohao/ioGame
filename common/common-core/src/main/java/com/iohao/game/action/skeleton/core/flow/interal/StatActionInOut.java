@@ -194,7 +194,10 @@ public final class StatActionInOut implements ActionMethodInOut {
         }
 
         /**
-         * 根据消耗时间取对应的时间范围对象
+         * 根据消耗时间获取对应的时间范围对象；
+         * <pre>
+         *     如果没有找到对应的时间范围，取配置 List 中的最后一个元素。
+         * </pre>
          *
          * @param time 消耗时间
          * @return 时间范围
@@ -231,9 +234,7 @@ public final class StatActionInOut implements ActionMethodInOut {
                 rangeStr = builder.toString();
             }
 
-            String format = "StatAction{%s, 执行[%s]次, 异常[%s]次, 平均耗时[%d], 最大耗时[%s], 总耗时[%s] %s";
-
-            return String.format(format
+            return String.format("StatAction{%s, 执行[%s]次, 异常[%s]次, 平均耗时[%d], 最大耗时[%s], 总耗时[%s] %s"
                     , CmdKit.toString(this.cmdInfo.getCmdMerge())
                     , this.executeCount
                     , this.errorCount
@@ -253,7 +254,7 @@ public final class StatActionInOut implements ActionMethodInOut {
          * StatAction 统计记录更新后调用
          *
          * @param statAction  action 统计记录
-         * @param time        调用耗时
+         * @param time        action 执行耗时
          * @param flowContext flowContext
          */
         void changed(StatAction statAction, long time, FlowContext flowContext);
@@ -289,8 +290,10 @@ public final class StatActionInOut implements ActionMethodInOut {
          *     比如可以在该方法内判断，只对某个或某些玩家来做监控。
          * </pre>
          *
-         * @param time 当前耗时
-         * @return true 表示满足条件；当为 true 时，会调用 updating 方法
+         * @param statAction  action 统计记录
+         * @param time        action 执行耗时
+         * @param flowContext flowContext
+         * @return true 表示满足条件；当为 true 时，会调用 updateTimeRange 方法
          */
         default boolean triggerUpdateTimeRange(StatAction statAction, long time, FlowContext flowContext) {
             return time == Long.MAX_VALUE;
@@ -300,7 +303,7 @@ public final class StatActionInOut implements ActionMethodInOut {
          * StatAction 统计记录更新中调用，当 trigger 方法为 true 时会调用
          *
          * @param statAction  action 统计记录
-         * @param time        耗时
+         * @param time        action 执行耗时
          * @param flowContext flowContext
          */
         default void updateTimeRange(StatAction statAction, long time, FlowContext flowContext) {
@@ -317,7 +320,7 @@ public final class StatActionInOut implements ActionMethodInOut {
          * </pre>
          *
          * @param statAction  action 统计记录
-         * @param time        调用耗时
+         * @param time        action 执行耗时
          * @param flowContext flowContext
          */
         default void flow(StatAction statAction, long time, FlowContext flowContext) {
@@ -329,12 +332,34 @@ public final class StatActionInOut implements ActionMethodInOut {
         }
     }
 
-    /** 时间范围记录 */
+    /**
+     * 时间范围记录
+     *
+     * @param start 开始时间
+     * @param end   结束时间
+     * @param count 该时间范围所触发的执行次数
+     * @param name  name
+     */
     public record TimeRange(long start, long end, LongAdder count, String name) {
+        /**
+         * 创建时间范围
+         *
+         * @param start 开始时间
+         * @param end   结束时间
+         * @return TimeRange
+         */
         public static TimeRange create(long start, long end) {
             return create(start, end, start + " ~ " + end);
         }
 
+        /**
+         * 创建时间范围，并指定名称
+         *
+         * @param start 开始时间
+         * @param end   结束时间
+         * @param name  打印时的名称
+         * @return TimeRange
+         */
         public static TimeRange create(long start, long end, String name) {
             return new TimeRange(start, end, new LongAdder(), name);
         }
