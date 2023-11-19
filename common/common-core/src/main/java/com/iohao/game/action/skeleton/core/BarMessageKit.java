@@ -32,6 +32,10 @@ import java.util.Objects;
  */
 @UtilityClass
 public class BarMessageKit {
+    public RequestMessage createRequestMessage(CmdInfo cmdInfo) {
+        return createRequestMessage(cmdInfo, null);
+    }
+
     public RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
 
         RequestMessage requestMessage = new RequestMessage();

@@ -71,12 +71,11 @@ public class CollKit {
         return collection == null || collection.isEmpty();
     }
 
-   public <T> Optional<T> findAny(Set<T> set) {
+    public <T> Optional<T> findAny(Set<T> set) {
         if (isEmpty(set)) {
             return Optional.empty();
         }
 
         return set.stream().findAny();
-   }
-
+    }
 }

@@ -111,7 +111,7 @@ class BreakingNews {
         // 插件相关
         list.add(new News("业务框架 - 插件介绍", "https://www.yuque.com/iohao/game/bsgvzglvlr5tenao"));
         list.add(new News("业务框架 - DebugInOut 插件", "https://www.yuque.com/iohao/game/pf3sx0"));
-        list.add(new News("业务框架 - action 统计插件", "https://www.yuque.com/iohao/game/znapzm1dqgehdyw8"));
+        list.add(new News("业务框架 - action 调用统计插件", "https://www.yuque.com/iohao/game/znapzm1dqgehdyw8"));
 
         return RandomKit.randomEle(list);
     }
