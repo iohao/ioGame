@@ -96,6 +96,14 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
         }
     }
 
+    /**
+     * 线程监控相关信息
+     *
+     * @param name         业务线程名
+     * @param executeCount 线程已执行任务的次数
+     * @param totalTime    执行任务的总耗时
+     * @param executor     ThreadPoolExecutor
+     */
     public record ThreadMonitor(String name, LongAdder executeCount, LongAdder totalTime, ThreadPoolExecutor executor) {
 
         public static ThreadMonitor create(String name, ThreadPoolExecutor executor) {
@@ -133,7 +141,6 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
 
         @Override
         public String toString() {
-
             return String.format("业务线程[%s] 共执行了 %s 次业务，平均耗时 %d ms, 剩余 %d 个任务未执行"
                     , this.name
                     , this.executeCount
