@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -84,6 +85,13 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
         void update(long time) {
             String name = Thread.currentThread().getName();
             this.getStatThread(name).increment(time);
+        }
+
+        public void forEach(Consumer<ThreadMonitor> action) {
+            this.map.values()
+                    .stream()
+                    .filter(ThreadMonitor::notEmpty)
+                    .forEach(action);
         }
 
         @Override
