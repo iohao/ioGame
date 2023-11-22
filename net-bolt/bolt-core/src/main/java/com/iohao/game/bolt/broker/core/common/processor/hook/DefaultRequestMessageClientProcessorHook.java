@@ -20,13 +20,14 @@ package com.iohao.game.bolt.broker.core.common.processor.hook;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
+import com.iohao.game.action.skeleton.kit.ExecutorRegion;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.concurrent.ThreadCreator;
+import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.Optional;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.*;
 
 /**
  * 框架提供的 RequestMessageClientProcessorHook 默认实现
@@ -42,22 +43,36 @@ import java.util.concurrent.ThreadFactory;
 final class DefaultRequestMessageClientProcessorHook implements RequestMessageClientProcessorHook {
     final Executor[] executors;
     final int executorLength;
+    final ExecutorRegion executorRegion;
 
     public DefaultRequestMessageClientProcessorHook() {
         int availableProcessors = availableProcessors2n();
         executorLength = availableProcessors;
         executors = new Executor[executorLength];
 
+        var executorRegionImpl = new ExecutorRegionImpl(new NonBlockingHashMap<>(executorLength));
+        this.executorRegion = executorRegionImpl;
+
         for (int i = 0; i < availableProcessors; i++) {
             // 线程名：RequestMessage-线程总数-当前线程编号
             int threadNo = i + 1;
             String threadNamePrefix = String.format("RequestMessage-%s-%s", availableProcessors, threadNo);
-            executors[i] = ExecutorKit.newSingleThreadExecutor(new TheThreadFactory(threadNamePrefix));
+//            executors[i] = ExecutorKit.newSingleThreadExecutor(new TheThreadFactory(threadNamePrefix));
+
+            executors[i] = new ThreadPoolExecutor(1, 1,
+                    0L, TimeUnit.MILLISECONDS,
+                    new LinkedBlockingQueue<>(),
+                    new TheThreadFactory(threadNamePrefix));
+
+            executorRegionImpl.put(threadNamePrefix, executors[i]);
         }
     }
 
     @Override
     public void processLogic(BarSkeleton barSkeleton, FlowContext flowContext) {
+
+        flowContext.option(FlowAttr.executorRegion, this.executorRegion);
+
         long userId = flowContext.getUserId();
 
         if (userId == 0) {

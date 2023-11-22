@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.core.flow.attr;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.kit.ExecutorRegion;
 
 /**
  * flow 上下文的一些扩展属性
@@ -54,4 +55,6 @@ public interface FlowAttr {
      */
     @Deprecated
     FlowOption<Object> data = FlowOption.valueOf("data");
+    /** 业务框架 action 线程 region */
+    FlowOption<ExecutorRegion> executorRegion = FlowOption.valueOf("executorRegion");
 }
