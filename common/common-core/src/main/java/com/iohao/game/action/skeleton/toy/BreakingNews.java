@@ -110,8 +110,10 @@ class BreakingNews {
 
         // 插件相关
         list.add(new News("业务框架 - 插件介绍", "https://www.yuque.com/iohao/game/bsgvzglvlr5tenao"));
-        list.add(new News("业务框架 - DebugInOut 插件", "https://www.yuque.com/iohao/game/pf3sx0"));
-        list.add(new News("业务框架 - action 调用统计插件", "https://www.yuque.com/iohao/game/znapzm1dqgehdyw8"));
+        list.add(new News("插件 - DebugInOut 插件", "https://www.yuque.com/iohao/game/pf3sx0"));
+        list.add(new News("插件 - action 调用统计插件", "https://www.yuque.com/iohao/game/znapzm1dqgehdyw8"));
+        list.add(new News("插件 - 业务线程监控插件", "https://www.yuque.com/iohao/game/zoqabk4gez3bckis"));
+        list.add(new News("插件 - 各时间段调用统计插件", "https://www.yuque.com/iohao/game/umzk2d6lovo4n9gz"));
 
         return RandomKit.randomEle(list);
     }
