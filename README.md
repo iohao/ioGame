@@ -500,7 +500,7 @@ ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar
 
 
 
-业务框架提供了[插件](https://www.yuque.com/iohao/game/bsgvzglvlr5tenao)机制，插件是可插拨的，并且是可扩展的。框架内置提供了 [DebugInOut](https://www.yuque.com/iohao/game/pf3sx0)、[action 调用统计](https://www.yuque.com/iohao/game/znapzm1dqgehdyw8) ...等插件；随着时间的推移，插件的数量会不断增加。开发者如有需要，可扩展一些符合自身业务的插件。
+业务框架提供了[插件](https://www.yuque.com/iohao/game/bsgvzglvlr5tenao)机制，插件是可插拨、可扩展的。框架内置提供了 [DebugInOut](https://www.yuque.com/iohao/game/pf3sx0)、[action 调用统计](https://www.yuque.com/iohao/game/znapzm1dqgehdyw8)、[业务线程监控插件](https://www.yuque.com/iohao/game/zoqabk4gez3bckis)、[各时间段调用统计插件](https://www.yuque.com/iohao/game/umzk2d6lovo4n9gz)...等插件；不同的插件提供了不同的关注点，比如我们可以使用调用、监控等插件相互配合，可以让我们在开发阶段就知道**是否存在性能问题**。合理利用好各个插件，可以让我们在开发阶段就能知道问题所在，提前发现问题，提前预防问题。
 
 
 

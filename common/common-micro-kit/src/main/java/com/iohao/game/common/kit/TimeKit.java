@@ -36,6 +36,8 @@ import java.time.format.DateTimeFormatter;
 public class TimeKit {
     public ZoneId defaultZoneId = ZoneId.systemDefault();
     public DateTimeFormatter defaultFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public final DateTimeFormatter dateFormatterYMD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     /** 时间更新策略 */
     UpdateCurrentTimeMillis updateCurrentTimeMillis = () -> {
     };

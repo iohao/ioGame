@@ -234,7 +234,7 @@ public final class StatActionInOut implements ActionMethodInOut {
                 rangeStr = builder.toString();
             }
 
-            return String.format("StatAction{%s, 执行[%s]次, 异常[%s]次, 平均耗时[%d], 最大耗时[%s], 总耗时[%s] %s"
+            return String.format("%s, 执行[%s]次, 异常[%s]次, 平均耗时[%d], 最大耗时[%s], 总耗时[%s] %s"
                     , CmdKit.toString(this.cmdInfo.getCmdMerge())
                     , this.executeCount
                     , this.errorCount
@@ -296,7 +296,7 @@ public final class StatActionInOut implements ActionMethodInOut {
          * @return true 表示满足条件；当为 true 时，会调用 updateTimeRange 方法
          */
         default boolean triggerUpdateTimeRange(StatAction statAction, long time, FlowContext flowContext) {
-            return time == Long.MAX_VALUE;
+            return false;
         }
 
         /**

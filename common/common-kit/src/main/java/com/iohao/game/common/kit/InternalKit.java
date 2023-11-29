@@ -23,8 +23,11 @@ import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
 import lombok.experimental.UtilityClass;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 内部工具类，开发者不要用在耗时 io 的任务上
@@ -66,6 +69,16 @@ import java.util.concurrent.TimeUnit;
  *         });
  * }
  * </pre>
+ * Timer 监听回调
+ * <p>
+ * example
+ * <pre>{@code
+ *     // 每分钟调用一次 onUpdate 方法
+ *     InternalKit.addMinuteTimerListener(new YourTimerListener());
+ *     // 每秒钟调用一次 onUpdate 方法
+ *     InternalKit.addSecondsTimerListeners(new YourTimerListener());
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2023-06-30
@@ -75,6 +88,8 @@ public class InternalKit {
     /** 时间精度为 1 秒钟，执行一些没有 io 操作的逻辑 */
     private final HashedWheelTimer timerSeconds = new HashedWheelTimer();
     private final ExecutorService executor = ExecutorKit.newCacheThreadPool("InternalKit");
+    private final List<TimerListener> minuteTimerListeners = new CopyOnWriteArrayList<>();
+    private final List<TimerListener> secondsTimerListeners = new CopyOnWriteArrayList<>();
 
 
     public void newTimeoutSeconds(TimerTask task) {
@@ -92,6 +107,77 @@ public class InternalKit {
      */
     public void execute(Runnable command) {
         executor.execute(command);
+    }
+
+    /**
+     * 添加 TimerListener 监听
+     * <pre>
+     *     框架每分钟会调用一次 TimerListener
+     * </pre>
+     *
+     * @param timerListener TimerListener 监听
+     */
+    public void addMinuteTimerListener(TimerListener timerListener) {
+        enableMinuteTime();
+
+        minuteTimerListeners.add(timerListener);
+    }
+
+    public void removeMinuteTimerListener(TimerListener timerListener) {
+        minuteTimerListeners.remove(timerListener);
+    }
+
+    /**
+     * 添加 TimerListener 监听
+     * <pre>
+     *     框架每秒钟会调用一次 TimerListener
+     * </pre>
+     *
+     * @param timerListener TimerListener 监听
+     */
+    public void addSecondsTimerListeners(TimerListener timerListener) {
+        enableSecondsTimer();
+
+        secondsTimerListeners.add(timerListener);
+    }
+
+    public void removeSecondsTimerListeners(TimerListener timerListener) {
+        secondsTimerListeners.remove(timerListener);
+    }
+
+    private final AtomicBoolean minuteTimeEnable = new AtomicBoolean();
+    private final AtomicBoolean secondsTimerEnable = new AtomicBoolean();
+
+    private void enableSecondsTimer() {
+        if (secondsTimerEnable.get()) {
+            return;
+        }
+
+        if (secondsTimerEnable.compareAndSet(false, true)) {
+            InternalKit.newTimeout(new TimerTask() {
+                @Override
+                public void run(Timeout timeout) {
+                    secondsTimerListeners.forEach(TimerListener::onUpdate);
+                    InternalKit.newTimeout(this, 1, TimeUnit.SECONDS);
+                }
+            }, 1, TimeUnit.SECONDS);
+        }
+    }
+
+    private void enableMinuteTime() {
+        if (minuteTimeEnable.get()) {
+            return;
+        }
+
+        if (minuteTimeEnable.compareAndSet(false, true)) {
+            InternalKit.newTimeout(new TimerTask() {
+                @Override
+                public void run(Timeout timeout) {
+                    minuteTimerListeners.forEach(TimerListener::onUpdate);
+                    InternalKit.newTimeout(this, 1, TimeUnit.MINUTES);
+                }
+            }, 1, TimeUnit.MINUTES);
+        }
     }
 
     private void enableUpdateCurrentTimeMillis() {
@@ -118,4 +204,24 @@ public class InternalKit {
 
         TimeKit.setUpdateCurrentTimeMillis(update);
     }
+
+    /**
+     * Timer 监听回调
+     * <p>
+     * example
+     * <pre>{@code
+     *     // 每分钟调用一次 onUpdate 方法
+     *     InternalKit.addMinuteTimerListener(new YourTimerListener());
+     *     // 每秒钟调用一次 onUpdate 方法
+     *     InternalKit.addSecondsTimerListeners(new YourTimerListener());
+     * }
+     * </pre>
+     */
+    public interface TimerListener {
+        /**
+         * Timer 监听回调
+         */
+        void onUpdate();
+    }
 }
+
