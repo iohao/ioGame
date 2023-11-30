@@ -21,7 +21,7 @@ package com.iohao.game.action.skeleton.core.flow.attr;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.kit.ExecutorRegion;
+import com.iohao.game.common.kit.concurrent.ThreadExecutor;
 
 /**
  * flow 上下文的一些扩展属性
@@ -43,7 +43,6 @@ public interface FlowAttr {
     FlowOption<String> logicServerId = FlowOption.valueOf("logicServerId");
     /** 逻辑服 tag 类型 */
     FlowOption<String> logicServerTag = FlowOption.valueOf("logicServerTag");
-
     /** action 中的业务参数 */
     FlowOption<Object> actionBizParam = FlowOption.valueOf("actionBizParam");
     /**
@@ -55,6 +54,6 @@ public interface FlowAttr {
      */
     @Deprecated
     FlowOption<Object> data = FlowOption.valueOf("data");
-    /** 业务框架 action 线程 region */
-    FlowOption<ExecutorRegion> executorRegion = FlowOption.valueOf("executorRegion");
+    /** 当前线程执行器 */
+    FlowOption<ThreadExecutor> threadExecutor = FlowOption.valueOf("threadExecutor");
 }

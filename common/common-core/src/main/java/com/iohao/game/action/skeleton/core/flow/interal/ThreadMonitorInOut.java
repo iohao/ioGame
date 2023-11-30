@@ -21,7 +21,7 @@ package com.iohao.game.action.skeleton.core.flow.interal;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.kit.ExecutorRegion;
+import com.iohao.game.common.kit.concurrent.ThreadExecutor;
 import lombok.Getter;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -47,31 +47,26 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
     @Override
     public void fuckIn(FlowContext flowContext) {
         flowContext.inOutStartTime();
-
-        if (Objects.isNull(this.region.executorRegion)) {
-            this.region.executorRegion = flowContext.option(FlowAttr.executorRegion);
-        }
     }
 
     @Override
     public void fuckOut(FlowContext flowContext) {
-        region.update(flowContext.getInOutTime());
+        ThreadExecutor threadExecutor = flowContext.option(FlowAttr.threadExecutor);
+
+        region.update(flowContext.getInOutTime(), threadExecutor);
     }
 
     @Getter
     public static class ThreadMonitorRegion {
         final Map<String, ThreadMonitor> map = new NonBlockingHashMap<>();
-        ExecutorRegion executorRegion;
 
-        ThreadMonitor getStatThread(String name) {
+        private ThreadMonitor getStatThread(ThreadExecutor threadExecutor) {
+            String name = threadExecutor.name();
             ThreadMonitor threadMonitor = this.map.get(name);
 
             // 无锁化
             if (Objects.isNull(threadMonitor)) {
-                ThreadPoolExecutor executor = Optional.ofNullable(this.executorRegion)
-                        .map(region -> region.getThreadPoolExecutor(name))
-                        .orElse(null);
-
+                ThreadPoolExecutor executor = threadExecutor.getThreadPoolExecutor();
                 threadMonitor = this.map.putIfAbsent(name, ThreadMonitor.create(name, executor));
 
                 if (Objects.isNull(threadMonitor)) {
@@ -82,9 +77,8 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
             return threadMonitor;
         }
 
-        void update(long time) {
-            String name = Thread.currentThread().getName();
-            this.getStatThread(name).increment(time);
+        void update(long time, ThreadExecutor threadExecutor) {
+            this.getStatThread(threadExecutor).increment(time);
         }
 
         public void forEach(Consumer<ThreadMonitor> action) {

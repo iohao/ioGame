@@ -45,10 +45,16 @@ import java.util.Objects;
  *     https://www.yuque.com/iohao/game/wg6lk7
  * </pre>
  *
+ * <pre>
+ *     请使用新版本游戏对外服
+ *     <a href="https://www.yuque.com/iohao/game/vu0hrkn8xqq0x9a5">迁移到新版游戏对外服</a>
+ * </pre>
+ *
  * @author 渔民小镇
  * @date 2022-01-11
  */
 @Slf4j
+@Deprecated
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserSessions {
     final ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
