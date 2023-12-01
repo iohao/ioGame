@@ -154,6 +154,9 @@ ioGame 在内存占用、启动速度、打包等方面也是优秀的。
 | [UE5 连接示例文档](https://www.yuque.com/iohao/game/rus213)  | 已经与 ioGame 的综合示例联调成功                        |
 | [websocket.js 连接示例文档](https://www.yuque.com/iohao/game/knqxehz2pl1sal5s) | websocket.js 连接的一个示例，使用 json 协议来传输交互。 |
 | [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、ks8）等介绍   |
+| [FXGL-ioGame-移动同步](https://www.yuque.com/iohao/game/bolt) | FXGL + ioGame 网络游戏中的多人移动演示。                |
+| [unity Tcp 移动同步 demo](https://www.yuque.com/iohao/game/kswsfk13ocg069uf) | 提供了 unity 与 ioGame 的【多人】移动同步演示           |
+| [28 行代码做个网页聊天室](https://www.yuque.com/iohao/game/we9eppym4yno9hq2) | 基于 ioGame 框架，用 28 行代码做一个简单的网页聊天室。  |
 
 
 
@@ -193,7 +196,7 @@ ioGame 是轻量级的网络游戏服务器框架，**不依赖任何第三方**
 
 ### ioGame 使用趋势数据
 
-关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 2023-11 月统计数据；
+关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 至今，各月的统计数据；
 
 
 

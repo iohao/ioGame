@@ -22,8 +22,8 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.common.kit.concurrent.ThreadExecutor;
-import com.iohao.game.common.kit.concurrent.ThreadExecutorRegion;
+import com.iohao.game.common.kit.concurrent.executor.UserThreadExecutorRegion;
+import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 
 import java.util.Optional;
 
@@ -56,7 +56,7 @@ final class DefaultRequestMessageClientProcessorHook implements RequestMessageCl
          * 默认实现使用单例的 ThreadExecutorRegion 来处理，
          * 即使在同一进程中启动了多个逻辑服，也不会创建过多线程执行器，而是使用同一个。
          */
-        ThreadExecutorRegion region = ThreadExecutorRegion.me();
+        UserThreadExecutorRegion region = UserThreadExecutorRegion.me();
         // 根据 userId 找到对应的线程执行器来消费业务
         ThreadExecutor threadExecutor = region.getThreadExecutor(userId);
         flowContext.option(FlowAttr.threadExecutor, threadExecutor);

@@ -80,7 +80,7 @@ import java.util.stream.Stream;
  * @date 2023-11-29
  */
 @Getter
-public final class TimeRangeInOut implements ActionMethodInOut {
+final class TimeRangeInOut implements ActionMethodInOut {
     public static final FlowOption<LocalDate> localDate = FlowOption.valueOf("TimeRangeInOut-LocalDate");
     public static final FlowOption<LocalTime> localTime = FlowOption.valueOf("TimeRangeInOut-LocalTime");
 

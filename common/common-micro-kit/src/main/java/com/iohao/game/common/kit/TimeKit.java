@@ -18,6 +18,7 @@
  */
 package com.iohao.game.common.kit;
 
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
 import java.time.Instant;
@@ -39,13 +40,9 @@ public class TimeKit {
     public final DateTimeFormatter dateFormatterYMD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /** 时间更新策略 */
-    UpdateCurrentTimeMillis updateCurrentTimeMillis = () -> {
+    @Setter
+    UpdateCurrentTimeMillis updateCurrentTimeMillis = new UpdateCurrentTimeMillis() {
     };
-
-    public void setUpdateCurrentTimeMillis(UpdateCurrentTimeMillis updateCurrentTimeMillis) {
-        TimeKit.updateCurrentTimeMillis = updateCurrentTimeMillis;
-        updateCurrentTimeMillis.init();
-    }
 
     public long currentTimeMillis() {
         return updateCurrentTimeMillis.getCurrentTimeMillis();
@@ -101,8 +98,6 @@ public class TimeKit {
     }
 
     public interface UpdateCurrentTimeMillis {
-        void init();
-
         default long getCurrentTimeMillis() {
             return System.currentTimeMillis();
         }

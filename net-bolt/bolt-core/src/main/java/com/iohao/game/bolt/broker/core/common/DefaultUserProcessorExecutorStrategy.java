@@ -54,17 +54,13 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
             return this.commonExecutor;
         }
 
-        if (userProcessorName.equals("RequestMessageClientProcessor")) {
-            // 游戏逻辑服请求处理单独一个池
-            return this.createExecutor(userProcessorName);
-        }
-
-        if (userProcessorName.equals("SettingUserIdMessageExternalProcessor")) {
-            createExecutor(userProcessorName);
-        }
-
-        // 其他类型的消息处理共用一个池
-        return this.commonExecutor;
+        return switch (userProcessorName) {
+            // 单独一个池
+            case "RequestMessageClientProcessor", "SettingUserIdMessageExternalProcessor" ->
+                    this.createExecutor(userProcessorName);
+            // 其他类型的消息处理共用一个池
+            default -> this.commonExecutor;
+        };
     }
 
     Executor createExecutor(String userProcessorName) {
@@ -95,6 +91,7 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
                 , id.incrementAndGet());
 
         DaemonThreadFactory threadFactory = new DaemonThreadFactory(namePrefix);
+
         var executor = new ThreadPoolExecutor(
                 corePoolSize, maximumPoolSize,
                 60L, TimeUnit.SECONDS,

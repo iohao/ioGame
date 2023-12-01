@@ -21,7 +21,7 @@ package com.iohao.game.action.skeleton.core.flow.interal;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.common.kit.concurrent.ThreadExecutor;
+import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.Getter;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -61,6 +61,7 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
         final Map<String, ThreadMonitor> map = new NonBlockingHashMap<>();
 
         private ThreadMonitor getStatThread(ThreadExecutor threadExecutor) {
+            // 如果开发者重写了 DefaultRequestMessageClientProcessorHook 实现，导致没有拿到 ThreadExecutor 对象就报 null
             String name = threadExecutor.name();
             ThreadMonitor threadMonitor = this.map.get(name);
 

@@ -21,7 +21,7 @@ package com.iohao.game.action.skeleton.core.flow.attr;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.common.kit.concurrent.ThreadExecutor;
+import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 
 /**
  * flow 上下文的一些扩展属性
