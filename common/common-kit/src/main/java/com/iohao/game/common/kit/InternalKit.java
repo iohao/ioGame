@@ -25,11 +25,11 @@ import io.netty.util.TimerTask;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
+import org.jctools.maps.NonBlockingHashSet;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -147,8 +147,8 @@ public class InternalKit {
     private final HashedWheelTimer wheelTimer = new HashedWheelTimer();
     /** 内置的 cacheExecutor 执行器 */
     @Getter
-    final ExecutorService cacheExecutor = ExecutorKit.newCacheThreadPool("InternalKit");
-    final Map<TickTimeUnit, List<TimerListener>> timerListenerMap = new NonBlockingHashMap<>();
+    final ExecutorService cacheExecutor = ExecutorKit.newCacheThreadPool("ioGameInternalKit");
+    final Map<TickTimeUnit, Set<TimerListener>> timerListenerMap = new NonBlockingHashMap<>();
 
     /**
      * 使用其他线程执行任务
@@ -216,10 +216,10 @@ public class InternalKit {
     public void addTimerListener(TimerListener timerListener, long tick, TimeUnit timeUnit) {
         TickTimeUnit tickTimeUnit = new TickTimeUnit(tick, timeUnit);
 
-        List<TimerListener> timerListeners = timerListenerMap.get(tickTimeUnit);
+        Set<TimerListener> timerListeners = timerListenerMap.get(tickTimeUnit);
 
         if (CollKit.isEmpty(timerListeners)) {
-            timerListeners = timerListenerMap.putIfAbsent(tickTimeUnit, new CopyOnWriteArrayList<>());
+            timerListeners = timerListenerMap.putIfAbsent(tickTimeUnit, new NonBlockingHashSet<>());
 
             if (Objects.isNull(timerListeners)) {
                 timerListeners = timerListenerMap.get(tickTimeUnit);
@@ -231,7 +231,7 @@ public class InternalKit {
         timerListeners.add(timerListener);
     }
 
-    private void foreverTimeout(long tick, TimeUnit timeUnit, List<TimerListener> timerListeners) {
+    private void foreverTimeout(long tick, TimeUnit timeUnit, Set<TimerListener> timerListeners) {
 
         // 启动定时器
         InternalKit.newTimeout(new TimerTask() {
