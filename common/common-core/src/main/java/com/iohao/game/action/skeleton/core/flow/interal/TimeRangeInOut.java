@@ -22,8 +22,8 @@ import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import com.iohao.game.common.kit.CollKit;
-import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.TimeKit;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.Getter;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -142,7 +142,7 @@ final class TimeRangeInOut implements ActionMethodInOut {
                      * 原计划是想保留 map 中的数据让开发者自行处理，
                      * 考虑到开发者可能会忘记移除 map 中的数据，为防止造成隐患，这里就直接移除昨天的数据了。
                      */
-                    InternalKit.execute(() -> {
+                    TaskKit.execute(() -> {
                         LocalDate yesterdayLocalDate = localDate.minusDays(1);
                         Optional.ofNullable(this.map.remove(yesterdayLocalDate))
                                 .ifPresent(timeRangeYesterday -> TimeRangeInOut.this.listener.callbackYesterday(timeRangeYesterday));

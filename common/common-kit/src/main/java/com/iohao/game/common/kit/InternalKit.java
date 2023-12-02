@@ -18,137 +18,25 @@
  */
 package com.iohao.game.common.kit;
 
-import com.iohao.game.common.kit.concurrent.TimerListener;
-import io.netty.util.HashedWheelTimer;
-import io.netty.util.Timeout;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import io.netty.util.TimerTask;
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import org.jctools.maps.NonBlockingHashMap;
-import org.jctools.maps.NonBlockingHashSet;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
  * 内部工具类，开发者不要用在耗时 io 的任务上
- * <pre>{@code
- *         // 执行一次
- *         InternalKit.newTimeoutSeconds(new TimerTask() {
- *             @Override
- *             public void run(Timeout timeout) {
- *                 log.info("one : {}", timeout);
- *             }
- *         });
- *
- *         // 3 秒后执行
- *         InternalKit.newTimeout(new TimerTask() {
- *             @Override
- *             public void run(Timeout timeout) {
- *                 log.info("3-newTimeout : {}", timeout);
- *             }
- *         }, 3, TimeUnit.SECONDS);
- * }
- * </pre>
- * <p>
- * 使用其他线程执行任务
- * <pre>{@code
- *         InternalKit.execute(()->{
- *             log.info("你的逻辑");
- *         });
- * }
- * </pre>
- * TimerListener 监听回调。内部使用 HashedWheelTimer 来模拟 ScheduledExecutorService 调度
- * <p>
- * example
- * <pre>{@code
- *     // 每秒钟调用一次 onUpdate 方法
- *     InternalKit.addSecondsTimerListener(new YourTimerListener());
- *     // 每分钟调用一次 onUpdate 方法
- *     InternalKit.addMinuteTimerListener(new YourTimerListener());
- *     // 每 10 秒钟调用一次 onUpdate 方法
- *     InternalKit.addTimerListener(new YourTimerListener(), 10, TimeUnit.SECONDS);
- *     // 每 30 分钟调用一次 onUpdate 方法
- *     InternalKit.addTimerListener(new YourTimerListener(), 30, TimeUnit.MINUTES);
- * }
- * </pre>
- * example - TimerListener - 高级用法
- * <pre>{@code
- *         //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 TimerListener
- *         InternalKit.addTimerListener(new TimerListener() {
- *             int hp = 2;
- *
- *             @Override
- *             public void onUpdate() {
- *                 hp--;
- *                 log.info("剩余 hp:2-{}", hp);
- *             }
- *
- *             @Override
- *             public boolean isActive() {
- *                 // 当返回 false 则表示不活跃，会从监听列表中移除当前 TimerListener
- *                 return hp != 0;
- *             }
- *         }, 1, TimeUnit.SECONDS);
- *
- *
- *         //【示例 - 跳过执行】每秒调用一次，当 triggerUpdate 返回值为 true，即符合条件时才执行 onUpdate 方法
- *         InternalKit.addTimerListener(new TimerListener() {
- *             int hp;
- *
- *             @Override
- *             public void onUpdate() {
- *                 log.info("current hp:{}", hp);
- *             }
- *
- *             @Override
- *             public boolean triggerUpdate() {
- *                 hp++;
- *                 // 当返回值为 true 时，会执行 onUpdate 方法
- *                 return hp % 2 == 0;
- *             }
- *         }, 1, TimeUnit.SECONDS);
- *
- *         //【示例 - 指定线程执行器】每秒调用一次
- *         // 如果有耗时的任务，比如涉及一些 io 操作的，建议指定执行器来执行当前回调（onUpdate 方法），以避免阻塞其他任务。
- *         InternalKit.addTimerListener(new TimerListener() {
- *             @Override
- *             public void onUpdate() {
- *                 log.info("执行耗时的 IO 任务，开始");
- *
- *                 try {
- *                     TimeUnit.SECONDS.sleep(3);
- *                 } catch (InterruptedException e) {
- *                     throw new RuntimeException(e);
- *                 }
- *
- *                 log.info("执行耗时的 IO 任务，结束");
- *             }
- *
- *             @Override
- *             public Executor getExecutor() {
- *                 // 指定执行器来执行当前回调（onUpdate 方法），以避免阻塞其他任务。
- *                 return InternalKit.getCacheExecutor();
- *             }
- *         }, 1, TimeUnit.SECONDS);
- * }
- *
+ * <pre>
+ *     请使用 TaskKit 代替
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-06-30
+ * @see TaskKit
  */
+@Deprecated
 @UtilityClass
 public class InternalKit {
-    /** 时间精度为 1 秒钟，执行一些没有 io 操作的逻辑 */
-    private final HashedWheelTimer wheelTimer = new HashedWheelTimer();
-    /** 内置的 cacheExecutor 执行器 */
-    @Getter
-    final ExecutorService cacheExecutor = ExecutorKit.newCacheThreadPool("ioGameInternalKit");
-    final Map<TickTimeUnit, Set<TimerListener>> timerListenerMap = new NonBlockingHashMap<>();
 
     /**
      * 使用其他线程执行任务
@@ -156,7 +44,7 @@ public class InternalKit {
      * @param command 任务
      */
     public void execute(Runnable command) {
-        cacheExecutor.execute(command);
+        TaskKit.execute(command);
     }
 
     /**
@@ -165,7 +53,7 @@ public class InternalKit {
      * @param task 任务
      */
     public void newTimeoutSeconds(TimerTask task) {
-        wheelTimer.newTimeout(task, 0, TimeUnit.SECONDS);
+        TaskKit.newTimeout(task, 0, TimeUnit.SECONDS);
     }
 
     /**
@@ -176,100 +64,7 @@ public class InternalKit {
      * @param unit  延迟时间单位
      */
     public void newTimeout(TimerTask task, long delay, TimeUnit unit) {
-        wheelTimer.newTimeout(task, delay, unit);
+        TaskKit.newTimeout(task, delay, unit);
     }
-
-    /**
-     * 添加 TimerListener 监听回调
-     * <pre>
-     *     框架每分钟会调用一次 TimerListener
-     * </pre>
-     *
-     * @param timerListener TimerListener 监听
-     */
-    public void addMinuteTimerListener(TimerListener timerListener) {
-        addTimerListener(timerListener, 1, TimeUnit.MINUTES);
-    }
-
-    /**
-     * 添加 TimerListener 监听回调
-     * <pre>
-     *     框架每秒钟会调用一次 TimerListener
-     * </pre>
-     *
-     * @param timerListener TimerListener 监听
-     */
-    public void addSecondsTimerListener(TimerListener timerListener) {
-        addTimerListener(timerListener, 1, TimeUnit.SECONDS);
-    }
-
-    /**
-     * 添加 TimerListener 监听回调
-     * <pre>
-     *     使用 HashedWheelTimer 来模拟 ScheduledExecutorService 调度
-     * </pre>
-     *
-     * @param timerListener TimerListener 监听
-     * @param tick          tick 次数
-     * @param timeUnit      tick 时间单位
-     */
-    public void addTimerListener(TimerListener timerListener, long tick, TimeUnit timeUnit) {
-        TickTimeUnit tickTimeUnit = new TickTimeUnit(tick, timeUnit);
-
-        Set<TimerListener> timerListeners = timerListenerMap.get(tickTimeUnit);
-
-        if (CollKit.isEmpty(timerListeners)) {
-            timerListeners = timerListenerMap.putIfAbsent(tickTimeUnit, new NonBlockingHashSet<>());
-
-            if (Objects.isNull(timerListeners)) {
-                timerListeners = timerListenerMap.get(tickTimeUnit);
-
-                foreverTimeout(tick, timeUnit, timerListeners);
-            }
-        }
-
-        timerListeners.add(timerListener);
-    }
-
-    private void foreverTimeout(long tick, TimeUnit timeUnit, Set<TimerListener> timerListeners) {
-
-        // 启动定时器
-        InternalKit.newTimeout(new TimerTask() {
-            @Override
-            public void run(Timeout timeout) {
-
-                if (timerListeners.isEmpty()) {
-                    InternalKit.newTimeout(this, tick, timeUnit);
-                    return;
-                }
-
-                timerListeners.forEach(timerListener -> {
-                    if (timerListener.triggerUpdate()) {
-                        var executor = timerListener.getExecutor();
-
-                        // Timer 监听回调
-                        if (Objects.nonNull(executor)) {
-                            executor.execute(timerListener::onUpdate);
-                        } else {
-                            timerListener.onUpdate();
-                        }
-                    }
-
-                    // 移除不活跃的监听
-                    if (!timerListener.isActive()) {
-                        timerListeners.remove(timerListener);
-                    }
-
-                });
-
-                InternalKit.newTimeout(this, tick, timeUnit);
-            }
-        }, tick, timeUnit);
-    }
-
-    record TickTimeUnit(long tick, TimeUnit timeUnit) {
-    }
-
-
 }
 

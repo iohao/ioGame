@@ -19,24 +19,11 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.iohao.game</groupId>
-            <artifactId>other-tool</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm -->
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>reflectasm</artifactId>
             <version>${reflectasm.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.jctools/jctools-core -->
-        <dependency>
-            <groupId>org.jctools</groupId>
-            <artifactId>jctools-core</artifactId>
-            <version>${jctools-core.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
@@ -45,13 +32,6 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>${netty.version}</version>
-            <scope>compile</scope>
         </dependency>
 
     </dependencies>

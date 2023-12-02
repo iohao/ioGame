@@ -18,7 +18,7 @@
  */
 package com.iohao.game.external.client.user;
 
-import com.iohao.game.common.kit.InternalKit;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,7 +43,7 @@ public class ClientUsers {
     final List<ClientUser> clientUsers = new CopyOnWriteArrayList<>();
 
     static {
-        InternalKit.execute(() -> {
+        TaskKit.execute(() -> {
 
             try {
                 // 小等一会
@@ -71,7 +71,7 @@ public class ClientUsers {
     }
 
     private void extractedExecute() {
-        InternalKit.execute(() -> {
+        TaskKit.execute(() -> {
             if (clientUsers.size() > 1) {
                 log.info("{} 个玩家全部登录完成，开始执行任务[{}]", clientUsers.size(), runnableQueue.size());
             }
@@ -79,7 +79,7 @@ public class ClientUsers {
             while (true) {
                 try {
                     Runnable take = runnableQueue.take();
-                    InternalKit.execute(take);
+                    TaskKit.execute(take);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

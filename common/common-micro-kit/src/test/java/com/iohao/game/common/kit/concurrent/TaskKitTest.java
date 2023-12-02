@@ -1,6 +1,5 @@
-package com.iohao.game.common.kit;
+package com.iohao.game.common.kit.concurrent;
 
-import com.iohao.game.common.kit.concurrent.TimerListener;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
 import lombok.extern.slf4j.Slf4j;
@@ -13,27 +12,26 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author 渔民小镇
- * @date 2023-07-02
+ * @date 2023-12-02
  */
 @Slf4j
-public class InternalKitTest {
+public class TaskKitTest {
 
     @Test
     public void timerListener() throws InterruptedException {
 
-
         // 每秒调用一次
-        InternalKit.addSecondsTimerListener(() -> log.info("tick 1 Seconds"));
+        TaskKit.addSecondsTimerListener(() -> log.info("tick 1 Seconds"));
         // 每分钟调用一次
-        InternalKit.addMinuteTimerListener(() -> log.info("tick 1 Minute"));
+        TaskKit.addMinuteTimerListener(() -> log.info("tick 1 Minute"));
 
         // 每 2 秒调用一次
-        InternalKit.addTimerListener(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
+        TaskKit.addTimerListener(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
         // 每 30 分钟调用一次
-        InternalKit.addTimerListener(() -> log.info("tick 30 Minute"), 30, TimeUnit.MINUTES);
+        TaskKit.addTimerListener(() -> log.info("tick 30 Minute"), 30, TimeUnit.MINUTES);
 
         //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 TimerListener
-        InternalKit.addTimerListener(new TimerListener() {
+        TaskKit.addTimerListener(new TimerListener() {
             int hp = 2;
 
             @Override
@@ -50,7 +48,7 @@ public class InternalKitTest {
         }, 1, TimeUnit.SECONDS);
 
         //【示例 - 跳过执行】每秒调用一次，当 triggerUpdate 返回值为 true，即符合条件时才执行 onUpdate 方法
-        InternalKit.addTimerListener(new TimerListener() {
+        TaskKit.addTimerListener(new TimerListener() {
             int hp;
 
             @Override
@@ -70,7 +68,7 @@ public class InternalKitTest {
         // 如果有耗时的任务，比如涉及一些 io 操作的，建议指定执行器来执行当前回调（onUpdate 方法），以避免阻塞其他任务。
         ExecutorService executorService = Executors.newCachedThreadPool();
 
-        InternalKit.addTimerListener(new TimerListener() {
+        TaskKit.addTimerListener(new TimerListener() {
             @Override
             public void onUpdate() {
                 log.info("执行耗时的 IO 任务，开始");
@@ -96,19 +94,19 @@ public class InternalKitTest {
 
     @Test
     public void newTimeout() throws InterruptedException {
-        InternalKit.newTimeoutSeconds(new TimerTask() {
+        TaskKit.newTimeoutSeconds(new TimerTask() {
             @Override
             public void run(Timeout timeout) {
                 log.info("1-newTimeoutSeconds : {}", timeout);
-                InternalKit.newTimeoutSeconds(this);
+                TaskKit.newTimeoutSeconds(this);
             }
         });
 
-        InternalKit.newTimeout(new TimerTask() {
+        TaskKit.newTimeout(new TimerTask() {
             @Override
             public void run(Timeout timeout) {
                 log.info("3-newTimeout : {}", timeout);
-                InternalKit.newTimeout(this, 3, TimeUnit.SECONDS);
+                TaskKit.newTimeout(this, 3, TimeUnit.SECONDS);
             }
         }, 3, TimeUnit.SECONDS);
 

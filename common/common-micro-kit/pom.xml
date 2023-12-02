@@ -12,12 +12,6 @@
 
     <artifactId>common-micro-kit</artifactId>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.iohao.game</groupId>
@@ -31,5 +25,13 @@
             <artifactId>jctools-core</artifactId>
             <version>${jctools-core.version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.netty/netty-common -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
