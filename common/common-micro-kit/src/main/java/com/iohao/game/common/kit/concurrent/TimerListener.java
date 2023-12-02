@@ -26,16 +26,17 @@ import java.util.concurrent.Executor;
  * example
  * <pre>{@code
  *     // 每秒钟调用一次 onUpdate 方法
- *     InternalKit.addSecondsTimerListener(new YourTimerListener());
+ *     TaskKit.addSecondsTimerListener(new YourTimerListener());
  *     // 每分钟调用一次 onUpdate 方法
- *     InternalKit.addMinuteTimerListener(new YourTimerListener());
+ *     TaskKit.addMinuteTimerListener(new YourTimerListener());
  *     // 每 10 秒钟调用一次 onUpdate 方法
- *     InternalKit.addTimerListener(new YourTimerListener(), 10, TimeUnit.SECONDS);
+ *     TaskKit.addTimerListener(new YourTimerListener(), 10, TimeUnit.SECONDS);
  * }
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-01
+ * @see TaskKit
  */
 public interface TimerListener {
     /**
@@ -63,12 +64,12 @@ public interface TimerListener {
      * <pre>{@code
      *     default Executor getExecutor() {
      *         // 耗时任务，指定一个执行器来消费当前 onUpdate
-     *         return InternalKit.getCacheExecutor();
+     *         return TaskKit.getCacheExecutor();
      *     }
      * }
      * </pre>
      *
-     * @return 执行器
+     * @return 当返回值为 null 时，将使用当前线程（默认 HashedWheelTimer）执行，否则使用该执行器来执行
      */
     default Executor getExecutor() {
         return null;

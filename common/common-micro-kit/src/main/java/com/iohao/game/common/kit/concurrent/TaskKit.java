@@ -246,20 +246,13 @@ public class TaskKit {
                 }
 
                 timerListeners.forEach(timerListener -> {
-                    if (timerListener.triggerUpdate()) {
-                        var executor = timerListener.getExecutor();
+                    var executor = timerListener.getExecutor();
 
-                        // Timer 监听回调
-                        if (Objects.nonNull(executor)) {
-                            executor.execute(timerListener::onUpdate);
-                        } else {
-                            timerListener.onUpdate();
-                        }
-                    }
-
-                    // 移除不活跃的监听
-                    if (!timerListener.isActive()) {
-                        timerListeners.remove(timerListener);
+                    // 如果指定了执行器，就将执行流程放到执行器中，否则使用当前线程
+                    if (Objects.nonNull(executor)) {
+                        executor.execute(() -> flowTimerListener(timerListener, timerListeners));
+                    } else {
+                        flowTimerListener(timerListener, timerListeners);
                     }
 
                 });
@@ -267,6 +260,18 @@ public class TaskKit {
                 TaskKit.newTimeout(this, tick, timeUnit);
             }
         }, tick, timeUnit);
+    }
+
+    private void flowTimerListener(TimerListener timerListener, Set<TimerListener> timerListeners) {
+
+        if (timerListener.triggerUpdate()) {
+            timerListener.onUpdate();
+        }
+
+        // 移除不活跃的监听
+        if (!timerListener.isActive()) {
+            timerListeners.remove(timerListener);
+        }
     }
 
     record TickTimeUnit(long tick, TimeUnit timeUnit) {
