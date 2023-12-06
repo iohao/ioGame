@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 内部工具类，开发者不要用在耗时 io 的任务上
  * <pre>
- *     请使用 TaskKit 代替
+ *     已经废弃，将在下个大版本中移除，请使用 TaskKit 代替
  * </pre>
  *
  * @author 渔民小镇
@@ -43,6 +43,7 @@ public class InternalKit {
      *
      * @param command 任务
      */
+    @Deprecated
     public void execute(Runnable command) {
         TaskKit.execute(command);
     }
@@ -52,8 +53,9 @@ public class InternalKit {
      *
      * @param task 任务
      */
+    @Deprecated
     public void newTimeoutSeconds(TimerTask task) {
-        TaskKit.newTimeout(task, 0, TimeUnit.SECONDS);
+        newTimeout(task, 0, TimeUnit.SECONDS);
     }
 
     /**
@@ -63,6 +65,7 @@ public class InternalKit {
      * @param delay 延迟时间
      * @param unit  延迟时间单位
      */
+    @Deprecated
     public void newTimeout(TimerTask task, long delay, TimeUnit unit) {
         TaskKit.newTimeout(task, delay, unit);
     }

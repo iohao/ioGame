@@ -21,24 +21,12 @@ package com.iohao.game.common.kit.concurrent;
 import java.util.concurrent.Executor;
 
 /**
- * Timer 监听回调
- * <p>
- * example
- * <pre>{@code
- *     // 每秒钟调用一次 onUpdate 方法
- *     TaskKit.addSecondsTimerListener(new YourTimerListener());
- *     // 每分钟调用一次 onUpdate 方法
- *     TaskKit.addMinuteTimerListener(new YourTimerListener());
- *     // 每 10 秒钟调用一次 onUpdate 方法
- *     TaskKit.addTimerListener(new YourTimerListener(), 10, TimeUnit.SECONDS);
- * }
- * </pre>
+ * 任务监听回调
  *
  * @author 渔民小镇
- * @date 2023-12-01
- * @see TaskKit
+ * @date 2023-12-06
  */
-public interface TimerListener {
+interface TaskListener {
     /**
      * 是否触发 onUpdate 监听回调方法
      *
@@ -73,14 +61,5 @@ public interface TimerListener {
      */
     default Executor getExecutor() {
         return null;
-    }
-
-    /**
-     * 是否活跃
-     *
-     * @return false 表示不活跃，会从监听列表中移除当前 TimerListener
-     */
-    default boolean isActive() {
-        return true;
     }
 }
