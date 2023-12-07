@@ -471,7 +471,13 @@ ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar
 
 
 
-在通讯方式方面，大部分框架只能支持推送（广播）这一类型的通讯方式；而 ioGame 则提供了 5 种类型的通讯方式，分别是单次请求处理、推送、单个逻辑服间的相互通讯、与同类型多个逻辑服相互通讯、[脉冲通讯](https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn)。通过对各种通讯方式的组合使用，可以简单完成以往难以完成的工作，并且这些通讯方式都支持跨进程、跨机器通信。
+在通讯方式方面，大部分框架只能支持推送（广播）这一类型的通讯方式；ioGame 则提供了多种类型的通讯方式，通过对各种通讯方式的组合使用，可以简单完成以往难以完成的工作，并且这些通讯方式都支持跨进程、跨机器通信的。这些通讯方式分别是
+1. [请求响应](https://www.yuque.com/iohao/game/krzxcmgoispw0gl8)（单次请求处理）
+2. [广播](https://www.yuque.com/iohao/game/qv4qfo)（推送）
+3. [单个逻辑服间的相互通讯](https://www.yuque.com/iohao/game/anguu6)（可跨机器通信、可跨进程通信）
+4. [与同类型多个逻辑服相互通讯](https://www.yuque.com/iohao/game/rf9rb9)（可跨多个机器通信、可跨多个进程通信）
+5. [脉冲通讯](https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn)（可跨多个机器通信、可跨多个进程通信）
+6. [分布式事件总线](https://www.yuque.com/iohao/game/gmxz33)[计划中]（类似 MQ、Redis 发布订阅的机制；可跨多个机器通信、可跨多个进程通信）
 
 
 
