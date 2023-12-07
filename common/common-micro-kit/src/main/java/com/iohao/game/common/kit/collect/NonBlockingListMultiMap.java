@@ -19,52 +19,52 @@
 package com.iohao.game.common.kit.collect;
 
 import org.jctools.maps.NonBlockingHashMap;
-import org.jctools.maps.NonBlockingHashSet;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 /**
- * 线程安全的 SetMultiMap 实现
+ * 线程安全的 ListMultiMap
  * <pre>
- *     value 为 set 集合实现
+ *     value 为 list 集合实现
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-07
  */
-final class NonBlockingSetMultiMap<K, V> implements SetMultiMap<K, V> {
-    private final Map<K, Set<V>> map = new NonBlockingHashMap<>();
+final class NonBlockingListMultiMap<K, V> implements ListMultiMap<K, V> {
+    private final Map<K, List<V>> map = new NonBlockingHashMap<>();
 
-    NonBlockingSetMultiMap() {
+    NonBlockingListMultiMap() {
     }
 
     @Override
-    public Map<K, Set<V>> asMap() {
+    public Map<K, List<V>> asMap() {
         return this.map;
     }
 
     @Override
-    public Set<V> ofIfAbsent(K key, Consumer<Set<V>> consumer) {
-        var set = this.map.get(key);
+    public List<V> ofIfAbsent(K key, Consumer<List<V>> consumer) {
+        var list = this.map.get(key);
 
-        if (Objects.isNull(set)) {
-            Set<V> newValueSet = new NonBlockingHashSet<>();
-            set = this.map.putIfAbsent(key, newValueSet);
+        if (Objects.isNull(list)) {
+            List<V> newValueList = new CopyOnWriteArrayList<>();
+            list = this.map.putIfAbsent(key, newValueList);
 
-            if (Objects.isNull(set)) {
-                Set<V> initSet = this.map.get(key);
+            if (Objects.isNull(list)) {
+                List<V> initList = this.map.get(key);
 
                 // 首次初始化回调
-                Optional.ofNullable(consumer).ifPresent(c -> c.accept(initSet));
+                Optional.ofNullable(consumer).ifPresent(c -> c.accept(initList));
 
-                return initSet;
+                return initList;
             }
         }
 
-        return set;
+        return list;
     }
 }

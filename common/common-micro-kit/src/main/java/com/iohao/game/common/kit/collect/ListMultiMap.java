@@ -18,22 +18,22 @@
  */
 package com.iohao.game.common.kit.collect;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * 线程安全的 SetMultiMap
+ * 线程安全的 ListMultiMap
  * <pre>
- *     value 为 set 集合实现
+ *     value 为 list 集合实现
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-07
  */
-public interface SetMultiMap<K, V> extends MultiMap<K, V> {
+public interface ListMultiMap<K, V> extends MultiMap<K, V> {
     @Override
-    Map<K, Set<V>> asMap();
+    Map<K, List<V>> asMap();
 
     /**
      * 根据 key 来 get 一个元素，如果不存在就创建集合
@@ -49,26 +49,19 @@ public interface SetMultiMap<K, V> extends MultiMap<K, V> {
      * @param consumer consumer
      * @return 集合
      */
-    Set<V> ofIfAbsent(K key, Consumer<Set<V>> consumer);
+    List<V> ofIfAbsent(K key, Consumer<List<V>> consumer);
 
     @Override
-    default Set<V> of(K key) {
+    default List<V> of(K key) {
         return this.ofIfAbsent(key, null);
     }
 
     @Override
-    default Set<V> get(K key) {
+    default List<V> get(K key) {
         return asMap().get(key);
     }
 
-    /**
-     * 默认实现，每次 new 一个
-     *
-     * @param <K> k
-     * @param <V> v
-     * @return SetMultiMap
-     */
-    static <K, V> SetMultiMap<K, V> create() {
-        return new NonBlockingSetMultiMap<>();
+    static <K, V> ListMultiMap<K, V> create() {
+        return new NonBlockingListMultiMap<>();
     }
 }

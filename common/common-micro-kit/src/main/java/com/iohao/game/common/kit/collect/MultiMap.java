@@ -35,7 +35,7 @@ interface MultiMap<K, V> {
     Map<K, ? extends Collection<V>> asMap();
 
     /**
-     * get 一个元素，如果不存在就创建集合
+     * 根据 key 来 get 一个元素，如果不存在就创建集合
      *
      * @param key key
      * @return collection 一定不为 null
