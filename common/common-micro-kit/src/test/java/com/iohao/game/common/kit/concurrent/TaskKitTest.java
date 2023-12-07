@@ -139,28 +139,29 @@ public class TaskKitTest {
 //            extractedThread(5);
 //        }
 //
-//        TaskKit.addSecondsTimerListener(() -> {
+//        TaskKit.addScheduleTaskListener(() -> {
+//            // print
 //            log.info("arrays : {}", Arrays.toString(arrays));
-//        });
+//        }, 1, TimeUnit.SECONDS);
 //
 //        TimeUnit.SECONDS.sleep(5);
 //    }
-//
-//    private static void extractedThread(int length) {
-//        new Thread(() -> {
-//            for (int j = 1; j < length; j++) {
-//                var tempValue = j;
-//                TaskKit.addTimerListener(new TimerListener() {
-//                    public String getValue() {
-//                        return length + " - " + tempValue;
-//                    }
-//
-//                    @Override
-//                    public void onUpdate() {
-//
-//                    }
-//                }, j, TimeUnit.SECONDS);
-//            }
-//        }).start();
-//    }
+
+    private static void extractedThread(int length) {
+        new Thread(() -> {
+            for (int j = 1; j < length; j++) {
+                var tempValue = j;
+                TaskKit.addScheduleTaskListener(new ScheduleTaskListener() {
+                    public String getValue() {
+                        return length + " - " + tempValue;
+                    }
+
+                    @Override
+                    public void onUpdate() {
+
+                    }
+                }, j, TimeUnit.SECONDS);
+            }
+        }).start();
+    }
 }

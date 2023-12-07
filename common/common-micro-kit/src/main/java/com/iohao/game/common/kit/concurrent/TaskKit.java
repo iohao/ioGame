@@ -20,15 +20,13 @@ package com.iohao.game.common.kit.concurrent;
 
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.common.kit.collect.SetMultiMap;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import org.jctools.maps.NonBlockingHashMap;
-import org.jctools.maps.NonBlockingHashSet;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -147,7 +145,7 @@ public class TaskKit {
     /** 内置的 cacheExecutor 执行器 */
     @Getter
     final ExecutorService cacheExecutor = ExecutorKit.newCacheThreadPool("ioGameTaskKit");
-    final Map<TickTimeUnit, Set<ScheduleTaskListener>> scheduleTaskListenerMap = new NonBlockingHashMap<>();
+    final SetMultiMap<TickTimeUnit, ScheduleTaskListener> scheduleTaskListenerMap = SetMultiMap.create();
 
     record TickTimeUnit(long tick, TimeUnit timeUnit) {
     }
@@ -223,13 +221,10 @@ public class TaskKit {
 
         // 无锁化
         if (CollKit.isEmpty(scheduleTaskListeners)) {
-            scheduleTaskListeners = scheduleTaskListenerMap.putIfAbsent(tickTimeUnit, new NonBlockingHashSet<>());
-
-            if (Objects.isNull(scheduleTaskListeners)) {
-                scheduleTaskListeners = scheduleTaskListenerMap.get(tickTimeUnit);
+            scheduleTaskListeners = scheduleTaskListenerMap.ofIfAbsent(tickTimeUnit, (initSet) -> {
                 // 使用 HashedWheelTimer 来模拟 ScheduledExecutorService 调度
-                foreverTimerTask(tick, timeUnit, scheduleTaskListeners);
-            }
+                foreverTimerTask(tick, timeUnit, initSet);
+            });
         }
 
         scheduleTaskListeners.add(taskListener);
