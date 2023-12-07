@@ -21,10 +21,7 @@ package com.iohao.game.common.kit.collect;
 import org.jctools.maps.NonBlockingHashMap;
 import org.jctools.maps.NonBlockingHashSet;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -37,7 +34,7 @@ import java.util.function.Consumer;
  * @date 2023-12-07
  */
 final class NonBlockingSetMultiMap<K, V> implements SetMultiMap<K, V> {
-    private final Map<K, Set<V>> map = new NonBlockingHashMap<>();
+    private final NonBlockingHashMap<K, Set<V>> map = new NonBlockingHashMap<>();
 
     NonBlockingSetMultiMap() {
     }
@@ -66,5 +63,10 @@ final class NonBlockingSetMultiMap<K, V> implements SetMultiMap<K, V> {
         }
 
         return set;
+    }
+
+    @Override
+    public Set<Map.Entry<K, Set<V>>> entrySet() {
+        return this.map.entrySet();
     }
 }

@@ -50,6 +50,8 @@ interface MultiMap<K, V> {
      */
     Collection<V> get(K key);
 
+//    Set<Map.Entry<K, V>> entrySet();
+
     /**
      * clear key 所对应的集合内的所有元素
      *

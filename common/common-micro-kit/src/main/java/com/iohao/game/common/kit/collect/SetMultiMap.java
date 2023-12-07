@@ -61,6 +61,8 @@ public interface SetMultiMap<K, V> extends MultiMap<K, V> {
         return asMap().get(key);
     }
 
+    Set<Map.Entry<K, Set<V>>> entrySet();
+
     /**
      * 默认实现，每次 new 一个
      *

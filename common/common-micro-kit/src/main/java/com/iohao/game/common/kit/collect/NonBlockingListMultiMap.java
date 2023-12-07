@@ -20,10 +20,7 @@ package com.iohao.game.common.kit.collect;
 
 import org.jctools.maps.NonBlockingHashMap;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
@@ -66,5 +63,10 @@ final class NonBlockingListMultiMap<K, V> implements ListMultiMap<K, V> {
         }
 
         return list;
+    }
+
+    @Override
+    public Set<Map.Entry<K, List<V>>> entrySet() {
+        return this.map.entrySet();
     }
 }

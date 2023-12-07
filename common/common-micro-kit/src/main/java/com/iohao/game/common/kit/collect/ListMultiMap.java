@@ -20,6 +20,7 @@ package com.iohao.game.common.kit.collect;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -60,6 +61,8 @@ public interface ListMultiMap<K, V> extends MultiMap<K, V> {
     default List<V> get(K key) {
         return asMap().get(key);
     }
+
+    Set<Map.Entry<K, List<V>>> entrySet();
 
     static <K, V> ListMultiMap<K, V> create() {
         return new NonBlockingListMultiMap<>();
