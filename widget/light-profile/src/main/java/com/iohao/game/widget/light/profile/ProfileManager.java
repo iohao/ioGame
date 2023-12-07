@@ -84,10 +84,10 @@ public final class ProfileManager {
 
         final String separator = ",";
         List<String> configNameList = Arrays.stream(name.orElse("")
-                .split(separator))
+                        .split(separator))
                 .filter(Objects::nonNull)
                 .map(String::trim)
-                .filter(s -> s.length() > 0)
+                .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
         log.debug("加载的目录列表 - size {} - {}", configNameList.size(), configNameList);
 

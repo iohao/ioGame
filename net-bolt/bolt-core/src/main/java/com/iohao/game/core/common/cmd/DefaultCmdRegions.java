@@ -20,6 +20,7 @@ package com.iohao.game.core.common.cmd;
 
 
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
+import com.iohao.game.common.kit.MoreKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -117,12 +118,8 @@ public final class DefaultCmdRegions implements CmdRegions {
 
         // 无锁化
         if (Objects.isNull(cmdRegionSet)) {
-            cmdRegionSet = new NonBlockingHashSet<>();
-            cmdRegionSet = this.logicServerCmdRegionMap.putIfAbsent(idHash, cmdRegionSet);
-
-            if (Objects.isNull(cmdRegionSet)) {
-                cmdRegionSet = this.logicServerCmdRegionMap.get(idHash);
-            }
+            Set<CmdRegion> newValue = new NonBlockingHashSet<>();
+            return MoreKit.putIfAbsent(this.logicServerCmdRegionMap, idHash, newValue);
         }
 
         return cmdRegionSet;
@@ -134,12 +131,8 @@ public final class DefaultCmdRegions implements CmdRegions {
 
         // 无锁化
         if (Objects.isNull(cmdRegion)) {
-            cmdRegion = new DefaultCmdRegion(cmdMerge);
-            cmdRegion = this.cmdRegionMap.putIfAbsent(cmdMerge, cmdRegion);
-
-            if (Objects.isNull(cmdRegion)) {
-                cmdRegion = this.cmdRegionMap.get(cmdMerge);
-            }
+            CmdRegion newValue = new DefaultCmdRegion(cmdMerge);
+            return MoreKit.putIfAbsent(cmdRegionMap, cmdMerge, newValue);
         }
 
         return cmdRegion;

@@ -21,6 +21,7 @@ package com.iohao.game.bolt.broker.server.balanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegionFactory;
+import com.iohao.game.common.kit.MoreKit;
 import lombok.Setter;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -140,11 +141,8 @@ public final class LogicBrokerClientLoadBalanced implements BrokerClientLoadBala
 
         // 无锁化
         if (Objects.isNull(brokerClientRegion)) {
-            brokerClientRegion = this.brokerClientRegionFactory.createBrokerClientRegion(tag);
-            brokerClientRegion = this.tagClientRegionMap.putIfAbsent(tag, brokerClientRegion);
-            if (Objects.isNull(brokerClientRegion)) {
-                brokerClientRegion = this.tagClientRegionMap.get(tag);
-            }
+            BrokerClientRegion newValue = this.brokerClientRegionFactory.createBrokerClientRegion(tag);
+            return MoreKit.putIfAbsent(tagClientRegionMap, tag, newValue);
         }
 
         return brokerClientRegion;

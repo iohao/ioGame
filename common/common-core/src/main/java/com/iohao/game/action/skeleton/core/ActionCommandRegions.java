@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core;
 
+import com.iohao.game.common.kit.MoreKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -41,6 +42,7 @@ import java.util.stream.Stream;
  * @author 渔民小镇
  * @date 2022-05-15
  */
+@Getter
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public final class ActionCommandRegions {
     private static final ActionCommand[][] EMPTY = new ActionCommand[0][0];
@@ -52,7 +54,6 @@ public final class ActionCommandRegions {
      *     value : subCmd region
      * </pre>
      */
-    @Getter
     final Map<Integer, ActionCommandRegion> regionMap = new NonBlockingHashMap<>();
 
     /**
@@ -66,7 +67,6 @@ public final class ActionCommandRegions {
      *     而通过数组则可以快速的找到对应的 action
      * </pre>
      */
-    @Getter
     ActionCommand[][] actionCommands = EMPTY;
 
     /**
@@ -132,11 +132,8 @@ public final class ActionCommandRegions {
 
         // 无锁化
         if (Objects.isNull(actionCommandRegion)) {
-            actionCommandRegion = new ActionCommandRegion(cmd);
-            actionCommandRegion = this.regionMap.putIfAbsent(cmd, actionCommandRegion);
-            if (Objects.isNull(actionCommandRegion)) {
-                actionCommandRegion = this.regionMap.get(cmd);
-            }
+            var newValue = new ActionCommandRegion(cmd);
+            return MoreKit.putIfAbsent(this.regionMap, cmd, newValue);
         }
 
         return actionCommandRegion;

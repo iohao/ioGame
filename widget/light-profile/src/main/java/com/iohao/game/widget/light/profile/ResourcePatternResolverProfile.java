@@ -86,7 +86,6 @@ class ResourcePatternResolverProfile {
             log.error(e.getMessage(), e);
         }
 
-
         return files;
     }
 

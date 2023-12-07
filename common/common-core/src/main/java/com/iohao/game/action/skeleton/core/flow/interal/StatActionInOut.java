@@ -23,6 +23,7 @@ import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.CollKit;
+import com.iohao.game.common.kit.MoreKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -121,10 +122,8 @@ public final class StatActionInOut implements ActionMethodInOut {
 
             // 无锁化
             if (Objects.isNull(statAction)) {
-                statAction = this.map.putIfAbsent(cmdInfo, new StatAction(cmdInfo));
-                if (Objects.isNull(statAction)) {
-                    statAction = this.map.get(cmdInfo);
-                }
+                var newValue = new StatAction(cmdInfo);
+                return MoreKit.putIfAbsent(this.map, cmdInfo, newValue);
             }
 
             return statAction;

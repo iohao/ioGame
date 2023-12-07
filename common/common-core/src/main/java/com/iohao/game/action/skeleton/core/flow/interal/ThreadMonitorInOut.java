@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.core.flow.interal;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
+import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.Getter;
 import org.jctools.maps.NonBlockingHashMap;
@@ -68,11 +69,8 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
             // 无锁化
             if (Objects.isNull(threadMonitor)) {
                 ThreadPoolExecutor executor = threadExecutor.getThreadPoolExecutor();
-                threadMonitor = this.map.putIfAbsent(name, ThreadMonitor.create(name, executor));
-
-                if (Objects.isNull(threadMonitor)) {
-                    threadMonitor = this.map.get(name);
-                }
+                ThreadMonitor newValue = ThreadMonitor.create(name, executor);
+                return MoreKit.putIfAbsent(this.map, name, newValue);
             }
 
             return threadMonitor;

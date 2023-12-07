@@ -20,6 +20,7 @@ package com.iohao.game.common.kit.asm;
 
 import com.esotericsoftware.reflectasm.ConstructorAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
+import com.iohao.game.common.kit.MoreKit;
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -54,11 +55,8 @@ public class ClassRefInfoKit {
 
         // 无锁化
         if (Objects.isNull(classRefInfo)) {
-            classRefInfo = createClassRefInfo(clazz);
-            classRefInfo = classRefInfoMap.putIfAbsent(clazz, classRefInfo);
-            if (Objects.isNull(classRefInfo)) {
-                classRefInfo = classRefInfoMap.get(clazz);
-            }
+            ClassRefInfo newValue = createClassRefInfo(clazz);
+            return MoreKit.putIfAbsent(classRefInfoMap, clazz, newValue);
         }
 
         return classRefInfo;
