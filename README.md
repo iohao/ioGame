@@ -154,6 +154,9 @@ ioGame 在内存占用、启动速度、打包等方面也是优秀的。
 | [UE5 连接示例文档](https://www.yuque.com/iohao/game/rus213)  | 已经与 ioGame 的综合示例联调成功                        |
 | [websocket.js 连接示例文档](https://www.yuque.com/iohao/game/knqxehz2pl1sal5s) | websocket.js 连接的一个示例，使用 json 协议来传输交互。 |
 | [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、ks8）等介绍   |
+| [FXGL-ioGame-移动同步](https://www.yuque.com/iohao/game/bolt) | FXGL + ioGame 网络游戏中的多人移动演示。                |
+| [unity Tcp 移动同步 demo](https://www.yuque.com/iohao/game/kswsfk13ocg069uf) | 提供了 unity 与 ioGame 的【多人】移动同步演示           |
+| [28 行代码做个网页聊天室](https://www.yuque.com/iohao/game/we9eppym4yno9hq2) | 基于 ioGame 框架，用 28 行代码做一个简单的网页聊天室。  |
 
 
 
@@ -193,7 +196,7 @@ ioGame 是轻量级的网络游戏服务器框架，**不依赖任何第三方**
 
 ### ioGame 使用趋势数据
 
-关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 2023-11 月统计数据；
+关注 ioGame 的游戏服务器开发者持续增多，2022-09 ~ 至今各月的统计数据；
 
 
 
@@ -223,7 +226,7 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 
 
-![](https://user-images.githubusercontent.com/26356013/281415560-fd344587-d159-48a7-8472-d72b9e348746.png)
+![](https://user-images.githubusercontent.com/26356013/288954555-67ec5f44-3d75-41f1-98aa-16a16035ca65.png)
 
 
 
@@ -468,7 +471,13 @@ ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar
 
 
 
-在通讯方式方面，大部分框架只能支持推送（广播）这一类型的通讯方式；而 ioGame 则提供了 5 种类型的通讯方式，分别是单次请求处理、推送、单个逻辑服间的相互通讯、与同类型多个逻辑服相互通讯、[脉冲通讯](https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn)。通过对各种通讯方式的组合使用，可以简单完成以往难以完成的工作，并且这些通讯方式都支持跨进程、跨机器通信。
+在通讯方式方面，大部分框架只能支持推送（广播）这一类型的通讯方式；ioGame 则提供了多种类型的通讯方式，通过对各种通讯方式的组合使用，可以简单完成以往难以完成的工作，并且这些通讯方式都支持跨进程、跨机器通信的。这些通讯方式分别是
+1. [请求响应](https://www.yuque.com/iohao/game/krzxcmgoispw0gl8)（单次请求处理）
+2. [广播](https://www.yuque.com/iohao/game/qv4qfo)（推送）
+3. [单个逻辑服间的相互通讯](https://www.yuque.com/iohao/game/anguu6)（可跨机器通信、可跨进程通信）
+4. [与同类型多个逻辑服相互通讯](https://www.yuque.com/iohao/game/rf9rb9)（可跨多个机器通信、可跨多个进程通信）
+5. [脉冲通讯](https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn)（可跨多个机器通信、可跨多个进程通信）
+6. [分布式事件总线](https://www.yuque.com/iohao/game/gmxz33)[计划中]（类似 MQ、Redis 发布订阅的机制；可跨多个机器通信、可跨多个进程通信）
 
 
 
@@ -500,11 +509,11 @@ ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar
 
 
 
-业务框架提供了[插件](https://www.yuque.com/iohao/game/bsgvzglvlr5tenao)机制，插件是可插拨的，并且是可扩展的。框架内置提供了 [DebugInOut](https://www.yuque.com/iohao/game/pf3sx0)、[action 调用统计](https://www.yuque.com/iohao/game/znapzm1dqgehdyw8) ...等插件；随着时间的推移，插件的数量会不断增加。开发者如有需要，可扩展一些符合自身业务的插件。
+业务框架提供了[插件](https://www.yuque.com/iohao/game/bsgvzglvlr5tenao)机制，插件是可插拨、可扩展的。框架内置提供了 [DebugInOut](https://www.yuque.com/iohao/game/pf3sx0)、[action 调用统计](https://www.yuque.com/iohao/game/znapzm1dqgehdyw8)、[业务线程监控插件](https://www.yuque.com/iohao/game/zoqabk4gez3bckis)、[各时间段调用统计插件](https://www.yuque.com/iohao/game/umzk2d6lovo4n9gz)...等插件；不同的插件提供了不同的关注点，比如我们可以使用调用、监控等插件相互配合，可以让我们在开发阶段就知道**是否存在性能问题**。合理利用好各个插件，可以让我们在开发阶段就能知道问题所在，提前发现问题，提前预防问题。
 
 
 
-在业务的并发方面，框架为开发者解决了单个玩家的并发问题，也提供了解决同一房间或业务内多个玩家并发问题的解决方法；框架在线程的扩展性上提供了友好的支持，并不是只能提供呆板的线程数量设置；详细请看 [ioGame 线程相关](https://www.yuque.com/iohao/game/eixd6x)。
+在线程安全方面，框架为开发者解决了单个玩家的并发问题，即使玩家重新登录后，也会使用相同的线程来消费业务，并推荐使用[领域事件](https://www.yuque.com/iohao/game/gmfy1k)来解决同一房间或业务内多个玩家的并发问题；[框架在线程的扩展性](https://www.yuque.com/iohao/game/eixd6x)上提供了友好的支持，并不是只能提供呆板的线程数量设置；
 
 
 
@@ -517,6 +526,10 @@ ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar
 
 
 在部署方面，ioGame 支持**多服单进程**的方式部署，也支持**多服多进程**多机器的方式部署；在部署方式上可以随意的切换而不需要更改代码。日常中我们可以按照单体思维开发，到了生产可以选择使用多进程的方式部署。
+
+
+
+在安全方面，所有的游戏逻辑服[不需要开放端口，天然地避免了扫描攻击](https://www.yuque.com/iohao/game/cklv8p#NQ6Oc)。由于不需要为每个逻辑服分配独立的端口，那么我们在使用诸如云服务器之类的服务时，就不需要担心端口开放权限的问题了。别小看这一个环节，通常这些小细节最浪费开发者的时间。由于我们不需要管理这些 IP:Port，**这部分的工作量就自然地消失了**。
 
 
 
