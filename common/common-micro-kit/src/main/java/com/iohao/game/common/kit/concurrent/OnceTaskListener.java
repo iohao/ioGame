@@ -60,7 +60,7 @@ import java.util.concurrent.Executor;
  * @author 渔民小镇
  * @date 2023-12-06
  * @see TaskKit
- * @see ScheduleTaskListener
+ * @see IntervalTaskListener
  */
 public interface OnceTaskListener extends TimerTask, TaskListener {
     @Override

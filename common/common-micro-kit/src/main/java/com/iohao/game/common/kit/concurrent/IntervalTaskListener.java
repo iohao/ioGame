@@ -26,9 +26,9 @@ package com.iohao.game.common.kit.concurrent;
  * example
  * <pre>{@code
  *     // 每分钟调用一次
- *     TaskKit.runIntervalMinutes(() -> log.info("tick 1 Minute"), 1);
+ *     TaskKit.runIntervalMinute(() -> log.info("tick 1 Minute"), 1);
  *     // 每 2 分钟调用一次
- *     TaskKit.runIntervalMinutes(() -> log.info("tick 2 Minute"), 2);
+ *     TaskKit.runIntervalMinute(() -> log.info("tick 2 Minute"), 2);
  *
  *     // 每 2 秒调用一次
  *     TaskKit.runInterval(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
@@ -41,7 +41,7 @@ package com.iohao.game.common.kit.concurrent;
  * @date 2023-12-01
  * @see TaskKit
  */
-public interface ScheduleTaskListener extends TaskListener {
+public interface IntervalTaskListener extends TaskListener {
 
     /**
      * 是否活跃

@@ -64,9 +64,9 @@ import java.util.concurrent.TimeUnit;
  *     TaskKit.runOnce(() -> log.info("800 delayMilliseconds"), 800);
  *
  *     // 每分钟调用一次
- *     TaskKit.runIntervalMinutes(() -> log.info("tick 1 Minute"), 1);
+ *     TaskKit.runIntervalMinute(() -> log.info("tick 1 Minute"), 1);
  *     // 每 2 分钟调用一次
- *     TaskKit.runIntervalMinutes(() -> log.info("tick 2 Minute"), 2);
+ *     TaskKit.runIntervalMinute(() -> log.info("tick 2 Minute"), 2);
  *
  *     // 每 2 秒调用一次
  *     TaskKit.runInterval(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
@@ -77,7 +77,7 @@ import java.util.concurrent.TimeUnit;
  * example - TaskListener - 高级用法
  * <pre>{@code
  *      //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 TimerListener
- *     TaskKit.runInterval(new ScheduleTaskListener() {
+ *     TaskKit.runInterval(new IntervalTaskListener() {
  *         int hp = 2;
  *
  *         @Override
@@ -94,7 +94,7 @@ import java.util.concurrent.TimeUnit;
  *     }, 1, TimeUnit.SECONDS);
  *
  *     //【示例 - 跳过执行】每秒调用一次，当 triggerUpdate 返回值为 true，即符合条件时才执行 onUpdate 方法
- *     TaskKit.runInterval(new ScheduleTaskListener() {
+ *     TaskKit.runInterval(new IntervalTaskListener() {
  *         int hp;
  *
  *         @Override
@@ -112,7 +112,7 @@ import java.util.concurrent.TimeUnit;
  *
  *     //【示例 - 指定线程执行器】每秒调用一次
  *     // 如果有耗时的任务，比如涉及一些 io 操作的，建议指定执行器来执行当前回调（onUpdate 方法），以避免阻塞其他任务。
- *     TaskKit.runInterval(new ScheduleTaskListener() {
+ *     TaskKit.runInterval(new IntervalTaskListener() {
  *         @Override
  *         public void onUpdate() {
  *             log.info("执行耗时的 IO 任务，开始");
@@ -145,7 +145,7 @@ public class TaskKit {
     /** 内置的 cacheExecutor 执行器 */
     @Getter
     final ExecutorService cacheExecutor = ExecutorKit.newCacheThreadPool("ioGameTaskKit");
-    final SetMultiMap<TickTimeUnit, ScheduleTaskListener> scheduleTaskListenerMap = SetMultiMap.create();
+    final SetMultiMap<TickTimeUnit, IntervalTaskListener> intervalTaskListenerMap = SetMultiMap.create();
 
     record TickTimeUnit(long tick, TimeUnit timeUnit) {
     }
@@ -198,7 +198,7 @@ public class TaskKit {
      * @param taskListener 调度任务监听
      * @param tickMinute   每 tickMinute 分钟，会调用一次监听
      */
-    public void runIntervalMinutes(ScheduleTaskListener taskListener, long tickMinute) {
+    public void runIntervalMinute(IntervalTaskListener taskListener, long tickMinute) {
         runInterval(taskListener, tickMinute, TimeUnit.MINUTES);
     }
 
@@ -212,23 +212,23 @@ public class TaskKit {
      * @param tick         tick 时间间隔；每 tick 时间间隔，会调用一次监听
      * @param timeUnit     tick 时间单位
      */
-    public void runInterval(ScheduleTaskListener taskListener, long tick, TimeUnit timeUnit) {
+    public void runInterval(IntervalTaskListener taskListener, long tick, TimeUnit timeUnit) {
         TickTimeUnit tickTimeUnit = new TickTimeUnit(tick, timeUnit);
 
-        Set<ScheduleTaskListener> scheduleTaskListeners = scheduleTaskListenerMap.get(tickTimeUnit);
+        Set<IntervalTaskListener> intervalTaskListeners = intervalTaskListenerMap.get(tickTimeUnit);
 
         // 无锁化
-        if (CollKit.isEmpty(scheduleTaskListeners)) {
-            scheduleTaskListeners = scheduleTaskListenerMap.ofIfAbsent(tickTimeUnit, (initSet) -> {
+        if (CollKit.isEmpty(intervalTaskListeners)) {
+            intervalTaskListeners = intervalTaskListenerMap.ofIfAbsent(tickTimeUnit, (initSet) -> {
                 // 使用 HashedWheelTimer 来模拟 ScheduledExecutorService 调度
                 foreverTimerTask(tick, timeUnit, initSet);
             });
         }
 
-        scheduleTaskListeners.add(taskListener);
+        intervalTaskListeners.add(taskListener);
     }
 
-    private void foreverTimerTask(long tick, TimeUnit timeUnit, Set<ScheduleTaskListener> set) {
+    private void foreverTimerTask(long tick, TimeUnit timeUnit, Set<IntervalTaskListener> set) {
 
         // 启动定时器
         TaskKit.newTimeout(new TimerTask() {
@@ -240,14 +240,14 @@ public class TaskKit {
                     return;
                 }
 
-                set.forEach(scheduleTaskListener -> {
-                    var executor = scheduleTaskListener.getExecutor();
+                set.forEach(intervalTaskListener -> {
+                    var executor = intervalTaskListener.getExecutor();
 
                     // 如果指定了执行器，就将执行流程放到执行器中，否则使用当前线程
                     if (Objects.nonNull(executor)) {
-                        executor.execute(() -> executeFlowTimerListener(scheduleTaskListener, set));
+                        executor.execute(() -> executeFlowTimerListener(intervalTaskListener, set));
                     } else {
-                        executeFlowTimerListener(scheduleTaskListener, set);
+                        executeFlowTimerListener(intervalTaskListener, set);
                     }
 
                 });
@@ -257,7 +257,7 @@ public class TaskKit {
         }, tick, timeUnit);
     }
 
-    private void executeFlowTimerListener(ScheduleTaskListener taskListener, Set<ScheduleTaskListener> set) {
+    private void executeFlowTimerListener(IntervalTaskListener taskListener, Set<IntervalTaskListener> set) {
         // 移除不活跃的监听
         if (!taskListener.isActive()) {
             set.remove(taskListener);
