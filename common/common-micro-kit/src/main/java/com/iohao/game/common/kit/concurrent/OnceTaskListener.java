@@ -34,15 +34,15 @@ import java.util.concurrent.Executor;
  * example
  * <pre>{@code
  *     // 只执行一次，500、800 milliseconds 后
- *     TaskKit.newMillisOnceTaskListener(() -> log.info("500 delayMilliseconds"), 500);
- *     TaskKit.newMillisOnceTaskListener(() -> log.info("800 delayMilliseconds"), 800);
+ *     TaskKit.runOnce(() -> log.info("500 delayMilliseconds"), 500);
+ *     TaskKit.runOnce(() -> log.info("800 delayMilliseconds"), 800);
  *
  *     // 只执行一次，10 秒后执行
- *     TaskKit.newOnceTaskListener(new YourOnceTaskListener(), 10, TimeUnit.SECONDS);
+ *     TaskKit.runOnce(new YourOnceTaskListener(), 10, TimeUnit.SECONDS);
  *
  *     // 只执行一次，1500 Milliseconds 后执行，当 theTriggerUpdate 为 true 时，才执行 onUpdate
  *     boolean theTriggerUpdate = RandomKit.randomBoolean();
- *     TaskKit.newOnceTaskListener(new OnceTaskListener() {
+ *     TaskKit.runOnce(new OnceTaskListener() {
  *         @Override
  *         public void onUpdate() {
  *             log.info("1500 delayMilliseconds");

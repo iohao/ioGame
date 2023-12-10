@@ -56,28 +56,28 @@ import java.util.concurrent.TimeUnit;
  * example - TaskListener 监听回调。内部使用 HashedWheelTimer 来模拟 ScheduledExecutorService 调度
  * <pre>{@code
  *     // 只执行一次，2 秒后执行
- *     TaskKit.newOnceTaskListener(() -> log.info("2 Seconds"), 2, TimeUnit.SECONDS);
+ *     TaskKit.runOnce(() -> log.info("2 Seconds"), 2, TimeUnit.SECONDS);
  *     // 只执行一次，1 分钟后执行
- *     TaskKit.newOnceTaskListener(() -> log.info("1 Minute"), 1, TimeUnit.MINUTES)
+ *     TaskKit.runOnce(() -> log.info("1 Minute"), 1, TimeUnit.MINUTES)
  *     // 只执行一次，500、800 milliseconds 后
- *     TaskKit.newMillisOnceTaskListener(() -> log.info("500 delayMilliseconds"), 500);
- *     TaskKit.newMillisOnceTaskListener(() -> log.info("800 delayMilliseconds"), 800);
+ *     TaskKit.runOnce(() -> log.info("500 delayMilliseconds"), 500);
+ *     TaskKit.runOnce(() -> log.info("800 delayMilliseconds"), 800);
  *
  *     // 每分钟调用一次
- *     TaskKit.addMinuteScheduleTaskListener(() -> log.info("tick 1 Minute"), 1);
+ *     TaskKit.runIntervalMinutes(() -> log.info("tick 1 Minute"), 1);
  *     // 每 2 分钟调用一次
- *     TaskKit.addMinuteScheduleTaskListener(() -> log.info("tick 2 Minute"), 2);
+ *     TaskKit.runIntervalMinutes(() -> log.info("tick 2 Minute"), 2);
  *
  *     // 每 2 秒调用一次
- *     TaskKit.addScheduleTaskListener(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
+ *     TaskKit.runInterval(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
  *     // 每 30 分钟调用一次
- *     TaskKit.addScheduleTaskListener(() -> log.info("tick 30 Minute"), 30, TimeUnit.MINUTES);
+ *     TaskKit.runInterval(() -> log.info("tick 30 Minute"), 30, TimeUnit.MINUTES);
  * }
  * </pre>
  * example - TaskListener - 高级用法
  * <pre>{@code
  *      //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 TimerListener
- *     TaskKit.addScheduleTaskListener(new ScheduleTaskListener() {
+ *     TaskKit.runInterval(new ScheduleTaskListener() {
  *         int hp = 2;
  *
  *         @Override
@@ -94,7 +94,7 @@ import java.util.concurrent.TimeUnit;
  *     }, 1, TimeUnit.SECONDS);
  *
  *     //【示例 - 跳过执行】每秒调用一次，当 triggerUpdate 返回值为 true，即符合条件时才执行 onUpdate 方法
- *     TaskKit.addScheduleTaskListener(new ScheduleTaskListener() {
+ *     TaskKit.runInterval(new ScheduleTaskListener() {
  *         int hp;
  *
  *         @Override
@@ -112,7 +112,7 @@ import java.util.concurrent.TimeUnit;
  *
  *     //【示例 - 指定线程执行器】每秒调用一次
  *     // 如果有耗时的任务，比如涉及一些 io 操作的，建议指定执行器来执行当前回调（onUpdate 方法），以避免阻塞其他任务。
- *     TaskKit.addScheduleTaskListener(new ScheduleTaskListener() {
+ *     TaskKit.runInterval(new ScheduleTaskListener() {
  *         @Override
  *         public void onUpdate() {
  *             log.info("执行耗时的 IO 任务，开始");
@@ -178,7 +178,7 @@ public class TaskKit {
      * @param delay        延迟时间
      * @param unit         延迟时间单位
      */
-    void newOnceTaskListener(OnceTaskListener taskListener, long delay, TimeUnit unit) {
+    void runOnce(OnceTaskListener taskListener, long delay, TimeUnit unit) {
         newTimeout(taskListener, delay, unit);
     }
 
@@ -188,9 +188,8 @@ public class TaskKit {
      * @param taskListener      taskListener
      * @param delayMilliseconds delayMilliseconds
      */
-    void newMillisOnceTaskListener(OnceTaskListener taskListener, long delayMilliseconds) {
-        // MILLISECONDS
-        newOnceTaskListener(taskListener, delayMilliseconds, TimeUnit.MILLISECONDS);
+    void runOnce(OnceTaskListener taskListener, long delayMilliseconds) {
+        runOnce(taskListener, delayMilliseconds, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -199,9 +198,8 @@ public class TaskKit {
      * @param taskListener 调度任务监听
      * @param tickMinute   每 tickMinute 分钟，会调用一次监听
      */
-    public void addMinuteScheduleTaskListener(ScheduleTaskListener taskListener, long tickMinute) {
-        // Minutes
-        addScheduleTaskListener(taskListener, tickMinute, TimeUnit.MINUTES);
+    public void runIntervalMinutes(ScheduleTaskListener taskListener, long tickMinute) {
+        runInterval(taskListener, tickMinute, TimeUnit.MINUTES);
     }
 
     /**
@@ -211,10 +209,10 @@ public class TaskKit {
      * </pre>
      *
      * @param taskListener 任务监听
-     * @param tick         tick 次数
+     * @param tick         tick 时间间隔；每 tick 时间间隔，会调用一次监听
      * @param timeUnit     tick 时间单位
      */
-    public void addScheduleTaskListener(ScheduleTaskListener taskListener, long tick, TimeUnit timeUnit) {
+    public void runInterval(ScheduleTaskListener taskListener, long tick, TimeUnit timeUnit) {
         TickTimeUnit tickTimeUnit = new TickTimeUnit(tick, timeUnit);
 
         Set<ScheduleTaskListener> scheduleTaskListeners = scheduleTaskListenerMap.get(tickTimeUnit);

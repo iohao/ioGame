@@ -26,14 +26,14 @@ package com.iohao.game.common.kit.concurrent;
  * example
  * <pre>{@code
  *     // 每分钟调用一次
- *     TaskKit.addMinuteScheduleTaskListener(() -> log.info("tick 1 Minute"), 1);
+ *     TaskKit.runIntervalMinutes(() -> log.info("tick 1 Minute"), 1);
  *     // 每 2 分钟调用一次
- *     TaskKit.addMinuteScheduleTaskListener(() -> log.info("tick 2 Minute"), 2);
+ *     TaskKit.runIntervalMinutes(() -> log.info("tick 2 Minute"), 2);
  *
  *     // 每 2 秒调用一次
- *     TaskKit.addScheduleTaskListener(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
+ *     TaskKit.runInterval(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
  *     // 每 30 分钟调用一次
- *     TaskKit.addScheduleTaskListener(() -> log.info("tick 30 Minute"), 30, TimeUnit.MINUTES);
+ *     TaskKit.runInterval(() -> log.info("tick 30 Minute"), 30, TimeUnit.MINUTES);
  * }
  * </pre>
  *
