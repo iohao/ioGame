@@ -50,7 +50,6 @@ public class TaskKitTest {
         }, 1500, TimeUnit.MILLISECONDS);
 
         TimeUnit.SECONDS.sleep(3);
-
     }
 
     @Test
