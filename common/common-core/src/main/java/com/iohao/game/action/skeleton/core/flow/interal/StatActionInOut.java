@@ -23,6 +23,7 @@ import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.CollKit;
+import com.iohao.game.common.kit.MoreKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -121,10 +122,8 @@ public final class StatActionInOut implements ActionMethodInOut {
 
             // 无锁化
             if (Objects.isNull(statAction)) {
-                statAction = this.map.putIfAbsent(cmdInfo, new StatAction(cmdInfo));
-                if (Objects.isNull(statAction)) {
-                    statAction = this.map.get(cmdInfo);
-                }
+                var newValue = new StatAction(cmdInfo);
+                return MoreKit.putIfAbsent(this.map, cmdInfo, newValue);
             }
 
             return statAction;
@@ -234,7 +233,7 @@ public final class StatActionInOut implements ActionMethodInOut {
                 rangeStr = builder.toString();
             }
 
-            return String.format("StatAction{%s, 执行[%s]次, 异常[%s]次, 平均耗时[%d], 最大耗时[%s], 总耗时[%s] %s"
+            return String.format("%s, 执行[%s]次, 异常[%s]次, 平均耗时[%d], 最大耗时[%s], 总耗时[%s] %s"
                     , CmdKit.toString(this.cmdInfo.getCmdMerge())
                     , this.executeCount
                     , this.errorCount
@@ -296,7 +295,7 @@ public final class StatActionInOut implements ActionMethodInOut {
          * @return true 表示满足条件；当为 true 时，会调用 updateTimeRange 方法
          */
         default boolean triggerUpdateTimeRange(StatAction statAction, long time, FlowContext flowContext) {
-            return time == Long.MAX_VALUE;
+            return false;
         }
 
         /**

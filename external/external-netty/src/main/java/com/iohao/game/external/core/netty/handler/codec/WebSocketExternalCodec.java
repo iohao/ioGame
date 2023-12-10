@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class WebSocketExternalCodec extends MessageToMessageCodec<BinaryWebSocketFrame, ExternalMessage> {
     @Override
-    protected void encode(ChannelHandlerContext ctx, ExternalMessage externalMessage, List<Object> out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, ExternalMessage externalMessage, List<Object> out) {
         /*
          *【游戏对外服】发送消息给【游戏客户端】
          * 编码器 - ExternalMessage ---> 字节数组，将消息发送到请求端（客户端）

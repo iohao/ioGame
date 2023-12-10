@@ -49,8 +49,6 @@ public final class UserSessionHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error(cause.getMessage(), cause);
-
         // 从 session 管理中移除
         UserSession userSession = UserSessions.me().getUserSession(ctx);
         UserSessions.me().removeUserSession(userSession);

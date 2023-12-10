@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core;
 
+import com.iohao.game.common.kit.MoreKit;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.Map;
@@ -98,10 +99,8 @@ public final class CmdInfoFlyweightFactory {
 
         // 无锁化
         if (Objects.isNull(cmdInfo)) {
-            cmdInfo = cmdInfoMap.putIfAbsent(cmdMerge, new CmdInfo(cmdMerge));
-            if (Objects.isNull(cmdInfo)) {
-                cmdInfo = cmdInfoMap.get(cmdMerge);
-            }
+            var newValue = new CmdInfo(cmdMerge);
+            return MoreKit.putIfAbsent(cmdInfoMap, cmdMerge, newValue);
         }
 
         return cmdInfo;

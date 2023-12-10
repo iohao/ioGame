@@ -27,6 +27,7 @@ import com.iohao.game.bolt.broker.core.message.BroadcastOrderMessage;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.CollKit;
+import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.StrKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -117,11 +118,8 @@ class BroadcastDebug {
 
         // 无锁化
         if (aClass == null) {
-            aClass = Class.forName(dataClass);
-            aClass = classMap.putIfAbsent(dataClass, aClass);
-            if (aClass == null) {
-                aClass = classMap.get(dataClass);
-            }
+            Class<?> newValue = Class.forName(dataClass);
+            return MoreKit.putIfAbsent(classMap, dataClass, newValue);
         }
 
         return aClass;

@@ -19,12 +19,12 @@
 package com.iohao.game.external.client.user;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import com.iohao.game.external.client.command.InputCommand;
 import com.iohao.game.external.client.command.RequestCommand;
-import com.iohao.game.external.client.kit.ClientUserConfigs;
 import com.iohao.game.external.client.kit.ClientKit;
+import com.iohao.game.external.client.kit.ClientUserConfigs;
 import com.iohao.game.external.client.kit.ScannerKit;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -145,7 +145,7 @@ public class ClientUserInputCommands {
             return;
         }
 
-        InternalKit.execute(this::extracted);
+        TaskKit.execute(this::extracted);
     }
 
     private void extracted() {

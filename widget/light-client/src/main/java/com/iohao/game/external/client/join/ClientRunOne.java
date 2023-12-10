@@ -20,8 +20,8 @@ package com.iohao.game.external.client.join;
 
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.ExecutorKit;
-import com.iohao.game.common.kit.InternalKit;
 import com.iohao.game.common.kit.PresentKit;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.InputCommandRegion;
 import com.iohao.game.external.client.user.ClientUser;
@@ -89,7 +89,7 @@ public final class ClientRunOne {
             return;
         }
 
-        InternalKit.execute(() -> clientConnect.connect(option));
+        TaskKit.execute(() -> clientConnect.connect(option));
 
         try {
             log.info("启动成功");

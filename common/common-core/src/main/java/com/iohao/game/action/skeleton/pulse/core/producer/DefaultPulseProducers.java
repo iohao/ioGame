@@ -44,7 +44,7 @@ import java.util.function.Consumer;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class DefaultPulseProducers implements PulseProducers {
-    final ScheduledExecutorService executor = ExecutorKit.newSingleScheduled(DefaultPulseProducers.class.getSimpleName());
+    static final ScheduledExecutorService executor = ExecutorKit.newSingleScheduled(DefaultPulseProducers.class.getSimpleName());
     final Map<String, PulseProducer<?>> map = new NonBlockingHashMap<>();
     final List<PulseTask> taskList = new CopyOnWriteArrayList<>();
     final AtomicBoolean atomicBoolean = new AtomicBoolean(false);
@@ -78,7 +78,7 @@ public final class DefaultPulseProducers implements PulseProducers {
 
             final Runnable runnable = () -> taskList.forEach(task -> task.ifPresent(consumer));
 
-            this.executor.scheduleAtFixedRate(runnable, 1, 1, TimeUnit.SECONDS);
+            DefaultPulseProducers.executor.scheduleAtFixedRate(runnable, 1, 1, TimeUnit.SECONDS);
         }
     }
 

@@ -18,104 +18,56 @@
  */
 package com.iohao.game.common.kit;
 
-import io.netty.util.HashedWheelTimer;
-import io.netty.util.Timeout;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import io.netty.util.TimerTask;
 import lombok.experimental.UtilityClass;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
  * 内部工具类，开发者不要用在耗时 io 的任务上
- * <pre>{@code
- *         // 每秒执行一次
- *         InternalKit.newTimeoutSeconds(new TimerTask() {
- *             @Override
- *             public void run(Timeout timeout) {
- *                 log.info("1-newTimeoutSeconds : {}", timeout);
- *                 InternalKit.newTimeoutSeconds(this);
- *             }
- *         });
- *
- *         // 只执行一次
- *         InternalKit.newTimeoutSeconds(new TimerTask() {
- *             @Override
- *             public void run(Timeout timeout) {
- *                 log.info("one : {}", timeout);
- *             }
- *         });
- * }
- * </pre>
- * <pre>{@code
- *         // 每隔 3 秒执行一次
- *         InternalKit.newTimeout(new TimerTask() {
- *             @Override
- *             public void run(Timeout timeout) {
- *                 log.info("3-newTimeout : {}", timeout);
- *                 InternalKit.newTimeout(this, 3, TimeUnit.SECONDS);
- *             }
- *         }, 3, TimeUnit.SECONDS);
- * }
- * </pre>
- * <p>
- * 使用其他线程执行任务
- * <pre>{@code
- *         InternalKit.execute(()->{
- *             log.info("你的逻辑");
- *         });
- * }
+ * <pre>
+ *     已经废弃，将在下个大版本中移除，请使用 TaskKit 代替
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-06-30
+ * @see TaskKit
  */
+@Deprecated
 @UtilityClass
 public class InternalKit {
-    /** 时间精度为 1 秒钟，执行一些没有 io 操作的逻辑 */
-    private final HashedWheelTimer timerSeconds = new HashedWheelTimer();
-    private final ExecutorService executor = ExecutorKit.newCacheThreadPool("InternalKit");
-
-
-    public void newTimeoutSeconds(TimerTask task) {
-        timerSeconds.newTimeout(task, 0, TimeUnit.SECONDS);
-    }
-
-    public void newTimeout(TimerTask task, long delay, TimeUnit unit) {
-        timerSeconds.newTimeout(task, delay, unit);
-    }
 
     /**
      * 使用其他线程执行任务
      *
      * @param command 任务
      */
+    @Deprecated
     public void execute(Runnable command) {
-        executor.execute(command);
+        TaskKit.execute(command);
     }
 
-    private void enableUpdateCurrentTimeMillis() {
-        TimeKit.UpdateCurrentTimeMillis update = new TimeKit.UpdateCurrentTimeMillis() {
-            volatile long currentTimeMillis = System.currentTimeMillis();
+    /**
+     * 执行任务
+     *
+     * @param task 任务
+     */
+    @Deprecated
+    public void newTimeoutSeconds(TimerTask task) {
+        newTimeout(task, 0, TimeUnit.SECONDS);
+    }
 
-            @Override
-            public void init() {
-                // 每秒更新一次时间
-                InternalKit.newTimeoutSeconds(new TimerTask() {
-                    @Override
-                    public void run(Timeout timeout) {
-                        currentTimeMillis = System.currentTimeMillis();
-                        InternalKit.newTimeoutSeconds(this);
-                    }
-                });
-            }
-
-            @Override
-            public long getCurrentTimeMillis() {
-                return currentTimeMillis;
-            }
-        };
-
-        TimeKit.setUpdateCurrentTimeMillis(update);
+    /**
+     * 延迟一定时间后执行任务；
+     *
+     * @param task  任务
+     * @param delay 延迟时间
+     * @param unit  延迟时间单位
+     */
+    @Deprecated
+    public void newTimeout(TimerTask task, long delay, TimeUnit unit) {
+        TaskKit.newTimeout(task, delay, unit);
     }
 }
+

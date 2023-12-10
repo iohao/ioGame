@@ -74,6 +74,15 @@ public class RandomKit {
         return ThreadLocalRandom.current().nextInt(end + 1);
     }
 
+    /**
+     * 随机一个 bool 值
+     *
+     * @return bool 值
+     */
+    public boolean randomBoolean() {
+        return ThreadLocalRandom.current().nextBoolean();
+    }
+
     public <T> T randomEle(List<T> list) {
 
         if (CollKit.isEmpty(list)) {
