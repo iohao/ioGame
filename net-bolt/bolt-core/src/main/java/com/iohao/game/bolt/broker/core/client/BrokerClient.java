@@ -33,7 +33,10 @@ import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.core.aware.AwareInject;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
+import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListenerRegion;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
+import com.iohao.game.common.kit.attr.AttrOptionDynamic;
+import com.iohao.game.common.kit.attr.AttrOptions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,7 +68,9 @@ import java.util.function.Supplier;
 @Setter(value = AccessLevel.PROTECTED)
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrokerClient implements BrokerClientContext, GroupWith {
+public class BrokerClient implements BrokerClientContext, GroupWith, AttrOptionDynamic {
+    final AttrOptions options = new AttrOptions();
+
     /** 服务器唯一标识 */
     String id;
     /**
@@ -106,6 +111,8 @@ public class BrokerClient implements BrokerClientContext, GroupWith {
 
     /** bolt 业务处理器的钩子管理器 */
     ClientProcessorHooks clientProcessorHooks;
+    /** 监听 */
+    BrokerClientListenerRegion brokerClientListenerRegion;
 
     /** 简单的服务器信息 */
     SimpleServerInfo simpleServerInfo;
@@ -127,18 +134,29 @@ public class BrokerClient implements BrokerClientContext, GroupWith {
     }
 
     public void init() {
+        if (initAtomic.get()) {
+            return;
+        }
 
         if (initAtomic.compareAndSet(false, true)) {
             // 在业务框架中保存一份与之相关的 BrokerClient 引用
             this.barSkeleton.option(SkeletonAttr.brokerClientContext, this);
-            int idHash = this.getBrokerClientModuleMessage().getIdHash();
+            BrokerClientModuleMessage moduleMessage = this.getBrokerClientModuleMessage();
+            int idHash = moduleMessage.getIdHash();
             this.barSkeleton.option(SkeletonAttr.logicServerIdHash, idHash);
 
             // 启动 runner 机制
             this.barSkeleton.getRunners().onStart();
 
+            // brokerClientListener 监听
+            BrokerClient client = this;
+            this.brokerClientListenerRegion.forEach(listener -> {
+                //  向 Broker（游戏网关）发起连接前的监听回调
+                listener.connectBefore(moduleMessage, client);
+            });
+
             // 初始化一些信息，并将逻辑服信息发送给 Broker（游戏网关）
-            this.initBoltClientManager();
+            this.initBrokerClientManager();
         }
     }
 
@@ -221,7 +239,7 @@ public class BrokerClient implements BrokerClientContext, GroupWith {
         }
     }
 
-    private void initBoltClientManager() {
+    private void initBrokerClientManager() {
         if (Objects.isNull(this.brokerClientManager)) {
             this.brokerClientManager = new BrokerClientManager();
         }

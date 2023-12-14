@@ -40,10 +40,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-05-16
  */
+@Setter
 @Slf4j
 public class RequestBrokerClientModuleMessageClientProcessor extends AsyncUserProcessor<RequestBrokerClientModuleMessage>
         implements BrokerClientItemAware {
-    @Setter
     BrokerClientItem brokerClientItem;
 
     @Override

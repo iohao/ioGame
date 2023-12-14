@@ -19,7 +19,7 @@
 package com.iohao.game.action.skeleton.core.runner;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +27,6 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -64,6 +63,10 @@ public final class Runners {
 
     /** 启动 runner 机制 onStart 方法 */
     public void onStart() {
+        if (this.onStart.get()) {
+            return;
+        }
+
         if (this.onStart.compareAndSet(false, true)) {
             this.runnerList.forEach(runner -> runner.onStart(this.barSkeleton));
         }
@@ -72,10 +75,10 @@ public final class Runners {
     /** 启动 runner 机制 onStartAfter 方法 */
     public void onStartAfter() {
         if (this.onStartAfter.compareAndSet(false, true)) {
-            // 延迟 1 秒执行，防止没连接到服务器， 或者将来增加一个注册回调的 Processor，目前先暂时这样
-            ScheduledExecutorService executorService = ExecutorKit.newSingleScheduled("RunnersAfter");
-            executorService.schedule(() -> this.runnerList.forEach(runner -> runner.onStartAfter(this.barSkeleton)), 1, TimeUnit.SECONDS);
-            executorService.shutdown();
+            TaskKit.newTimeout(timeout -> {
+                // 延迟 1 秒执行，防止没连接到服务器， 或者将来增加一个注册回调的 Processor，目前先暂时这样
+                this.runnerList.forEach(runner -> runner.onStartAfter(this.barSkeleton));
+            }, 1, TimeUnit.SECONDS);
         }
     }
 

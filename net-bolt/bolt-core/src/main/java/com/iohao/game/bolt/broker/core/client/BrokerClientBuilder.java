@@ -27,6 +27,8 @@ import com.iohao.game.bolt.broker.core.aware.AwareInject;
 import com.iohao.game.bolt.broker.core.client.config.BrokerClientStatusConfig;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
+import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListener;
+import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListenerRegion;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.common.kit.HashKit;
 import com.iohao.game.common.kit.NetworkKit;
@@ -61,7 +63,7 @@ public class BrokerClientBuilder {
     /** 需要移除的用户处理器 */
     @Getter(value = AccessLevel.PRIVATE)
     final List<Class<?>> removeProcessorList = new ArrayList<>();
-
+    final BrokerClientListenerRegion brokerClientListenerRegion = new BrokerClientListenerRegion();
     /**
      * 服务器唯一标识
      * <pre>
@@ -148,6 +150,16 @@ public class BrokerClientBuilder {
         return this;
     }
 
+    /**
+     * 添加监听
+     *
+     * @param listener listener
+     * @return this
+     */
+    public BrokerClientBuilder addListener(BrokerClientListener listener) {
+        this.brokerClientListenerRegion.add(listener);
+        return this;
+    }
 
     /**
      * 构建 BrokerClient
@@ -165,7 +177,7 @@ public class BrokerClientBuilder {
         this.settingDefaultValue();
 
         // 模块信息 （子游戏服的信息、逻辑服）
-        var brokerClientModuleMessage = this.createBrokerClientMessage();
+        BrokerClientModuleMessage brokerClientModuleMessage = this.createBrokerClientMessage();
         SimpleServerInfo simpleServerInfo = this.createSimpleServerInfo();
 
         BrokerClient brokerClient = new BrokerClient()
@@ -176,6 +188,7 @@ public class BrokerClientBuilder {
                 .setBrokerAddress(this.brokerAddress)
                 .setBrokerClientType(this.brokerClientType)
                 .setBrokerClientModuleMessage(brokerClientModuleMessage)
+                .setBrokerClientListenerRegion(this.brokerClientListenerRegion)
                 .setTimeoutMillis(this.timeoutMillis)
                 .setConnectionEventProcessorMap(this.connectionEventProcessorMap)
                 .setProcessorList(this.processorList)
@@ -183,8 +196,7 @@ public class BrokerClientBuilder {
                 .setBrokerClientManager(this.brokerClientManager)
                 .setSimpleServerInfo(simpleServerInfo)
                 .setAwareInject(this.awareInject)
-                .setStatus(this.status)
-                ;
+                .setStatus(this.status);
 
         brokerClient.setWithNo(this.withNo);
 

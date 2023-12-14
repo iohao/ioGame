@@ -16,19 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.client;
+package com.iohao.game.bolt.broker.core.message;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 /**
- * 逻辑服类型
- *
  * @author 渔民小镇
- * @date 2022-05-14
+ * @date 2023-12-14
  */
-public enum BrokerClientType implements Serializable {
-    /** 游戏逻辑服 */
-    LOGIC,
-    /** 游戏对外服 (真实用户连接的服务器) */
-    EXTERNAL
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class BrokerClientOfflineMessage implements Serializable {
+    BrokerClientModuleMessage moduleMessage;
+
+    public static BrokerClientOfflineMessage of(BrokerClientModuleMessage moduleMessage) {
+        BrokerClientOfflineMessage offlineMessage = new BrokerClientOfflineMessage();
+        offlineMessage.moduleMessage = moduleMessage;
+        return offlineMessage;
+    }
 }

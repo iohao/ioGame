@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -16,30 +16,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.message;
+package com.iohao.game.bolt.broker.core.common.processor.listener;
 
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.jctools.maps.NonBlockingHashSet;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
 
 /**
- * 游戏逻辑服下线
+ * BrokerClient 监听管理域
  *
  * @author 渔民小镇
- * @date 2023-05-01
+ * @date 2023-12-14
  */
-@Getter
-@Setter
-@Deprecated
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrokerClientModuleMessageOffline implements Serializable {
+public class BrokerClientListenerRegion {
+    final Set<BrokerClientListener> listeners = new NonBlockingHashSet<>();
 
-    @Serial
-    private static final long serialVersionUID = -152069218480715948L;
+    public boolean isEmpty() {
+        return listeners.isEmpty();
+    }
 
-    BrokerClientModuleMessage brokerClientModuleMessage;
+    public void add(BrokerClientListener listener) {
+        Objects.requireNonNull(listener);
+        this.listeners.add(listener);
+    }
+
+    public void remove(BrokerClientListener listener) {
+        this.listeners.remove(listener);
+    }
+
+    public void clear() {
+        this.listeners.clear();
+    }
+
+    public void forEach(Consumer<BrokerClientListener> consumer) {
+        this.listeners.forEach(consumer);
+    }
 }

@@ -19,8 +19,8 @@
 package com.iohao.game.action.skeleton.toy;
 
 import com.iohao.game.action.skeleton.IoGameVersion;
-import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.RandomKit;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -108,9 +108,7 @@ public final class IoGameBanner {
             System.out.println();
         };
 
-        var executorService = ExecutorKit.newSingleThreadExecutor("IoGameBanner");
-        executorService.execute(runnable);
-        executorService.shutdown();
+        TaskKit.execute(runnable);
     }
 
     private void clean() {

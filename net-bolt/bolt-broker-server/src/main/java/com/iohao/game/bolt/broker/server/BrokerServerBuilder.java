@@ -38,7 +38,6 @@ import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegionFacto
 import com.iohao.game.bolt.broker.server.balanced.region.StrictBrokerClientRegion;
 import com.iohao.game.bolt.broker.server.enhance.BrokerEnhances;
 import com.iohao.game.bolt.broker.server.processor.*;
-import com.iohao.game.bolt.broker.server.processor.connection.CloseConnectionEventBrokerProcessor;
 import com.iohao.game.bolt.broker.server.processor.connection.ConnectionEventBrokerProcessor;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.bolt.broker.server.service.DefaultBrokerClientModules;
@@ -103,7 +102,7 @@ public class BrokerServerBuilder implements AwareInject {
         System.setProperty(Configs.CONN_MONITOR_SWITCH, "true");
         System.setProperty(Configs.CONN_RECONNECT_SWITCH, "true");
     }
-    
+
     /**
      * 构建游戏网关
      *
@@ -261,12 +260,16 @@ public class BrokerServerBuilder implements AwareInject {
     private void defaultProcessor() {
         // ============================注册连接器============================
 
-        Supplier<ConnectionEventProcessor> closeConnectionEventSupplier = CloseConnectionEventBrokerProcessor::new;
+        Supplier<ConnectionEventProcessor> connectionCloseEventSupplier = ConnectionCloseEventBrokerProcessor::new;
         Supplier<ConnectionEventProcessor> connectionEventSupplier = ConnectionEventBrokerProcessor::new;
+        Supplier<ConnectionEventProcessor> connectionExceptionEventSupplier = ConnectionExceptionEventBrokerProcessor::new;
+        Supplier<ConnectionEventProcessor> connectionFailedEventSupplier = ConnectionFailedEventBrokerProcessor::new;
 
         this
+                .addConnectionEventProcessor(ConnectionEventType.EXCEPTION, connectionExceptionEventSupplier)
+                .addConnectionEventProcessor(ConnectionEventType.CONNECT_FAILED, connectionFailedEventSupplier)
                 .addConnectionEventProcessor(ConnectionEventType.CONNECT, connectionEventSupplier)
-                .addConnectionEventProcessor(ConnectionEventType.CLOSE, closeConnectionEventSupplier);
+                .addConnectionEventProcessor(ConnectionEventType.CLOSE, connectionCloseEventSupplier);
 
         // ============================注册用户处理器============================
 

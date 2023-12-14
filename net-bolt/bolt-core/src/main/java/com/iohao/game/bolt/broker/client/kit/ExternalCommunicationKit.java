@@ -27,8 +27,6 @@ import com.iohao.game.core.common.client.Attachment;
 import com.iohao.game.core.common.client.ExternalBizCodeCont;
 import lombok.experimental.UtilityClass;
 
-import java.util.Objects;
-
 /**
  * 这个工具只能在游戏逻辑服中使用
  *

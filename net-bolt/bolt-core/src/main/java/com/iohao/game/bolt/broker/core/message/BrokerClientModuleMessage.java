@@ -23,6 +23,7 @@ import com.iohao.game.common.kit.HashKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
@@ -42,23 +43,14 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@ToString
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerClientModuleMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = -1570849960266785141L;
-    /** 服务器唯一标识 */
-    String id;
-    /** 服务器唯一标识 hash */
-    int idHash;
     /** 模块名 */
     String name;
-    /** 逻辑服地址 */
-    String address;
-    List<Integer> cmdMergeList;
-    /** 逻辑服类型 */
-    BrokerClientType brokerClientType = BrokerClientType.LOGIC;
-
     /**
      * 逻辑服标签 （tag 相当于归类）
      * <pre>
@@ -73,23 +65,21 @@ public class BrokerClientModuleMessage implements Serializable {
     /** 逻辑服状态 */
     int status;
     int withNo;
+    /** 逻辑服类型 */
+    BrokerClientType brokerClientType = BrokerClientType.LOGIC;
+    /** 服务器唯一标识 */
+    String id;
+    /** 服务器唯一标识 hash */
+    int idHash;
+    /** 逻辑服地址 */
+    String address;
+    @ToString.Exclude
+    List<Integer> cmdMergeList;
 
     public BrokerClientModuleMessage setId(String id) {
         this.id = id;
         this.idHash = HashKit.hash32(id);
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "BrokerClientModuleMessage{" +
-                "name='" + name + '\'' +
-                ", tag='" + tag + '\'' +
-                ", id='" + id + '\'' +
-                ", idHash=" + idHash +
-                ", address='" + address + '\'' +
-                ", brokerClientType=" + brokerClientType +
-                '}';
     }
 
     @Override

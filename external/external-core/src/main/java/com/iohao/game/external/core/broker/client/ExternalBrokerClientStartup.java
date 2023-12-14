@@ -30,6 +30,7 @@ import com.iohao.game.bolt.broker.core.common.processor.pulse.PulseSignalRequest
 import com.iohao.game.bolt.broker.core.common.processor.pulse.PulseSignalResponseUserProcessor;
 import com.iohao.game.external.core.broker.client.enhance.ExternalEnhances;
 import com.iohao.game.external.core.broker.client.processor.*;
+import com.iohao.game.external.core.broker.client.processor.listener.CmdRegionBrokerClientListener;
 import lombok.Setter;
 
 /**
@@ -38,8 +39,8 @@ import lombok.Setter;
  * @author 渔民小镇
  * @date 2023-02-21
  */
+@Setter
 public class ExternalBrokerClientStartup extends AbstractBrokerClientStartup {
-    @Setter
     String id;
 
     protected BarSkeletonBuilder createBarSkeletonBuilder() {
@@ -63,7 +64,9 @@ public class ExternalBrokerClientStartup extends AbstractBrokerClientStartup {
                 // 逻辑服标签 （tag 相当于归类）
                 .tag("external")
                 // 逻辑服设置为对外服类型
-                .brokerClientType(BrokerClientType.EXTERNAL);
+                .brokerClientType(BrokerClientType.EXTERNAL)
+                .addListener(CmdRegionBrokerClientListener.me())
+                ;
     }
 
     @Override
@@ -89,10 +92,9 @@ public class ExternalBrokerClientStartup extends AbstractBrokerClientStartup {
                 .registerUserProcessor(PulseSignalRequestUserProcessor::new)
                 // 脉冲信号响应接收
                 .registerUserProcessor(PulseSignalResponseUserProcessor::new)
-                // 游戏逻辑服信息上线通知
-                .registerUserProcessor(BrokerClientModuleMessageExternalProcessor::new)
-                // 游戏逻辑服信息下线通知
-                .registerUserProcessor(BrokerClientModuleMessageOfflineExternalProcessor::new)
+                // 其他逻辑服的上线、下线相关通知
+                .registerUserProcessor(BrokerClientOnlineMessageExternalProcessor::new)
+                .registerUserProcessor(BrokerClientOfflineMessageExternalProcessor::new)
         ;
     }
 }

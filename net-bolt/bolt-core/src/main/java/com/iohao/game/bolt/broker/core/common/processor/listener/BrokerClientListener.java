@@ -16,19 +16,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.client;
-
-import java.io.Serializable;
+package com.iohao.game.bolt.broker.core.common.processor.listener;
 
 /**
- * 逻辑服类型
+ * BrokerClient 监听
  *
  * @author 渔民小镇
- * @date 2022-05-14
+ * @date 2023-12-14
+ * @see LineListener
+ * @see ConnectionBeforeListener
+ * @see BrokerClientListenerRegion
  */
-public enum BrokerClientType implements Serializable {
-    /** 游戏逻辑服 */
-    LOGIC,
-    /** 游戏对外服 (真实用户连接的服务器) */
-    EXTERNAL
+public interface BrokerClientListener extends
+        LineListener,
+        ConnectionBeforeListener {
 }

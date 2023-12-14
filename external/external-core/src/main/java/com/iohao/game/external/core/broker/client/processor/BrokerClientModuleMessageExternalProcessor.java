@@ -20,15 +20,19 @@ package com.iohao.game.external.core.broker.client.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
+import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
-import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.core.common.cmd.CmdRegions;
 
 /**
+ * 使用 {@link BrokerClientOnlineMessageExternalProcessor} 代替
+ *
  * @author 渔民小镇
  * @date 2023-05-01
+ * @see BrokerClientOnlineMessageExternalProcessor
  */
+@Deprecated
 public final class BrokerClientModuleMessageExternalProcessor extends AbstractAsyncUserProcessor<BrokerClientModuleMessage>
         implements CmdRegionsAware {
     CmdRegions cmdRegions;

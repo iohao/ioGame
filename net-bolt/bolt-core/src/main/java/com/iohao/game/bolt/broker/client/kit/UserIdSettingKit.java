@@ -34,8 +34,7 @@ import java.util.Objects;
 /**
  * 变更用户 id
  * <pre>
- *     用户连接登录编写 文档
- *     https://www.yuque.com/iohao/game/tywkqv
+ *     <a href="https://www.yuque.com/iohao/game/tywkqv">用户连接登录编写 文档</a>
  * </pre>
  *
  * @author 渔民小镇

@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -16,30 +16,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.message;
+package com.iohao.game.bolt.broker.server.processor;
 
-import lombok.AccessLevel;
-import lombok.Getter;
+import com.alipay.remoting.Connection;
+import com.alipay.remoting.ConnectionEventProcessor;
+import com.alipay.remoting.ConnectionEventType;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-
-import java.io.Serial;
-import java.io.Serializable;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * 游戏逻辑服下线
- *
  * @author 渔民小镇
- * @date 2023-05-01
+ * @date 2023-12-14
  */
-@Getter
 @Setter
-@Deprecated
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class BrokerClientModuleMessageOffline implements Serializable {
+@Slf4j(topic = IoGameLogName.ConnectionTopic)
+public class ConnectionExceptionEventBrokerProcessor implements ConnectionEventProcessor {
+    @Override
+    public void onEvent(String remoteAddress, Connection connection) {
+        if (IoGameGlobalConfig.openLog) {
+            log.info("Broker ConnectionEventType:【{}】 remoteAddress:【{}】，Connection:【{}】",
+                    ConnectionEventType.EXCEPTION, remoteAddress, connection
+            );
+        }
 
-    @Serial
-    private static final long serialVersionUID = -152069218480715948L;
-
-    BrokerClientModuleMessage brokerClientModuleMessage;
+    }
 }

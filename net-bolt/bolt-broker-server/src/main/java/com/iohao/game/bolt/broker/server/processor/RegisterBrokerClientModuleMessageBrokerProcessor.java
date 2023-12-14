@@ -38,12 +38,12 @@ import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
-import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.consts.IoGameLogName;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import com.iohao.game.core.common.cmd.CmdRegions;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -54,9 +54,11 @@ import java.util.stream.Collectors;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Setter
 @Slf4j(topic = IoGameLogName.CommonStdout)
 public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserProcessor<BrokerClientModuleMessage>
         implements BrokerServerAware, BrokerClientModulesAware, CmdRegionsAware {
+
     BrokerServer brokerServer;
     BrokerClientModules brokerClientModules;
     CmdRegions cmdRegions;
@@ -82,11 +84,15 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
 
         print(brokerClientModuleMessage);
 
-        if (IoGameGlobalConfig.isSendBrokerClientModuleMessage()) {
-            this.sendBrokerClientModuleMessage(brokerClientModuleMessage);
-        }
+        var context = new LineKit.Context(brokerServer, brokerClientModules, cmdRegions, brokerClientModuleMessage);
+        LineKit.online(context);
+
+//        if (IoGameGlobalConfig.isSendBrokerClientModuleMessage()) {
+//            this.sendBrokerClientModuleMessage(brokerClientModuleMessage);
+//        }
     }
 
+    @Deprecated
     private void sendBrokerClientModuleMessage(BrokerClientModuleMessage moduleMessage) {
 
         BrokerClientType brokerClientType = moduleMessage.getBrokerClientType();
@@ -194,35 +200,29 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
         }
 
         if (fixedRateFlag.compareAndSet(false, true)) {
-            ExecutorKit.newSingleScheduled("print").scheduleAtFixedRate(() -> {
-                BrokerPrintKit.print(this.brokerServer);
+//            ExecutorKit.newSingleScheduled("print").scheduleAtFixedRate(() -> {
+//                BrokerPrintKit.print(this.brokerServer);
+//
+//                BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
+//                BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
+//
+//                this.printCluster(brokerClusterMessage);
+//
+//            }, 5, 30, TimeUnit.SECONDS);
+
+            TaskKit.addMinuteScheduleTaskListener(() -> {
+                BrokerPrintKit.print(brokerServer);
 
                 BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
                 BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
 
-                this.printCluster(brokerClusterMessage);
-
-            }, 5, 30, TimeUnit.SECONDS);
+                printCluster(brokerClusterMessage);
+            }, 1);
         }
     }
 
     @Override
     public String interest() {
         return BrokerClientModuleMessage.class.getName();
-    }
-
-    @Override
-    public void setBrokerServer(BrokerServer brokerServer) {
-        this.brokerServer = brokerServer;
-    }
-
-    @Override
-    public void setBrokerClientModules(BrokerClientModules brokerClientModules) {
-        this.brokerClientModules = brokerClientModules;
-    }
-
-    @Override
-    public void setCmdRegions(CmdRegions cmdRegions) {
-        this.cmdRegions = cmdRegions;
     }
 }

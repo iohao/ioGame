@@ -16,19 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.client;
+package com.iohao.game.external.core.hook;
 
-import java.io.Serializable;
+import com.iohao.game.common.kit.attr.AttrOption;
+import com.iohao.game.core.common.cmd.CmdRegions;
 
 /**
- * 逻辑服类型
+ * 游戏对外服的扩展属性
  *
  * @author 渔民小镇
- * @date 2022-05-14
+ * @date 2023-12-14
  */
-public enum BrokerClientType implements Serializable {
-    /** 游戏逻辑服 */
-    LOGIC,
-    /** 游戏对外服 (真实用户连接的服务器) */
-    EXTERNAL
+public interface BrokerClientExternalAttr {
+    AttrOption<CmdRegions> cmdRegions = AttrOption.valueOf("cmdRegions");
 }

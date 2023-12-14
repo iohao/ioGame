@@ -16,48 +16,45 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.external.core.broker.client.processor;
+package com.iohao.game.external.core.broker.client.processor.listener;
 
-import com.alipay.remoting.AsyncContext;
-import com.alipay.remoting.BizContext;
-import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
+import com.iohao.game.bolt.broker.core.client.BrokerClient;
+import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListener;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
-import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessageOffline;
-import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.core.common.cmd.BrokerClientId;
 import com.iohao.game.core.common.cmd.CmdRegions;
+import com.iohao.game.external.core.hook.BrokerClientExternalAttr;
 
 /**
- * 游戏逻辑服信息下线通知
- * 使用 {@link BrokerClientOfflineMessageExternalProcessor} 代替
- *
  * @author 渔民小镇
- * @date 2023-05-01
- * @see BrokerClientOfflineMessageExternalProcessor
+ * @date 2023-12-14
  */
-@Deprecated
-public final class BrokerClientModuleMessageOfflineExternalProcessor extends AbstractAsyncUserProcessor<BrokerClientModuleMessageOffline>
-        implements CmdRegionsAware {
-    CmdRegions cmdRegions;
+public class CmdRegionBrokerClientListener implements BrokerClientListener {
 
     @Override
-    public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientModuleMessageOffline messageOffline) {
-        BrokerClientModuleMessage moduleMessage = messageOffline.getBrokerClientModuleMessage();
+    public void onlineLogic(BrokerClientModuleMessage moduleMessage, BrokerClient client) {
+        CmdRegions cmdRegions = client.option(BrokerClientExternalAttr.cmdRegions);
+        // 游戏逻辑服的路由数据
+        cmdRegions.loading(moduleMessage);
+    }
+
+    @Override
+    public void offlineLogic(BrokerClientModuleMessage moduleMessage, BrokerClient client) {
+        CmdRegions cmdRegions = client.option(BrokerClientExternalAttr.cmdRegions);
 
         String id = moduleMessage.getId();
         int idHash = moduleMessage.getIdHash();
         BrokerClientId brokerClientId = new BrokerClientId(idHash, id);
         // 游戏逻辑服的路由数据
-        this.cmdRegions.unLoading(brokerClientId);
+        cmdRegions.unLoading(brokerClientId);
     }
 
-    @Override
-    public String interest() {
-        return BrokerClientModuleMessageOffline.class.getName();
+    public static CmdRegionBrokerClientListener me() {
+        return Holder.ME;
     }
 
-    @Override
-    public void setCmdRegions(CmdRegions cmdRegions) {
-        this.cmdRegions = cmdRegions;
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final CmdRegionBrokerClientListener ME = new CmdRegionBrokerClientListener();
     }
 }

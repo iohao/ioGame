@@ -70,13 +70,10 @@ public class BrokerClientApplication {
         return brokerClientStartup.initConfig();
     }
 
-
     /**
      * 实验性功能，将来可能移除的。
      */
     private void experiment(BrokerClientBuilder builder) {
-        // ExtRegions.me().add(new MonitorExtRegion());
-
         ActionCommandRegions actionCommandRegions = builder.barSkeleton().getActionCommandRegions();
         String tag = builder.tag();
 

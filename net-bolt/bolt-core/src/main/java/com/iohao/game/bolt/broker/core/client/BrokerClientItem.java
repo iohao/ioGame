@@ -164,12 +164,11 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
     @Override
     public ResponseMessage invokeModuleMessage(RequestMessage requestMessage) {
 
-        InnerModuleMessage moduleMessage = new InnerModuleMessage();
-        moduleMessage.setRequestMessage(requestMessage);
-
         ResponseMessage o = null;
 
         try {
+            InnerModuleMessage moduleMessage = new InnerModuleMessage();
+            moduleMessage.setRequestMessage(requestMessage);
             o = (ResponseMessage) this.invokeSync(moduleMessage);
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);
@@ -180,11 +179,9 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
 
     @Override
     public void invokeModuleVoidMessage(RequestMessage requestMessage) {
-
-        InnerModuleVoidMessage moduleVoidMessage = new InnerModuleVoidMessage();
-        moduleVoidMessage.setRequestMessage(requestMessage);
-
         try {
+            InnerModuleVoidMessage moduleVoidMessage = new InnerModuleVoidMessage();
+            moduleVoidMessage.setRequestMessage(requestMessage);
             this.oneway(moduleVoidMessage);
         } catch (RemotingException e) {
             log.error(e.getMessage(), e);
@@ -301,11 +298,9 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
      * 客户端服务器注册到网关服
      */
     public void registerToBroker() {
-        // 客户端服务器注册到游戏网关服
-        BrokerClientModuleMessage brokerClientModuleMessage = this.brokerClient.getBrokerClientModuleMessage();
-
         try {
-
+            // 客户端服务器注册到游戏网关服
+            BrokerClientModuleMessage brokerClientModuleMessage = this.brokerClient.getBrokerClientModuleMessage();
             this.rpcClient.oneway(address, brokerClientModuleMessage);
 
             TimeUnit.MILLISECONDS.sleep(100);
@@ -326,8 +321,8 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
     }
 
     private void send() {
-        BrokerClientItemConnectMessage message = new BrokerClientItemConnectMessage();
         try {
+            var message = new BrokerClientItemConnectMessage();
             this.rpcClient.oneway(address, message);
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);
