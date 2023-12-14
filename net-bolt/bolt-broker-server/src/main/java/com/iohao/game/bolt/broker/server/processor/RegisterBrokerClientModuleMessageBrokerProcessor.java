@@ -210,7 +210,7 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
 //
 //            }, 5, 30, TimeUnit.SECONDS);
 
-            TaskKit.addMinuteScheduleTaskListener(() -> {
+            TaskKit.runIntervalMinute(() -> {
                 BrokerPrintKit.print(brokerServer);
 
                 BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();

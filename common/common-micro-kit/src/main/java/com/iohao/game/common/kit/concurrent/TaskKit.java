@@ -76,7 +76,7 @@ import java.util.concurrent.TimeUnit;
  * </pre>
  * example - TaskListener - 高级用法
  * <pre>{@code
- *      //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 TimerListener
+ *      //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 Listener
  *     TaskKit.runInterval(new IntervalTaskListener() {
  *         int hp = 2;
  *
@@ -88,7 +88,7 @@ import java.util.concurrent.TimeUnit;
  *
  *         @Override
  *         public boolean isActive() {
- *             // 当返回 false 则表示不活跃，会从监听列表中移除当前 TimerListener
+ *             // 当返回 false 则表示不活跃，会从监听列表中移除当前 Listener
  *             return hp != 0;
  *         }
  *     }, 1, TimeUnit.SECONDS);
@@ -178,7 +178,7 @@ public class TaskKit {
      * @param delay        延迟时间
      * @param unit         延迟时间单位
      */
-    void runOnce(OnceTaskListener taskListener, long delay, TimeUnit unit) {
+    public void runOnce(OnceTaskListener taskListener, long delay, TimeUnit unit) {
         newTimeout(taskListener, delay, unit);
     }
 
@@ -188,7 +188,7 @@ public class TaskKit {
      * @param taskListener      taskListener
      * @param delayMilliseconds delayMilliseconds
      */
-    void runOnce(OnceTaskListener taskListener, long delayMilliseconds) {
+    public void runOnceMillis(OnceTaskListener taskListener, long delayMilliseconds) {
         runOnce(taskListener, delayMilliseconds, TimeUnit.MILLISECONDS);
     }
 

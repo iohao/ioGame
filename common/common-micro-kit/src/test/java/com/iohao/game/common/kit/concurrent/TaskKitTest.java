@@ -31,8 +31,8 @@ public class TaskKitTest {
         TaskKit.runOnce(() -> log.info("1 Minute"), 1, TimeUnit.MINUTES);
 
         // 只执行一次，500、800 milliseconds 后
-        TaskKit.runOnce(() -> log.info("500 delayMilliseconds"), 500);
-        TaskKit.runOnce(() -> log.info("800 delayMilliseconds"), 800);
+        TaskKit.runOnceMillis(() -> log.info("500 delayMilliseconds"), 500);
+        TaskKit.runOnceMillis(() -> log.info("800 delayMilliseconds"), 800);
 
         // 只执行一次，1500 Milliseconds后执行，当 theTriggerUpdate 为 true 时，才执行 onUpdate
         boolean theTriggerUpdate = RandomKit.randomBoolean();
@@ -65,7 +65,7 @@ public class TaskKitTest {
         // 每 30 分钟调用一次
         TaskKit.runInterval(() -> log.info("tick 30 Minute"), 30, TimeUnit.MINUTES);
 
-        //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 TimerListener
+        //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 Listener
         TaskKit.runInterval(new IntervalTaskListener() {
             int hp = 2;
 
@@ -77,7 +77,7 @@ public class TaskKitTest {
 
             @Override
             public boolean isActive() {
-                // 当返回 false 则表示不活跃，会从监听列表中移除当前 TimerListener
+                // 当返回 false 则表示不活跃，会从监听列表中移除当前 Listener
                 return hp != 0;
             }
         }, 1, TimeUnit.SECONDS);
