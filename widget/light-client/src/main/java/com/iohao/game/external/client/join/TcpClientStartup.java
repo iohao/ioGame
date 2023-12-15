@@ -45,7 +45,7 @@ class TcpClientStartup implements ClientConnect {
     @Override
     public void connect(ClientConnectOption option) {
         ClientUser clientUser = option.getClientUser();
-        ClientMessageHandler clientMessageHandler = new ClientMessageHandler( clientUser);
+        ClientMessageHandler clientMessageHandler = new ClientMessageHandler(clientUser);
 
         EventLoopGroup group = new NioEventLoopGroup();
         var bootstrap = new Bootstrap();
@@ -71,7 +71,7 @@ class TcpClientStartup implements ClientConnect {
                                 0));
 
                         // 编解码
-                        pipeline.addLast("codec", TcpExternalCodec.me());
+                        pipeline.addLast("codec", new TcpExternalCodec());
 
                         pipeline.addLast(clientMessageHandler);
                     }

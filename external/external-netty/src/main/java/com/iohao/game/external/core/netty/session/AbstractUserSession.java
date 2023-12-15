@@ -18,8 +18,8 @@
  */
 package com.iohao.game.external.core.netty.session;
 
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.common.kit.attr.AttrOptions;
 import com.iohao.game.core.common.cmd.CmdRegions;
 import com.iohao.game.external.core.session.UserChannelId;
@@ -60,7 +60,7 @@ abstract class AbstractUserSession implements UserSession {
         this.option(UserSessionOption.bindingLogicServerIdSet, new NonBlockingHashSet<>());
     }
 
-    public void employ(RequestMessage requestMessage) {
+    public void employ(BarMessage requestMessage) {
         HeadMetadata headMetadata = requestMessage.getHeadMetadata();
         // 设置请求用户的id
         headMetadata.setUserId(this.userId);

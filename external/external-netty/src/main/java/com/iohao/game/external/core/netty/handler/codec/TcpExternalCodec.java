@@ -19,6 +19,8 @@
 package com.iohao.game.external.core.netty.handler.codec;
 
 import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.protocol.BarMessage;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -32,13 +34,15 @@ import java.util.List;
  * @author 渔民小镇
  * @date 2023-02-21
  */
-public class TcpExternalCodec extends MessageToMessageCodec<ByteBuf, ExternalMessage> {
+public class TcpExternalCodec extends MessageToMessageCodec<ByteBuf, BarMessage> {
     @Override
-    protected void encode(ChannelHandlerContext ctx, ExternalMessage externalMessage, List<Object> out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, BarMessage message, List<Object> out) throws Exception {
         /*
-         *【游戏对外服】发送消息给【游戏客户端】
-         * 编码器 - ExternalMessage ---> 字节数组，将消息发送到请求端（客户端）
+         * 编码器 - 将消息发送到请求端（客户端）；【游戏对外服】发送消息给【游戏客户端】
+         * ResponseMessage ---> ExternalMessage ---> 字节数组
          */
+        ExternalMessage externalMessage = ExternalCodecKit.convertExternalMessage(message);
+
         byte[] bytes = DataCodecKit.encode(externalMessage);
 
         /*
@@ -57,29 +61,21 @@ public class TcpExternalCodec extends MessageToMessageCodec<ByteBuf, ExternalMes
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) {
-        // 解码器 - 字节数组 ---> ExternalMessage，接收请求端的消息（客户端）
-
+        /*
+         * 解码器 - 接收请求端的消息（客户端）；
+         * 字节数组 ---> ExternalMessage ---> RequestMessage
+         */
         // 读取消息长度
         int length = msg.readInt();
         // 消息
         byte[] msgBytes = new byte[length];
         msg.readBytes(msgBytes);
 
-        ExternalMessage message = DataCodecKit.decode(msgBytes, ExternalMessage.class);
+        ExternalMessage externalMessage = DataCodecKit.decode(msgBytes, ExternalMessage.class);
+
+        BarMessage message = ExternalCodecKit.convertRequestMessage(externalMessage);
+
         //【游戏对外服】接收【游戏客户端】的消息
         out.add(message);
-    }
-
-    public TcpExternalCodec() {
-    }
-
-    @Deprecated
-    public static TcpExternalCodec me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final TcpExternalCodec ME = new TcpExternalCodec();
     }
 }

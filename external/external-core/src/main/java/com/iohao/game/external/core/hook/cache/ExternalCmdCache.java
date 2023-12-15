@@ -18,8 +18,8 @@
  */
 package com.iohao.game.external.core.hook.cache;
 
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.external.core.message.ExternalMessage;
 
 /**
  * 游戏对外服缓存数据查询、添加相关接口
@@ -39,7 +39,7 @@ public interface ExternalCmdCache {
      * @param message message
      * @return 返回值为 null，表示缓存中没有数据
      */
-    ExternalMessage getCache(ExternalMessage message);
+    BarMessage getCache(BarMessage message);
 
     /**
      * 添加：将响应数据添加到缓存中

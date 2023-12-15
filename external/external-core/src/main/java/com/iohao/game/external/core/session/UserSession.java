@@ -19,8 +19,8 @@
 package com.iohao.game.external.core.session;
 
 
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.common.kit.attr.AttrOptionDynamic;
 
 /**
@@ -87,7 +87,7 @@ public interface UserSession extends AttrOptionDynamic {
      *
      * @param requestMessage 请求消息
      */
-    void employ(RequestMessage requestMessage);
+    void employ(BarMessage requestMessage);
 
     /**
      * writeAndFlush

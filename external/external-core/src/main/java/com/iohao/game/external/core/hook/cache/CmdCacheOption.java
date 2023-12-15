@@ -31,7 +31,7 @@ import java.util.Objects;
  * 游戏对外服缓存配置
  *
  * @author 渔民小镇
- * @date 2023-07-02
+ * @date 2023-12-15
  */
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -73,7 +73,7 @@ public final class CmdCacheOption {
          * <pre>
          *     间隔多久做一次缓存过期检测
          *
-         *     默认是每 120 秒做一次缓存数据的检测
+         *     默认是每 5 分钟做一次缓存数据的检测
          *
          *     注意事项：
          *     检测时间是为了避免频繁的对缓存做检测。
@@ -83,7 +83,7 @@ public final class CmdCacheOption {
          *     如果你想很精准的控制缓存时间，可以设置为每秒做一次检测。
          * </pre>
          */
-        Duration expireCheckTime = Duration.ofMinutes(2);
+        Duration expireCheckTime = Duration.ofMinutes(5);
 
         public CmdCacheOption build() {
 

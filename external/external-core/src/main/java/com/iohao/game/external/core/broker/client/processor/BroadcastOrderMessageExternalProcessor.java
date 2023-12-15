@@ -24,7 +24,7 @@ import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.message.BroadcastOrderMessage;
 import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.external.core.aware.UserSessionsAware;
-import com.iohao.game.external.core.kit.ExternalKit;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.session.UserSessions;
 
 import java.util.concurrent.Executor;
@@ -49,7 +49,7 @@ public final class BroadcastOrderMessageExternalProcessor extends AsyncUserProce
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BroadcastOrderMessage message) {
-        ExternalKit.broadcast(message, this.userSessions);
+        ExternalCodecKit.broadcast(message, this.userSessions);
     }
 
     @Override

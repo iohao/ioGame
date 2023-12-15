@@ -19,12 +19,12 @@
 package com.iohao.game.external.core.broker.client.ext.impl;
 
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.core.common.client.ExternalBizCodeCont;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegion;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegionContext;
-import com.iohao.game.external.core.kit.ExternalKit;
-import com.iohao.game.external.core.message.ExternalMessage;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 
 import java.io.Serializable;
 
@@ -37,14 +37,14 @@ import java.io.Serializable;
  * @author 渔民小镇
  * @date 2023-02-21
  */
-public class ForcedOfflineExternalBizRegion implements ExternalBizRegion {
-    final ExternalMessage externalMessage;
+public final class ForcedOfflineExternalBizRegion implements ExternalBizRegion {
+    final BarMessage response;
 
     public ForcedOfflineExternalBizRegion() {
-        externalMessage = ExternalKit.createExternalMessage();
         // 强制玩家下线 状态码
-        externalMessage.setResponseStatus(ActionErrorEnum.forcedOffline.getCode());
-        externalMessage.setValidMsg(ActionErrorEnum.forcedOffline.getMsg());
+        response = ExternalCodecKit.createResponse();
+        response.setResponseStatus(ActionErrorEnum.forcedOffline.getCode());
+        response.setValidatorMsg(ActionErrorEnum.forcedOffline.getMsg());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ForcedOfflineExternalBizRegion implements ExternalBizRegion {
         // 发送强制下线消息
         var userSessions = regionContext.getUserSessions();
         // 据 userId 移除 UserSession ，在移除前发送一个消息
-        userSessions.removeUserSession(userId, externalMessage);
+        userSessions.removeUserSession(userId, response);
 
         return null;
     }

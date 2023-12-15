@@ -27,15 +27,12 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
-import com.iohao.game.external.core.kit.ExternalKit;
-import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.session.UserChannelId;
 import com.iohao.game.external.core.session.UserSession;
 import com.iohao.game.external.core.session.UserSessions;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * 接收来自网关的响应
@@ -58,7 +55,6 @@ public final class ResponseMessageExternalProcessor extends AbstractAsyncUserPro
             log.info("接收来自网关的响应 {}", responseMessage);
         }
 
-        ExternalMessage externalMessage = ExternalKit.convertExternalMessage(responseMessage);
         HeadMetadata headMetadata = responseMessage.getHeadMetadata();
 
         long userId = headMetadata.getUserId();
@@ -78,7 +74,7 @@ public final class ResponseMessageExternalProcessor extends AbstractAsyncUserPro
 
         // 响应结果给用户
         if (userSession != null) {
-            userSession.writeAndFlush(externalMessage);
+            userSession.writeAndFlush(responseMessage);
         }
 
         // 游戏对外服缓存

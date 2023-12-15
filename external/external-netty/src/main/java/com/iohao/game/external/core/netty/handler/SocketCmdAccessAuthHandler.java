@@ -19,11 +19,11 @@
 package com.iohao.game.external.core.netty.handler;
 
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.hook.AccessAuthenticationHook;
-import com.iohao.game.external.core.kit.ExternalKit;
-import com.iohao.game.external.core.message.ExternalMessage;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.netty.session.SocketUserSessions;
 import com.iohao.game.external.core.session.UserSession;
 import com.iohao.game.external.core.session.UserSessions;
@@ -38,12 +38,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @date 2023-05-05
  */
 @ChannelHandler.Sharable
-public class SocketCmdAccessAuthHandler extends SimpleChannelInboundHandler<ExternalMessage>
+public class SocketCmdAccessAuthHandler extends SimpleChannelInboundHandler<BarMessage>
         implements UserSessionsAware {
     protected UserSessions<?, ?> userSessions;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage message) {
+    protected void channelRead0(ChannelHandlerContext ctx, BarMessage message) {
         if (reject(ctx, message)) {
             // 拒绝玩家直接访问 action
             return;
@@ -61,12 +61,13 @@ public class SocketCmdAccessAuthHandler extends SimpleChannelInboundHandler<Exte
         ctx.fireChannelRead(message);
     }
 
-    protected boolean reject(ChannelHandlerContext ctx, ExternalMessage message) {
+    protected boolean reject(ChannelHandlerContext ctx, BarMessage message) {
         AccessAuthenticationHook accessAuthenticationHook = ExternalGlobalConfig.accessAuthenticationHook;
-        boolean reject = accessAuthenticationHook.reject(message.getCmdMerge());
+        int cmdMerge = message.getHeadMetadata().getCmdMerge();
+        boolean reject = accessAuthenticationHook.reject(cmdMerge);
 
         if (reject) {
-            ExternalKit.employError(message, ActionErrorEnum.cmdInfoErrorCode);
+            ExternalCodecKit.employError(message, ActionErrorEnum.cmdInfoErrorCode);
             // 响应结果给玩家
             ctx.writeAndFlush(message);
 
@@ -76,17 +77,18 @@ public class SocketCmdAccessAuthHandler extends SimpleChannelInboundHandler<Exte
         return false;
     }
 
-    protected boolean notPass(ChannelHandlerContext ctx, ExternalMessage message, boolean loginSuccess) {
+    protected boolean notPass(ChannelHandlerContext ctx, BarMessage message, boolean loginSuccess) {
         // 是否可以访问业务方法（action），true 表示可以访问该路由对应的业务方法
         AccessAuthenticationHook accessAuthenticationHook = ExternalGlobalConfig.accessAuthenticationHook;
-        boolean pass = accessAuthenticationHook.pass(loginSuccess, message.getCmdMerge());
+        int cmdMerge = message.getHeadMetadata().getCmdMerge();
+        boolean pass = accessAuthenticationHook.pass(loginSuccess, cmdMerge);
 
         if (pass) {
             return false;
         }
 
         // 当访问验证没通过，通知玩家
-        ExternalKit.employError(message, ActionErrorEnum.verifyIdentity);
+        ExternalCodecKit.employError(message, ActionErrorEnum.verifyIdentity);
 
         // 响应结果给玩家
         ctx.writeAndFlush(message);

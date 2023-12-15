@@ -18,11 +18,11 @@
  */
 package com.iohao.game.external.core.netty.handler;
 
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.external.core.ExternalCoreSetting;
 import com.iohao.game.external.core.aware.ExternalCoreSettingAware;
 import com.iohao.game.external.core.hook.IdleHook;
 import com.iohao.game.external.core.hook.internal.IdleProcessSetting;
-import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.message.ExternalMessageCmdCode;
 import com.iohao.game.external.core.netty.DefaultExternalCoreSetting;
 import com.iohao.game.external.core.netty.session.SocketUserSession;
@@ -52,15 +52,14 @@ public final class SocketIdleHandler extends ChannelInboundHandlerAdapter
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-        ExternalMessage externalMessage = (ExternalMessage) msg;
+        BarMessage message = (BarMessage) msg;
 
         // 心跳处理
-        int cmdCode = externalMessage.getCmdCode();
-
+        int cmdCode = message.getHeadMetadata().getCmdCode();
         if (cmdCode == ExternalMessageCmdCode.idle) {
 
             if (this.pong) {
-                ctx.writeAndFlush(externalMessage);
+                ctx.writeAndFlush(message);
             }
 
             return;

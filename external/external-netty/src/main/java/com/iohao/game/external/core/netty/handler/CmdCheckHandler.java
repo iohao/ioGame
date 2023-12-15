@@ -19,10 +19,10 @@
 package com.iohao.game.external.core.netty.handler;
 
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.core.common.cmd.CmdRegions;
-import com.iohao.game.external.core.kit.ExternalKit;
-import com.iohao.game.external.core.message.ExternalMessage;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -39,13 +39,13 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @date 2023-05-01
  */
 @ChannelHandler.Sharable
-public final class CmdCheckHandler extends SimpleChannelInboundHandler<ExternalMessage>
+public final class CmdCheckHandler extends SimpleChannelInboundHandler<BarMessage>
         implements CmdRegionsAware {
     CmdRegions cmdRegions;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage message) {
-        int cmdMerge = message.getCmdMerge();
+    protected void channelRead0(ChannelHandlerContext ctx, BarMessage message) {
+        int cmdMerge = message.getHeadMetadata().getCmdMerge();
         // 路由存在
         if (cmdRegions.existCmdMerge(cmdMerge)) {
             // 交给下一个业务处理 (handler) , 下一个业务指的是你编排 handler 时的顺序
@@ -53,7 +53,7 @@ public final class CmdCheckHandler extends SimpleChannelInboundHandler<ExternalM
             return;
         }
 
-        ExternalKit.employError(message, ActionErrorEnum.cmdInfoErrorCode);
+        ExternalCodecKit.employError(message, ActionErrorEnum.cmdInfoErrorCode);
 
         ctx.writeAndFlush(message);
     }

@@ -19,9 +19,9 @@
 package com.iohao.game.external.core.netty.hook;
 
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.common.consts.IoGameLogName;
-import com.iohao.game.external.core.kit.ExternalKit;
-import com.iohao.game.external.core.message.ExternalMessage;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.session.UserSession;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -49,12 +49,12 @@ public final class DefaultSocketIdleHook implements SocketIdleHook {
             log.debug("ALL_IDLE 总超时");
         }
 
-        ExternalMessage externalMessage = ExternalKit.createIdleErrorMessage();
+        BarMessage message = ExternalCodecKit.createIdleErrorMessage();
         // 错误消息
-        externalMessage.setValidMsg(ActionErrorEnum.idleErrorCode.getMsg() + " : " + state.name());
+        message.setValidatorMsg(ActionErrorEnum.idleErrorCode.getMsg() + " : " + state.name());
 
         // 通知客户端，触发了心跳事件
-        userSession.writeAndFlush(externalMessage);
+        userSession.writeAndFlush(message);
 
         // 返回 true 表示通知框架将当前的用户（玩家）连接关闭
         return true;

@@ -91,7 +91,6 @@ public interface MicroBootstrapFlow<Bootstrap> {
         pipelineCodec(pipelineContext);
         // 心跳相关
         pipelineIdle(pipelineContext);
-        // 自定义的业务编排
         /*
          * 自定义的业务编排 pipeline
          * 开发者可以单独重写这个接口方法，达到自定义编排 Handler，

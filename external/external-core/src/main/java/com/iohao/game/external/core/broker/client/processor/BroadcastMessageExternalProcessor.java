@@ -25,7 +25,7 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
-import com.iohao.game.external.core.kit.ExternalKit;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.session.UserSessions;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +51,7 @@ public final class BroadcastMessageExternalProcessor extends AbstractAsyncUserPr
             log.info("对外服接收网关的数据：{}", message);
         }
 
-        ExternalKit.broadcast(message, this.userSessions);
+        ExternalCodecKit.broadcast(message, this.userSessions);
     }
 
     @Override

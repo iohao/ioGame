@@ -160,6 +160,10 @@ public final class HeadMetadata implements Serializable {
     /** 临时变量 */
     transient Object other;
     transient int withNo;
+    /** 请求命令类型: 0 心跳，1 业务 */
+    transient int cmdCode;
+    /** 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验 */
+    transient int protocolSwitch;
 
     public HeadMetadata setCmdInfo(CmdInfo cmdInfo) {
         this.cmdMerge = cmdInfo.getCmdMerge();

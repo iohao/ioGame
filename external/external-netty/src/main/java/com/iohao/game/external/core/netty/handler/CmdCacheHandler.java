@@ -18,9 +18,9 @@
  */
 package com.iohao.game.external.core.netty.handler;
 
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.hook.cache.ExternalCmdCache;
-import com.iohao.game.external.core.message.ExternalMessage;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -34,7 +34,7 @@ import java.util.Objects;
  * @date 2023-07-02
  */
 @ChannelHandler.Sharable
-public class CmdCacheHandler extends SimpleChannelInboundHandler<ExternalMessage> {
+public class CmdCacheHandler extends SimpleChannelInboundHandler<BarMessage> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -49,10 +49,10 @@ public class CmdCacheHandler extends SimpleChannelInboundHandler<ExternalMessage
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage message) {
+    protected void channelRead0(ChannelHandlerContext ctx, BarMessage message) {
         ExternalCmdCache externalCmdCache = ExternalGlobalConfig.externalCmdCache;
 
-        ExternalMessage cache = externalCmdCache.getCache(message);
+        BarMessage cache = externalCmdCache.getCache(message);
         if (Objects.nonNull(cache)) {
             // 从缓存中取到了数据，直接返回缓存数据
             ctx.writeAndFlush(cache);
@@ -65,7 +65,6 @@ public class CmdCacheHandler extends SimpleChannelInboundHandler<ExternalMessage
 
 
     public CmdCacheHandler() {
-
     }
 
     public static CmdCacheHandler me() {
