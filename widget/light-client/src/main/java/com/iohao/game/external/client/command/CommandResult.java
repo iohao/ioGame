@@ -21,15 +21,13 @@ package com.iohao.game.external.client.command;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.wrapper.*;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,95 +39,24 @@ import java.util.Objects;
  */
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class CommandResult {
-    final ExternalMessage message;
-    /** 请求参数 */
-    @Getter
-    @Deprecated
-    Object requestData;
-    @Setter
-    @Deprecated
-    Class<?> responseClass;
+    final BarMessage message;
     /** 业务对象 */
     Object value;
 
-    public CommandResult(ExternalMessage message) {
+    public CommandResult(BarMessage message) {
         this.message = message;
     }
 
     public ExternalMessage getExternalMessage() {
-        return this.message;
-    }
-
-    /**
-     * <pre>
-     *     请使用 {@code this.getValue(Class)} 代替
-     * </pre>
-     *
-     * @param <T>
-     * @return
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public <T> T getValue() {
-
-        if (Objects.isNull(value)) {
-            this.value = this.getValue(this.responseClass);
-        }
-
-        return (T) value;
-    }
-
-    /**
-     * <pre>
-     *     请使用 {@code  this.listValue(Class)} 代替
-     * </pre>
-     *
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public <T> List<T> toList(Class<? extends T> clazz) {
-        getValue();
-
-        if (value instanceof ByteValueList byteValueList) {
-            return (List<T>) byteValueList.values.stream()
-                    .map(bytes -> DataCodecKit.decode(bytes, clazz))
-                    .toList();
-        }
-
-        if (value instanceof StringValueList stringValueList) {
-            return (List<T>) stringValueList.values;
-        }
-
-        if (value instanceof LongValueList longValueList) {
-            return (List<T>) longValueList.values;
-        }
-
-        if (value instanceof IntValueList intValueList) {
-            return (List<T>) intValueList.values;
-        }
-
-        if (value instanceof BoolValueList boolValueList) {
-            return (List<T>) boolValueList.values;
-        }
-
-        return Collections.emptyList();
+        return this.message.getHeadMetadata().getExternalMessage();
     }
 
     public int getMsgId() {
-        return message.getMsgId();
+        return message.getHeadMetadata().getMsgId();
     }
 
     public CmdInfo getCmdInfo() {
-        int cmdMerge = message.getCmdMerge();
-        return CmdInfo.of(cmdMerge);
-    }
-
-    @Deprecated
-    public byte[] getBytes() {
-        return message.getData();
+        return message.getHeadMetadata().getCmdInfo();
     }
 
     @SuppressWarnings("unchecked")

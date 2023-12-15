@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.protocol;
 
+import com.baidu.bjf.remoting.protobuf.annotation.Ignore;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdInfoFlyweightFactory;
 import lombok.AccessLevel;
@@ -164,6 +165,12 @@ public final class HeadMetadata implements Serializable {
     transient int cmdCode;
     /** 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验 */
     transient int protocolSwitch;
+    /** 预留 inet */
+    @Ignore
+    transient Object inetSocketAddress;
+    /** 原始的游戏对外服协议引用（开发者可自定义，这里会保存一个引用，方便特殊业务获取） */
+    @Ignore
+    transient Object externalMessage;
 
     public HeadMetadata setCmdInfo(CmdInfo cmdInfo) {
         this.cmdMerge = cmdInfo.getCmdMerge();
@@ -237,5 +244,10 @@ public final class HeadMetadata implements Serializable {
         headMetadata.withNo = this.withNo;
 
         return headMetadata;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getExternalMessage() {
+        return (T) this.externalMessage;
     }
 }

@@ -19,10 +19,12 @@
 package com.iohao.game.external.client.join;
 
 import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.user.ClientUser;
 import com.iohao.game.external.client.user.ClientUserChannel;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
@@ -78,14 +80,17 @@ class WebSocketClientStartup implements ClientConnect {
             @Override
             public void onMessage(ByteBuffer byteBuffer) {
                 // 接收服务器返回的消息
-                byte[] dataContent = byteBuffer.array();
-                ExternalMessage externalMessage = DataCodecKit.decode(dataContent, ExternalMessage.class);
+                byte[] msgBytes = byteBuffer.array();
+                ExternalMessage externalMessage = DataCodecKit.decode(msgBytes, ExternalMessage.class);
 
-                clientUserChannel.readMessage(externalMessage);
+                BarMessage message = ExternalCodecKit.convertRequestMessage(externalMessage);
+
+                clientUserChannel.readMessage(message);
             }
         };
 
-        clientUserChannel.setClientChannel(externalMessage -> {
+        clientUserChannel.setClientChannel(message -> {
+            ExternalMessage externalMessage = ExternalCodecKit.convertExternalMessage(message);
             byte[] bytes = DataCodecKit.encode(externalMessage);
             webSocketClient.send(bytes);
         });

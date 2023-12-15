@@ -18,13 +18,15 @@
  */
 package com.iohao.game.external.client.user;
 
+import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.protocol.BarMessage;
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.external.client.command.*;
 import com.iohao.game.external.client.kit.ClientUserConfigs;
-import com.iohao.game.external.core.kit.ExternalKit;
-import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.message.ExternalMessageCmdCode;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -76,7 +78,7 @@ public class ClientUserChannel {
 
     final DefaultClientUser clientUser;
 
-    public Consumer<ExternalMessage> clientChannel;
+    public Consumer<BarMessage> clientChannel;
     /** 目标 ip （服务器 ip） */
     public InetSocketAddress inetSocketAddress;
 
@@ -146,14 +148,16 @@ public class ClientUserChannel {
         this.callbackMap.put(msgId, requestCommand);
         CmdInfo cmdInfo = CmdInfo.of(requestCommand.getCmdMerge());
 
-        ExternalMessage externalMessage = ExternalKit.createExternalMessage(cmdInfo);
-        externalMessage.setMsgId(msgId);
+        RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo);
+        HeadMetadata headMetadata = requestMessage.getHeadMetadata();
+        headMetadata.setMsgId(msgId);
 
         RequestDataDelegate requestData = requestCommand.getRequestData();
         Object data = "";
         if (Objects.nonNull(requestData)) {
             data = requestData.createRequestData();
-            externalMessage.setData(DataCodecKit.encode(data));
+            byte[] encode = DataCodecKit.encode(data);
+            requestMessage.setData(encode);
         }
 
         if (ClientUserConfigs.openLogRequestCommand) {
@@ -167,25 +171,25 @@ public class ClientUserChannel {
             );
         }
 
-        this.writeAndFlush(externalMessage);
+        this.writeAndFlush(requestMessage);
     }
 
-    public void readMessage(ExternalMessage externalMessage) {
-        channelRead.read(externalMessage);
+    public void readMessage(BarMessage message) {
+        channelRead.read(message);
     }
 
-    public void writeAndFlush(ExternalMessage externalMessage) {
+    public void writeAndFlush(BarMessage message) {
         if (Objects.isNull(this.clientChannel)) {
             return;
         }
 
         InetSocketAddress inetSocketAddress = this.inetSocketAddress;
         if (Objects.nonNull(inetSocketAddress)) {
-            externalMessage.setOther(inetSocketAddress);
+            message.getHeadMetadata().setInetSocketAddress(inetSocketAddress);
         }
 
         // 发送数据到游戏服务器
-        this.clientChannel.accept(externalMessage);
+        this.clientChannel.accept(message);
     }
 
     /**
@@ -221,28 +225,30 @@ public class ClientUserChannel {
 
     class DefaultChannelRead implements ClientChannelRead {
         @Override
-        public void read(ExternalMessage externalMessage) {
+        public void read(BarMessage message) {
+            HeadMetadata headMetadata = message.getHeadMetadata();
+
             // 表示有异常消息;统一异常处理
-            int responseStatus = externalMessage.getResponseStatus();
-            int cmdMerge = externalMessage.getCmdMerge();
-            CmdInfo cmdInfo = CmdInfo.of(cmdMerge);
-            int msgId = externalMessage.getMsgId();
+            int responseStatus = message.getResponseStatus();
+            int cmdMerge = headMetadata.getCmdMerge();
+            CmdInfo cmdInfo = headMetadata.getCmdInfo();
+            int msgId = headMetadata.getMsgId();
             RequestCommand requestCommand = callbackMap.remove(msgId);
 
             if (responseStatus != 0) {
-                log.error("[错误码:{}] - [消息:{}] - {}", responseStatus, externalMessage.getValidMsg(), cmdInfo);
+                log.error("[错误码:{}] - [消息:{}] - {}", responseStatus, message.getValidatorMsg(), cmdInfo);
                 return;
             }
 
-            if (externalMessage.getCmdCode() == ExternalMessageCmdCode.idle) {
+            if (headMetadata.getCmdCode() == ExternalMessageCmdCode.idle) {
                 if (ClientUserConfigs.openLogIdle) {
-                    log.info("接收服务器心跳回调 : {}", externalMessage);
+                    log.info("接收服务器心跳回调 : {}", message);
                 }
 
                 return;
             }
 
-            CommandResult commandResult = new CommandResult(externalMessage);
+            CommandResult commandResult = new CommandResult(message);
 
             // 有回调的，交给回调处理
             if (Objects.nonNull(requestCommand)) {
@@ -259,7 +265,6 @@ public class ClientUserChannel {
                     );
                 }
 
-                commandResult.setResponseClass(requestCommand.getResponseClass());
                 CallbackDelegate callback = requestCommand.getCallback();
                 callback.callback(commandResult);
 
@@ -277,7 +282,6 @@ public class ClientUserChannel {
                 }
 
                 CallbackDelegate callback = listenCommand.getCallback();
-                commandResult.setResponseClass(listenCommand.getResponseClass());
                 callback.callback(commandResult);
             }
         }

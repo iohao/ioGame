@@ -51,6 +51,18 @@ public interface ExternalCodec {
         return responseMessage;
     }
 
+    default RequestMessage createRequest() {
+        var headMetadata = new HeadMetadata();
+        // 请求命令类型: 0 心跳，1 业务
+        headMetadata.setCmdCode(ExternalMessageCmdCode.biz);
+        // 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验
+        headMetadata.setProtocolSwitch(ExternalGlobalConfig.protocolSwitch);
+
+        var requestMessage = new RequestMessage();
+        requestMessage.setHeadMetadata(headMetadata);
+        return requestMessage;
+    }
+
     /**
      * 将 BarMessage 转为游戏对外服协议
      *

@@ -186,7 +186,7 @@ ioGame 是轻量级的网络游戏服务器框架，**不依赖任何第三方**
 <dependency>
     <groupId>com.iohao.game</groupId>
     <artifactId>run-one-netty</artifactId>
-    <version>17.1.60</version>
+    <version>21.0.snapshot</version>
 </dependency>
 ```
 

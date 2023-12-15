@@ -71,7 +71,7 @@ class TcpClientStartup implements ClientConnect {
                                 0));
 
                         // 编解码
-                        pipeline.addLast("codec", new TcpExternalCodec());
+                        pipeline.addLast("codec", new ClientTcpExternalCodec());
 
                         pipeline.addLast(clientMessageHandler);
                     }

@@ -56,6 +56,10 @@ public class ExternalCodecKit {
         return response;
     }
 
+    public RequestMessage createRequest() {
+        return externalCodec.createRequest();
+    }
+
     public ResponseMessage createResponse() {
         return externalCodec.createResponse();
     }
@@ -80,6 +84,8 @@ public class ExternalCodecKit {
 
     public void broadcast(BroadcastMessage message, UserSessions<?, ?> userSessions) {
         ResponseMessage responseMessage = message.getResponseMessage();
+        HeadMetadata headMetadata = responseMessage.getHeadMetadata();
+        headMetadata.setCmdCode(ExternalMessageCmdCode.biz);
 
         // 推送消息给全服真实用户
         if (message.isBroadcastAll()) {
@@ -95,7 +101,6 @@ public class ExternalCodecKit {
         }
 
         // 推送消息给单个真实用户
-        HeadMetadata headMetadata = responseMessage.getHeadMetadata();
         long userId = headMetadata.getUserId();
 
         userSessions.ifPresent(userId, userSession -> userSession.writeAndFlush(responseMessage));

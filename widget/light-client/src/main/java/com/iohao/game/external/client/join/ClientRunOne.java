@@ -18,6 +18,8 @@
  */
 package com.iohao.game.external.client.join;
 
+import com.iohao.game.action.skeleton.protocol.BarMessage;
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.PresentKit;
@@ -30,6 +32,7 @@ import com.iohao.game.external.client.user.ClientUsers;
 import com.iohao.game.external.client.user.DefaultClientUser;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.message.ExternalMessageCmdCode;
 import lombok.AccessLevel;
@@ -110,14 +113,15 @@ public final class ClientRunOne {
      */
     public ClientRunOne idle(int idlePeriod) {
 
-        ExecutorKit.newSingleScheduled("idle").scheduleAtFixedRate(() -> {
-            ExternalMessage externalMessage = new ExternalMessage();
-            externalMessage.setCmdCode(ExternalMessageCmdCode.idle);
+        TaskKit.runInterval(() -> {
+            BarMessage message = ExternalCodecKit.createRequest();
+            HeadMetadata headMetadata = message.getHeadMetadata();
+            headMetadata.setCmdCode(ExternalMessageCmdCode.idle);
 
             ClientUserChannel clientUserChannel = clientUser.getClientUserChannel();
-            clientUserChannel.writeAndFlush(externalMessage);
+            clientUserChannel.writeAndFlush(message);
 
-        }, 1, idlePeriod, TimeUnit.SECONDS);
+        }, idlePeriod, TimeUnit.SECONDS);
 
         return this;
     }

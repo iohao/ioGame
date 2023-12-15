@@ -27,6 +27,7 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
+import com.iohao.game.external.core.message.ExternalMessageCmdCode;
 import com.iohao.game.external.core.session.UserChannelId;
 import com.iohao.game.external.core.session.UserSession;
 import com.iohao.game.external.core.session.UserSessions;
@@ -56,6 +57,7 @@ public final class ResponseMessageExternalProcessor extends AbstractAsyncUserPro
         }
 
         HeadMetadata headMetadata = responseMessage.getHeadMetadata();
+        headMetadata.setCmdCode(ExternalMessageCmdCode.biz);
 
         long userId = headMetadata.getUserId();
         // 当存在 userId 时，并且可以找到对应的 UserSession

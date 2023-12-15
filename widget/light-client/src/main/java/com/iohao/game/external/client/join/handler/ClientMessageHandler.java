@@ -18,6 +18,7 @@
  */
 package com.iohao.game.external.client.join.handler;
 
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.external.client.user.ClientUser;
 import com.iohao.game.external.client.user.ClientUserChannel;
 import com.iohao.game.external.core.message.ExternalMessage;
@@ -30,7 +31,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @date 2023-05-31
  */
 @ChannelHandler.Sharable
-public class ClientMessageHandler extends SimpleChannelInboundHandler<ExternalMessage> {
+public class ClientMessageHandler extends SimpleChannelInboundHandler<BarMessage> {
 
     final ClientUserChannel clientUserChannel;
 
@@ -39,7 +40,7 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<ExternalMe
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ExternalMessage externalMessage) {
-        clientUserChannel.readMessage(externalMessage);
+    protected void channelRead0(ChannelHandlerContext ctx, BarMessage message) {
+        clientUserChannel.readMessage(message);
     }
 }

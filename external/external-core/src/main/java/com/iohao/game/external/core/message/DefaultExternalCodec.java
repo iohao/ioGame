@@ -56,6 +56,7 @@ public final class DefaultExternalCodec implements ExternalCodec {
         externalMessage.setCustomData(headMetadata.getCustomData());
         // 请求命令类型: 0 心跳，1 业务
         externalMessage.setCmdCode(headMetadata.getCmdCode());
+        externalMessage.setOther(headMetadata.getInetSocketAddress());
 
         return (T) externalMessage;
     }
