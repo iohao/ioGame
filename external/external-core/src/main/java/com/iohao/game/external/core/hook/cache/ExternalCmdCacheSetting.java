@@ -24,7 +24,7 @@ package com.iohao.game.external.core.hook.cache;
  * @author 渔民小镇
  * @date 2023-07-02
  */
-public interface ExternalCmdCacheConfig {
+public interface ExternalCmdCacheSetting {
 
     /**
      * 设置游戏对外服缓存默认配置

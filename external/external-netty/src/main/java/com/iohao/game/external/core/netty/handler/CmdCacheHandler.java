@@ -63,7 +63,6 @@ public class CmdCacheHandler extends SimpleChannelInboundHandler<BarMessage> {
         ctx.fireChannelRead(message);
     }
 
-
     public CmdCacheHandler() {
     }
 
