@@ -20,13 +20,14 @@ package com.iohao.game.bolt.broker.core.client;
 
 import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.ConnectionEventType;
+import com.alipay.remoting.rpc.RpcClient;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelector;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelectorFactory;
 import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
-import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -133,10 +134,10 @@ public final class BrokerClientManager {
     private void a() {
         AtomicBoolean flag = new AtomicBoolean();
         if (flag.compareAndSet(false, true)) {
-            ExecutorKit.newSingleScheduled("aa").scheduleAtFixedRate(() -> {
+            TaskKit.runInterval(() -> {
                 Set<String> keySet = brokerClientItemMap.keySet();
                 log.info("当前网关数量 : {} {}", this.brokerClientItemMap.size(), keySet);
-            }, 1, 5, TimeUnit.SECONDS);
+            }, 5, TimeUnit.SECONDS);
         }
     }
 

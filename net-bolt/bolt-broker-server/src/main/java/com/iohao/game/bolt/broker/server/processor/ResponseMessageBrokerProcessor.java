@@ -42,10 +42,11 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Setter
 @Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public class ResponseMessageBrokerProcessor extends AbstractAsyncUserProcessor<ResponseMessage>
         implements BrokerServerAware {
-    @Setter
+
     BrokerServer brokerServer;
 
     @Override

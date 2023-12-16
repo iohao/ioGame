@@ -24,7 +24,9 @@ import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
+import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.common.consts.CommonConst;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.external.core.session.UserSessions;
@@ -104,5 +106,13 @@ public class ExternalCodecKit {
         long userId = headMetadata.getUserId();
 
         userSessions.ifPresent(userId, userSession -> userSession.writeAndFlush(responseMessage));
+    }
+
+    public void employ(BarMessage message, BrokerClient brokerClient) {
+        // 设置当前逻辑服 id
+        BrokerClientModuleMessage moduleMessage = brokerClient.getBrokerClientModuleMessage();
+        int idHash = moduleMessage.getIdHash();
+        HeadMetadata headMetadata = message.getHeadMetadata();
+        headMetadata.setSourceClientId(idHash);
     }
 }

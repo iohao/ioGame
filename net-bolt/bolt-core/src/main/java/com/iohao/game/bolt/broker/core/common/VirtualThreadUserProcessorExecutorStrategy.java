@@ -16,23 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core;
+package com.iohao.game.bolt.broker.core.common;
 
-import com.iohao.game.action.skeleton.core.codec.DataCodec;
+import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
- * 业务框架全局配置
+ * VirtualThread impl
  *
  * @author 渔民小镇
- * @date 2022-11-24
+ * @date 2023-12-16
+ * @see Executors#newVirtualThreadPerTaskExecutor()
  */
-public class IoGameGlobalSetting {
-    /**
-     * 设置
-     *
-     * @param dataCodec
-     */
-    public static void setDataCodec(DataCodec dataCodec) {
-        DataCodecKit.setDataCodec(dataCodec);
+@Slf4j
+final class VirtualThreadUserProcessorExecutorStrategy implements UserProcessorExecutorStrategy {
+    final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+
+    @Override
+    public Executor getExecutor(UserProcessorExecutorAware userProcessorExecutorAware) {
+        return executorService;
     }
 }

@@ -18,24 +18,32 @@
  */
 package com.iohao.game.external.core.netty.handler;
 
+import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
+import com.iohao.game.bolt.broker.core.client.BrokerClient;
+import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
+import com.iohao.game.external.core.netty.session.SocketUserSession;
 import com.iohao.game.external.core.netty.session.SocketUserSessions;
 import com.iohao.game.external.core.session.UserSessions;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 渔民小镇
  * @date 2023-02-19
  */
+@Setter
 @ChannelHandler.Sharable
 @Slf4j(topic = IoGameLogName.ExternalTopic)
 public final class SocketUserSessionHandler extends ChannelInboundHandlerAdapter
-        implements UserSessionsAware {
+        implements UserSessionsAware, BrokerClientAware {
+
     SocketUserSessions userSessions;
+    BrokerClient brokerClient;
 
     @Override
     public void setUserSessions(UserSessions<?, ?> userSessions) {
@@ -44,8 +52,14 @@ public final class SocketUserSessionHandler extends ChannelInboundHandlerAdapter
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        BrokerClientModuleMessage moduleMessage = brokerClient.getBrokerClientModuleMessage();
+        int idHash = moduleMessage.getIdHash();
+
         // 加入到 session 管理
-        userSessions.add(ctx);
+        SocketUserSession userSession = userSessions.add(ctx);
+        userSession.setExternalClientId(idHash);
+
+        ctx.fireChannelActive();
     }
 
     @Override

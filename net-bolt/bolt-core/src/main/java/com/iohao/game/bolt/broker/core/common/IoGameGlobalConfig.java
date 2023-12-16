@@ -18,6 +18,7 @@
  */
 package com.iohao.game.bolt.broker.core.common;
 
+import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import lombok.experimental.UtilityClass;
 
@@ -96,8 +97,16 @@ public class IoGameGlobalConfig {
     public boolean brokerClusterLog = BrokerGlobalConfig.brokerClusterLog;
     /** true 使用调度器打印集群信息，默认 30 秒打印一次（目前不提供打印频率设置） */
     public boolean brokerClusterFixedRateLog;
-    /** UserProcessor 构建 Executor 的策略 */
-    public UserProcessorExecutorStrategy userProcessorExecutorStrategy = new DefaultUserProcessorExecutorStrategy();
+    /**
+     * UserProcessor 构建 Executor 的策略
+     * <pre>
+     *     默认使用 VirtualThreadUserProcessorExecutorStrategy 实现类，
+     *     内容使用 Executors.newVirtualThreadPerTaskExecutor()
+     * </pre>
+     *
+     * @see DefaultUserProcessorExecutorStrategy
+     */
+    public UserProcessorExecutorStrategy userProcessorExecutorStrategy = new VirtualThreadUserProcessorExecutorStrategy();
 
     public Executor getExecutor(UserProcessorExecutorAware userProcessorExecutorAware) {
 
@@ -127,4 +136,8 @@ public class IoGameGlobalConfig {
     }
 
     public boolean sendBrokerClientModuleMessage = true;
+
+
+    public UserProcessor.ExecutorSelector brokerExecutorSelector;
+    public UserProcessor.ExecutorSelector brokerClientExecutorSelector;
 }

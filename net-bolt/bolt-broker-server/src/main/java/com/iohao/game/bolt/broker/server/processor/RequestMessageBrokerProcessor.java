@@ -52,13 +52,13 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-05-14
  */
+@Setter
 @Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public class RequestMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestMessage>
         implements BrokerServerAware, CmdRegionsAware {
-    @Setter
+
     BrokerServer brokerServer;
 
-    @Setter
     CmdRegions cmdRegions;
 
     @Override

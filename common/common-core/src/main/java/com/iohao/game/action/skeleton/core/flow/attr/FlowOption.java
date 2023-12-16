@@ -18,8 +18,6 @@
  */
 package com.iohao.game.action.skeleton.core.flow.attr;
 
-import java.util.Objects;
-
 /**
  * FlowOption
  *
@@ -29,23 +27,5 @@ import java.util.Objects;
 public record FlowOption<T>(String name) {
     public static <T> FlowOption<T> valueOf(String name) {
         return new FlowOption<>(name);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof FlowOption<?> that)) {
-            return false;
-        }
-
-        return Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
     }
 }

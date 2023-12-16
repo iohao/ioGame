@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.codec.DataCodec;
 import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -38,6 +39,7 @@ public class DataCodecKit {
 
     /** 业务数据的编解码器 */
     @Getter
+    @Setter
     DataCodec dataCodec = new ProtoDataCodec();
 
     /**
@@ -60,9 +62,5 @@ public class DataCodecKit {
      */
     public <T> T decode(byte[] data, Class<T> paramClazz) {
         return dataCodec.decode(data, paramClazz);
-    }
-
-    void setDataCodec(DataCodec dataCodec) {
-        DataCodecKit.dataCodec = dataCodec;
     }
 }

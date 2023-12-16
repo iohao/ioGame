@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -135,6 +136,14 @@ public final class StatActionInOut implements ActionMethodInOut {
 
         public Stream<StatAction> stream() {
             return this.map.values().stream();
+        }
+
+        @Override
+        public String toString() {
+            return map.values().stream()
+                    .map(StatAction::toString)
+                    .collect(Collectors.joining("\n"));
+
         }
     }
 

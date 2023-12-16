@@ -36,7 +36,7 @@ import java.util.List;
  */
 public final class TcpExternalCodec extends MessageToMessageCodec<ByteBuf, BarMessage> {
     @Override
-    protected void encode(ChannelHandlerContext ctx, BarMessage message, List<Object> out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, BarMessage message, List<Object> out) {
         /*
          * 编码器 - 【游戏对外服】发送消息给【游戏客户端、请求端】
          * ResponseMessage ---> ExternalMessage ---> 字节数组

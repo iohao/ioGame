@@ -48,6 +48,9 @@ abstract class AbstractUserSession implements UserSession {
     long userId;
     UserChannelId userChannelId;
     CmdRegions cmdRegions;
+    /** 所在游戏对外服的 idHash */
+    @Setter
+    int externalClientId;
     /** 状态 */
     @Setter
     UserSessionState state = UserSessionState.ACTIVE;
@@ -64,6 +67,7 @@ abstract class AbstractUserSession implements UserSession {
         HeadMetadata headMetadata = requestMessage.getHeadMetadata();
         // 设置请求用户的id
         headMetadata.setUserId(this.userId);
+        headMetadata.setSourceClientId(this.externalClientId);
 
         this.ifPresent(UserSessionOption.externalJoin, externalJoin -> headMetadata.setStick(externalJoin.getIndex()));
 
@@ -115,6 +119,6 @@ abstract class AbstractUserSession implements UserSession {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userChannelId);
+        return userChannelId.hashCode();
     }
 }

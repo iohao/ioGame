@@ -40,7 +40,7 @@ public record AttrOption<T>(String name, T defaultValue) implements Serializable
      * @return AttrOption
      */
     public static <T> AttrOption<T> valueOf(String name) {
-        return new AttrOption<>(name, null);
+        return valueOf(name, null);
     }
 
     /**
@@ -52,6 +52,7 @@ public record AttrOption<T>(String name, T defaultValue) implements Serializable
      * @return AttrOption
      */
     public static <T> AttrOption<T> valueOf(String name, T defaultValue) {
+        Objects.requireNonNull(name);
         return new AttrOption<>(name, defaultValue);
     }
 
@@ -72,6 +73,6 @@ public record AttrOption<T>(String name, T defaultValue) implements Serializable
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        return this.name.hashCode();
     }
 }

@@ -40,6 +40,6 @@ public record UserChannelId(String channelId) {
 
     @Override
     public int hashCode() {
-        return Objects.hash(channelId);
+        return channelId.hashCode();
     }
 }

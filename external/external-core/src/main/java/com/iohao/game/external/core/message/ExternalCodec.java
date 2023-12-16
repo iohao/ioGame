@@ -18,6 +18,7 @@
  */
 package com.iohao.game.external.core.message;
 
+import com.alipay.remoting.rpc.RpcCommandType;
 import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
@@ -57,6 +58,7 @@ public interface ExternalCodec {
         headMetadata.setCmdCode(ExternalMessageCmdCode.biz);
         // 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验
         headMetadata.setProtocolSwitch(ExternalGlobalConfig.protocolSwitch);
+        headMetadata.setRpcCommandType(RpcCommandType.REQUEST_ONEWAY);
 
         var requestMessage = new RequestMessage();
         requestMessage.setHeadMetadata(headMetadata);

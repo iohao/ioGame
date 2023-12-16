@@ -24,6 +24,7 @@ import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.netty.session.SocketUserSession;
 import com.iohao.game.external.core.netty.session.SocketUserSessions;
 import com.iohao.game.external.core.session.UserSessions;
@@ -48,9 +49,6 @@ public final class SocketRequestBrokerHandler extends SimpleChannelInboundHandle
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, BarMessage message) {
-
-        this.settingIdHash(message);
-
         // 给请求消息加上一些 user 自身的数据
         SocketUserSession userSession = this.userSessions.getUserSession(ctx);
         userSession.employ(message);
@@ -66,12 +64,5 @@ public final class SocketRequestBrokerHandler extends SimpleChannelInboundHandle
     @Override
     public void setUserSessions(UserSessions<?, ?> userSessions) {
         this.userSessions = (SocketUserSessions) userSessions;
-    }
-
-    private void settingIdHash(BarMessage message) {
-        // 设置当前游戏对外服 id
-        BrokerClientModuleMessage brokerClientModuleMessage = brokerClient.getBrokerClientModuleMessage();
-        int idHash = brokerClientModuleMessage.getIdHash();
-        message.getHeadMetadata().setSourceClientId(idHash);
     }
 }

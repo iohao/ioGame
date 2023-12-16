@@ -36,6 +36,8 @@ import java.util.concurrent.Executor;
  *
  * @author 渔民小镇
  * @date 2022-11-11
+ * @see DefaultUserProcessorExecutorStrategy
+ * @see VirtualThreadUserProcessorExecutorStrategy
  */
 public interface UserProcessorExecutorStrategy {
     /**
