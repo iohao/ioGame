@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -16,18 +16,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.protocol;
+package com.iohao.game.core.common;
 
-import java.io.Serial;
+import com.iohao.game.common.kit.ExecutorKit;
+import lombok.Getter;
+import lombok.experimental.UtilityClass;
+
+import java.util.concurrent.Executor;
 
 /**
- * 同步请求
+ * Broker 、 BrokerClient 之间通信专用工具
  *
  * @author 渔民小镇
- * @date 2022-08-20
+ * @date 2023-12-19
  */
-public final class SyncRequestMessage extends RequestMessage {
-    @Serial
-    private static final long serialVersionUID = 785883662083103966L;
+@UtilityClass
+public class NetCommonKit {
+    @Getter
+    final Executor virtualExecutor = ExecutorKit.newVirtualExecutor("ioGame-NetVirtualExecutor");
 
+    /**
+     * 使用虚拟线程执行任务
+     *
+     * @param command 任务
+     */
+    public void executeVirtual(Runnable command) {
+        virtualExecutor.execute(command);
+    }
 }

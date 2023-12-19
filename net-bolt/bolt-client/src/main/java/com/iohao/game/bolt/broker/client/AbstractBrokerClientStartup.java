@@ -83,7 +83,6 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
                 .registerUserProcessor(BrokerClusterMessageClientProcessor::new)
                 // 业务请求处理器
                 .registerUserProcessor(RequestMessageClientProcessor::new)
-                .registerUserProcessor(SyncRequestMessageClientProcessor::new)
                 // 脉冲信号请求接收
                 .registerUserProcessor(PulseSignalRequestUserProcessor::new)
                 // 脉冲信号响应接收

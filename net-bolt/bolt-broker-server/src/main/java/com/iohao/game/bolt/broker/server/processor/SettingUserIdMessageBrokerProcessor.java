@@ -29,6 +29,7 @@ import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
+import com.iohao.game.core.common.NetCommonKit;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,9 +43,10 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-14
  */
 @Slf4j
-public class SettingUserIdMessageBrokerProcessor extends AbstractAsyncUserProcessor<SettingUserIdMessage>
+@Setter
+public final class SettingUserIdMessageBrokerProcessor extends AbstractAsyncUserProcessor<SettingUserIdMessage>
         implements BrokerServerAware {
-    @Setter
+
     BrokerServer brokerServer;
 
     @Override
@@ -59,15 +61,17 @@ public class SettingUserIdMessageBrokerProcessor extends AbstractAsyncUserProces
         var externalLoadBalanced = balancedManager.getExternalLoadBalanced();
 
         // 根据 sourceClientId 获取对应的对外服
-        BrokerClientProxy brokerClientProxy = externalLoadBalanced.get(sourceClientId);
+        final BrokerClientProxy brokerClientProxy = externalLoadBalanced.get(sourceClientId);
 
-        try {
-            // 转发给对外服, 并得到对外服的响应
-            SettingUserIdMessageResponse messageResponse = brokerClientProxy.invokeSync(settingUserIdMessage);
-            asyncCtx.sendResponse(messageResponse);
-        } catch (RemotingException | InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
+        NetCommonKit.executeVirtual(() -> {
+            try {
+                // 转发给对外服, 并得到对外服的响应
+                SettingUserIdMessageResponse messageResponse = brokerClientProxy.invokeSync(settingUserIdMessage);
+                asyncCtx.sendResponse(messageResponse);
+            } catch (RemotingException | InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+        });
     }
 
     @Override

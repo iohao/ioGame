@@ -46,10 +46,11 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-06-07
  */
 @Slf4j
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InnerModuleVoidMessageBrokerProcessor extends AbstractAsyncUserProcessor<InnerModuleVoidMessage>
+public final class InnerModuleVoidMessageBrokerProcessor extends AbstractAsyncUserProcessor<InnerModuleVoidMessage>
         implements BrokerServerAware {
-    @Setter
+
     BrokerServer brokerServer;
 
     @Override

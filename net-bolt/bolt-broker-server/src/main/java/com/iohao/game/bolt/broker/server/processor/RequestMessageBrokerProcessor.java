@@ -54,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Setter
 @Slf4j(topic = IoGameLogName.MsgTransferTopic)
-public class RequestMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestMessage>
+public final class RequestMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestMessage>
         implements BrokerServerAware, CmdRegionsAware {
 
     BrokerServer brokerServer;

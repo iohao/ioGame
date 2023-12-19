@@ -37,7 +37,7 @@ import java.util.Objects;
  * @date 2023-04-22
  */
 @Slf4j
-public class PulseSignalResponseBrokerProcessor extends AbstractAsyncUserProcessor<PulseSignalResponse>
+public final class PulseSignalResponseBrokerProcessor extends AbstractAsyncUserProcessor<PulseSignalResponse>
         implements BrokerServerAware {
     BrokerServer brokerServer;
 
@@ -69,6 +69,4 @@ public class PulseSignalResponseBrokerProcessor extends AbstractAsyncUserProcess
     public String interest() {
         return PulseSignalResponse.class.getName();
     }
-
-
 }

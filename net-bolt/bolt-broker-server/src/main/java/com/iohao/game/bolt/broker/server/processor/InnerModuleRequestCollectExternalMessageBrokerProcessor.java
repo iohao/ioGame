@@ -31,6 +31,7 @@ import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.ExternalBrokerClientLoadBalanced;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.common.kit.CompletableFutureKit;
+import com.iohao.game.core.common.NetCommonKit;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -45,16 +46,19 @@ import java.util.stream.Stream;
  * <pre>
  *     游戏逻辑服访问游戏对外服，因为只有游戏对外服持有这些数据
  *     把多个游戏对外服的结果聚合在一起
+ *
+ *     <a href="https://www.yuque.com/iohao/game/ivxsw5">获取游戏对外服的数据与扩展 - 文档</a>
  * </pre>
  *
  * @author 渔民小镇
  * @date 2022-07-27
  */
+@Setter
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InnerModuleRequestCollectExternalMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestCollectExternalMessage>
+public final class InnerModuleRequestCollectExternalMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestCollectExternalMessage>
         implements BrokerServerAware {
-    @Setter
+
     BrokerServer brokerServer;
 
     @Override
@@ -64,15 +68,14 @@ public class InnerModuleRequestCollectExternalMessageBrokerProcessor extends Abs
 
         // 并行调用多个游戏对外服
         var futureList = this.listFuture(requestCollectMessage, balanced);
-        // 将多个对外服的结果收集到 list 中
-        var aggregationItemMessages = CompletableFutureKit.sequence(futureList);
+        CompletableFutureKit.sequenceAsync(futureList).thenAccept(messageList -> {
+            // 多个游戏对外服的响应结果
+            ResponseCollectExternalMessage responseCollectMessage = new ResponseCollectExternalMessage();
+            responseCollectMessage.setMessageList(messageList);
 
-        // 多个游戏对外服的响应结果
-        ResponseCollectExternalMessage responseCollectMessage = new ResponseCollectExternalMessage();
-        responseCollectMessage.setMessageList(aggregationItemMessages);
-
-        // 将响应数据给回请求方
-        asyncCtx.sendResponse(responseCollectMessage);
+            // 将响应数据给回请求方
+            asyncCtx.sendResponse(responseCollectMessage);
+        });
     }
 
     private List<CompletableFuture<ResponseCollectExternalItemMessage>> listFuture(
@@ -102,7 +105,7 @@ public class InnerModuleRequestCollectExternalMessageBrokerProcessor extends Abs
             String logicServerId = brokerClientProxy.getId();
             // 得到一个逻辑服的结果
             return itemMessage.setLogicServerId(logicServerId);
-        })).toList();
+        }, NetCommonKit.getVirtualExecutor())).toList();
     }
 
     @Override

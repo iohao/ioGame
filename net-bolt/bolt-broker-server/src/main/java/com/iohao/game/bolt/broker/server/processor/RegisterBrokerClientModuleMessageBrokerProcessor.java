@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  */
 @Setter
 @Slf4j(topic = IoGameLogName.CommonStdout)
-public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserProcessor<BrokerClientModuleMessage>
+public final class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserProcessor<BrokerClientModuleMessage>
         implements BrokerServerAware, BrokerClientModulesAware, CmdRegionsAware {
 
     BrokerServer brokerServer;
@@ -106,6 +106,7 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
         }
     }
 
+    @Deprecated
     private void extractedExternal(BrokerClientModuleMessage moduleMessage) {
         // 将所有游戏逻辑服的信息发送给当前游戏对外服
         String address = moduleMessage.getAddress();
@@ -126,6 +127,7 @@ public class RegisterBrokerClientModuleMessageBrokerProcessor extends AsyncUserP
                 .forEach(consumer);
     }
 
+    @Deprecated
     private void extractedLogic(BrokerClientModuleMessage moduleMessage) {
         cmdRegions.loading(moduleMessage);
 

@@ -55,4 +55,16 @@ public class CompletableFutureKit {
 
         // see https://nurkiewicz.com/2013/05/java-8-completablefuture-in-action.html
     }
+
+    public <U> CompletableFuture<List<U>> sequenceAsync(List<CompletableFuture<U>> futures) {
+        // see https://nurkiewicz.com/2013/05/java-8-completablefuture-in-action.html
+
+        return CompletableFuture.allOf(futures.toArray(EMPTY_ARRAY)).thenApply(v -> {
+            // join all
+            return futures.stream()
+                    .map(CompletableFuture::join)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        });
+    }
 }

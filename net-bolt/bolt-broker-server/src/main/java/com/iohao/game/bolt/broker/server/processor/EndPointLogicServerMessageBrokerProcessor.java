@@ -30,9 +30,10 @@ import lombok.Setter;
  * @author 渔民小镇
  * @date 2022-05-28
  */
-public class EndPointLogicServerMessageBrokerProcessor extends AbstractAsyncUserProcessor<EndPointLogicServerMessage>
+@Setter
+public final class EndPointLogicServerMessageBrokerProcessor extends AbstractAsyncUserProcessor<EndPointLogicServerMessage>
         implements BrokerServerAware {
-    @Setter
+
     BrokerServer brokerServer;
 
     @Override

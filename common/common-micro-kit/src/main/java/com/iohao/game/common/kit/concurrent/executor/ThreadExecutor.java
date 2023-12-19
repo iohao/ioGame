@@ -40,7 +40,11 @@ public record ThreadExecutor(String name, Executor executor, int threadNo) {
         this.executor.execute(command);
     }
 
-    public ThreadPoolExecutor getThreadPoolExecutor() {
-        return (ThreadPoolExecutor) this.executor;
+    public int getWorkQueue() {
+        if (this.executor instanceof ThreadPoolExecutor threadPoolExecutor) {
+            return threadPoolExecutor.getQueue().size();
+        }
+
+        return 0;
     }
 }

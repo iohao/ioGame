@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,7 +24,7 @@ public class NetworkKit {
     /**
      * ip black list. 10.0.2.15 is default ip for virtual box vm
      */
-    public final List<String> IP_BLACK_LIST = Arrays.asList("10.0.2.15");
+    public final List<String> IP_BLACK_LIST = List.of("10.0.2.15");
     /** 类似 127.0.0.1 ，但这里是本机的 ip */
     public String LOCAL_IP = getLocalIP();
     public final Pattern ADDRESS_FORMAT = Pattern.compile("(?<host>^.*):(?<port>\\d+$)");

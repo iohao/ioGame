@@ -20,12 +20,7 @@ package com.iohao.game.bolt.broker.core.common.processor.hook;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.common.kit.concurrent.executor.UserThreadExecutorRegion;
-import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
-
-import java.util.Optional;
+import com.iohao.game.action.skeleton.kit.ExecutorSelectKit;
 
 /**
  * 框架提供的 RequestMessageClientProcessorHook 默认实现
@@ -40,30 +35,11 @@ final class DefaultRequestMessageClientProcessorHook implements RequestMessageCl
 
     @Override
     public void processLogic(BarSkeleton barSkeleton, FlowContext flowContext) {
+        boolean execute = ExecutorSelectKit.processLogic(barSkeleton, flowContext);
 
-        long userId = flowContext.getUserId();
-
-        if (userId == 0) {
-            HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
-            // 如果没有登录，使用 channelId 计算；如果 channelId 不存在，则使用 cmd
-            userId = Optional.ofNullable(headMetadata.getChannelId())
-                    .map(String::hashCode)
-                    .map(Math::abs)
-                    .orElseGet(headMetadata::getCmdMerge);
-        }
-
-        /*
-         * 默认实现使用单例的 ThreadExecutorRegion 来处理，
-         * 即使在同一进程中启动了多个逻辑服，也不会创建过多线程执行器，而是使用同一个。
-         */
-        UserThreadExecutorRegion region = UserThreadExecutorRegion.me();
-        // 根据 userId 找到对应的线程执行器来消费业务
-        ThreadExecutor threadExecutor = region.getThreadExecutor(userId);
-        flowContext.option(FlowAttr.threadExecutor, threadExecutor);
-
-        threadExecutor.execute(() -> {
-            // 执行业务框架
+        if (!execute) {
+            // 在当前线程中执行业务框架
             barSkeleton.handle(flowContext);
-        });
+        }
     }
 }

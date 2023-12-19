@@ -45,7 +45,7 @@ import java.util.Optional;
  */
 @Setter
 @Slf4j(topic = IoGameLogName.ConnectionTopic)
-public class ConnectionCloseEventBrokerProcessor implements ConnectionEventProcessor,
+public final class ConnectionCloseEventBrokerProcessor implements ConnectionEventProcessor,
         BrokerServerAware, BrokerClientModulesAware, CmdRegionsAware {
 
     BrokerServer brokerServer;

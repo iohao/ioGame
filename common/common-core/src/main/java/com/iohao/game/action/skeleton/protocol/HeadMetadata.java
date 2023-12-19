@@ -95,20 +95,13 @@ public final class HeadMetadata implements Serializable {
      * <pre>
      *     see : com.alipay.remoting.rpc.RpcCommandType
      *
-     *     在 bolt 中， 调用方使用
-     *     com.alipay.remoting.rpc.RpcServer或 com.alipay.remoting.rpc.RpcClient 的 oneway 方法
+     *     在 bolt 中， 调用方使用 com.alipay.remoting.rpc.RpcServer或 com.alipay.remoting.rpc.RpcClient 的 oneway 方法，
+     *     则 AsyncContext.sendResponse 无法回传响应；原因可阅读 com.alipay.remoting.rpc.protocol.RpcRequestProcessor#sendResponseIfNecessary 源码。
      *
-     *     则 AsyncContext.sendResponse 无法回传响应
-     *     原因可阅读 com.alipay.remoting.rpc.protocol.RpcRequestProcessor#sendResponseIfNecessary 源码。
+     *     业务框架保持与 bolt 的风格一至，使用 RpcCommandType。不同的是，业务框架会用 RpcCommandType 区别使用什么方式来发送响应。
      *
-     *
-     *     业务框架保持与 bolt 的风格一至使用 RpcCommandType
-     *     不同的是业务框架会用 RpcCommandType 区别使用什么方式来发送响应。
-     *
-     *     如果 rpcCommandType != RpcCommandType.REQUEST_ONEWAY ,
-     *     就使用 com.alipay.remoting.AsyncContext#sendResponse 来发送响应
+     *     如果 rpcCommandType != RpcCommandType.REQUEST_ONEWAY，就使用 com.alipay.remoting.AsyncContext#sendResponse 来发送响应。
      *     具体发送逻辑可读 {@link com.iohao.game.action.skeleton.core.flow.interal.DefaultActionAfter} 源码
-     *
      * </pre>
      */
     byte rpcCommandType;
@@ -157,7 +150,8 @@ public final class HeadMetadata implements Serializable {
      * </pre>
      */
     byte[] customData;
-
+    /** 所选执行器 */
+    ExecutorSelectEnum executorSelect;
     /** 临时变量 */
     transient Object other;
     transient int withNo;

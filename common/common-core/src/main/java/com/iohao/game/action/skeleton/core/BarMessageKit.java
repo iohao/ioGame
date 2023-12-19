@@ -21,7 +21,6 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import lombok.experimental.UtilityClass;
 
 import java.util.Objects;
@@ -52,25 +51,6 @@ public class BarMessageKit {
         if (Objects.nonNull(data)) {
             requestMessage.setData(data);
         }
-    }
-
-    /**
-     * 将 RequestMessage 转为 SyncRequestMessage
-     *
-     * @param requestMessage RequestMessage
-     * @return SyncRequestMessage
-     */
-    public SyncRequestMessage convertSyncRequestMessage(RequestMessage requestMessage) {
-        SyncRequestMessage syncRequestMessage;
-
-        if (requestMessage instanceof SyncRequestMessage theSyncRequestMessage) {
-            syncRequestMessage = theSyncRequestMessage;
-        } else {
-            syncRequestMessage = new SyncRequestMessage();
-            requestMessage.copyTo(syncRequestMessage);
-        }
-
-        return syncRequestMessage;
     }
 
     /**

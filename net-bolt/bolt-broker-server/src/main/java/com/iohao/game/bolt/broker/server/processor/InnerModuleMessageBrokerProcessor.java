@@ -34,6 +34,7 @@ import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
 import com.iohao.game.bolt.broker.server.kit.EndPointClientIdKit;
+import com.iohao.game.core.common.NetCommonKit;
 import com.iohao.game.core.common.cmd.CmdRegions;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,13 +51,20 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-05-14
  */
 @Slf4j
-public class InnerModuleMessageBrokerProcessor extends AbstractAsyncUserProcessor<InnerModuleMessage>
+public final class InnerModuleMessageBrokerProcessor extends AbstractAsyncUserProcessor<InnerModuleMessage>
         implements BrokerServerAware, CmdRegionsAware {
     @Setter
     BrokerServer brokerServer;
 
     @Setter
     CmdRegions cmdRegions;
+
+    final ResponseMessage emptyResponseMessage;
+
+    public InnerModuleMessageBrokerProcessor() {
+        emptyResponseMessage = new ResponseMessage();
+        emptyResponseMessage.setHeadMetadata(new HeadMetadata());
+    }
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, InnerModuleMessage innerModuleMessage) {
@@ -86,14 +94,16 @@ public class InnerModuleMessageBrokerProcessor extends AbstractAsyncUserProcesso
             return;
         }
 
-        try {
-            // 请求方请求其它服务器得到的响应数据
-            ResponseMessage responseMessage = brokerClientProxy.invokeSync(requestMessage);
-            // 将响应数据给回请求方
-            asyncCtx.sendResponse(responseMessage);
-        } catch (RemotingException | InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
+        NetCommonKit.executeVirtual(() -> {
+            try {
+                // 请求方请求其它服务器得到的响应数据
+                ResponseMessage responseMessage = brokerClientProxy.invokeSync(requestMessage);
+                // 将响应数据给回请求方
+                asyncCtx.sendResponse(responseMessage);
+            } catch (RemotingException | InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+        });
     }
 
     private void extractedError(AsyncContext asyncCtx, RequestMessage requestMessage) {

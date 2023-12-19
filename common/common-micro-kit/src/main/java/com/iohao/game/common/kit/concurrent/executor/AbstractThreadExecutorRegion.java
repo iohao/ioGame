@@ -22,19 +22,18 @@ import com.iohao.game.common.kit.concurrent.ThreadCreator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author 渔民小镇
  * @date 2023-12-01
  */
 @FieldDefaults(level = AccessLevel.PROTECTED)
-abstract sealed class AbstractThreadExecutorRegion
-        implements ThreadExecutorRegion
-        permits UserThreadExecutorRegion, SimpleThreadExecutorRegion {
+abstract sealed class AbstractThreadExecutorRegion implements ThreadExecutorRegion
+        permits
+        UserThreadExecutorRegion,
+        UserVirtualExecutorRegion,
+        SimpleThreadExecutorRegion {
 
     final int executorLength;
     /** 线程执行器 */
@@ -49,13 +48,19 @@ abstract sealed class AbstractThreadExecutorRegion
             int threadNo = i + 1;
             String threadNamePrefix = String.format("%s-%s-%s", threadName, executorSize, threadNo);
 
-            var executor = new ThreadPoolExecutor(1, 1,
-                    0L, TimeUnit.MILLISECONDS,
-                    new LinkedBlockingQueue<>(),
-                    new InternalThreadFactory(threadNamePrefix));
+            var executor = this.createExecutorService(threadNamePrefix);
 
             this.threadExecutors[i] = new ThreadExecutor(threadNamePrefix, executor, threadNo);
         }
+    }
+
+    protected ExecutorService createExecutorService(String name) {
+        InternalThreadFactory threadFactory = new InternalThreadFactory(name);
+
+        return new ThreadPoolExecutor(1, 1,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(),
+                threadFactory);
     }
 
     private static class InternalThreadFactory extends ThreadCreator implements ThreadFactory {

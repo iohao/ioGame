@@ -25,13 +25,11 @@ import com.alipay.remoting.config.BoltClientOption;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.RpcClient;
 import com.alipay.remoting.rpc.protocol.UserProcessor;
-import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.SkeletonAttr;
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import com.iohao.game.action.skeleton.protocol.collect.RequestCollectMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
@@ -191,10 +189,8 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
     @Override
     public ResponseCollectMessage invokeModuleCollectMessage(RequestMessage requestMessage) {
 
-        SyncRequestMessage syncRequestMessage = BarMessageKit.convertSyncRequestMessage(requestMessage);
-
         RequestCollectMessage requestCollectMessage = new RequestCollectMessage()
-                .setRequestMessage(syncRequestMessage);
+                .setRequestMessage(requestMessage);
 
         try {
             return (ResponseCollectMessage) this.invokeSync(requestCollectMessage);

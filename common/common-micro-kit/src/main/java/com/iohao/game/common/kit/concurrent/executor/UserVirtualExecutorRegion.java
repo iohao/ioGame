@@ -18,22 +18,22 @@
  */
 package com.iohao.game.common.kit.concurrent.executor;
 
+import com.iohao.game.common.kit.ExecutorKit;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.ExecutorService;
+
 /**
- * 线程执行器管理域
- * <pre>
- *     执行器具体数量是不大于 Runtime.getRuntime().availableProcessors() 的 2 次幂。
- *     当 availableProcessors 的值分别为 4、8、12、16、32 时，对应的数量则是 4、8、8、16、32。
- *
- *     4、8、12、16、32 （availableProcessors 的值）
- *     4、8、 8、16、32 （对应的数量）
- * </pre>
+ * 用户虚拟线程执行器
  *
  * @author 渔民小镇
- * @date 2023-12-01
+ * @date 2023-12-19
  */
-public final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion {
-    public UserThreadExecutorRegion(String threadName) {
-        super(threadName, availableProcessors2n());
+@Slf4j
+public final class UserVirtualExecutorRegion extends AbstractThreadExecutorRegion {
+
+    public UserVirtualExecutorRegion(String threadName) {
+        super(threadName, UserThreadExecutorRegion.availableProcessors2n());
     }
 
     /**
@@ -58,22 +58,17 @@ public final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion
         throw new RuntimeException("不支持");
     }
 
-    public static UserThreadExecutorRegion me() {
-        return UserThreadExecutorRegion.Holder.ME;
+    @Override
+    protected ExecutorService createExecutorService(String name) {
+        return ExecutorKit.newVirtualExecutor(name);
+    }
+
+    public static UserVirtualExecutorRegion me() {
+        return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final UserThreadExecutorRegion ME = new UserThreadExecutorRegion("UserExecutor");
-    }
-
-    static int availableProcessors2n() {
-        int n = Runtime.getRuntime().availableProcessors();
-        n |= (n >> 1);
-        n |= (n >> 2);
-        n |= (n >> 4);
-        n |= (n >> 8);
-        n |= (n >> 16);
-        return (n + 1) >> 1;
+        static final UserVirtualExecutorRegion ME = new UserVirtualExecutorRegion("UserVirtual");
     }
 }

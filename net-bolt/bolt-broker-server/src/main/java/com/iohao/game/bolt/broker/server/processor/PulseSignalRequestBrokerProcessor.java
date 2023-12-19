@@ -37,7 +37,7 @@ import java.util.function.Consumer;
  * @author 渔民小镇
  * @date 2023-04-22
  */
-public class PulseSignalRequestBrokerProcessor extends AbstractAsyncUserProcessor<PulseSignalRequest>
+public final class PulseSignalRequestBrokerProcessor extends AbstractAsyncUserProcessor<PulseSignalRequest>
         implements BrokerServerAware {
 
     BrokerServer brokerServer;

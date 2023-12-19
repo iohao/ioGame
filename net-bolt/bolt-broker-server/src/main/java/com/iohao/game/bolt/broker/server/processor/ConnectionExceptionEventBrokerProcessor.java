@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Setter
 @Slf4j(topic = IoGameLogName.ConnectionTopic)
-public class ConnectionExceptionEventBrokerProcessor implements ConnectionEventProcessor {
+public final class ConnectionExceptionEventBrokerProcessor implements ConnectionEventProcessor {
     @Override
     public void onEvent(String remoteAddress, Connection connection) {
         if (IoGameGlobalConfig.openLog) {

@@ -19,10 +19,10 @@
 package com.iohao.game.bolt.broker.core.common;
 
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
+import com.iohao.game.core.common.NetCommonKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -34,10 +34,10 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 final class VirtualThreadUserProcessorExecutorStrategy implements UserProcessorExecutorStrategy {
-    final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+    final Executor virtualExecutor = NetCommonKit.getVirtualExecutor();
 
     @Override
     public Executor getExecutor(UserProcessorExecutorAware userProcessorExecutorAware) {
-        return executorService;
+        return virtualExecutor;
     }
 }

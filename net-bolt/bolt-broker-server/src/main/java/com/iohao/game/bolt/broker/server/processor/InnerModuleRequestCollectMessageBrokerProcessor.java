@@ -23,8 +23,8 @@ import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
 import com.iohao.game.action.skeleton.protocol.collect.RequestCollectMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectItemMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
@@ -37,6 +37,7 @@ import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegion;
 import com.iohao.game.common.kit.CompletableFutureKit;
+import com.iohao.game.core.common.NetCommonKit;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -52,7 +53,7 @@ import java.util.concurrent.CompletableFuture;
  *     是把多个相同逻辑服结果聚合在一起
  *
  *     文档
- *          <a href="https://www.yuque.com/iohao/game/rf9rb9">...</a>
+ *          <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
  * </pre>
  *
  * <pre>
@@ -63,16 +64,17 @@ import java.util.concurrent.CompletableFuture;
  * @date 2022-05-22
  */
 @Slf4j
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InnerModuleRequestCollectMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestCollectMessage>
+public final class InnerModuleRequestCollectMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestCollectMessage>
         implements BrokerServerAware {
-    @Setter
+
     BrokerServer brokerServer;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestCollectMessage requestCollectMessage) {
 
-        SyncRequestMessage requestMessage = requestCollectMessage.getRequestMessage();
+        RequestMessage requestMessage = requestCollectMessage.getRequestMessage();
         HeadMetadata headMetadata = requestMessage.getHeadMetadata();
         int cmdMerge = headMetadata.getCmdMerge();
 
@@ -81,10 +83,9 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AbstractAsy
         var logicBalanced = balancedManager.getLogicBalanced();
         BrokerClientRegion brokerClientRegion = logicBalanced.getBrokerClientRegion(cmdMerge);
 
-        // 响应结果
-        ResponseCollectMessage responseCollectMessage = new ResponseCollectMessage();
-
         if (brokerClientRegion == null) {
+            // 响应结果
+            var responseCollectMessage = new ResponseCollectMessage();
             responseCollectMessage.setError(ActionErrorEnum.cmdInfoErrorCode);
             // 将响应数据给回请求方
             asyncCtx.sendResponse(responseCollectMessage);
@@ -93,15 +94,15 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AbstractAsy
 
         // 并行调用多个逻辑服
         var futureList = this.listFuture(requestMessage, brokerClientRegion);
-        // 将多个逻辑服的结果收集到 list 中
-        var aggregationItemMessages = CompletableFutureKit.sequence(futureList);
+        CompletableFutureKit.sequenceAsync(futureList).thenAcceptAsync(messageList -> {
+            var responseCollectMessage = new ResponseCollectMessage();
+            responseCollectMessage.setMessageList(messageList);
 
-        responseCollectMessage.setMessageList(aggregationItemMessages);
+            // 将响应数据给回请求方
+            asyncCtx.sendResponse(responseCollectMessage);
 
-        // 将响应数据给回请求方
-        asyncCtx.sendResponse(responseCollectMessage);
-
-        print(responseCollectMessage);
+            print(responseCollectMessage);
+        }, NetCommonKit.getVirtualExecutor());
     }
 
     private void print(ResponseCollectMessage responseCollectMessage) {
@@ -123,7 +124,7 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AbstractAsy
         }
     }
 
-    private List<CompletableFuture<ResponseCollectItemMessage>> listFuture(SyncRequestMessage requestMessage
+    private List<CompletableFuture<ResponseCollectItemMessage>> listFuture(RequestMessage requestMessage
             , BrokerClientRegion brokerClientRegion) {
 
         // 逻辑服列表 stream；异步请求逻辑服
@@ -154,7 +155,7 @@ public class InnerModuleRequestCollectMessageBrokerProcessor extends AbstractAsy
             return new ResponseCollectItemMessage()
                     .setResponseMessage(responseMessage)
                     .setLogicServerId(logicServerId);
-        })).toList();
+        }, NetCommonKit.getVirtualExecutor())).toList();
     }
 
     @Override

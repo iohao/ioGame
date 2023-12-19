@@ -28,7 +28,7 @@ import java.io.Serial;
  * @author 渔民小镇
  * @date 2021-12-20
  */
-public sealed class RequestMessage extends BarMessage permits SyncRequestMessage {
+public final class RequestMessage extends BarMessage {
     @Serial
     private static final long serialVersionUID = 8564408386704453534L;
 

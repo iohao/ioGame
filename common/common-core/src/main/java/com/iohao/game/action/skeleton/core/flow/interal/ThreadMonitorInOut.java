@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -53,8 +52,9 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
     @Override
     public void fuckOut(FlowContext flowContext) {
         ThreadExecutor threadExecutor = flowContext.option(FlowAttr.threadExecutor);
-
-        region.update(flowContext.getInOutTime(), threadExecutor);
+        if (Objects.nonNull(threadExecutor)) {
+            region.update(flowContext.getInOutTime(), threadExecutor);
+        }
     }
 
     @Getter
@@ -62,14 +62,12 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
         final Map<String, ThreadMonitor> map = new NonBlockingHashMap<>();
 
         private ThreadMonitor getStatThread(ThreadExecutor threadExecutor) {
-            // 如果开发者重写了 DefaultRequestMessageClientProcessorHook 实现，导致没有拿到 ThreadExecutor 对象就报 null
             String name = threadExecutor.name();
             ThreadMonitor threadMonitor = this.map.get(name);
 
             // 无锁化
             if (Objects.isNull(threadMonitor)) {
-                ThreadPoolExecutor executor = threadExecutor.getThreadPoolExecutor();
-                ThreadMonitor newValue = ThreadMonitor.create(name, executor);
+                ThreadMonitor newValue = ThreadMonitor.create(name, threadExecutor);
                 return MoreKit.putIfAbsent(this.map, name, newValue);
             }
 
@@ -105,9 +103,9 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
      * @param totalTime    执行任务的总耗时
      * @param executor     ThreadPoolExecutor
      */
-    public record ThreadMonitor(String name, LongAdder executeCount, LongAdder totalTime, ThreadPoolExecutor executor) {
+    public record ThreadMonitor(String name, LongAdder executeCount, LongAdder totalTime, ThreadExecutor executor) {
 
-        public static ThreadMonitor create(String name, ThreadPoolExecutor executor) {
+        public static ThreadMonitor create(String name, ThreadExecutor executor) {
             return new ThreadMonitor(name, new LongAdder(), new LongAdder(), executor);
         }
 
@@ -136,7 +134,7 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
          */
         public int countRemaining() {
             return Optional.ofNullable(this.executor)
-                    .map(threadPoolExecutor -> threadPoolExecutor.getQueue().size())
+                    .map(ThreadExecutor::getWorkQueue)
                     .orElse(0);
         }
 

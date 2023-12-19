@@ -44,7 +44,7 @@ import java.util.Objects;
  */
 @Setter
 @Slf4j(topic = IoGameLogName.MsgTransferTopic)
-public class ResponseMessageBrokerProcessor extends AbstractAsyncUserProcessor<ResponseMessage>
+public final class ResponseMessageBrokerProcessor extends AbstractAsyncUserProcessor<ResponseMessage>
         implements BrokerServerAware {
 
     BrokerServer brokerServer;

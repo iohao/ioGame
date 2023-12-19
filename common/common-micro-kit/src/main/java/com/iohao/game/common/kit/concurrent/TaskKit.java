@@ -29,8 +29,8 @@ import lombok.experimental.UtilityClass;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 /**
  * 任务消费相关的内部工具类，开发者不要用在耗时 io 的任务上
@@ -144,7 +144,10 @@ public class TaskKit {
     private final HashedWheelTimer wheelTimer = new HashedWheelTimer();
     /** 内置的 cacheExecutor 执行器 */
     @Getter
-    final ExecutorService cacheExecutor = ExecutorKit.newCacheThreadPool("ioGameTaskKit");
+    final ExecutorService cacheExecutor = ExecutorKit.newCacheThreadPool("ioGameThread");
+    /** 虚拟线程执行器 */
+    @Getter
+    final ExecutorService virtualExecutor = ExecutorKit.newVirtualExecutor("ioGameVirtual");
     final SetMultiMap<TickTimeUnit, IntervalTaskListener> intervalTaskListenerMap = SetMultiMap.create();
 
     record TickTimeUnit(long tick, TimeUnit timeUnit) {
@@ -157,6 +160,27 @@ public class TaskKit {
      */
     public void execute(Runnable command) {
         cacheExecutor.execute(command);
+    }
+
+    /**
+     * 使用虚拟线程执行任务
+     *
+     * @param command 任务
+     */
+    public void executeVirtual(Runnable command) {
+        virtualExecutor.execute(command);
+    }
+
+    /**
+     * 返回一个 CompletableFuture，该任务会在 virtualExecutor（虚拟线程） 中异步运行，结果将从 Supplier 中获得
+     *
+     * @param supplier supplier
+     * @param <U>      u
+     * @return CompletableFuture
+     * @see TaskKit#virtualExecutor
+     */
+    public <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) {
+        return CompletableFuture.supplyAsync(supplier, virtualExecutor);
     }
 
     /**

@@ -19,12 +19,13 @@
 package com.iohao.game.bolt.broker.core.common;
 
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
-import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.concurrent.DaemonThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 默认策略
@@ -33,36 +34,28 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date 2022-11-11
  */
 @Slf4j
-class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrategy {
-    final AtomicInteger id = new AtomicInteger();
+final class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrategy {
     final Executor commonExecutor;
+    final Executor requestMessageExecutor;
 
     DefaultUserProcessorExecutorStrategy() {
         int corePoolSize = Runtime.getRuntime().availableProcessors();
         int maximumPoolSize = corePoolSize << 1;
         this.commonExecutor = createExecutor("common", corePoolSize, maximumPoolSize);
+
+        this.requestMessageExecutor = createExecutor("RequestMessage", corePoolSize, corePoolSize);
     }
 
     @Override
     public Executor getExecutor(UserProcessorExecutorAware userProcessorExecutorAware) {
         String userProcessorName = userProcessorExecutorAware.getClass().getSimpleName();
 
-        if (StrKit.isEmpty(userProcessorName)) {
-            return this.commonExecutor;
+        if ("RequestMessageClientProcessor".equals(userProcessorName)) {
+            // 单独一个池
+            return this.requestMessageExecutor;
         }
 
-        return switch (userProcessorName) {
-            // 单独一个池
-            case "RequestMessageClientProcessor", "SettingUserIdMessageExternalProcessor" ->
-                    this.createExecutor(userProcessorName);
-            // 其他类型的消息处理共用一个池
-            default -> this.commonExecutor;
-        };
-    }
-
-    Executor createExecutor(String userProcessorName) {
-        int corePoolSize = Runtime.getRuntime().availableProcessors();
-        return createExecutor(userProcessorName, corePoolSize, corePoolSize);
+        return this.commonExecutor;
     }
 
     Executor createExecutor(String userProcessorName, int corePoolSize, int maximumPoolSize) {
@@ -76,16 +69,13 @@ class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrat
          * workQueue ArrayBlockingQueue
          * NamedThreadFactory daemon=true
          *
-         *
-         *
          * 下面对于 UserProcessor 提供了一些默认的 Executor 配置，
          * 开发者可以根据自身业务需要来定制 UserProcessorExecutorStrategy。
-         * 如果有好的优化建议，欢迎 PR
          */
 
         String namePrefix = String.format("Processor-Executor-%s-%d"
                 , userProcessorName
-                , id.incrementAndGet());
+                , maximumPoolSize);
 
         DaemonThreadFactory threadFactory = new DaemonThreadFactory(namePrefix);
 

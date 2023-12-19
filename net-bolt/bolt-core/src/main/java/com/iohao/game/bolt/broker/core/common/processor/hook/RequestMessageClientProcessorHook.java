@@ -42,4 +42,5 @@ public interface RequestMessageClientProcessorHook {
      * @param flowContext 业务框架 flow 上下文
      */
     void processLogic(BarSkeleton barSkeleton, FlowContext flowContext);
+
 }

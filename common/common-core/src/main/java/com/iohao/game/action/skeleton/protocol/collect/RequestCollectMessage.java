@@ -18,7 +18,7 @@
  */
 package com.iohao.game.action.skeleton.protocol.collect;
 
-import com.iohao.game.action.skeleton.protocol.SyncRequestMessage;
+import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,5 +52,5 @@ import java.io.Serializable;
 public class RequestCollectMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = 4271692369352579162L;
-    SyncRequestMessage requestMessage;
+    RequestMessage requestMessage;
 }

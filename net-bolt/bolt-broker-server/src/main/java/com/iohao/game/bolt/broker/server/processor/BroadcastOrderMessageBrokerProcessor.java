@@ -44,7 +44,7 @@ import java.util.concurrent.ExecutorService;
  */
 @Setter
 @Slf4j(topic = IoGameLogName.MsgTransferTopic)
-public class BroadcastOrderMessageBrokerProcessor extends AsyncUserProcessor<BroadcastOrderMessage>
+public final class BroadcastOrderMessageBrokerProcessor extends AsyncUserProcessor<BroadcastOrderMessage>
         implements BrokerServerAware {
     BrokerServer brokerServer;
     final ExecutorService executorService = ExecutorKit.newSingleThreadExecutor("BroadcastOrderBroker");

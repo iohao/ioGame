@@ -105,8 +105,9 @@ public class IoGameGlobalConfig {
      * </pre>
      *
      * @see DefaultUserProcessorExecutorStrategy
+     * @see VirtualThreadUserProcessorExecutorStrategy
      */
-    public UserProcessorExecutorStrategy userProcessorExecutorStrategy = new VirtualThreadUserProcessorExecutorStrategy();
+    public UserProcessorExecutorStrategy userProcessorExecutorStrategy = new DefaultUserProcessorExecutorStrategy();
 
     public Executor getExecutor(UserProcessorExecutorAware userProcessorExecutorAware) {
 

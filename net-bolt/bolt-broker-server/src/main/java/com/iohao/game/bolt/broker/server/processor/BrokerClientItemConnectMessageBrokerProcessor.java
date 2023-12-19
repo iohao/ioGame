@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Setter
 @Slf4j(topic = IoGameLogName.ConnectionTopic)
-public class BrokerClientItemConnectMessageBrokerProcessor extends AbstractAsyncUserProcessor<BrokerClientItemConnectMessage> {
+public final class BrokerClientItemConnectMessageBrokerProcessor extends AbstractAsyncUserProcessor<BrokerClientItemConnectMessage> {
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientItemConnectMessage request) {
         log.debug("bizCtx.getRemoteAddress() : {}", bizCtx.getRemoteAddress());

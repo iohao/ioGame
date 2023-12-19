@@ -28,7 +28,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 模块信息代理
@@ -111,6 +110,6 @@ public class BrokerClientProxy {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return id.hashCode();
     }
 }

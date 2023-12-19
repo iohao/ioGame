@@ -32,6 +32,18 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @UtilityClass
 public class ExecutorKit {
+
+    /**
+     * 虚拟线程执行器
+     *
+     * @param name name
+     * @return 执行器
+     */
+    public ExecutorService newVirtualExecutor(String name) {
+        ThreadFactory factory = Thread.ofVirtual().name(name).factory();
+        return Executors.newThreadPerTaskExecutor(factory);
+    }
+
     /**
      * 创建单个线程执行器
      *

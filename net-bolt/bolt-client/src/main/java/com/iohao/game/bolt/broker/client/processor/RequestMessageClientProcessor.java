@@ -93,10 +93,7 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
             // 执行业务框架
             this.requestMessageClientProcessorHook.processLogic(barSkeleton, flowContext);
         } catch (Throwable e) {
-            /*
-             * 如果不在这里 try 而是交给 bolt 处理，bolt 是不会在控制台中打印日志的（通常是开发者没做相关配置）
-             * 这里做个防范 try，正常情况下是不会出现异常的，除非重写了部分方法引发的。(try 并在控制台中打印异常信息)
-             */
+            // 这里做个防范 try，正常情况下是不会出现异常的，除非重写了部分方法引发的。(try 并在控制台中打印异常信息)
             log.error(e.getMessage(), e);
         }
     }
