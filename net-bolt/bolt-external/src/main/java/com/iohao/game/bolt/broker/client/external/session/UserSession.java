@@ -188,7 +188,7 @@ public class UserSession {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId);
+        return Long.hashCode(userId);
     }
 
     private String getChannelId() {

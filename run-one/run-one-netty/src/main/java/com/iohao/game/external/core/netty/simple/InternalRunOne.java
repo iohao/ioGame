@@ -18,12 +18,11 @@
  */
 package com.iohao.game.external.core.netty.simple;
 
-import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import com.iohao.game.bolt.broker.core.GroupWith;
-import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.HashKit;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import com.iohao.game.external.core.ExternalServer;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -43,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Setter(AccessLevel.PACKAGE)
 class InternalRunOne {
-    final ExecutorService executorService = ExecutorKit.newCacheThreadPool("InternalRunOne");
+    final ExecutorService executorService = TaskKit.getCacheExecutor();
     final int withNo = HashKit.hash32(UUID.randomUUID().toString());
     /** 游戏对外服列表 */
     List<ExternalServer> externalServerList;
@@ -81,9 +80,6 @@ class InternalRunOne {
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         }
-
-        // 生成游戏文档
-        executorService.execute(BarSkeletonDoc.me()::buildDoc);
     }
 
     /**

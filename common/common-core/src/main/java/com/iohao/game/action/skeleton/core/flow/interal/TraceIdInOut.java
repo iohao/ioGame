@@ -16,25 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core;
+package com.iohao.game.action.skeleton.core.flow.interal;
 
-import com.iohao.game.action.skeleton.core.codec.DataCodec;
-import lombok.experimental.UtilityClass;
+import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.common.kit.TraceKit;
+import org.slf4j.MDC;
+
+import java.util.Objects;
 
 /**
- * 业务框架全局配置
+ * MDC traceId 日志插件
  *
  * @author 渔民小镇
- * @date 2022-11-24
+ * @date 2023-12-20
  */
-@UtilityClass
-public class IoGameGlobalSetting {
-    /**
-     * 设置业务数据的编解码器
-     *
-     * @param dataCodec dataCodec
-     */
-    public void setDataCodec(DataCodec dataCodec) {
-        DataCodecKit.setDataCodec(dataCodec);
+public final class TraceIdInOut implements ActionMethodInOut {
+    @Override
+    public void fuckIn(FlowContext flowContext) {
+
+        HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
+        String traceId = headMetadata.getTraceId();
+
+        if (Objects.nonNull(traceId)) {
+            MDC.put(TraceKit.traceName, traceId);
+        }
+    }
+
+    @Override
+    public void fuckOut(FlowContext flowContext) {
+        MDC.clear();
     }
 }

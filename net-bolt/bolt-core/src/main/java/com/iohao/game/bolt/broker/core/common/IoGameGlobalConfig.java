@@ -96,6 +96,9 @@ public class IoGameGlobalConfig {
     public boolean brokerClusterLog = BrokerGlobalConfig.brokerClusterLog;
     /** true 使用调度器打印集群信息，默认 30 秒打印一次（目前不提供打印频率设置） */
     public boolean brokerClusterFixedRateLog;
+    /** true 表示开启 traceId 特性 */
+    public boolean openTraceId;
+
     /**
      * UserProcessor 构建 Executor 的策略
      * <pre>

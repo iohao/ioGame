@@ -152,6 +152,8 @@ public final class HeadMetadata implements Serializable {
     byte[] customData;
     /** 所选执行器 */
     ExecutorSelectEnum executorSelect;
+    /** traceId */
+    String traceId;
     /** 临时变量 */
     transient Object other;
     transient int withNo;

@@ -19,12 +19,13 @@
 package com.iohao.game.external.core.netty.handler;
 
 import com.iohao.game.action.skeleton.protocol.BarMessage;
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.consts.IoGameLogName;
+import com.iohao.game.common.kit.TraceKit;
 import com.iohao.game.external.core.aware.UserSessionsAware;
-import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.netty.session.SocketUserSession;
 import com.iohao.game.external.core.netty.session.SocketUserSessions;
 import com.iohao.game.external.core.session.UserSessions;
@@ -52,6 +53,11 @@ public final class SocketRequestBrokerHandler extends SimpleChannelInboundHandle
         // 给请求消息加上一些 user 自身的数据
         SocketUserSession userSession = this.userSessions.getUserSession(ctx);
         userSession.employ(message);
+
+        if (IoGameGlobalConfig.openTraceId) {
+            HeadMetadata headMetadata = message.getHeadMetadata();
+            headMetadata.setTraceId(TraceKit.newTraceId());
+        }
 
         try {
             // 请求游戏网关，在由网关转到具体的业务逻辑服

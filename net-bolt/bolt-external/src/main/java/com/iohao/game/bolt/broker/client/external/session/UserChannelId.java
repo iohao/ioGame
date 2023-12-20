@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -47,6 +47,6 @@ public record UserChannelId(String channelId) {
 
     @Override
     public int hashCode() {
-        return Objects.hash(channelId);
+        return channelId.hashCode();
     }
 }
