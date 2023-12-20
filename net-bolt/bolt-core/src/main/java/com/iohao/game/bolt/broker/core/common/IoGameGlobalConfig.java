@@ -18,7 +18,6 @@
  */
 package com.iohao.game.bolt.broker.core.common;
 
-import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import lombok.experimental.UtilityClass;
 
@@ -130,15 +129,4 @@ public class IoGameGlobalConfig {
     public boolean isBrokerClusterFixedRateLog() {
         return openLog && brokerClusterFixedRateLog;
     }
-
-    public boolean isSendBrokerClientModuleMessage() {
-        // 实验性功能
-        return sendBrokerClientModuleMessage;
-    }
-
-    public boolean sendBrokerClientModuleMessage = true;
-
-
-    public UserProcessor.ExecutorSelector brokerExecutorSelector;
-    public UserProcessor.ExecutorSelector brokerClientExecutorSelector;
 }

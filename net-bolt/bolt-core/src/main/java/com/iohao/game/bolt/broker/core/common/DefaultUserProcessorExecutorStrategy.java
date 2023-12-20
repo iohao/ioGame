@@ -19,9 +19,13 @@
 package com.iohao.game.bolt.broker.core.common;
 
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
+import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.concurrent.DaemonThreadFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.jctools.maps.NonBlockingHashMap;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -35,40 +39,52 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 final class DefaultUserProcessorExecutorStrategy implements UserProcessorExecutorStrategy {
-    final Executor commonExecutor;
-    final Executor requestMessageExecutor;
-
-    DefaultUserProcessorExecutorStrategy() {
-        int corePoolSize = Runtime.getRuntime().availableProcessors();
-        int maximumPoolSize = corePoolSize << 1;
-        this.commonExecutor = createExecutor("common", corePoolSize, maximumPoolSize);
-
-        this.requestMessageExecutor = createExecutor("RequestMessage", corePoolSize, corePoolSize);
-    }
+    final Map<String, Executor> executorMap = new NonBlockingHashMap<>();
 
     @Override
     public Executor getExecutor(UserProcessorExecutorAware userProcessorExecutorAware) {
-        String userProcessorName = userProcessorExecutorAware.getClass().getSimpleName();
 
-        if ("RequestMessageClientProcessor".equals(userProcessorName)) {
-            // 单独一个池
-            return this.requestMessageExecutor;
+        if (userProcessorExecutorAware.inNettyThreadExecute()) {
+            /*
+             * 当 inNettyThreadExecute 为 true 时，即使设置了执行器也是无效的。
+             * 如果开发者使用自定义的线程执行器，需要将 inNettyThreadExecute 设置为 false。
+             *
+             * 如果将 inNettyThreadExecute 设置为 false，会有两种情况
+             *     1. 如果配置了自定义的线程执行器，则会优先使用自定义的线程执行器来执行业务；
+             *     2. 如果没有配置，也就是返回 null，将会使用 bolt 默认的 ioThreadExecutor ；具体阅读 ProcessorManager.defaultExecutor 相关源码
+             */
+            return null;
         }
 
-        return this.commonExecutor;
+        String userProcessorName = userProcessorExecutorAware.getClass().getSimpleName();
+        if ("RequestMessageClientProcessor".equals(userProcessorName)) {
+            // 单独一个池
+            return ofExecutor("RequestMessage");
+        }
+
+        return ofExecutor("common");
+    }
+
+    Executor ofExecutor(String name) {
+
+        Executor executor = this.executorMap.get(name);
+
+        if (Objects.isNull(executor)) {
+            int corePoolSize = Runtime.getRuntime().availableProcessors();
+            var tempExecutor = createExecutor(name, corePoolSize, corePoolSize);
+            executor = MoreKit.firstNonNull(this.executorMap.putIfAbsent(name, tempExecutor), tempExecutor);
+            if (executor != tempExecutor) {
+                // 引用不相等就 shutdown
+                ((ThreadPoolExecutor) tempExecutor).shutdown();
+            }
+        }
+
+        return executor;
     }
 
     Executor createExecutor(String userProcessorName, int corePoolSize, int maximumPoolSize) {
 
         /*
-         * 目前 bolt 默认的 io 线程池的配置是
-         * corePoolSize 20
-         * maximumPoolSize 400
-         * keepAliveTime 60
-         * unit TimeUnit.SECONDS
-         * workQueue ArrayBlockingQueue
-         * NamedThreadFactory daemon=true
-         *
          * 下面对于 UserProcessor 提供了一些默认的 Executor 配置，
          * 开发者可以根据自身业务需要来定制 UserProcessorExecutorStrategy。
          */

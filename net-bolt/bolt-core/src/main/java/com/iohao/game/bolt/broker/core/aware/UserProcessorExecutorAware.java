@@ -31,7 +31,7 @@ import java.util.concurrent.Executor;
  * @author 渔民小镇
  * @date 2022-11-10
  */
-public interface UserProcessorExecutorAware {
+public interface UserProcessorExecutorAware extends UserProcessorInNettyThreadAware {
     /**
      * set UserProcessor Executor
      *

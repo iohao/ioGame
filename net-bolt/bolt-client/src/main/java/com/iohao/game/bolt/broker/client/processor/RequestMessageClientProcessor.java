@@ -30,7 +30,6 @@ import com.iohao.game.bolt.broker.client.action.skeleton.BoltChannelContext;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.common.processor.hook.RequestMessageClientProcessorHook;
 import com.iohao.game.common.consts.IoGameLogName;
@@ -50,11 +49,6 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
         implements BrokerClientAware {
     BrokerClient brokerClient;
     RequestMessageClientProcessorHook requestMessageClientProcessorHook;
-
-    public RequestMessageClientProcessor() {
-        ExecutorSelector brokerClientExecutorSelector = IoGameGlobalConfig.brokerClientExecutorSelector;
-        this.setExecutorSelector(brokerClientExecutorSelector);
-    }
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, RequestMessage request) {
@@ -109,10 +103,5 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
     @Override
     public String interest() {
         return RequestMessage.class.getName();
-    }
-
-    @Override
-    public boolean processInIOThread() {
-        return true;
     }
 }

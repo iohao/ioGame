@@ -34,13 +34,35 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ExecutorKit {
 
     /**
-     * 虚拟线程执行器
+     * 创建虚拟线程执行器
      *
      * @param name name
      * @return 执行器
      */
     public ExecutorService newVirtualExecutor(String name) {
         ThreadFactory factory = Thread.ofVirtual().name(name).factory();
+        return newVirtualExecutor(factory);
+    }
+
+    /**
+     * 创建虚拟线程执行器
+     *
+     * @param name  name
+     * @param start start
+     * @return 执行器
+     */
+    public ExecutorService newVirtualExecutor(String name, int start) {
+        ThreadFactory factory = Thread.ofVirtual().name(name, start).factory();
+        return newVirtualExecutor(factory);
+    }
+
+    /**
+     * 创建虚拟线程执行器
+     *
+     * @param factory factory
+     * @return 执行器
+     */
+    public ExecutorService newVirtualExecutor(ThreadFactory factory) {
         return Executors.newThreadPerTaskExecutor(factory);
     }
 

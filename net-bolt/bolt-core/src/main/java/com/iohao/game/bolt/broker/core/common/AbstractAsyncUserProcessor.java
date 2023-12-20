@@ -33,6 +33,7 @@ public abstract class AbstractAsyncUserProcessor<T> extends AsyncUserProcessor<T
         implements UserProcessorExecutorAware {
 
     Executor userProcessorExecutor;
+    boolean inNettyThread;
 
     @Override
     public Executor getExecutor() {
@@ -47,5 +48,20 @@ public abstract class AbstractAsyncUserProcessor<T> extends AsyncUserProcessor<T
     @Override
     public void setUserProcessorExecutor(Executor executor) {
         this.userProcessorExecutor = executor;
+    }
+
+    @Override
+    public void setInNettyThread(boolean inNettyThread) {
+        this.inNettyThread = inNettyThread;
+    }
+
+    @Override
+    public boolean inNettyThreadExecute() {
+        return this.inNettyThread;
+    }
+
+    @Override
+    public boolean processInIOThread() {
+        return inNettyThread;
     }
 }

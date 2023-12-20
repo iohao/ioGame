@@ -47,14 +47,14 @@ public class ExecutorSelectKit {
     public boolean processLogic(BarSkeleton barSkeleton, FlowContext flowContext) {
         HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
 
-        long executorIndex = getExecutorIndex(flowContext, headMetadata);
+        final long executorIndex = getExecutorIndex(flowContext, headMetadata);
 
-        ExecutorSelectEnum executorSelect = headMetadata.getExecutorSelect();
+        final ExecutorSelectEnum executorSelect = headMetadata.getExecutorSelect();
 
         final ThreadExecutor threadExecutor = switch (executorSelect) {
             case null -> UserThreadExecutorRegion.me().getThreadExecutor(executorIndex);
-            case userExecutor -> UserThreadExecutorRegion.me().getThreadExecutor(executorIndex);
             case userVirtualExecutor -> UserVirtualExecutorRegion.me().getThreadExecutor(executorIndex);
+            case userExecutor -> UserThreadExecutorRegion.me().getThreadExecutor(executorIndex);
             default -> null;
         };
 
