@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -19,6 +19,8 @@
 package com.iohao.game.bolt.broker.core.client;
 
 import com.iohao.game.action.skeleton.core.commumication.*;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import lombok.experimental.UtilityClass;
 
 /**
  * 游戏逻辑服 BrokerClient 的引用持有
@@ -27,22 +29,29 @@ import com.iohao.game.action.skeleton.core.commumication.*;
  *
  *     对于多个 BrokerClient 的引用管理，可以参考 {@link BrokerClients}
  *
- *
  *     这个类的主要作用是为了更好的区分框架提供的通讯方式
  *     让开发者在使用时更加的清晰
+ * </pre>
+ * 注意
+ * <pre>
+ *     如果一个进程中启动了多个逻辑服，会随机选一个作为 brokerClient 的引用。
+ *
+ *     如果想获取当前 action 所关联的游戏逻辑服，可以通过 FlowContext 获取
+ *     参考 {@link FlowContext#getBroadcastContext()}
  * </pre>
  *
  * @author 渔民小镇
  * @date 2022-05-15
  */
+@UtilityClass
 public class BrokerClientHelper {
-    static BrokerClient brokerClient;
+    BrokerClient brokerClient;
 
-    public static BrokerClientContext getBrokerClient() {
+    public BrokerClientContext getBrokerClient() {
         return brokerClient;
     }
 
-    public static ProcessorContext getProcessorContext() {
+    public ProcessorContext getProcessorContext() {
         return brokerClient.getCommunicationAggregationContext();
     }
 
@@ -51,7 +60,7 @@ public class BrokerClientHelper {
      *
      * @return BroadcastContext
      */
-    public static BroadcastContext getBroadcastContext() {
+    public BroadcastContext getBroadcastContext() {
         return brokerClient.getCommunicationAggregationContext();
     }
 
@@ -60,7 +69,7 @@ public class BrokerClientHelper {
      *
      * @return BroadcastOrderContext
      */
-    public static BroadcastOrderContext getBroadcastOrderContext() {
+    public BroadcastOrderContext getBroadcastOrderContext() {
         return brokerClient.getCommunicationAggregationContext();
     }
 
@@ -69,7 +78,7 @@ public class BrokerClientHelper {
      *
      * @return InvokeModuleContext
      */
-    public static InvokeModuleContext getInvokeModuleContext() {
+    public InvokeModuleContext getInvokeModuleContext() {
         return brokerClient.getCommunicationAggregationContext();
     }
 
@@ -78,33 +87,7 @@ public class BrokerClientHelper {
      *
      * @return InvokeExternalModuleContext
      */
-    public static InvokeExternalModuleContext getInvokeExternalModuleContext() {
+    public InvokeExternalModuleContext getInvokeExternalModuleContext() {
         return brokerClient.getCommunicationAggregationContext();
-    }
-
-    @Deprecated
-    private BrokerClientHelper() {
-
-    }
-
-    /**
-     * 请使用静态方法
-     * <pre>
-     *     将 BrokerClientHelper.xxx() 改为 BrokerClientHelper.xxx()
-     *
-     *     将在下个大版本中移除
-     * </pre>
-     *
-     * @return me
-     */
-    @Deprecated
-    public static BrokerClientHelper me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    @Deprecated
-    private static class Holder {
-        static final BrokerClientHelper ME = new BrokerClientHelper();
     }
 }

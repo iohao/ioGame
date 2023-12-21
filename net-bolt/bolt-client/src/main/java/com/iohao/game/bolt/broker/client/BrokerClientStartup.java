@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -110,6 +110,7 @@ public sealed interface BrokerClientStartup permits AbstractBrokerClientStartup 
      */
     default void startupSuccess(BrokerClient brokerClient) {
         // 对于 brokerClient 的引用使用，建议用 BrokerClientHolder
-        BrokerClients.put(this.getClass(), brokerClient);
+        String id = brokerClient.getId();
+        BrokerClients.put(id, brokerClient);
     }
 }

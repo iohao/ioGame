@@ -19,69 +19,35 @@
 package com.iohao.game.bolt.broker.core.client;
 
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
+import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 管理 BrokerClient
  * <pre>
- *     当然开发者也可以自己定义一个类来管理 BrokerClient
+ *     管理逻辑服，默认情况使用 BrokerClient.id 与 BrokerClient 关联
  *
- *     什么情况下需要管理 BrokerClient 呢?
- *     多服单进程时，建议这么管理。 框架是对每个逻辑服会创建一个 BrokerClient
- *     比如：
- *          大厅逻辑服有对应的 BrokerClient
- *          抽奖逻辑服也有对应的一个 BrokerClient
- *
- *     OK，当我上面没说（原因是我不想白打字，就不删除上面这段话了，所以当我上面什么都没说）
- *     实际上即使是多服单进程的方式启动，BrokerClient 是共用游戏网关的，所以只要保存任意一个就可以了
- *     建议使用 {@link BrokerClientHelper} ，在逻辑服启动时，框架会让 {@link BrokerClientHelper} 保持一个 BrokerClient 的引用
- *
+ *     具体阅读 BrokerClientStartup#startupSuccess 源码
  * </pre>
  *
  * @author 渔民小镇
  * @date 2022-05-15
  */
+@UtilityClass
 public class BrokerClients {
-    static final Map<String, BrokerClient> brokerClientMap = new NonBlockingHashMap<>();
+    final Map<String, BrokerClient> brokerClientMap = new NonBlockingHashMap<>();
 
-    public static void put(Class<?> clazz, BrokerClient brokerClient) {
-        put(clazz.getName(), brokerClient);
+    public void put(String id, BrokerClient brokerClient) {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(brokerClient);
+
+        brokerClientMap.put(id, brokerClient);
     }
 
-    public static void put(String key, BrokerClient brokerClient) {
-        brokerClientMap.put(key, brokerClient);
+    public BrokerClientContext getBrokerClient(String id) {
+        return brokerClientMap.get(id);
     }
-
-    public static BrokerClientContext getBrokerClient(Class<?> clazz) {
-        return getBrokerClient(clazz.getName());
-    }
-
-    public static BrokerClientContext getBrokerClient(String key) {
-        return brokerClientMap.get(key);
-    }
-
-    private BrokerClients() {
-
-    }
-
-    /**
-     * 已经标记过期，将在下个大版本移除
-     * <pre>
-     *     请直接使用静态方法代替； BrokerClients.xxx
-     * </pre>
-     *
-     * @return BrokerClients
-     */
-    @Deprecated
-    public static BrokerClients me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final BrokerClients ME = new BrokerClients();
-    }
-
 }

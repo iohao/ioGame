@@ -142,8 +142,8 @@ public class FlowContext implements FlowOptionDynamic, SimpleCommunication {
     }
 
     @Override
-    public CommunicationAggregationContext aggregationContext() {
-        return this.option(FlowAttr.brokerClientContext).getCommunicationAggregationContext();
+    public BrokerClientContext getBrokerClientContext() {
+        return this.option(FlowAttr.brokerClientContext);
     }
 
     @Override
