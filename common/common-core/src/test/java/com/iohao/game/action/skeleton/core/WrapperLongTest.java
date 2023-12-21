@@ -39,7 +39,7 @@ import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.Wrappe
 public class WrapperLongTest {
 
     private CmdInfo getCmdInfo(int subCmd) {
-        return CmdInfo.getCmdInfo(WrapperLongActionCmd.cmd, subCmd);
+        return CmdInfo.of(WrapperLongActionCmd.cmd, subCmd);
     }
 
     private FlowContext createLongValueFlowContext(int subCmd) {

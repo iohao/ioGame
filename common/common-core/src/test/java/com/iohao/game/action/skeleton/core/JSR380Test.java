@@ -46,7 +46,7 @@ public class JSR380Test {
     public void jsr380() {
         DogValid dogValid = new DogValid();
 
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.jsr380);
+        CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.jsr380);
 
         RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
         requestMessage.setData(dogValid);

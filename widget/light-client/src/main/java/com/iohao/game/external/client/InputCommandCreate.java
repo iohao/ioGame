@@ -66,7 +66,7 @@ public class InputCommandCreate {
 
     public CmdInfo ofCmdInfo(int subCmd) {
         AssertKit.assertTrueThrow(cmd < 0, "cmd 不能小于 0");
-        return CmdInfo.getCmdInfo(cmd, subCmd);
+        return CmdInfo.of(cmd, subCmd);
     }
 
     public InputCommand getInputCommand(int subCmd) {

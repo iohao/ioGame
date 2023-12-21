@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.protocol.external;
 
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,8 +28,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
-
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 
 /**
  * 游戏逻辑服访问游戏对外服，同时访问多个游戏对外服 - 请求
@@ -73,6 +72,8 @@ public final class RequestCollectExternalMessage implements Serializable {
      * </pre>
      */
     int sourceClientId;
+    /** traceId MDC */
+    String traceId;
 
     @SuppressWarnings("unchecked")
     public <T> T getData() {

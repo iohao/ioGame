@@ -34,7 +34,7 @@ public class BarSkeletonTest {
         BarSkeleton barSkeleton = TestDataKit.newBarSkeleton();
 
         // 模拟路由信息
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.hello);
+        CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.hello);
 
         // 模拟请求
         HeadMetadata headMetadata = new HeadMetadata();
@@ -70,7 +70,7 @@ public class BarSkeletonTest {
         BarSkeleton barSkeleton = TestDataKit.newBarSkeleton();
 
         // 模拟路由信息
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.test_void);
+        CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.test_void);
 
         // 模拟请求
         HeadMetadata headMetadata = new HeadMetadata();

@@ -18,14 +18,10 @@
  */
 package com.iohao.game.common.kit;
 
-import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -37,9 +33,12 @@ import java.util.function.Supplier;
 @UtilityClass
 public class TraceKit {
     final Map<String, TraceIdSupplier> traceIdSupplierMap = new NonBlockingHashMap<>();
-    @Setter
     TraceIdSupplier traceIdSupplier = new SnowTraceIdSupplier(0, 0);
-    public String traceName = "ioGameTraceId";
+    public final String traceName = "ioGameTraceId";
+
+    public void setDefaultTraceIdSupplier(TraceIdSupplier traceIdSupplier) {
+        TraceKit.traceIdSupplier = traceIdSupplier;
+    }
 
     public void putTraceIdSupplier(String name, TraceIdSupplier traceIdSupplier) {
         traceIdSupplierMap.putIfAbsent(name, traceIdSupplier);
@@ -53,47 +52,15 @@ public class TraceKit {
         return traceIdSupplier.get();
     }
 
+    /**
+     * TraceId 生成策略
+     */
     @FunctionalInterface
     public interface TraceIdSupplier extends Supplier<String> {
 
     }
 
-    private class TraceIdSupplierMD5 implements TraceIdSupplier {
-
-        @Override
-        public String get() {
-            String id = UUID.randomUUID().toString();
-            return md5Encrypt(id);
-        }
-
-        public String md5Encrypt(String input) {
-            try {
-                // 创建MessageDigest对象，指定MD5算法
-                MessageDigest md = MessageDigest.getInstance("MD5");
-                // 将输入的字符串转换为字节数组
-                byte[] bytes = input.getBytes();
-                // 对字节数组进行MD5加密
-                md.update(bytes);
-                // 获取加密后的字节数组
-                byte[] digest = md.digest();
-                // 将字节数组转换为16进制字符串
-                StringBuilder sb = new StringBuilder();
-                for (byte b : digest) {
-                    // 将每个字节转换为两位16进制数，不足两位的补0
-                    sb.append(String.format("%02x", b));
-                }
-
-                // 返回加密后的字符串
-                return sb.toString();
-            } catch (NoSuchAlgorithmException e) {
-                // 如果没有找到MD5算法，抛出异常
-                return null;
-            }
-        }
-    }
-
     private class SnowTraceIdSupplier implements TraceIdSupplier {
-
         final static long START_TIMESTAMP = 1480166465631L;
 
         final static long SEQUENCE_BIT = 12;

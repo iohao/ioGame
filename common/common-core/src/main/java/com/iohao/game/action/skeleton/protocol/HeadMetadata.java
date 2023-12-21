@@ -202,6 +202,7 @@ public final class HeadMetadata implements Serializable {
      *     与其他游戏逻辑服通信时可以使用
      *     方法中给 HeadMetadata 赋值了玩家的必要属性：
      *     userId、attachmentData、channelId、bindingLogicServerIds、customData
+     *     traceId、executorSelect
      * </pre>
      * 以下属性不会赋值，如有需要，请自行赋值
      * <pre>
@@ -222,6 +223,8 @@ public final class HeadMetadata implements Serializable {
         headMetadata.channelId = this.channelId;
         headMetadata.bindingLogicServerIds = this.bindingLogicServerIds;
         headMetadata.customData = this.customData;
+        headMetadata.traceId = this.traceId;
+        headMetadata.executorSelect = this.executorSelect;
 
         return headMetadata;
     }
@@ -236,8 +239,13 @@ public final class HeadMetadata implements Serializable {
 
         headMetadata.stick = this.stick;
         headMetadata.cacheCondition = this.cacheCondition;
+
         headMetadata.other = this.other;
         headMetadata.withNo = this.withNo;
+        headMetadata.cmdCode = this.cmdCode;
+        headMetadata.protocolSwitch = this.protocolSwitch;
+        headMetadata.inetSocketAddress = this.inetSocketAddress;
+        headMetadata.externalMessage = this.externalMessage;
 
         return headMetadata;
     }

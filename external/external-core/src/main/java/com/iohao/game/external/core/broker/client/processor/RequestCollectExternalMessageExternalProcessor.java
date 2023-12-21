@@ -26,12 +26,14 @@ import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMe
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalItemMessage;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.common.consts.IoGameLogName;
+import com.iohao.game.common.kit.TraceKit;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegion;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegionContext;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegions;
 import com.iohao.game.external.core.session.UserSessions;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -73,13 +75,18 @@ public final class RequestCollectExternalMessageExternalProcessor extends Abstra
             return;
         }
 
-        ResponseCollectExternalItemMessage itemMessage = new ResponseCollectExternalItemMessage();
+        var itemMessage = new ResponseCollectExternalItemMessage();
 
         ExternalBizRegionContext context = new ExternalBizRegionContext();
         context.setRequestCollectExternalMessage(request);
         context.setUserSessions(this.userSessions);
 
         try {
+
+            if (Objects.nonNull(request.getTraceId())) {
+                MDC.put(TraceKit.traceName, request.getTraceId());
+            }
+
             Serializable data = externalBizRegion.request(context);
             itemMessage.setData(data);
         } catch (Throwable e) {
@@ -89,6 +96,10 @@ public final class RequestCollectExternalMessageExternalProcessor extends Abstra
                 // 不是自定义的异常才打印 error 信息
                 log.error(e.getMessage(), e);
                 itemMessage.setError(ActionErrorEnum.systemOtherErrCode);
+            }
+        } finally {
+            if (Objects.nonNull(request.getTraceId())) {
+                MDC.clear();
             }
         }
 
@@ -100,6 +111,4 @@ public final class RequestCollectExternalMessageExternalProcessor extends Abstra
     public String interest() {
         return RequestCollectExternalMessage.class.getName();
     }
-
-
 }

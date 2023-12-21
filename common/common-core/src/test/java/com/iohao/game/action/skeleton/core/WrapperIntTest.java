@@ -42,7 +42,7 @@ import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.Wrappe
 public class WrapperIntTest {
 
     private CmdInfo getCmdInfo(int subCmd) {
-        return CmdInfo.getCmdInfo(WrapperIntActionCmd.cmd, subCmd);
+        return CmdInfo.of(WrapperIntActionCmd.cmd, subCmd);
     }
 
     private FlowContext createIntValueFlowContext(int subCmd) {

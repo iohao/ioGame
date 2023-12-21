@@ -18,16 +18,17 @@
  */
 package com.iohao.game.action.skeleton.core.flow;
 
-import com.iohao.game.action.skeleton.core.*;
-import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
-import com.iohao.game.action.skeleton.core.commumication.InvokeModuleContext;
+import com.iohao.game.action.skeleton.core.ActionCommand;
+import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.core.commumication.*;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -59,7 +60,7 @@ import java.util.Objects;
 @Getter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FlowContext implements FlowOptionDynamic {
+public class FlowContext implements FlowOptionDynamic, SimpleCommunication {
     /** 动态属性 */
     final Map<FlowOption<?>, Object> options = new HashMap<>();
 
@@ -140,174 +141,18 @@ public class FlowContext implements FlowOptionDynamic {
         return this;
     }
 
-    /**
-     * cmdInfo
-     * <pre>
-     *     将在下个大版本中移除，因为类职责的原因
-     *
-     *     flowContext 中已经有 getCmdInfo() 方法，这个方法表示当前请求的上下文中的 cmdInfo 信息
-     *
-     *     如果在 flowContext 中提供这个带参数的 getCmdInfo(int,int) 方法，
-     *     会给使用的开发者造成理解上的困难，因为这个方法表示获取一个"新的" cmdInfo 信息
-     *
-     *     建议使用 {@link CmdInfo#getCmdInfo(int, int)} 来代替
-     * </pre>
-     *
-     * @param cmd    主 cmd
-     * @param subCmd 子 cmd
-     * @return cmdInfo
-     */
-    @Deprecated
-    public CmdInfo getCmdInfo(int cmd, int subCmd) {
-        return CmdInfo.getCmdInfo(cmd, subCmd);
+    @Override
+    public CommunicationAggregationContext aggregationContext() {
+        return this.option(FlowAttr.brokerClientContext).getCommunicationAggregationContext();
     }
 
-    /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     https://www.yuque.com/iohao/game/anguu6
-     * </pre>
-     *
-     * <pre>
-     *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
-     * </pre>
-     *
-     * @param cmdInfo 路由信息
-     * @param data    请求参数
-     * @param clazz   pb class
-     * @param <T>     t
-     * @return pb 对象
-     */
-    @Deprecated
-    public <T> T invokeModuleMessageData(CmdInfo cmdInfo, Object data, Class<T> clazz) {
-        // 当前项目启动的服务上下文
-        BrokerClientContext brokerClientContext = this.option(FlowAttr.brokerClientContext);
-        InvokeModuleContext invokeModuleContext = brokerClientContext.getInvokeModuleContext();
-
-        return invokeModuleContext.invokeModuleMessageData(cmdInfo, data, clazz);
+    @Override
+    public HeadMetadata getHeadMetadata() {
+        return this.request.getHeadMetadata();
     }
 
-    /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     https://www.yuque.com/iohao/game/anguu6
-     * </pre>
-     *
-     * <pre>
-     *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
-     * </pre>
-     *
-     * @param cmdInfo 路由信息
-     * @param clazz   pb class
-     * @param <T>     t
-     * @return pb 对象
-     */
-    @Deprecated
-    public <T> T invokeModuleMessageData(CmdInfo cmdInfo, Class<T> clazz) {
-        return this.invokeModuleMessageData(cmdInfo, null, clazz);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     https://www.yuque.com/iohao/game/anguu6
-     * </pre>
-     *
-     * <pre>
-     *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
-     * </pre>
-     *
-     * @param cmdInfo cmdInfo
-     * @param data    请求参数
-     * @return ResponseMessage
-     */
-    @Deprecated
-    public ResponseMessage invokeModuleMessage(CmdInfo cmdInfo, Object data) {
-
-        RequestMessage requestMessage = createRequestMessage(cmdInfo, data);
-        // 当前项目启动的服务上下文
-        BrokerClientContext brokerClientContext = this.option(FlowAttr.brokerClientContext);
-        InvokeModuleContext invokeModuleContext = brokerClientContext.getInvokeModuleContext();
-
-        return invokeModuleContext.invokeModuleMessage(requestMessage);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     https://www.yuque.com/iohao/game/anguu6
-     * </pre>
-     *
-     * <pre>
-     *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
-     * </pre>
-     *
-     * @param cmdInfo cmdInfo
-     * @return ResponseMessage
-     */
-    @Deprecated
-    public ResponseMessage invokeModuleMessage(CmdInfo cmdInfo) {
-        return this.invokeModuleMessage(cmdInfo, null);
-    }
-
-    /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
-     * <pre>
-     *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是逻辑服。
-     *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
-     *
-     *     具体的意思可以参考文档中的说明
-     *     https://www.yuque.com/iohao/game/rf9rb9
-     * </pre>
-     *
-     * <pre>
-     *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
-     * </pre>
-     *
-     * @param cmdInfo 路由信息
-     * @param data    业务数据
-     * @return ResponseCollectMessage
-     */
-    @Deprecated
-    public ResponseCollectMessage invokeModuleCollectMessage(CmdInfo cmdInfo, Object data) {
-        RequestMessage requestMessage = createRequestMessage(cmdInfo, data);
-        // 当前项目启动的服务上下文
-        BrokerClientContext brokerClientContext = this.option(FlowAttr.brokerClientContext);
-        InvokeModuleContext invokeModuleContext = brokerClientContext.getInvokeModuleContext();
-
-        return invokeModuleContext.invokeModuleCollectMessage(requestMessage);
-    }
-
-    /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
-     * <pre>
-     *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是逻辑服。
-     *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
-     *
-     *     具体的意思可以参考文档中的说明
-     *     https://www.yuque.com/iohao/game/rf9rb9
-     * </pre>
-     *
-     * <pre>
-     *     将在下个大版本中移除，因为类职责的原因
-     *     具体描述参考 https://www.yuque.com/iohao/game/zz8xiz#sLySn
-     * </pre>
-     *
-     * @param cmdInfo 路由信息
-     * @return ResponseCollectMessage
-     */
-    @Deprecated
-    public ResponseCollectMessage invokeModuleCollectMessage(CmdInfo cmdInfo) {
-        return invokeModuleCollectMessage(cmdInfo, null);
+    public RequestMessage createRequestMessage(CmdInfo cmdInfo) {
+        return this.createRequestMessage(cmdInfo, null);
     }
 
     /**
@@ -324,10 +169,10 @@ public class FlowContext implements FlowOptionDynamic {
      * @param data    业务参数
      * @return request
      */
-    protected RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
+    @Override
+    public RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
 
-        HeadMetadata headMetadata = this.request
-                .getHeadMetadata()
+        HeadMetadata headMetadata = this.getHeadMetadata()
                 .cloneHeadMetadata()
                 .setCmdInfo(cmdInfo);
 

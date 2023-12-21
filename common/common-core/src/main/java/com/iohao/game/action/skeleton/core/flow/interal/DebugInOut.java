@@ -151,6 +151,8 @@ public final class DebugInOut implements ActionMethodInOut {
 
         extractedJoin(flowContext, paramMap);
 
+        extractedTraceId(flowContext, paramMap);
+
         methodRequestParam(flowContext, paramMap);
 
         ResponseMessage responseMessage = flowContext.getResponse();
@@ -162,8 +164,21 @@ public final class DebugInOut implements ActionMethodInOut {
         }
     }
 
+    private static void extractedTraceId(FlowContext flowContext, Map<String, Object> paramMap) {
+        HeadMetadata headMetadata = flowContext.getHeadMetadata();
+        String traceId = headMetadata.getTraceId();
+
+        if (Objects.isNull(traceId)) {
+            paramMap.put("traceId", "");
+            return;
+        }
+
+        String str = String.format(" [traceId:%s] ", traceId);
+        paramMap.put("traceId", str);
+    }
+
     private static void extractedJoin(FlowContext flowContext, Map<String, Object> paramMap) {
-        HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
+        HeadMetadata headMetadata = flowContext.getHeadMetadata();
         int stick = headMetadata.getStick();
 
         String str = switch (stick) {
@@ -193,7 +208,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 ┣ 错误码: {errorCode}
                 ┣ 错误信息: {validatorMsg}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [线程:{threadName}] ━━━━━{joinName}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [线程:{threadName}] ━━━━━{joinName}━━━━━{traceId}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 """;
 
         String message = StrKit.format(template, paramMap);
@@ -215,7 +230,7 @@ public final class DebugInOut implements ActionMethodInOut {
                 ┣ 参数: {paramName} : {paramData}
                 ┣ 响应: {returnData}
                 ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [线程:{threadName}] ━━━━━{joinName}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [线程:{threadName}] ━━━━━{joinName}━━━━━{traceId}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 """;
 
         String message = StrKit.format(template, paramMap);

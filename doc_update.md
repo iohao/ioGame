@@ -373,7 +373,7 @@ private static void test() {
   var bizData = WrapperKit.of(1);
 
   // 广播上下文
-  CmdInfo cmdInfo = CmdInfo.getCmdInfo(DemoBroadcastCmd.cmd, DemoBroadcastCmd.broadcastMsg);
+  CmdInfo cmdInfo = CmdInfo.of(DemoBroadcastCmd.cmd, DemoBroadcastCmd.broadcastMsg);
   BroadcastContext broadcastContext = BrokerClientHelper.getBroadcastContext();
   broadcastContext.broadcast(cmdInfo, bizData);
 

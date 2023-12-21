@@ -45,7 +45,7 @@ public class JSR380ValidatedGroupTest {
     public void updateGroupTest() {
         BirdValid birdValid = new BirdValid();
 
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.validated_group_update);
+        CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.validated_group_update);
 
         RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
         requestMessage.setData(birdValid);
@@ -60,7 +60,7 @@ public class JSR380ValidatedGroupTest {
     public void createGroupTest() {
         BirdValid birdValid = new BirdValid();
 
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.validated_group_create);
+        CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.validated_group_create);
 
         RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
         requestMessage.setData(birdValid);
