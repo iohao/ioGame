@@ -37,39 +37,39 @@ interface LineListener {
      *     已经在线上的，或者有新上线的游戏对外服都会触发此方法
      * </pre>
      *
-     * @param moduleMessage 游戏对外服
-     * @param client        当前逻辑服
+     * @param otherModuleMessage 游戏对外服
+     * @param client             当前逻辑服
      */
-    default void onlineExternal(BrokerClientModuleMessage moduleMessage, BrokerClient client) {
+    default void onlineExternal(BrokerClientModuleMessage otherModuleMessage, BrokerClient client) {
     }
 
     /**
      * 其他游戏对外服下线监听
      *
-     * @param moduleMessage 下线的游戏对外服
-     * @param client        当前逻辑服
+     * @param otherModuleMessage 下线的游戏对外服
+     * @param client             当前逻辑服
      */
-    default void offlineExternal(BrokerClientModuleMessage moduleMessage, BrokerClient client) {
+    default void offlineExternal(BrokerClientModuleMessage otherModuleMessage, BrokerClient client) {
     }
 
     /**
-     * 其他游戏逻辑服上线监听
+     * 其他游戏逻辑服在线监听
      * <pre>
      *     已经在线上的，或者有新上线的游戏逻辑服都会触发此方法
      * </pre>
      *
-     * @param moduleMessage 在线上的其他游戏逻辑服
-     * @param client        当前逻辑服
+     * @param otherModuleMessage 在线的其他游戏逻辑服
+     * @param client             当前逻辑服
      */
-    default void onlineLogic(BrokerClientModuleMessage moduleMessage, BrokerClient client) {
+    default void onlineLogic(BrokerClientModuleMessage otherModuleMessage, BrokerClient client) {
     }
 
     /**
      * 其他游戏逻辑服下线监听
      *
-     * @param moduleMessage 下线的游戏逻辑服
-     * @param client        当前逻辑服
+     * @param otherModuleMessage 下线的游戏逻辑服
+     * @param client             当前逻辑服
      */
-    default void offlineLogic(BrokerClientModuleMessage moduleMessage, BrokerClient client) {
+    default void offlineLogic(BrokerClientModuleMessage otherModuleMessage, BrokerClient client) {
     }
 }

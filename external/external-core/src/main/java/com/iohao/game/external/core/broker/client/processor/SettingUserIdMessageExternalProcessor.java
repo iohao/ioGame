@@ -20,15 +20,20 @@ package com.iohao.game.external.core.broker.client.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
 import com.iohao.game.common.consts.IoGameLogName;
+import com.iohao.game.common.kit.TraceKit;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.session.UserChannelId;
 import com.iohao.game.external.core.session.UserSessions;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
+
+import java.util.Objects;
 
 /**
  * 设置 userId 的处理器
@@ -46,15 +51,28 @@ public final class SettingUserIdMessageExternalProcessor extends AbstractAsyncUs
 
         long userId = request.getUserId();
         String channelId = request.getUserChannelId();
-
         UserChannelId userChannelId = new UserChannelId(channelId);
 
-        // 当设置好玩家 id ，也表示着已经身份验证了（表示登录过了）。
-        boolean result = this.userSessions.settingUserId(userChannelId, userId);
-
         SettingUserIdMessageResponse response = new SettingUserIdMessageResponse();
-        response.setSuccess(result);
         response.setUserId(userId);
+
+        HeadMetadata headMetadata = request.getHeadMetadata();
+        String traceId = headMetadata.getTraceId();
+
+        if (Objects.nonNull(traceId)) {
+            try {
+                MDC.put(TraceKit.traceName, traceId);
+                // 当设置好玩家 id ，也表示着已经身份验证了（表示登录过了）。
+                boolean result = this.userSessions.settingUserId(userChannelId, userId);
+                response.setSuccess(result);
+            } finally {
+                MDC.clear();
+            }
+        } else {
+            // 当设置好玩家 id ，也表示着已经身份验证了（表示登录过了）。
+            boolean result = this.userSessions.settingUserId(userChannelId, userId);
+            response.setSuccess(result);
+        }
 
         asyncCtx.sendResponse(response);
 

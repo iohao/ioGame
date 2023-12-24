@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.core.flow.attr;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 
 /**
@@ -45,15 +46,8 @@ public interface FlowAttr {
     FlowOption<String> logicServerTag = FlowOption.valueOf("logicServerTag");
     /** action 中的业务参数 */
     FlowOption<Object> actionBizParam = FlowOption.valueOf("actionBizParam");
-    /**
-     * 请求参数的业务数据
-     * <pre>
-     *     将在下个大版本中移除，请使用 FlowAttr.actionBizParam 代替。
-     *     该属性当前已经失效。
-     * </pre>
-     */
-    @Deprecated
-    FlowOption<Object> data = FlowOption.valueOf("data");
     /** 当前线程执行器 */
     FlowOption<ThreadExecutor> threadExecutor = FlowOption.valueOf("threadExecutor");
+    /** EventBus 是逻辑服事件总线，与业务框架、逻辑服是 1:1:1 的关系 */
+    FlowOption<EventBus> eventBus = FlowOption.valueOf("eventBus");
 }

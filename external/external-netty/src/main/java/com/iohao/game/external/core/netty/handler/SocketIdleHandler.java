@@ -54,19 +54,23 @@ public final class SocketIdleHandler extends ChannelInboundHandlerAdapter
 
         BarMessage message = (BarMessage) msg;
 
-        // 心跳处理
         int cmdCode = message.getHeadMetadata().getCmdCode();
-        if (cmdCode == ExternalMessageCmdCode.idle) {
-
-            if (this.pong) {
-                ctx.writeAndFlush(message);
-            }
-
+        if (cmdCode != ExternalMessageCmdCode.idle) {
+            // 不是心跳请求. 交给下一个业务处理 (handler) , 下一个业务指的是你编排 handler 时的顺序
+            ctx.fireChannelRead(msg);
             return;
         }
 
-        // 不是心跳请求. 交给下一个业务处理 (handler) , 下一个业务指的是你编排 handler 时的顺序
-        ctx.fireChannelRead(msg);
+        // 心跳处理
+        if (this.pong) {
+
+            if (Objects.nonNull(this.idleHook)) {
+                // 心跳响应前的处理
+                this.idleHook.pongBefore(message);
+            }
+
+            ctx.writeAndFlush(message);
+        }
     }
 
     @Override

@@ -32,18 +32,18 @@ import com.iohao.game.external.core.hook.BrokerClientExternalAttr;
 public class CmdRegionBrokerClientListener implements BrokerClientListener {
 
     @Override
-    public void onlineLogic(BrokerClientModuleMessage moduleMessage, BrokerClient client) {
+    public void onlineLogic(BrokerClientModuleMessage otherModuleMessage, BrokerClient client) {
         CmdRegions cmdRegions = client.option(BrokerClientExternalAttr.cmdRegions);
         // 游戏逻辑服的路由数据
-        cmdRegions.loading(moduleMessage);
+        cmdRegions.loading(otherModuleMessage);
     }
 
     @Override
-    public void offlineLogic(BrokerClientModuleMessage moduleMessage, BrokerClient client) {
+    public void offlineLogic(BrokerClientModuleMessage otherModuleMessage, BrokerClient client) {
         CmdRegions cmdRegions = client.option(BrokerClientExternalAttr.cmdRegions);
 
-        String id = moduleMessage.getId();
-        int idHash = moduleMessage.getIdHash();
+        String id = otherModuleMessage.getId();
+        int idHash = otherModuleMessage.getIdHash();
         BrokerClientId brokerClientId = new BrokerClientId(idHash, id);
         // 游戏逻辑服的路由数据
         cmdRegions.unLoading(brokerClientId);

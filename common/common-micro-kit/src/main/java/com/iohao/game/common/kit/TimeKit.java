@@ -18,6 +18,7 @@
  */
 package com.iohao.game.common.kit;
 
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 时间工具
@@ -41,8 +43,7 @@ public class TimeKit {
 
     /** 时间更新策略 */
     @Setter
-    UpdateCurrentTimeMillis updateCurrentTimeMillis = new UpdateCurrentTimeMillis() {
-    };
+    UpdateCurrentTimeMillis updateCurrentTimeMillis = new SecondUpdateCurrentTimeMillis();
 
     public long currentTimeMillis() {
         return updateCurrentTimeMillis.getCurrentTimeMillis();
@@ -100,6 +101,22 @@ public class TimeKit {
     public interface UpdateCurrentTimeMillis {
         default long getCurrentTimeMillis() {
             return System.currentTimeMillis();
+        }
+    }
+
+    private final class SecondUpdateCurrentTimeMillis implements UpdateCurrentTimeMillis {
+        volatile long currentTimeMillis;
+
+        public SecondUpdateCurrentTimeMillis() {
+            TaskKit.runInterval(() -> {
+                // 每秒种更新一次当前时间
+                currentTimeMillis = System.currentTimeMillis();
+            }, 1, TimeUnit.SECONDS);
+        }
+
+        @Override
+        public long getCurrentTimeMillis() {
+            return this.currentTimeMillis;
         }
     }
 }

@@ -56,6 +56,8 @@ import java.util.function.Supplier;
 @Accessors(fluent = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerClientBuilder {
+    /** 模拟的同进程 id */
+    static final String ioGamePidRandom = UUID.randomUUID().toString();
     /** 连接处理器 */
     final Map<ConnectionEventType, Supplier<ConnectionEventProcessor>> connectionEventProcessorMap = new NonBlockingHashMap<>();
     /** 用户处理器 */
@@ -209,6 +211,7 @@ public class BrokerClientBuilder {
     }
 
     private void settingDefaultValue() {
+
         if (Objects.isNull(this.id)) {
             this.id = UUID.randomUUID().toString();
         }
@@ -225,6 +228,9 @@ public class BrokerClientBuilder {
             // 因为目前 clientProcess 的 hook 只有一个，暂时这样处理着
             this.clientProcessorHooks = new ClientProcessorHooks();
         }
+
+        // 处理分步式事件总线的 listener
+        this.addListener(new EventBusBrokerClientListener());
 
         for (Class<?> removeClass : this.removeProcessorList) {
             Iterator<Supplier<UserProcessor<?>>> iterator = this.processorList.iterator();
@@ -268,6 +274,7 @@ public class BrokerClientBuilder {
                 .setTag(this.tag)
                 .setStatus(this.status)
                 .setWithNo(this.withNo)
+                .setIoGamePid(ioGamePidRandom)
                 ;
     }
 

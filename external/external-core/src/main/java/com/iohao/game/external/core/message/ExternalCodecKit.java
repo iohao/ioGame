@@ -44,17 +44,21 @@ import java.util.Collection;
 public class ExternalCodecKit {
     public ExternalCodec externalCodec = new DefaultExternalCodec();
 
-    public BarMessage createIdleErrorMessage() {
+    public BarMessage createIdleMessage() {
         BarMessage response = externalCodec.createResponse();
         HeadMetadata headMetadata = response.getHeadMetadata();
 
         // 请求命令类型: 心跳
         headMetadata.setCmdCode(ExternalMessageCmdCode.idle);
-        // 错误码
-        response.setResponseStatus(ActionErrorEnum.idleErrorCode.getCode());
-        // 错误消息
-        response.setValidatorMsg(ActionErrorEnum.idleErrorCode.getMsg());
+        return response;
+    }
 
+    public BarMessage createErrorIdleMessage(ActionErrorEnum idleErrorCode) {
+        BarMessage response = createIdleMessage();
+        // 错误码
+        response.setResponseStatus(idleErrorCode.getCode());
+        // 错误消息
+        response.setValidatorMsg(idleErrorCode.getMsg());
         return response;
     }
 

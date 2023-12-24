@@ -20,6 +20,11 @@ package com.iohao.game.action.skeleton.core.flow;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.commumication.*;
+import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
+import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
+import com.iohao.game.action.skeleton.eventbus.EventBus;
+import com.iohao.game.action.skeleton.eventbus.EventBusMessage;
+import com.iohao.game.action.skeleton.eventbus.EventBusSubscriber;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
@@ -54,7 +59,7 @@ import java.util.function.Consumer;
  * @date 2023-12-21
  * @see FlowContext
  */
-interface SimpleCommunication {
+interface SimpleCommunication extends FlowOptionDynamic {
     /**
      * 创建请求对象
      *
@@ -80,7 +85,9 @@ interface SimpleCommunication {
      *
      * @return 游戏逻辑服
      */
-    BrokerClientContext getBrokerClientContext();
+    default BrokerClientContext getBrokerClientContext() {
+        return this.option(FlowAttr.brokerClientContext);
+    }
 
     /**
      * 框架网络通讯聚合接口
@@ -89,6 +96,105 @@ interface SimpleCommunication {
      */
     private CommunicationAggregationContext aggregationContext() {
         return getBrokerClientContext().getCommunicationAggregationContext();
+    }
+
+    /**
+     * EventBus 是逻辑服事件总线，与业务框架、逻辑服是 1:1:1 的关系
+     *
+     * @return EventBus
+     */
+    default EventBus getEventBus() {
+        return this.option(FlowAttr.eventBus);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     1 给当前进程所有逻辑服的订阅者发送事件消息
+     *     2 给其他进程的订阅者发送事件消息
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fire(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        EventBus eventBus = this.getEventBus();
+        eventBus.fire(eventBusMessage);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     仅给当前进程所有逻辑服的订阅者发送事件消息
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireLocal(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireLocal(eventBusMessage);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     仅给当前进程所有逻辑服的订阅者发送事件消息
+     *
+     *     [同步]，在当前线程中调用订阅者
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireLocalSync(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireLocalSync(eventBusMessage);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     仅给当前 EventBus 的订阅者发送事件消息。
+     *     订阅者指的是已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者。
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireMe(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireMe(eventBusMessage);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     仅给当前 EventBus 的订阅者发送事件消息。
+     *     订阅者指的是已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者。
+     *
+     *     [同步]，在当前线程中调用订阅者
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireMeSync(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireMeSync(eventBusMessage);
+    }
+
+    private EventBusMessage createEventBusMessage(Object eventSource) {
+        HeadMetadata headMetadata = this.getHeadMetadata();
+        long userId = headMetadata.getUserId();
+        String traceId = headMetadata.getTraceId();
+
+        var eventBusMessage = new EventBusMessage();
+        eventBusMessage.setEventSource(eventSource);
+        eventBusMessage.setUserId(userId);
+        eventBusMessage.setTraceId(traceId);
+
+        return eventBusMessage;
     }
 
     /**

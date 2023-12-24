@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.protocol;
 import com.baidu.bjf.remoting.protobuf.annotation.Ignore;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdInfoFlyweightFactory;
+import com.iohao.game.action.skeleton.kit.ExecutorSelectEnum;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

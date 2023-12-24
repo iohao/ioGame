@@ -22,7 +22,6 @@ import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.core.commumication.*;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
@@ -60,10 +59,9 @@ import java.util.Objects;
 @Getter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FlowContext implements FlowOptionDynamic, SimpleCommunication {
+public class FlowContext implements SimpleCommunication {
     /** 动态属性 */
     final Map<FlowOption<?>, Object> options = new HashMap<>();
-
     /** 业务框架 */
     BarSkeleton barSkeleton;
     /** command */
@@ -139,11 +137,6 @@ public class FlowContext implements FlowOptionDynamic, SimpleCommunication {
         }
 
         return this;
-    }
-
-    @Override
-    public BrokerClientContext getBrokerClientContext() {
-        return this.option(FlowAttr.brokerClientContext);
     }
 
     @Override

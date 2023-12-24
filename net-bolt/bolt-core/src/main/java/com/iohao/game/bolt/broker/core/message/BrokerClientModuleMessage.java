@@ -29,7 +29,9 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -49,6 +51,7 @@ import java.util.Objects;
 public class BrokerClientModuleMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = -1570849960266785141L;
+    final Map<String, Object> header = new HashMap<>();
     /** 模块名 */
     String name;
     /**
@@ -75,11 +78,23 @@ public class BrokerClientModuleMessage implements Serializable {
     String address;
     @ToString.Exclude
     List<Integer> cmdMergeList;
+    /** 模拟的同进程 pid */
+    String ioGamePid;
 
     public BrokerClientModuleMessage setId(String id) {
+        Objects.requireNonNull(id);
         this.id = id;
         this.idHash = HashKit.hash32(id);
         return this;
+    }
+
+    public void addHeader(String name, Object data) {
+        this.header.put(name, data);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getHeader(String name) {
+        return (T) this.header.get(name);
     }
 
     @Override
@@ -97,6 +112,6 @@ public class BrokerClientModuleMessage implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return id.hashCode();
     }
 }

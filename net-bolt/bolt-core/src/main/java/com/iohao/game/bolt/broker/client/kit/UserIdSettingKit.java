@@ -26,6 +26,7 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
+import com.iohao.game.common.kit.TimeKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,7 +69,7 @@ public class UserIdSettingKit {
                 .setUserId(userId)
                 .setUserChannelId(userChannelId)
                 .setHeadMetadata(headMetadata)
-                .setStartTime(System.currentTimeMillis());
+                .setStartTime(TimeKit.currentTimeMillis());
 
         if (log.isDebugEnabled()) {
             log.debug("1 逻辑服 {}", userIdMessage);

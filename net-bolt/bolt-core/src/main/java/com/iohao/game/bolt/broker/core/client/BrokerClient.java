@@ -152,7 +152,7 @@ public class BrokerClient implements BrokerClientContext, GroupWith, AttrOptionD
             BrokerClient client = this;
             this.brokerClientListenerRegion.forEach(listener -> {
                 //  向 Broker（游戏网关）发起连接前的监听回调
-                listener.connectBefore(moduleMessage, client);
+                listener.registerBefore(moduleMessage, client);
             });
 
             // 初始化一些信息，并将逻辑服信息发送给 Broker（游戏网关）

@@ -31,6 +31,12 @@ package com.iohao.game.action.skeleton.core.commumication;
  * @date 2021-12-20
  */
 public interface BrokerClientContext extends ChannelContext, SimpleServer {
+    /**
+     * 获取逻辑服 id
+     *
+     * @return id
+     */
+    String getId();
 
     /**
      * 发送消息到游戏网关

@@ -40,10 +40,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author 渔民小镇
  * @date 2022-05-16
  */
-@Setter
 @Slf4j
+@Setter
 public class RequestBrokerClientModuleMessageClientProcessor extends AsyncUserProcessor<RequestBrokerClientModuleMessage>
         implements BrokerClientItemAware {
+
     BrokerClientItem brokerClientItem;
 
     @Override
@@ -54,7 +55,7 @@ public class RequestBrokerClientModuleMessageClientProcessor extends AsyncUserPr
         }
 
         int withNo = request.getWithNo();
-        this.brokerClientItem.setBrokerServerWithNo(request.getWithNo());
+        this.brokerClientItem.setBrokerServerWithNo(withNo);
         // 客户端服务器注册到游戏网关服
         this.brokerClientItem.registerToBroker();
 

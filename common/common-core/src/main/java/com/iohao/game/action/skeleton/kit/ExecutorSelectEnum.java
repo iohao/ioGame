@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.protocol;
+package com.iohao.game.action.skeleton.kit;
 
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.common.kit.concurrent.executor.*;
 
 import java.io.Serializable;
@@ -27,7 +28,7 @@ import java.io.Serializable;
  * <pre>
  *     具体阅读参考 DefaultRequestMessageClientProcessorHook 相关源码
  *
- *     可将枚举设置到 {@link HeadMetadata#executorSelect} 中。框架会在执行 action 前，根据 ExecutorSelectEnum 值来选择对应的执行器。
+ *     可将枚举设置到 {@link HeadMetadata#setExecutorSelect(ExecutorSelectEnum)} 中。框架会在执行 action 前，根据 ExecutorSelectEnum 值来选择对应的执行器。
  *
  *     当为 null 或 userExecutor 时，使用 UserThreadExecutorRegion 策略，该策略【保证线程安全】
  *     该策略可以确保同一玩家的 action 请求在同一线程执行器中执行。
@@ -60,7 +61,7 @@ public enum ExecutorSelectEnum implements Serializable {
      * @see UserVirtualExecutorRegion
      */
     userVirtualExecutor,
-    /** 在当前 bolt 线程中执行 action 请求 */
+    /** netty 线程中执行 action 请求 */
     currentThread,
     /** 预留给开发者的 */
     customExecutor

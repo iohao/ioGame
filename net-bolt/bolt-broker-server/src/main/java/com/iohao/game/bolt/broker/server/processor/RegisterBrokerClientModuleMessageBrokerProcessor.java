@@ -94,6 +94,10 @@ public final class RegisterBrokerClientModuleMessageBrokerProcessor extends Asyn
 
     @Deprecated
     private void sendBrokerClientModuleMessage(BrokerClientModuleMessage moduleMessage) {
+        this.notifyOnline(moduleMessage);
+    }
+
+    private void notifyOnline(BrokerClientModuleMessage moduleMessage) {
 
         BrokerClientType brokerClientType = moduleMessage.getBrokerClientType();
 

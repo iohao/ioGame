@@ -16,34 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.common.processor.listener;
-
-import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
+package com.iohao.game.action.skeleton.eventbus;
 
 /**
- * 连接到 Broker（游戏网关）前的监听
+ * 监听
  *
  * @author 渔民小镇
- * @date 2023-12-14
+ * @date 2023-12-24
  */
-interface ConnectionBeforeListener {
+public interface EventBusMessageFireListener {
+
     /**
-     * 将当前逻辑服注册到 Broker（游戏网关）之前的回调
+     * 事件消息没有对应的订阅者时，所触发的监听回调
      * <pre>
-     *     如果有特殊业务的，开发者可以在此方法中给 BrokerClient、BrokerClientModuleMessage 增加一些其他的附加信息
-     *
-     *     this.barSkeleton.getRunners().onStart();
-     *     this.registerBefore()
-     *     ...
-     *     registerToBroker()
+     *     注意，默认情况下只有调用 {@link EventBus#fire} 方法时才会检测。
      * </pre>
      *
-     * @param moduleMessage 当前逻辑服信息
-     * @param client        当前逻辑服
-     * @see BrokerClient#init()
+     * @param eventBusMessage 事件消息
+     * @param eventBus        eventBus
      */
-    default void registerBefore(BrokerClientModuleMessage moduleMessage, BrokerClient client) {
+    void fireEmpty(EventBusMessage eventBusMessage, EventBus eventBus);
 
+    static EventBusMessageFireListener defaultInstance() {
+        return DefaultEventBusMessageFireListener.me();
     }
 }

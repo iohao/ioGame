@@ -322,6 +322,8 @@ public class BrokerServerBuilder implements AwareInject {
                 .registerUserProcessor(PulseSignalRequestBrokerProcessor::new)
                 // 处理 - 接收脉冲消费者-的脉冲信号
                 .registerUserProcessor(PulseSignalResponseBrokerProcessor::new)
+                // 分布式事件总线 broker
+                .registerUserProcessor(EventBusMessageBrokerProcessor::new)
         ;
 
         BrokerEnhances.enhance(this);

@@ -21,10 +21,12 @@ package com.iohao.game.bolt.broker.client.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.SkeletonAttr;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
+import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.client.action.skeleton.BoltChannelContext;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
@@ -80,6 +82,9 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
             flowContext.option(FlowAttr.brokerClientContext, brokerClient);
             flowContext.option(FlowAttr.logicServerId, brokerClient.getId());
             flowContext.option(FlowAttr.logicServerTag, brokerClient.getTag());
+
+            EventBus eventBus = barSkeleton.option(SkeletonAttr.eventBus);
+            flowContext.option(FlowAttr.eventBus, eventBus);
 
             // 设置 flowContext 的一些属性值
             FlowContextKit.employ(flowContext);

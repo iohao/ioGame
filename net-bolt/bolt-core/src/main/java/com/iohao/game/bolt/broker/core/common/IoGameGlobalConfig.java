@@ -18,7 +18,9 @@
  */
 package com.iohao.game.bolt.broker.core.common;
 
+import com.iohao.game.action.skeleton.core.IoGameCommonCoreConfig;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import java.util.Objects;
@@ -99,6 +101,9 @@ public class IoGameGlobalConfig {
     /** true 表示开启 traceId 特性 */
     public boolean openTraceId;
 
+    @Getter
+    boolean eventBusLog;
+
     /**
      * UserProcessor 构建 Executor 的策略
      * <pre>
@@ -132,4 +137,11 @@ public class IoGameGlobalConfig {
     public boolean isBrokerClusterFixedRateLog() {
         return openLog && brokerClusterFixedRateLog;
     }
+
+    public static void setEventBusLog(boolean eventBusLog) {
+        IoGameGlobalConfig.eventBusLog = eventBusLog;
+        IoGameCommonCoreConfig.eventBusLog = eventBusLog;
+    }
+
+
 }

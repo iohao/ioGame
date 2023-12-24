@@ -18,6 +18,7 @@
  */
 package com.iohao.game.external.core.hook;
 
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.external.core.session.UserSession;
 
 /**
@@ -41,4 +42,16 @@ public interface IdleHook<IdleEvent> {
      * @return true 断开玩家连接
      */
     boolean callback(UserSession userSession, IdleEvent event);
+
+    /**
+     * 心跳响应前的回调
+     * <pre>
+     *     开发者可以给心跳消息添加一些额外信息，比如当前时间之类的。
+     * </pre>
+     *
+     * @param idleMessage 心跳消息
+     */
+    default void pongBefore(BarMessage idleMessage) {
+
+    }
 }

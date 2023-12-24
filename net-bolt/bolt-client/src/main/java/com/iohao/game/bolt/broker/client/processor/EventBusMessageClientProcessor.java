@@ -20,45 +20,39 @@ package com.iohao.game.bolt.broker.client.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
+import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.SkeletonAttr;
+import com.iohao.game.action.skeleton.eventbus.EventBus;
+import com.iohao.game.action.skeleton.eventbus.EventBusMessage;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListenerRegion;
-import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
-import com.iohao.game.bolt.broker.core.message.BrokerClientOnlineMessage;
+import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
+import com.iohao.game.common.consts.IoGameLogName;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 逻辑服在线通知
+ * 分布式事件总线 brokerClient
  *
  * @author 渔民小镇
- * @date 2023-12-14
+ * @date 2023-12-24
  */
-@Slf4j
 @Setter
-public final class BrokerClientOnlineMessageLogicProcessor extends AsyncUserProcessor<BrokerClientOnlineMessage>
+@Slf4j(topic = IoGameLogName.CommonStdout)
+public class EventBusMessageClientProcessor extends AbstractAsyncUserProcessor<EventBusMessage>
         implements BrokerClientAware {
 
     BrokerClient brokerClient;
 
     @Override
-    public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientOnlineMessage message) {
-
-        BrokerClientModuleMessage moduleMessage = message.getModuleMessage();
-
-        // BrokerClientOnlineMessage 是 Broker（游戏网关）发送过来的信息，
-        BrokerClientListenerRegion listenerRegion = brokerClient.getBrokerClientListenerRegion();
-        listenerRegion.forEach(listener -> {
-            switch (moduleMessage.getBrokerClientType()) {
-                case EXTERNAL -> listener.onlineExternal(moduleMessage, brokerClient);
-                case LOGIC -> listener.onlineLogic(moduleMessage, brokerClient);
-            }
-        });
+    public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, final EventBusMessage eventBusMessage) {
+        BarSkeleton barSkeleton = brokerClient.getBarSkeleton();
+        EventBus eventBus = barSkeleton.option(SkeletonAttr.eventBus);
+        eventBus.fireMe(eventBusMessage);
     }
 
     @Override
     public String interest() {
-        return BrokerClientOnlineMessage.class.getName();
+        return EventBusMessage.class.getName();
     }
 }

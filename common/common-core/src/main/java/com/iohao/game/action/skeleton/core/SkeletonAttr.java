@@ -19,6 +19,7 @@
 package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
+import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.pulse.Pulses;
 import com.iohao.game.action.skeleton.pulse.core.PulseTransmit;
 import com.iohao.game.common.kit.attr.AttrOption;
@@ -38,4 +39,6 @@ public interface SkeletonAttr {
     AttrOption<PulseTransmit> producerPulseTransmit = AttrOption.valueOf("producerPulseTransmit");
     /** 脉冲消费者的发射器 */
     AttrOption<PulseTransmit> consumerPulseTransmit = AttrOption.valueOf("consumerPulseTransmit");
+    /** EventBus */
+    AttrOption<EventBus> eventBus = AttrOption.valueOf("eventBus");
 }

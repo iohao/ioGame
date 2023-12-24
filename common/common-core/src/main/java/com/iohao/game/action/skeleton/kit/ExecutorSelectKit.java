@@ -21,7 +21,6 @@ package com.iohao.game.action.skeleton.kit;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.protocol.ExecutorSelectEnum;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import com.iohao.game.common.kit.concurrent.executor.UserThreadExecutorRegion;
