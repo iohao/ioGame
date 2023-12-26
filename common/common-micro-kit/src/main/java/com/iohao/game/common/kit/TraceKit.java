@@ -33,11 +33,11 @@ import java.util.function.Supplier;
 @UtilityClass
 public class TraceKit {
     final Map<String, TraceIdSupplier> traceIdSupplierMap = new NonBlockingHashMap<>();
-    TraceIdSupplier traceIdSupplier = new SnowTraceIdSupplier(0, 0);
+    TraceIdSupplier defaultTraceIdSupplier = new SnowTraceIdSupplier(0, 0);
     public final String traceName = "ioGameTraceId";
 
     public void setDefaultTraceIdSupplier(TraceIdSupplier traceIdSupplier) {
-        TraceKit.traceIdSupplier = traceIdSupplier;
+        TraceKit.defaultTraceIdSupplier = traceIdSupplier;
     }
 
     public void putTraceIdSupplier(String name, TraceIdSupplier traceIdSupplier) {
@@ -45,11 +45,11 @@ public class TraceKit {
     }
 
     public String newTraceId(String name) {
-        return traceIdSupplierMap.getOrDefault(name, traceIdSupplier).get();
+        return traceIdSupplierMap.getOrDefault(name, defaultTraceIdSupplier).get();
     }
 
     public String newTraceId() {
-        return traceIdSupplier.get();
+        return defaultTraceIdSupplier.get();
     }
 
     /**
@@ -88,9 +88,11 @@ public class TraceKit {
             if (dataCenterId > MAX_DATACENTER_NUM || dataCenterId < 0) {
                 throw new IllegalArgumentException("Datacenter ID can't be greater than MAX_DATACENTER_NUM or less than 0");
             }
+
             if (machineId > MAX_MACHINE_NUM || machineId < 0) {
                 throw new IllegalArgumentException("Machine ID can't be greater than MAX_MACHINE_NUM or less than 0");
             }
+
             this.dataCenterId = dataCenterId;
             this.machineId = machineId;
         }

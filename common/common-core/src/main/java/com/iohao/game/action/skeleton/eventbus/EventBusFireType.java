@@ -52,12 +52,12 @@ public interface EventBusFireType {
      *     fireLocal 包括了 fireMe 、 fireLocalNeighbor 。
      * </pre>
      */
-    int fireLocal = 3;
+    int fireLocal = 4;
     /**
      * 远程
      * <pre>
      *     表示远程有订阅者接收了事件消息。（通常指的是跨服）
      * </pre>
      */
-    int fireRemote = 4;
+    int fireRemote = 8;
 }

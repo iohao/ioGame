@@ -83,8 +83,11 @@ public class EventBusRegion {
         eventBusMap.put(eventBus.id, eventBus);
     }
 
-    Set<EventBrokerClientMessage> listAcrossProgressEventBrokerClientMsg(Class<?> eventSourceClazz) {
-        return acrossProgressTopicMultiMap.get(eventSourceClazz.getName());
+    Set<EventBrokerClientMessage> listAcrossProgressEventBrokerClientMessage(EventBusMessage eventBusMessage) {
+        Object eventSource = eventBusMessage.getEventSource();
+        Class<?> eventSourceClass = eventSource.getClass();
+        String name = eventSourceClass.getName();
+        return acrossProgressTopicMultiMap.get(name);
     }
 
     //    /**

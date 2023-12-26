@@ -45,8 +45,7 @@ public class ExecutorSelectKit {
      */
     public boolean processLogic(BarSkeleton barSkeleton, FlowContext flowContext) {
         HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
-
-        final long executorIndex = getExecutorIndex(flowContext, headMetadata);
+        final long executorIndex = getExecutorIndex(headMetadata);
 
         final ExecutorSelectEnum executorSelect = headMetadata.getExecutorSelect();
 
@@ -72,9 +71,8 @@ public class ExecutorSelectKit {
         return true;
     }
 
-    public long getExecutorIndex(FlowContext flowContext, HeadMetadata headMetadata) {
-        long userId = flowContext.getUserId();
-
+    public long getExecutorIndex(HeadMetadata headMetadata) {
+        var userId = headMetadata.getUserId();
         if (userId != 0) {
             return userId;
         }

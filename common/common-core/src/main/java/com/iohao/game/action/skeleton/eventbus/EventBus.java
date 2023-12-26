@@ -81,14 +81,14 @@ public final class EventBus {
         this.id = Objects.requireNonNull(id);
     }
 
-    public void register(EventBusSubscriber subscribe) {
+    public void register(Object eventBusSubscriber) {
 
         if (status != EventBusStatus.register) {
             throw new RuntimeException("运行中不允许注册订阅者，请在 AbstractEventRunner.registerEventBus 方法中注册。 ");
         }
 
         // 注册
-        this.subscriberRegistry.register(subscribe);
+        this.subscriberRegistry.register(eventBusSubscriber);
     }
 
     /**
@@ -235,18 +235,15 @@ public final class EventBus {
     }
 
     void fireRemote(EventBusMessage eventBusMessage) {
-        var eventSource = eventBusMessage.getEventSource();
-        Class<?> eventSourceClazz = eventSource.getClass();
+        var messageSet = EventBusRegion
+                .listAcrossProgressEventBrokerClientMessage(eventBusMessage);
 
-        var eventBrokerClientMsgSet = EventBusRegion
-                .listAcrossProgressEventBrokerClientMsg(eventSourceClazz);
-
-        if (CollKit.isEmpty(eventBrokerClientMsgSet)) {
+        if (CollKit.isEmpty(messageSet)) {
             return;
         }
 
         // 如果其他进程中存在当前事件源的订阅者，将事件源发布到其他进程中
-        eventBusMessage.setEventBrokerClientMessageSet(eventBrokerClientMsgSet);
+        eventBusMessage.setEventBrokerClientMessageSet(messageSet);
         eventBusMessage.addFireType(EventBusFireType.fireRemote);
 
         extractedPrint(eventBusMessage);

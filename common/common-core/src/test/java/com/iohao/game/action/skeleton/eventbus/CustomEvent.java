@@ -25,7 +25,8 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2023-12-24
  */
 @Slf4j
-public class CustomEvent implements EventBusSubscriber {
+@EventBusSubscriber
+public class CustomEvent {
     @EventSubscribe
     public void myMessage1(MyMessage message) {
         log.info("myMessage1 : {}", message);

@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core.flow;
 
+import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.commumication.*;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
@@ -25,6 +26,7 @@ import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
 import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.eventbus.EventBusMessage;
 import com.iohao.game.action.skeleton.eventbus.EventBusSubscriber;
+import com.iohao.game.action.skeleton.kit.ExecutorSelectKit;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
@@ -32,13 +34,17 @@ import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
 import com.iohao.game.common.kit.TraceKit;
-import com.iohao.game.common.kit.concurrent.TaskKit;
+import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
+import com.iohao.game.common.kit.concurrent.executor.UserVirtualExecutorRegion;
 import org.slf4j.MDC;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * 帮助 FlowContext 得到通信的能力
@@ -96,105 +102,6 @@ interface SimpleCommunication extends FlowOptionDynamic {
      */
     private CommunicationAggregationContext aggregationContext() {
         return getBrokerClientContext().getCommunicationAggregationContext();
-    }
-
-    /**
-     * EventBus 是逻辑服事件总线，与业务框架、逻辑服是 1:1:1 的关系
-     *
-     * @return EventBus
-     */
-    default EventBus getEventBus() {
-        return this.option(FlowAttr.eventBus);
-    }
-
-    /**
-     * 发送事件给订阅者
-     * <pre>
-     *     1 给当前进程所有逻辑服的订阅者发送事件消息
-     *     2 给其他进程的订阅者发送事件消息
-     * </pre>
-     *
-     * @param eventSource 事件源
-     */
-    default void fire(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
-        EventBus eventBus = this.getEventBus();
-        eventBus.fire(eventBusMessage);
-    }
-
-    /**
-     * 发送事件给订阅者
-     * <pre>
-     *     仅给当前进程所有逻辑服的订阅者发送事件消息
-     * </pre>
-     *
-     * @param eventSource 事件源
-     */
-    default void fireLocal(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
-        EventBus eventBus = this.getEventBus();
-        eventBus.fireLocal(eventBusMessage);
-    }
-
-    /**
-     * 发送事件给订阅者
-     * <pre>
-     *     仅给当前进程所有逻辑服的订阅者发送事件消息
-     *
-     *     [同步]，在当前线程中调用订阅者
-     * </pre>
-     *
-     * @param eventSource 事件源
-     */
-    default void fireLocalSync(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
-        EventBus eventBus = this.getEventBus();
-        eventBus.fireLocalSync(eventBusMessage);
-    }
-
-    /**
-     * 发送事件给订阅者
-     * <pre>
-     *     仅给当前 EventBus 的订阅者发送事件消息。
-     *     订阅者指的是已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者。
-     * </pre>
-     *
-     * @param eventSource 事件源
-     */
-    default void fireMe(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
-        EventBus eventBus = this.getEventBus();
-        eventBus.fireMe(eventBusMessage);
-    }
-
-    /**
-     * 发送事件给订阅者
-     * <pre>
-     *     仅给当前 EventBus 的订阅者发送事件消息。
-     *     订阅者指的是已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者。
-     *
-     *     [同步]，在当前线程中调用订阅者
-     * </pre>
-     *
-     * @param eventSource 事件源
-     */
-    default void fireMeSync(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
-        EventBus eventBus = this.getEventBus();
-        eventBus.fireMeSync(eventBusMessage);
-    }
-
-    private EventBusMessage createEventBusMessage(Object eventSource) {
-        HeadMetadata headMetadata = this.getHeadMetadata();
-        long userId = headMetadata.getUserId();
-        String traceId = headMetadata.getTraceId();
-
-        var eventBusMessage = new EventBusMessage();
-        eventBusMessage.setEventSource(eventSource);
-        eventBusMessage.setUserId(userId);
-        eventBusMessage.setTraceId(traceId);
-
-        return eventBusMessage;
     }
 
     /**
@@ -337,7 +244,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @return CompletableFuture ResponseMessage
      */
     default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final RequestMessage requestMessage) {
-        return TaskKit.supplyAsync(() -> this.invokeModuleMessage(requestMessage));
+        return this.supplyAsync(() -> this.invokeModuleMessage(requestMessage));
     }
 
     /**
@@ -384,11 +291,13 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param callback       异步回调方法
      */
     default void invokeModuleMessageAsync(final RequestMessage requestMessage, final Consumer<ResponseMessage> callback) {
-        var headMetadata = requestMessage.getHeadMetadata();
+        final HeadMetadata headMetadata = requestMessage.getHeadMetadata();
         var traceId = headMetadata.getTraceId();
 
+        var virtualExecutor = this.getVirtualExecutor();
+
         if (Objects.isNull(traceId)) {
-            this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(callback, TaskKit.getVirtualExecutor());
+            this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(callback, virtualExecutor);
             return;
         }
 
@@ -399,7 +308,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
             } finally {
                 MDC.clear();
             }
-        }, TaskKit.getVirtualExecutor());
+        }, virtualExecutor);
     }
 
     /**
@@ -519,7 +428,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @return CompletableFuture ResponseCollectMessage
      */
     default CompletableFuture<ResponseCollectMessage> invokeModuleCollectMessageFuture(final RequestMessage requestMessage) {
-        return TaskKit.supplyAsync(() -> this.invokeModuleCollectMessage(requestMessage));
+        return this.supplyAsync(() -> this.invokeModuleCollectMessage(requestMessage));
     }
 
     /**
@@ -578,11 +487,13 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param callback       异步回调方法
      */
     default void invokeModuleCollectMessageAsync(final RequestMessage requestMessage, final Consumer<ResponseCollectMessage> callback) {
-        var headMetadata = requestMessage.getHeadMetadata();
+        final HeadMetadata headMetadata = requestMessage.getHeadMetadata();
         var traceId = headMetadata.getTraceId();
 
+        var virtualExecutor = this.getVirtualExecutor();
+
         if (Objects.isNull(traceId)) {
-            this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(callback, TaskKit.getVirtualExecutor());
+            this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(callback, virtualExecutor);
             return;
         }
 
@@ -593,7 +504,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
             } finally {
                 MDC.clear();
             }
-        }, TaskKit.getVirtualExecutor());
+        }, virtualExecutor);
     }
 
     /**
@@ -702,7 +613,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
 
     private RequestCollectExternalMessage createRequestCollectExternalMessage(final int bizCode, final Serializable data) {
         // 得到发起请求的游戏对外服 id
-        var headMetadata = this.getHeadMetadata();
+        HeadMetadata headMetadata = this.getHeadMetadata();
         var sourceClientId = headMetadata.getSourceClientId();
 
         return new RequestCollectExternalMessage()
@@ -779,7 +690,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @return ResponseCollectExternalMessage 一定不为 null
      */
     default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final RequestCollectExternalMessage request) {
-        return TaskKit.supplyAsync(() -> this.invokeExternalModuleCollectMessage(request));
+        return this.supplyAsync(() -> this.invokeExternalModuleCollectMessage(request));
     }
 
     /**
@@ -828,8 +739,10 @@ interface SimpleCommunication extends FlowOptionDynamic {
     default void invokeExternalModuleCollectMessageAsync(final RequestCollectExternalMessage request, final Consumer<ResponseCollectExternalMessage> callback) {
         var traceId = request.getTraceId();
 
+        var virtualExecutor = this.getVirtualExecutor();
+
         if (Objects.isNull(traceId)) {
-            this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(callback, TaskKit.getVirtualExecutor());
+            this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(callback, virtualExecutor);
             return;
         }
 
@@ -840,6 +753,362 @@ interface SimpleCommunication extends FlowOptionDynamic {
             } finally {
                 MDC.clear();
             }
-        }, TaskKit.getVirtualExecutor());
+        }, virtualExecutor);
+    }
+
+    /**
+     * 给自己发送消息
+     * <pre>
+     *     路由则使用当前 action 的路由。
+     * </pre>
+     *
+     * @param bizData 业务数据
+     * @see HeadMetadata#getCmdInfo()
+     */
+    default void broadcastMe(Object bizData) {
+        final HeadMetadata headMetadata = this.getHeadMetadata();
+        CmdInfo cmdInfo = headMetadata.getCmdInfo();
+
+        this.broadcastMe(cmdInfo, bizData);
+    }
+
+    /**
+     * 给自己发送消息
+     *
+     * @param cmdInfo 发送到此路由
+     * @param bizData 业务数据
+     */
+    default void broadcastMe(CmdInfo cmdInfo, Object bizData) {
+        var userId = this.userId();
+        this.broadcast(cmdInfo, bizData, userId);
+    }
+
+    /**
+     * 给自己发送消息
+     *
+     * @param responseMessage 消息
+     */
+    default void broadcastMe(ResponseMessage responseMessage) {
+        var userId = this.userId();
+        this.broadcast(responseMessage, userId);
+    }
+
+    /**
+     * 全服广播
+     *
+     * @param cmdInfo 广播到此路由
+     * @param bizData 业务数据
+     */
+    default void broadcast(CmdInfo cmdInfo, Object bizData) {
+        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        this.broadcast(responseMessage);
+    }
+
+    /**
+     * 全服广播
+     *
+     * @param responseMessage 消息
+     */
+    default void broadcast(ResponseMessage responseMessage) {
+        employTraceId(responseMessage);
+
+        BroadcastContext broadcastContext = this.getBroadcastContext();
+        broadcastContext.broadcast(responseMessage);
+    }
+
+    /**
+     * 广播消息给单个用户
+     *
+     * @param cmdInfo 广播到此路由
+     * @param bizData 业务数据
+     * @param userId  userId
+     */
+    default void broadcast(CmdInfo cmdInfo, Object bizData, long userId) {
+        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        this.broadcast(responseMessage, userId);
+    }
+
+    /**
+     * 广播消息给单个用户
+     *
+     * @param responseMessage 消息
+     * @param userId          userId
+     */
+    default void broadcast(ResponseMessage responseMessage, long userId) {
+        employTraceId(responseMessage);
+
+        BroadcastContext broadcastContext = this.getBroadcastContext();
+        broadcastContext.broadcast(responseMessage, userId);
+    }
+
+    /**
+     * 广播消息给指定用户列表
+     *
+     * @param cmdInfo    广播到此路由
+     * @param bizData    业务数据
+     * @param userIdList 指定用户列表
+     */
+    default void broadcast(CmdInfo cmdInfo, Object bizData, Collection<Long> userIdList) {
+        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        this.broadcast(responseMessage, userIdList);
+    }
+
+    /**
+     * 广播消息给指定用户列表
+     *
+     * @param responseMessage 消息
+     * @param userIdList      指定用户列表 (如果为 null 或 empty 就不会触发)
+     */
+    default void broadcast(ResponseMessage responseMessage, Collection<Long> userIdList) {
+        employTraceId(responseMessage);
+
+        BroadcastContext broadcastContext = this.getBroadcastContext();
+        broadcastContext.broadcast(responseMessage, userIdList);
+    }
+
+    /**
+     * 顺序 - 给自己发送消息
+     * <pre>
+     *     路由则使用当前 action 的路由。
+     * </pre>
+     *
+     * @param bizData 业务数据
+     * @see HeadMetadata#getCmdInfo()
+     */
+    default void broadcastOrderMe(Object bizData) {
+        final HeadMetadata headMetadata = this.getHeadMetadata();
+        CmdInfo cmdInfo = headMetadata.getCmdInfo();
+
+        this.broadcastOrderMe(cmdInfo, bizData);
+    }
+
+    /**
+     * 顺序 - 给自己发送消息
+     *
+     * @param cmdInfo 发送到此路由
+     * @param bizData 业务数据
+     */
+    default void broadcastOrderMe(CmdInfo cmdInfo, Object bizData) {
+        var userId = this.userId();
+        this.broadcastOrder(cmdInfo, bizData, userId);
+    }
+
+    /**
+     * 顺序 - 给自己发送消息
+     *
+     * @param responseMessage 消息
+     */
+    default void broadcastOrderMe(ResponseMessage responseMessage) {
+        var userId = this.userId();
+        this.broadcastOrder(responseMessage, userId);
+    }
+
+    /**
+     * 顺序 - 全服广播
+     *
+     * @param cmdInfo 广播到此路由
+     * @param bizData 业务数据
+     */
+    default void broadcastOrder(CmdInfo cmdInfo, Object bizData) {
+        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        this.broadcastOrder(responseMessage);
+    }
+
+    /**
+     * 顺序 - 全服广播
+     *
+     * @param responseMessage 消息
+     */
+    default void broadcastOrder(ResponseMessage responseMessage) {
+        employTraceId(responseMessage);
+
+        BroadcastOrderContext broadcastOrderContext = this.getBroadcastOrderContext();
+        broadcastOrderContext.broadcastOrder(responseMessage);
+    }
+
+    /**
+     * 顺序 - 广播消息给指定用户列表
+     *
+     * @param cmdInfo    广播到此路由
+     * @param bizData    业务数据
+     * @param userIdList 指定用户列表
+     */
+    default void broadcastOrder(CmdInfo cmdInfo, Object bizData, Collection<Long> userIdList) {
+        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        this.broadcastOrder(responseMessage, userIdList);
+    }
+
+    /**
+     * 顺序 - 广播消息给指定用户列表
+     *
+     * @param responseMessage 消息
+     * @param userIdList      指定用户列表 (如果为 null 或 empty 就不会触发)
+     */
+    default void broadcastOrder(ResponseMessage responseMessage, Collection<Long> userIdList) {
+        employTraceId(responseMessage);
+
+        BroadcastOrderContext broadcastOrderContext = this.getBroadcastOrderContext();
+        broadcastOrderContext.broadcastOrder(responseMessage, userIdList);
+    }
+
+    /**
+     * 顺序 - 广播消息给单个用户
+     *
+     * @param cmdInfo 广播到此路由
+     * @param bizData 业务数据
+     * @param userId  userId
+     */
+    default void broadcastOrder(CmdInfo cmdInfo, Object bizData, long userId) {
+        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        this.broadcastOrder(responseMessage, userId);
+    }
+
+    /**
+     * 顺序 - 广播消息给单个用户
+     *
+     * @param responseMessage 消息
+     * @param userId          userId
+     */
+    default void broadcastOrder(ResponseMessage responseMessage, long userId) {
+        employTraceId(responseMessage);
+
+        BroadcastOrderContext broadcastOrderContext = this.getBroadcastOrderContext();
+        broadcastOrderContext.broadcastOrder(responseMessage, userId);
+    }
+
+    /**
+     * EventBus 是逻辑服事件总线，与业务框架、逻辑服是 1:1:1 的关系
+     *
+     * @return EventBus
+     */
+    default EventBus getEventBus() {
+        return this.option(FlowAttr.eventBus);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     1 给当前进程所有逻辑服的订阅者发送事件消息
+     *     2 给其他进程的订阅者发送事件消息
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fire(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+
+        EventBus eventBus = this.getEventBus();
+        eventBus.fire(eventBusMessage);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     仅给当前进程所有逻辑服的订阅者发送事件消息
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireLocal(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireLocal(eventBusMessage);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     仅给当前进程所有逻辑服的订阅者发送事件消息
+     *
+     *     [同步]，在当前线程中调用订阅者
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireLocalSync(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireLocalSync(eventBusMessage);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     仅给当前 EventBus 的订阅者发送事件消息。
+     *     订阅者指的是已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者。
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireMe(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireMe(eventBusMessage);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     仅给当前 EventBus 的订阅者发送事件消息。
+     *     订阅者指的是已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者。
+     *
+     *     [同步]，在当前线程中调用订阅者
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireMeSync(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireMeSync(eventBusMessage);
+    }
+
+    private EventBusMessage createEventBusMessage(Object eventSource) {
+        HeadMetadata headMetadata = this.getHeadMetadata();
+        long userId = headMetadata.getUserId();
+        String traceId = headMetadata.getTraceId();
+
+        var eventBusMessage = new EventBusMessage();
+        eventBusMessage.setEventSource(eventSource);
+        eventBusMessage.setUserId(userId);
+        eventBusMessage.setTraceId(traceId);
+
+        return eventBusMessage;
+    }
+
+    private Executor getVirtualExecutor() {
+        final HeadMetadata headMetadata = this.getHeadMetadata();
+        var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
+
+        var region = UserVirtualExecutorRegion.me();
+        ThreadExecutor threadExecutor = region.getThreadExecutor(executorIndex);
+
+        return threadExecutor.executor();
+    }
+
+    private <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) {
+        return CompletableFuture.supplyAsync(supplier, this.getVirtualExecutor());
+    }
+
+    private long userId() {
+        return this.getHeadMetadata().getUserId();
+    }
+
+    private ResponseMessage createResponseMessage(CmdInfo cmdInfo, Object data) {
+        Objects.requireNonNull(data);
+        return BarMessageKit.createResponseMessage(cmdInfo, data);
+    }
+
+    private void employTraceId(ResponseMessage responseMessage) {
+        String traceId = this.getHeadMetadata().getTraceId();
+
+        if (Objects.nonNull(traceId)) {
+            HeadMetadata headMetadata = responseMessage.getHeadMetadata();
+            headMetadata.setTraceId(traceId);
+        }
     }
 }

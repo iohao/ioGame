@@ -18,11 +18,16 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
+import java.lang.annotation.*;
+
 /**
- * 此接口只是为了标记，目的是结合工具可快速找到所有的订阅者配置
+ * 此注解不是必须的，只是为了标记，目的是结合工具可快速找到所有的订阅者配置
  *
  * @author 渔民小镇
  * @date 2023-12-24
  */
-public interface EventBusSubscriber {
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface EventBusSubscriber {
 }

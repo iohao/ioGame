@@ -18,7 +18,6 @@
  */
 package com.iohao.game.action.skeleton.protocol.collect;
 
-import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -63,7 +62,6 @@ public class ResponseCollectItemMessage implements Serializable {
             return null;
         }
 
-        byte[] data = responseMessage.getData();
-        return DataCodecKit.decode(data, dataClazz);
+        return responseMessage.getData(dataClazz);
     }
 }

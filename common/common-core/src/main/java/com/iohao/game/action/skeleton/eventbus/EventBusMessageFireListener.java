@@ -27,7 +27,7 @@ package com.iohao.game.action.skeleton.eventbus;
 public interface EventBusMessageFireListener {
 
     /**
-     * 事件消息没有对应的订阅者时，所触发的监听回调
+     * 事件消息没有对应的订阅者时，触发的监听回调
      * <pre>
      *     注意，默认情况下只有调用 {@link EventBus#fire} 方法时才会检测。
      * </pre>

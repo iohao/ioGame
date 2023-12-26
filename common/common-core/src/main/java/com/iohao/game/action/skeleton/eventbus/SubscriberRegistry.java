@@ -28,7 +28,6 @@ import org.jctools.maps.NonBlockingHashSet;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Stream;
@@ -64,7 +63,7 @@ final class SubscriberRegistry {
             // 方法名
             String methodName = method.getName();
             // 方法下标
-           var parameterClass = parameter.getType();
+            var parameterClass = parameter.getType();
             int methodIndex = methodAccess.getIndex(methodName, parameterClass);
 
             var annotation = method.getAnnotation(EventSubscribe.class);
@@ -98,12 +97,9 @@ final class SubscriberRegistry {
     }
 
     private void addSubscriber(Subscriber subscriber) {
-        Method method = subscriber.method;
-        Parameter parameter = method.getParameters()[0];
-        Class<?> methodParamClazz = parameter.getType();
-        this.subscriberSetMap.put(methodParamClazz, subscriber);
-
-        this.eventSourceClassSet.add(methodParamClazz);
+        Class<?> parameterClass = subscriber.parameterClass;
+        this.subscriberSetMap.put(parameterClass, subscriber);
+        this.eventSourceClassSet.add(parameterClass);
     }
 
     private Stream<Method> streamMethod(Class<?> clazz) {
