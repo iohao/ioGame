@@ -100,8 +100,8 @@ interface SimpleCommunication extends FlowOptionDynamic {
      *
      * @return 框架网络通讯聚合接口
      */
-    private CommunicationAggregationContext aggregationContext() {
-        return getBrokerClientContext().getCommunicationAggregationContext();
+    default CommunicationAggregationContext aggregationContext() {
+        return this.option(FlowAttr.aggregationContext);
     }
 
     /**

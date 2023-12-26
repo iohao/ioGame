@@ -82,6 +82,7 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
             flowContext.option(FlowAttr.brokerClientContext, brokerClient);
             flowContext.option(FlowAttr.logicServerId, brokerClient.getId());
             flowContext.option(FlowAttr.logicServerTag, brokerClient.getTag());
+            flowContext.option(FlowAttr.aggregationContext, brokerClient.getCommunicationAggregationContext());
 
             EventBus eventBus = barSkeleton.option(SkeletonAttr.eventBus);
             flowContext.option(FlowAttr.eventBus, eventBus);

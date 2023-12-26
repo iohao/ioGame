@@ -20,6 +20,7 @@ package com.iohao.game.action.skeleton.core.flow.attr;
 
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
+import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
@@ -38,6 +39,7 @@ public interface FlowAttr {
     FlowOption<String> msgException = FlowOption.valueOf("msgException");
     /** 当前项目启动的服务上下文（当前服务器），see: BrokerClient */
     FlowOption<BrokerClientContext> brokerClientContext = FlowOption.valueOf("brokerClientContext");
+    FlowOption<CommunicationAggregationContext> aggregationContext = FlowOption.valueOf("aggregationContext");
     /** 通信通道接口 */
     FlowOption<ChannelContext> channelContext = FlowOption.valueOf("channelContext");
     /** 逻辑服 id */
