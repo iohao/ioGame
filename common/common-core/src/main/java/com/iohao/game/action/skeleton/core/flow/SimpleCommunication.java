@@ -25,7 +25,6 @@ import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
 import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.eventbus.EventBusMessage;
-import com.iohao.game.action.skeleton.eventbus.EventBusSubscriber;
 import com.iohao.game.action.skeleton.kit.ExecutorSelectKit;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
@@ -837,6 +836,8 @@ interface SimpleCommunication extends FlowOptionDynamic {
     default void broadcast(ResponseMessage responseMessage, long userId) {
         employTraceId(responseMessage);
 
+        extractedSourceClientId(responseMessage, userId);
+
         BroadcastContext broadcastContext = this.getBroadcastContext();
         broadcastContext.broadcast(responseMessage, userId);
     }
@@ -972,6 +973,8 @@ interface SimpleCommunication extends FlowOptionDynamic {
     default void broadcastOrder(ResponseMessage responseMessage, long userId) {
         employTraceId(responseMessage);
 
+        extractedSourceClientId(responseMessage, userId);
+
         BroadcastOrderContext broadcastOrderContext = this.getBroadcastOrderContext();
         broadcastOrderContext.broadcastOrder(responseMessage, userId);
     }
@@ -1037,7 +1040,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * 发送事件给订阅者
      * <pre>
      *     仅给当前 EventBus 的订阅者发送事件消息。
-     *     订阅者指的是已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者。
+     *     订阅者指的是已注册到 {@link EventBus#register(Object)} 的订阅者。
      * </pre>
      *
      * @param eventSource 事件源
@@ -1053,7 +1056,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * 发送事件给订阅者
      * <pre>
      *     仅给当前 EventBus 的订阅者发送事件消息。
-     *     订阅者指的是已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者。
+     *     订阅者指的是已注册到 {@link EventBus#register(Object)} 的订阅者。
      *
      *     [同步]，在当前线程中调用订阅者
      * </pre>
@@ -1081,11 +1084,11 @@ interface SimpleCommunication extends FlowOptionDynamic {
     }
 
     private Executor getVirtualExecutor() {
+        // 得到用户对应的虚拟线程执行器
         final HeadMetadata headMetadata = this.getHeadMetadata();
         var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
 
-        var region = UserVirtualExecutorRegion.me();
-        ThreadExecutor threadExecutor = region.getThreadExecutor(executorIndex);
+        ThreadExecutor threadExecutor = UserVirtualExecutorRegion.me().getThreadExecutor(executorIndex);
 
         return threadExecutor.executor();
     }
@@ -1110,5 +1113,23 @@ interface SimpleCommunication extends FlowOptionDynamic {
             HeadMetadata headMetadata = responseMessage.getHeadMetadata();
             headMetadata.setTraceId(traceId);
         }
+    }
+
+    private void extractedSourceClientId(ResponseMessage responseMessage, long userId) {
+        // userId 等于自己，这里就精准广播到玩家所在的对外服中（即使启动了多个游戏对外服，也能精准到玩家所在的对外服中）
+        HeadMetadata headMetadata = this.getHeadMetadata();
+        if (userId != headMetadata.getUserId()) {
+            return;
+        }
+
+        HeadMetadata responseMessageHeadMetadata = responseMessage.getHeadMetadata();
+        if (responseMessageHeadMetadata.getSourceClientId() != 0) {
+            // 说明已经指定了需要精准广播的游戏对外服
+            return;
+        }
+
+        // 指定游戏对外服广播（当前玩家所在的游戏对外服）
+        int sourceClientId = headMetadata.getSourceClientId();
+        responseMessageHeadMetadata.setSourceClientId(sourceClientId);
     }
 }
