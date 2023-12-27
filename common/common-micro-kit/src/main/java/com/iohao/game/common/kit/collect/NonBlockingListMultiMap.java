@@ -36,9 +36,6 @@ import java.util.function.Consumer;
 final class NonBlockingListMultiMap<K, V> implements ListMultiMap<K, V> {
     private final Map<K, List<V>> map = new NonBlockingHashMap<>();
 
-    NonBlockingListMultiMap() {
-    }
-
     @Override
     public Map<K, List<V>> asMap() {
         return this.map;

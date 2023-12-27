@@ -16,22 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core;
-
-import lombok.experimental.UtilityClass;
+package com.iohao.game.action.skeleton.core.flow;
 
 /**
- * 业务框架相关的默认配置
- *
  * @author 渔民小镇
- * @date 2023-12-24
+ * @date 2023-12-27
  */
-@UtilityClass
-public class IoGameCommonCoreConfig {
-    public boolean eventBusLog;
-
-    public interface ExternalBizCode {
-        /** 用户（玩家）的元信息同步，AttachmentExternalBizRegion */
-        int attachment = -3;
-    }
+interface SimpleContext extends SimpleAttachment {
 }

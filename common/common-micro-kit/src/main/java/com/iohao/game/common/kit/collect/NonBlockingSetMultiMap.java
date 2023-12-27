@@ -36,9 +36,6 @@ import java.util.function.Consumer;
 final class NonBlockingSetMultiMap<K, V> implements SetMultiMap<K, V> {
     private final NonBlockingHashMap<K, Set<V>> map = new NonBlockingHashMap<>();
 
-    NonBlockingSetMultiMap() {
-    }
-
     @Override
     public Map<K, Set<V>> asMap() {
         return this.map;

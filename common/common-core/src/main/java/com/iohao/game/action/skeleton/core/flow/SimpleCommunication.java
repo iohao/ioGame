@@ -22,10 +22,8 @@ import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.commumication.*;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
 import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.eventbus.EventBusMessage;
-import com.iohao.game.action.skeleton.kit.ExecutorSelectKit;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
@@ -33,15 +31,12 @@ import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
 import com.iohao.game.common.kit.TraceKit;
-import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
-import com.iohao.game.common.kit.concurrent.executor.UserVirtualExecutorRegion;
 import org.slf4j.MDC;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -64,22 +59,7 @@ import java.util.function.Supplier;
  * @date 2023-12-21
  * @see FlowContext
  */
-interface SimpleCommunication extends FlowOptionDynamic {
-    /**
-     * 创建请求对象
-     *
-     * @param cmdInfo 路由
-     * @param data    业务数据
-     * @return 请求对象
-     */
-    RequestMessage createRequestMessage(final CmdInfo cmdInfo, final Object data);
-
-    /**
-     * FlowContext request HeadMetadata
-     *
-     * @return HeadMetadata
-     */
-    HeadMetadata getHeadMetadata();
+interface SimpleCommunication extends SimpleCommon {
 
     /**
      * 游戏逻辑服
@@ -99,7 +79,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      *
      * @return 框架网络通讯聚合接口
      */
-    default CommunicationAggregationContext aggregationContext() {
+    private CommunicationAggregationContext aggregationContext() {
         return this.option(FlowAttr.aggregationContext);
     }
 
@@ -616,10 +596,14 @@ interface SimpleCommunication extends FlowOptionDynamic {
         var sourceClientId = headMetadata.getSourceClientId();
 
         return new RequestCollectExternalMessage()
+                // 根据业务码，调用游戏对外服与业务码对应的业务实现类
+                .setBizCode(bizCode)
+                // 业务数据
+                .setData(data)
                 // 强制指定需要访问的游戏对外服；当指定 id 后，将不会访问所有的游戏对外服
                 .setSourceClientId(sourceClientId)
-                .setBizCode(bizCode)
-                .setData(data);
+                .setTraceId(headMetadata.getTraceId())
+                ;
     }
 
     /**
@@ -767,7 +751,6 @@ interface SimpleCommunication extends FlowOptionDynamic {
     default void broadcastMe(Object bizData) {
         final HeadMetadata headMetadata = this.getHeadMetadata();
         CmdInfo cmdInfo = headMetadata.getCmdInfo();
-
         this.broadcastMe(cmdInfo, bizData);
     }
 
@@ -778,8 +761,8 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param bizData 业务数据
      */
     default void broadcastMe(CmdInfo cmdInfo, Object bizData) {
-        var userId = this.userId();
-        this.broadcast(cmdInfo, bizData, userId);
+        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        this.broadcastMe(responseMessage);
     }
 
     /**
@@ -788,7 +771,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param responseMessage 消息
      */
     default void broadcastMe(ResponseMessage responseMessage) {
-        var userId = this.userId();
+        var userId = this.getUserId();
         this.broadcast(responseMessage, userId);
     }
 
@@ -799,7 +782,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param bizData 业务数据
      */
     default void broadcast(CmdInfo cmdInfo, Object bizData) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcast(responseMessage);
     }
 
@@ -823,7 +806,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param userId  userId
      */
     default void broadcast(CmdInfo cmdInfo, Object bizData, long userId) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcast(responseMessage, userId);
     }
 
@@ -834,6 +817,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param userId          userId
      */
     default void broadcast(ResponseMessage responseMessage, long userId) {
+
         employTraceId(responseMessage);
 
         extractedSourceClientId(responseMessage, userId);
@@ -850,7 +834,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param userIdList 指定用户列表
      */
     default void broadcast(CmdInfo cmdInfo, Object bizData, Collection<Long> userIdList) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcast(responseMessage, userIdList);
     }
 
@@ -879,7 +863,6 @@ interface SimpleCommunication extends FlowOptionDynamic {
     default void broadcastOrderMe(Object bizData) {
         final HeadMetadata headMetadata = this.getHeadMetadata();
         CmdInfo cmdInfo = headMetadata.getCmdInfo();
-
         this.broadcastOrderMe(cmdInfo, bizData);
     }
 
@@ -890,8 +873,8 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param bizData 业务数据
      */
     default void broadcastOrderMe(CmdInfo cmdInfo, Object bizData) {
-        var userId = this.userId();
-        this.broadcastOrder(cmdInfo, bizData, userId);
+        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        this.broadcastOrderMe(responseMessage);
     }
 
     /**
@@ -900,7 +883,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param responseMessage 消息
      */
     default void broadcastOrderMe(ResponseMessage responseMessage) {
-        var userId = this.userId();
+        var userId = this.getUserId();
         this.broadcastOrder(responseMessage, userId);
     }
 
@@ -911,7 +894,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param bizData 业务数据
      */
     default void broadcastOrder(CmdInfo cmdInfo, Object bizData) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrder(responseMessage);
     }
 
@@ -935,7 +918,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param userIdList 指定用户列表
      */
     default void broadcastOrder(CmdInfo cmdInfo, Object bizData, Collection<Long> userIdList) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrder(responseMessage, userIdList);
     }
 
@@ -960,7 +943,7 @@ interface SimpleCommunication extends FlowOptionDynamic {
      * @param userId  userId
      */
     default void broadcastOrder(CmdInfo cmdInfo, Object bizData, long userId) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrder(responseMessage, userId);
     }
 
@@ -1083,27 +1066,8 @@ interface SimpleCommunication extends FlowOptionDynamic {
         return eventBusMessage;
     }
 
-    private Executor getVirtualExecutor() {
-        // 得到用户对应的虚拟线程执行器
-        final HeadMetadata headMetadata = this.getHeadMetadata();
-        var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
-
-        ThreadExecutor threadExecutor = UserVirtualExecutorRegion.me().getThreadExecutor(executorIndex);
-
-        return threadExecutor.executor();
-    }
-
     private <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) {
         return CompletableFuture.supplyAsync(supplier, this.getVirtualExecutor());
-    }
-
-    private long userId() {
-        return this.getHeadMetadata().getUserId();
-    }
-
-    private ResponseMessage createResponseMessage(CmdInfo cmdInfo, Object data) {
-        Objects.requireNonNull(data);
-        return BarMessageKit.createResponseMessage(cmdInfo, data);
     }
 
     private void employTraceId(ResponseMessage responseMessage) {
@@ -1116,15 +1080,15 @@ interface SimpleCommunication extends FlowOptionDynamic {
     }
 
     private void extractedSourceClientId(ResponseMessage responseMessage, long userId) {
-        // userId 等于自己，这里就精准广播到玩家所在的对外服中（即使启动了多个游戏对外服，也能精准到玩家所在的对外服中）
-        HeadMetadata headMetadata = this.getHeadMetadata();
-        if (userId != headMetadata.getUserId()) {
-            return;
-        }
-
         HeadMetadata responseMessageHeadMetadata = responseMessage.getHeadMetadata();
         if (responseMessageHeadMetadata.getSourceClientId() != 0) {
             // 说明已经指定了需要精准广播的游戏对外服
+            return;
+        }
+
+        // userId 等于自己，这里就精准广播到玩家所在的对外服中（即使启动了多个游戏对外服，也能精准到玩家所在的对外服中）
+        HeadMetadata headMetadata = this.getHeadMetadata();
+        if (userId != headMetadata.getUserId()) {
             return;
         }
 

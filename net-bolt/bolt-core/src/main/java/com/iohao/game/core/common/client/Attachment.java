@@ -18,7 +18,7 @@
  */
 package com.iohao.game.core.common.client;
 
-import java.io.Serializable;
+import com.iohao.game.action.skeleton.core.flow.UserAttachment;
 
 /**
  * 元信息接口
@@ -30,7 +30,7 @@ import java.io.Serializable;
  * @author 渔民小镇
  * @date 2022-12-11
  */
-public interface Attachment extends Serializable {
+public interface Attachment extends UserAttachment {
     /**
      * get userId
      *

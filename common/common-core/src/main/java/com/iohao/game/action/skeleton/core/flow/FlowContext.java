@@ -21,7 +21,6 @@ package com.iohao.game.action.skeleton.core.flow;
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
@@ -59,7 +58,7 @@ import java.util.Objects;
 @Getter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FlowContext implements SimpleCommunication {
+public class FlowContext implements SimpleContext {
     /** 动态属性 */
     final Map<FlowOption<?>, Object> options = new HashMap<>();
     /** 业务框架 */
@@ -76,8 +75,6 @@ public class FlowContext implements SimpleCommunication {
     Object[] methodParams;
     /** 业务方法的返回值 */
     Object methodResult;
-    /** userId */
-    long userId;
     /** true 业务方法有异常 */
     boolean error;
     /** true 执行 ActionAfter 接口 {@link ActionAfter} */
@@ -105,24 +102,7 @@ public class FlowContext implements SimpleCommunication {
     long inOutTime;
 
     public CmdInfo getCmdInfo() {
-        HeadMetadata headMetadata = this.request.getHeadMetadata();
-        return headMetadata.getCmdInfo();
-    }
-
-    /**
-     * 元附加信息
-     * <pre>
-     *     一般是在游戏对外服中设置的一些附加信息
-     *     这些信息会跟随请求来到游戏逻辑服中
-     * </pre>
-     *
-     * @param clazz clazz
-     * @param <T>   t
-     * @return 元附加信息
-     */
-    public <T> T getAttachment(Class<T> clazz) {
-        byte[] attachmentData = this.request.getHeadMetadata().getAttachmentData();
-        return DataCodecKit.decode(attachmentData, clazz);
+        return this.getHeadMetadata().getCmdInfo();
     }
 
     /**
@@ -146,37 +126,6 @@ public class FlowContext implements SimpleCommunication {
 
     public RequestMessage createRequestMessage(CmdInfo cmdInfo) {
         return this.createRequestMessage(cmdInfo, null);
-    }
-
-    /**
-     * 创建一个 request 对象，并使用当前 FlowContext HeadMetadata 部分属性。
-     * <pre>
-     *     HeadMetadata 对象以下属性不会赋值，如有需要，请自行赋值
-     *       sourceClientId
-     *       endPointClientId
-     *       rpcCommandType
-     *       msgId
-     * </pre>
-     *
-     * @param cmdInfo 路由
-     * @param data    业务参数
-     * @return request
-     */
-    @Override
-    public RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
-
-        HeadMetadata headMetadata = this.getHeadMetadata()
-                .cloneHeadMetadata()
-                .setCmdInfo(cmdInfo);
-
-        RequestMessage requestMessage = new RequestMessage();
-        requestMessage.setHeadMetadata(headMetadata);
-
-        if (Objects.nonNull(data)) {
-            requestMessage.setData(data);
-        }
-
-        return requestMessage;
     }
 
     /**

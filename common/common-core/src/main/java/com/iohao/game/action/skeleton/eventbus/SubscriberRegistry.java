@@ -92,7 +92,7 @@ final class SubscriberRegistry {
         Class<?> methodParamClazz = eventSource.getClass();
 
         return this.eventSourceClassSet.contains(methodParamClazz)
-                ? this.subscriberSetMap.of(methodParamClazz)
+                ? this.subscriberSetMap.get(methodParamClazz)
                 : Collections.emptyList();
     }
 

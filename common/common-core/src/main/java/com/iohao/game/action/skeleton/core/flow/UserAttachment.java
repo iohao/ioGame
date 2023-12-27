@@ -16,22 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core;
+package com.iohao.game.action.skeleton.core.flow;
 
-import lombok.experimental.UtilityClass;
+import java.io.Serializable;
 
 /**
- * 业务框架相关的默认配置
+ * 元信息接口
+ * <pre>
+ *     注意：框架默认使用的是 protobuf 编解码，所以建议子类添加 ProtobufClass 注解
+ * </pre>
  *
  * @author 渔民小镇
- * @date 2023-12-24
+ * @date 2023-12-27
  */
-@UtilityClass
-public class IoGameCommonCoreConfig {
-    public boolean eventBusLog;
+public interface UserAttachment extends Serializable {
 
-    public interface ExternalBizCode {
-        /** 用户（玩家）的元信息同步，AttachmentExternalBizRegion */
-        int attachment = -3;
-    }
 }

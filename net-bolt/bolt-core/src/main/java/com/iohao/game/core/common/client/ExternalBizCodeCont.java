@@ -18,6 +18,8 @@
  */
 package com.iohao.game.core.common.client;
 
+import com.iohao.game.action.skeleton.core.IoGameCommonCoreConfig;
+
 /**
  * <pre>
  *     开发者扩展时，用正数的业务码
@@ -34,5 +36,5 @@ public interface ExternalBizCodeCont {
     int forcedOffline = -2;
 
     /** 用户（玩家）的元信息同步，AttachmentExternalBizRegion */
-    int attachment = -3;
+    int attachment = IoGameCommonCoreConfig.ExternalBizCode.attachment;
 }
