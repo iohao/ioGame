@@ -61,9 +61,4 @@ final class NonBlockingListMultiMap<K, V> implements ListMultiMap<K, V> {
 
         return list;
     }
-
-    @Override
-    public Set<Map.Entry<K, List<V>>> entrySet() {
-        return this.map.entrySet();
-    }
 }

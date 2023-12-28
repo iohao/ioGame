@@ -19,14 +19,33 @@
 package com.iohao.game.action.skeleton.eventbus;
 
 /**
+ * 监听
+ *
  * @author 渔民小镇
  * @date 2023-12-24
  */
-public interface SubscriberInvokeCreate {
+public interface EventBusListener {
+    /**
+     * 订阅者异常处理
+     *
+     * @param e               e
+     * @param eventSource     事件源
+     * @param eventBusMessage 事件消息
+     */
+    void invokeException(Throwable e, Object eventSource, EventBusMessage eventBusMessage);
 
-    SubscriberInvoke create(Subscriber subscriber, EventBusMessage eventBusMessage);
+    /**
+     * 事件消息没有对应的订阅者时，触发的监听回调
+     * <pre>
+     *     注意，默认情况下只有调用 {@link EventBus#fire} 方法时才会检测。
+     * </pre>
+     *
+     * @param eventBusMessage 事件消息
+     * @param eventBus        eventBus
+     */
+    void emptySubscribe(EventBusMessage eventBusMessage, EventBus eventBus);
 
-    static SubscriberInvokeCreate defaultInstance() {
-        return DefaultSubscriberInvokeCreate.me();
+    static EventBusListener defaultInstance() {
+        return DefaultEventBusListener.me();
     }
 }

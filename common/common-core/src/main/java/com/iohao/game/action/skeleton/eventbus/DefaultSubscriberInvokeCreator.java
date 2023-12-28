@@ -27,21 +27,20 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2023-12-24
  */
-final class DefaultSubscriberInvokeCreate implements SubscriberInvokeCreate {
-
+final class DefaultSubscriberInvokeCreator implements SubscriberInvokeCreator {
 
     @Override
     public SubscriberInvoke create(Subscriber subscriber, EventBusMessage eventBusMessage) {
         return new DefaultSubscriberInvoke(subscriber, eventBusMessage);
     }
 
-    static DefaultSubscriberInvokeCreate me() {
+    static DefaultSubscriberInvokeCreator me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final DefaultSubscriberInvokeCreate ME = new DefaultSubscriberInvokeCreate();
+        static final DefaultSubscriberInvokeCreator ME = new DefaultSubscriberInvokeCreator();
     }
 
     record DefaultSubscriberInvoke(Subscriber subscriber, EventBusMessage eventBusMessage) implements SubscriberInvoke {

@@ -18,15 +18,33 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author 渔民小镇
  * @date 2023-12-24
  */
-public interface EventBusMessageCreate {
-    EventBusMessage create(Object eventSource);
+@Slf4j
+final class DefaultEventBusListener implements EventBusListener {
+    @Override
+    public void invokeException(Throwable e, Object eventSource, EventBusMessage eventBusMessage) {
+        log.error(e.getMessage(), e);
+    }
 
-    static EventBusMessageCreate defaultInstance() {
-        return DefaultEventBusMessageCreate.me();
+    @Override
+    public void emptySubscribe(EventBusMessage eventBusMessage, EventBus eventBus) {
+        Object eventSource = eventBusMessage.getEventSource();
+        Class<?> clazz = eventSource.getClass();
+        String simpleName = clazz.getName();
+        log.warn("事件源[{}]，没有配置订阅者。{}", clazz.getSimpleName(), simpleName);
+    }
+
+    static DefaultEventBusListener me() {
+        return Holder.ME;
+    }
+
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final DefaultEventBusListener ME = new DefaultEventBusListener();
     }
 }
-

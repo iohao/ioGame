@@ -25,5 +25,9 @@ package com.iohao.game.action.skeleton.eventbus;
  * @date 2023-12-24
  */
 public interface SubscriberInvoke {
+    /**
+     * 执行订阅者方法
+     */
     void invoke();
+
 }

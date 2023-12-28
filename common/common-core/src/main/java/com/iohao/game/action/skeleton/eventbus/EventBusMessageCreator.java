@@ -16,14 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.eventbus.capable;
+package com.iohao.game.action.skeleton.eventbus;
 
 /**
- * 在用户线程执行器中执行
+ * EventBusMessage creator
  *
  * @author 渔民小镇
  * @date 2023-12-24
  */
-public interface EventUserId {
-    long getUserId();
+public interface EventBusMessageCreator {
+    EventBusMessage create(Object eventSource);
+
+    static EventBusMessageCreator defaultInstance() {
+        return DefaultEventBusMessageCreator.me();
+    }
 }
+

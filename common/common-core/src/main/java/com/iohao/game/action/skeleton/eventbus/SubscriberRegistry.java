@@ -20,7 +20,7 @@ package com.iohao.game.action.skeleton.eventbus;
 
 import com.esotericsoftware.reflectasm.ConstructorAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
-import com.iohao.game.common.kit.collect.SetMultiMap;
+import com.iohao.game.common.kit.collect.ListMultiMap;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -42,14 +42,14 @@ import java.util.stream.Stream;
 @FieldDefaults(level = AccessLevel.PACKAGE)
 final class SubscriberRegistry {
     static final LongAdder threadIndexAdder = new LongAdder();
-    final SetMultiMap<Class<?>, Subscriber> subscriberSetMap = SetMultiMap.create();
-    final Set<Class<?>> listenerClassSet = new NonBlockingHashSet<>();
-    final Set<Class<?>> eventSourceClassSet = new NonBlockingHashSet<>();
+    final ListMultiMap<Class<?>, Subscriber> subscriberMultiMap = ListMultiMap.create();
+    final Set<Class<?>> eventBusSubscriberSet = new NonBlockingHashSet<>();
 
-    void register(Object listener) {
-        Class<?> clazz = listener.getClass();
+    void register(Object eventBusSubscriber) {
 
-        if (!listenerClassSet.add(clazz)) {
+        Class<?> clazz = eventBusSubscriber.getClass();
+
+        if (!eventBusSubscriberSet.add(clazz)) {
             throw new RuntimeException("已经存在 " + clazz);
         }
 
@@ -66,40 +66,42 @@ final class SubscriberRegistry {
             var parameterClass = parameter.getType();
             int methodIndex = methodAccess.getIndex(methodName, parameterClass);
 
+            // 订阅者注解相关
             var annotation = method.getAnnotation(EventSubscribe.class);
             var executorSelector = annotation.value();
+            int order = Math.abs(annotation.order());
 
             threadIndexAdder.increment();
-            long threadIndex = threadIndexAdder.longValue();
 
-            Subscriber subscriber = new Subscriber(threadIndex)
+            Subscriber subscriber = new Subscriber(threadIndexAdder.longValue())
                     .setMethodAccess(methodAccess)
                     .setConstructorAccess(constructorAccess)
                     .setMethodName(methodName)
                     .setMethod(method)
                     .setMethodIndex(methodIndex)
                     .setTargetClazz(clazz)
-                    .setTarget(listener)
+                    .setTarget(eventBusSubscriber)
                     .setParameterName(parameter.getName())
                     .setParameterClass(parameterClass)
+                    .setOrder(order)
                     .setExecutorSelect(executorSelector);
 
-            addSubscriber(subscriber);
+            this.subscriberMultiMap.put(parameterClass, subscriber);
         });
+
+        this.subscriberMultiMap.asMap().values().forEach(EventBusRegion::sort);
+    }
+
+    Collection<Class<?>> listEventSourceClass() {
+        return this.subscriberMultiMap.keySet();
     }
 
     Collection<Subscriber> listSubscriber(Object eventSource) {
         Class<?> methodParamClazz = eventSource.getClass();
 
-        return this.eventSourceClassSet.contains(methodParamClazz)
-                ? this.subscriberSetMap.get(methodParamClazz)
+        return this.subscriberMultiMap.containsKey(methodParamClazz)
+                ? this.subscriberMultiMap.get(methodParamClazz)
                 : Collections.emptyList();
-    }
-
-    private void addSubscriber(Subscriber subscriber) {
-        Class<?> parameterClass = subscriber.parameterClass;
-        this.subscriberSetMap.put(parameterClass, subscriber);
-        this.eventSourceClassSet.add(parameterClass);
     }
 
     private Stream<Method> streamMethod(Class<?> clazz) {

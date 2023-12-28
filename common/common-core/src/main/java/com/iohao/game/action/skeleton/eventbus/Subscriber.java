@@ -20,10 +20,10 @@ package com.iohao.game.action.skeleton.eventbus;
 
 import com.esotericsoftware.reflectasm.ConstructorAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 
@@ -37,11 +37,11 @@ import java.lang.reflect.Method;
  * @date 2023-12-24
  * @see EventSubscribe
  */
-@Slf4j
-@Setter
 @Accessors(chain = true)
+@Setter(AccessLevel.PACKAGE)
 public final class Subscriber {
-    final long threadIndex;
+    @Getter
+    final long id;
     /** 方法访问器 */
     MethodAccess methodAccess;
     /** 类访问器 */
@@ -59,20 +59,25 @@ public final class Subscriber {
     String parameterName;
     /** 方法参数类型 */
     Class<?> parameterClass;
+    /**
+     * 执行的顺序（类似优先级）
+     * <pre>
+     *     想要确保按顺序执行，需要确定使用的是相同的线程执行器
+     * </pre>
+     *
+     * @see com.iohao.game.action.skeleton.eventbus.EventSubscribe.ExecutorSelector
+     */
+    int order;
     /** 执行器选择策略 */
     @Getter
     EventSubscribe.ExecutorSelector executorSelect;
 
-    Subscriber(long threadIndex) {
-        this.threadIndex = threadIndex;
+    Subscriber(long id) {
+        this.id = id;
     }
 
     void invoke(Object param) {
-        try {
-            // 调用开发者在 action 类中编写的业务方法，即 action
-            methodAccess.invoke(target, methodIndex, param);
-        } catch (Throwable e) {
-            log.error(e.getMessage(), e);
-        }
+        // 调用开发者在 action 类中编写的业务方法，即 action
+        methodAccess.invoke(target, methodIndex, param);
     }
 }

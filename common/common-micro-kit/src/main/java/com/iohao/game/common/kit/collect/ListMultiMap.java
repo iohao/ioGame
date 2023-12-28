@@ -62,7 +62,9 @@ public interface ListMultiMap<K, V> extends MultiMap<K, V> {
         return asMap().get(key);
     }
 
-    Set<Map.Entry<K, List<V>>> entrySet();
+    default Set<Map.Entry<K, List<V>>> entrySet() {
+        return this.asMap().entrySet();
+    }
 
     static <K, V> ListMultiMap<K, V> create() {
         return new NonBlockingListMultiMap<>();

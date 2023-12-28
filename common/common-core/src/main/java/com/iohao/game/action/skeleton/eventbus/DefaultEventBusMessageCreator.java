@@ -18,28 +18,33 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
-import lombok.extern.slf4j.Slf4j;
+import com.iohao.game.common.kit.TraceKit;
+import org.slf4j.MDC;
 
 /**
  * @author 渔民小镇
  * @date 2023-12-24
  */
-@Slf4j
-final class DefaultEventBusMessageFireListener implements EventBusMessageFireListener {
+final class DefaultEventBusMessageCreator implements EventBusMessageCreator {
     @Override
-    public void fireEmpty(EventBusMessage eventBusMessage, EventBus eventBus) {
-        Object eventSource = eventBusMessage.getEventSource();
-        Class<?> clazz = eventSource.getClass();
-        String simpleName = clazz.getName();
-        log.warn("事件源[{}]，没有配置订阅者。{}", clazz.getSimpleName(), simpleName);
+    public EventBusMessage create(Object eventSource) {
+
+        EventBusMessage eventBusMessage = new EventBusMessage();
+        eventBusMessage.setEventSource(eventSource);
+
+        // traceId
+        String traceId = MDC.get(TraceKit.traceName);
+        eventBusMessage.setTraceId(traceId);
+
+        return eventBusMessage;
     }
 
-    static DefaultEventBusMessageFireListener me() {
+    static DefaultEventBusMessageCreator me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final DefaultEventBusMessageFireListener ME = new DefaultEventBusMessageFireListener();
+        static final DefaultEventBusMessageCreator ME = new DefaultEventBusMessageCreator();
     }
 }

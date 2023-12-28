@@ -74,7 +74,7 @@ final class EventBusBrokerClientListener implements BrokerClientListener {
             Set<String> topics = result.topicSet();
             EventBrokerClientMessage eventBrokerClientMessage = result.eventBrokerClientMessage();
 
-            EventBusRegion.unloadAcrossProgressTopic(topics, eventBrokerClientMessage);
+            EventBusRegion.unloadRemoteTopic(topics, eventBrokerClientMessage);
         });
     }
 
@@ -87,7 +87,7 @@ final class EventBusBrokerClientListener implements BrokerClientListener {
 
             Set<String> topics = result.topicSet();
             EventBrokerClientMessage eventBrokerClientMessage = result.eventBrokerClientMessage();
-            EventBusRegion.loadAcrossProgressEventBrokerClientMsg(topics, eventBrokerClientMessage);
+            EventBusRegion.loadRemoteEventTopic(topics, eventBrokerClientMessage);
         });
     }
 

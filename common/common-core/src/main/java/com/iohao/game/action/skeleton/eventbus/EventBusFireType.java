@@ -45,12 +45,7 @@ public interface EventBusFireType {
      */
     int fireLocalNeighbor = 2;
     /**
-     * 当前进程
-     * <pre>
-     *     表示本地进程有订阅者接收了事件消息
-     *
-     *     fireLocal 包括了 fireMe 、 fireLocalNeighbor 。
-     * </pre>
+     * 当前进程所有订阅者收了事件消息
      */
     int fireLocal = 4;
     /**

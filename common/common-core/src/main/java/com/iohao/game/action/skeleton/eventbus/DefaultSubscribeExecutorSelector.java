@@ -49,13 +49,17 @@ final class DefaultSubscribeExecutorSelector implements SubscribeExecutorSelecto
             return UserThreadExecutorRegion.me().getThreadExecutor(threadIndex);
         }
 
-        // [线程安全] 其他情况，相同的订阅者使用同一个线程执行器
-        long threadIndex = subscriber.threadIndex;
-        // 其他线程中执行
+        // [线程安全] 相同的订阅者使用同一个线程执行器
+        if (executorSelect == EventSubscribe.ExecutorSelector.methodExecutor) {
+            long threadIndex = subscriber.id;
+            return SimpleThreadExecutorRegion.me().getThreadExecutor(threadIndex);
+        }
+
+        long threadIndex = getThreadIndex(eventBusMessage);
         return SimpleThreadExecutorRegion.me().getThreadExecutor(threadIndex);
     }
 
-    private long getThreadIndex(EventBusMessage eventBusMessage) {
+    long getThreadIndex(EventBusMessage eventBusMessage) {
         long userId = eventBusMessage.getUserId();
 
         if (userId != 0) {

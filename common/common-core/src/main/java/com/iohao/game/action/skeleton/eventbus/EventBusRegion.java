@@ -18,12 +18,15 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
+import com.iohao.game.common.kit.collect.ListMultiMap;
 import com.iohao.game.common.kit.collect.SetMultiMap;
+import com.iohao.game.common.kit.concurrent.executor.SimpleThreadExecutorRegion;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,7 +59,15 @@ public class EventBusRegion {
      *     value : across progress brokerClientId
      * </pre>
      */
-    final SetMultiMap<String, EventBrokerClientMessage> acrossProgressTopicMultiMap = SetMultiMap.create();
+    final SetMultiMap<String, EventBrokerClientMessage> remoteTopicMultiMap = SetMultiMap.create();
+    /**
+     * 事件源与订阅者的映射
+     * <pre>
+     *     key : 事件源
+     *     value : 订阅者集合。（当前进程内的所有订阅者）
+     * </pre>
+     */
+    final ListMultiMap<Class<?>, Subscriber> subscriberListMap = ListMultiMap.create();
 
     public EventBus getEventBus(String brokerClientId) {
         return eventBusMap.get(brokerClientId);
@@ -68,96 +79,73 @@ public class EventBusRegion {
      * @param topics                   订阅者主题
      * @param eventBrokerClientMessage 其他进程的逻辑服信息
      */
-    public void loadAcrossProgressEventBrokerClientMsg(Collection<String> topics, EventBrokerClientMessage eventBrokerClientMessage) {
-        topics.forEach(topic -> acrossProgressTopicMultiMap.put(topic, eventBrokerClientMessage));
+    public void loadRemoteEventTopic(Collection<String> topics, EventBrokerClientMessage eventBrokerClientMessage) {
+        topics.forEach(topic -> remoteTopicMultiMap.put(topic, eventBrokerClientMessage));
     }
 
-    public void unloadAcrossProgressTopic(Collection<String> topics, EventBrokerClientMessage eventBrokerClientMessage) {
+    public void unloadRemoteTopic(Collection<String> topics, EventBrokerClientMessage eventBrokerClientMessage) {
         for (String topic : topics) {
-            Set<EventBrokerClientMessage> eventBrokerClientMessages = acrossProgressTopicMultiMap.get(topic);
+            Set<EventBrokerClientMessage> eventBrokerClientMessages = remoteTopicMultiMap.get(topic);
             eventBrokerClientMessages.remove(eventBrokerClientMessage);
         }
     }
 
-    void add(EventBus eventBus) {
-        eventBusMap.put(eventBus.id, eventBus);
-    }
-
-    Set<EventBrokerClientMessage> listAcrossProgressEventBrokerClientMessage(EventBusMessage eventBusMessage) {
+    Set<EventBrokerClientMessage> listRemoteEventBrokerClientMessage(EventBusMessage eventBusMessage) {
         Object eventSource = eventBusMessage.getEventSource();
         Class<?> eventSourceClass = eventSource.getClass();
         String name = eventSourceClass.getName();
-        return acrossProgressTopicMultiMap.get(name);
+        return remoteTopicMultiMap.get(name);
     }
 
-    //    /**
-//     * 事件源与订阅者的映射
-//     * <pre>
-//     *     key : 事件源
-//     *     value : 订阅者集合。（当前进程内的所有订阅者）
-//     * </pre>
-//     */
-//    final ListMultiMap<Class<?>, Subscriber> subscriberListMap = ListMultiMap.create();
-//
-//    final Set<Integer> excludeIdHashSet = new NonBlockingHashSet<>();
+    void addLocal(EventBus eventBus) {
+        eventBusMap.put(eventBus.id, eventBus);
 
-//    void add1(EventBus eventBus) {
-//        EventBrokerClientMsg eventBrokerClientMsg = eventBus.eventBrokerClientMsg;
-//
-//        String id = eventBrokerClientMsg.brokerClientId();
-//        eventBusMap.put(id, eventBus);
-//
-//        int idHash = HashKit.hash32(id);
-//        excludeIdHashSet.add(idHash);
-//
-//        SetMultiMap<Class<?>, Subscriber> tempMap = SetMultiMap.create();
-//        for (EventBus bus : eventBusMap.values()) {
-//            SubscriberRegistry subscriberRegistry = bus.subscriberRegistry;
-//            SetMultiMap<Class<?>, Subscriber> setMultiMap = subscriberRegistry.subscriberSetMap;
-//
-//            if (setMultiMap.isEmpty()) {
-//                continue;
-//            }
-//
-//            for (var entry : setMultiMap.entrySet()) {
-//                Class<?> key = entry.getKey();
-//                tempMap.of(key).addAll(entry.getValue());
-//            }
-//        }
-//
-//        subscriberListMap.clear();
-//        for (Map.Entry<Class<?>, Set<Subscriber>> entry : tempMap.entrySet()) {
-//            subscriberListMap.of(entry.getKey()).addAll(entry.getValue());
-//        }
-//    }
+        SimpleThreadExecutorRegion.me().execute(EventBusRegion::resetLocalSubscriber, 1);
+    }
 
-//    /**
-//     * 根据事件源，获取当前进程的所有订阅者
-//     *
-//     * @param eventSource 事件源
-//     * @return 当前进程的所有订阅者
-//     */
-//    List<Subscriber> listSubscriber(Object eventSource) {
-//        Class<?> eventSourceClazz = eventSource.getClass();
-//        return listSubscriber(eventSourceClazz);
-//    }
-//
-//    private List<Subscriber> listSubscriber(Class<?> eventSourceClazz) {
-//        return subscriberListMap.get(eventSourceClazz);
-//    }
+    /**
+     * 根据事件消息，获取当前进程所有的订阅者
+     *
+     * @param eventBusMessage 事件消息
+     * @return 当前进程所有的订阅者
+     */
+    List<Subscriber> listLocalSubscriber(EventBusMessage eventBusMessage) {
+        Object eventSource = eventBusMessage.getEventSource();
+        Class<?> eventSourceClazz = eventSource.getClass();
+        return subscriberListMap.get(eventSourceClazz);
+    }
 
-//    /**
-//     * 根据事件源，获取当前进程的所有订阅者
-//     *
-//     * @param eventSource 事件源
-//     * @return 当前进程的所有订阅者
-//     */
-//    List<Subscriber> listSubscriber1(Object eventSource) {
-//        Class<?> eventSourceClazz = eventSource.getClass();
-//        return listSubscriber(eventSourceClazz);
-//    }
-//
-//    private List<Subscriber> listSubscriber1(Class<?> eventSourceClazz) {
-//        return subscriberListMap.get(eventSourceClazz);
-//    }
+    private void resetLocalSubscriber() {
+
+        ListMultiMap<Class<?>, Subscriber> tempMultiMap = ListMultiMap.create();
+        for (EventBus eventBus : eventBusMap.values()) {
+
+            SubscriberRegistry subscriberRegistry = eventBus.subscriberRegistry;
+            var multiMap = subscriberRegistry.subscriberMultiMap;
+
+            if (multiMap.isEmpty()) {
+                continue;
+            }
+
+            for (var entry : multiMap.entrySet()) {
+                Class<?> key = entry.getKey();
+                tempMultiMap.of(key).addAll(entry.getValue());
+            }
+        }
+
+        subscriberListMap.clear();
+
+        for (Map.Entry<Class<?>, List<Subscriber>> entry : tempMultiMap.entrySet()) {
+            var subscribers = entry.getValue();
+
+            sort(subscribers);
+
+            subscriberListMap.of(entry.getKey()).addAll(subscribers);
+        }
+    }
+
+    void sort(List<Subscriber> subscribers) {
+        // order 排序
+        subscribers.sort((o1, o2) -> o2.order - o1.order);
+    }
 }

@@ -44,8 +44,8 @@ public final class EventBusMessage implements Serializable {
     /**
      * userId
      * <pre>
-     *     通常，我们可以将 userId 看成是 threadIndex，
-     *     因为该属性的主要作用是确定使用哪个线程执行器
+     *     通常，我们可以将 userId 看成是 threadIndex， 因为该属性的主要作用是确定使用哪个线程执行器。
+     *     当该值为 0 时，框架会分配一个值。
      * </pre>
      */
     long userId;
@@ -55,18 +55,9 @@ public final class EventBusMessage implements Serializable {
     Object eventSource;
     /** 其他进程的信息 */
     Set<EventBrokerClientMessage> eventBrokerClientMessageSet;
-    @Getter(AccessLevel.PRIVATE)
-    transient int fireType;
 
-    /**
-     * 添加已经触发的订阅者类型
-     *
-     * @param fireType {@link EventBusFireType}
-     * @see EventBusFireType
-     */
-    public void addFireType(int fireType) {
-        this.fireType |= fireType;
-    }
+    @Getter(AccessLevel.PACKAGE)
+    transient int fireType;
 
     /**
      * 已经触发的订阅者类型是否存在
@@ -79,7 +70,17 @@ public final class EventBusMessage implements Serializable {
         return (this.fireType & fireType) == fireType;
     }
 
-    public boolean emptyFireType() {
+    /**
+     * 添加已经触发的订阅者类型
+     *
+     * @param fireType {@link EventBusFireType}
+     * @see EventBusFireType
+     */
+    void addFireType(int fireType) {
+        this.fireType |= fireType;
+    }
+
+    boolean emptyFireType() {
         return fireType == 0;
     }
 }

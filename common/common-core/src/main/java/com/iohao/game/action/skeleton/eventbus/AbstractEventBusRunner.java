@@ -44,9 +44,9 @@ public abstract class AbstractEventBusRunner implements Runner {
         skeleton.option(SkeletonAttr.eventBus, eventBus);
 
         eventBus.setSubscribeExecutorSelector(SubscribeExecutorSelector.defaultInstance());
-        eventBus.setSubscriberInvokeCreate(SubscriberInvokeCreate.defaultInstance());
-        eventBus.setEventBusMessageCreate(EventBusMessageCreate.defaultInstance());
-        eventBus.setListener(EventBusMessageFireListener.defaultInstance());
+        eventBus.setSubscriberInvokeCreator(SubscriberInvokeCreator.defaultInstance());
+        eventBus.setEventBusMessageCreator(EventBusMessageCreator.defaultInstance());
+        eventBus.setEventBusListener(EventBusListener.defaultInstance());
 
         eventBus.setBrokerClientContext(brokerClientContext);
         eventBus.setEventBrokerClientMessage(eventBrokerClientMessage);
@@ -55,7 +55,7 @@ public abstract class AbstractEventBusRunner implements Runner {
 
         eventBus.setStatus(EventBus.EventBusStatus.run);
 
-        EventBusRegion.add(eventBus);
+        EventBusRegion.addLocal(eventBus);
     }
 
     private static EventBrokerClientMessage getEventBrokerClientMessage(BrokerClientContext brokerClientContext) {

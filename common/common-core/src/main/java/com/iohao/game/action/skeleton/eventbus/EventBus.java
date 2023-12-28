@@ -29,6 +29,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,9 +66,9 @@ public final class EventBus {
     final String id;
 
     SubscribeExecutorSelector subscribeExecutorSelector;
-    SubscriberInvokeCreate subscriberInvokeCreate;
-    EventBusMessageCreate eventBusMessageCreate;
-    EventBusMessageFireListener listener;
+    SubscriberInvokeCreator subscriberInvokeCreator;
+    EventBusMessageCreator eventBusMessageCreator;
+    EventBusListener eventBusListener;
 
     /** 对应逻辑服的相关信息 */
     EventBrokerClientMessage eventBrokerClientMessage;
@@ -91,6 +92,25 @@ public final class EventBus {
         this.subscriberRegistry.register(eventBusSubscriber);
     }
 
+    public EventBusMessage createEventBusMessage(Object eventSource) {
+        return this.eventBusMessageCreator.create(eventSource);
+    }
+
+    public EventTopicMessage getEventTopicMessage() {
+
+        // 当前 eventBus 订阅的所有事件源主题
+        var eventSourceClassSet = this.subscriberRegistry.listEventSourceClass();
+
+        Set<String> collect = eventSourceClassSet.stream()
+                .map(Class::getName)
+                .collect(Collectors.toSet());
+
+        EventTopicMessage message = new EventTopicMessage();
+        message.setTopicSet(collect);
+
+        return message;
+    }
+
     /**
      * 发送事件给订阅者
      * <pre>
@@ -107,7 +127,7 @@ public final class EventBus {
         this.fireRemote(eventBusMessage);
 
         if (eventBusMessage.emptyFireType()) {
-            this.listener.fireEmpty(eventBusMessage, this);
+            this.eventBusListener.emptySubscribe(eventBusMessage, this);
         }
     }
 
@@ -148,8 +168,101 @@ public final class EventBus {
     }
 
     private void fireLocal(EventBusMessage eventBusMessage, boolean async) {
-        this.fireMe(eventBusMessage, async);
-        this.fireLocalNeighbor(eventBusMessage, async);
+        List<Subscriber> subscribers = EventBusRegion.listLocalSubscriber(eventBusMessage);
+        if (CollKit.isEmpty(subscribers)) {
+            return;
+        }
+
+        eventBusMessage.addFireType(EventBusFireType.fireLocal);
+
+        // 发送事件
+        this.invokeSubscriber(eventBusMessage, async, subscribers);
+    }
+
+    void fireRemote(EventBusMessage eventBusMessage) {
+        var messageSet = EventBusRegion.listRemoteEventBrokerClientMessage(eventBusMessage);
+
+        if (CollKit.isEmpty(messageSet)) {
+            return;
+        }
+
+        // 如果其他进程中存在当前事件源的订阅者，将事件源发布到其他进程中
+        eventBusMessage.setEventBrokerClientMessageSet(messageSet);
+        eventBusMessage.addFireType(EventBusFireType.fireRemote);
+
+        this.extractedPrint(eventBusMessage);
+
+        try {
+            this.brokerClientContext.oneway(eventBusMessage);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    public void fireMe(Object eventSource) {
+        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        this.fireMe(eventBusMessage);
+    }
+
+    /**
+     * 仅给当前 EventBus 的订阅者发送事件消息
+     * <pre>
+     *     已注册到 {@link EventBus#register(Object)}  的订阅者
+     * </pre>
+     *
+     * @param eventBusMessage 事件消息
+     */
+    public void fireMe(EventBusMessage eventBusMessage) {
+        this.fireMe(eventBusMessage, true);
+    }
+
+    public void fireMeSync(Object eventSource) {
+        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        this.fireMeSync(eventBusMessage);
+    }
+
+    /**
+     * 仅给当前 EventBus 的订阅者发送事件消息
+     * <pre>
+     *     已注册到 {@link EventBus#register(Object)} 的订阅者
+     *
+     *     [同步]
+     * </pre>
+     *
+     * @param eventBusMessage 事件消息
+     */
+    public void fireMeSync(EventBusMessage eventBusMessage) {
+        this.fireMe(eventBusMessage, false);
+    }
+
+    private void fireMe(EventBusMessage eventBusMessage, boolean async) {
+        Collection<Subscriber> subscribers = this.listSubscriber(eventBusMessage);
+
+        if (CollKit.isEmpty(subscribers)) {
+            return;
+        }
+
+        eventBusMessage.addFireType(EventBusFireType.fireMe);
+
+        this.invokeSubscriber(eventBusMessage, async, subscribers);
+    }
+
+    public void fireLocalNeighbor(Object eventSource) {
+        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        this.fireLocalNeighbor(eventBusMessage);
+    }
+
+    public void fireLocalNeighbor(EventBusMessage eventBusMessage) {
+        this.fireLocalNeighbor(eventBusMessage, true);
+    }
+
+    public void fireLocalNeighborSync(Object eventSource) {
+        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        this.fireLocalNeighborSync(eventBusMessage);
+    }
+
+    public void fireLocalNeighborSync(EventBusMessage eventBusMessage) {
+        this.fireLocalNeighbor(eventBusMessage, false);
     }
 
     /**
@@ -179,80 +292,9 @@ public final class EventBus {
         }
 
         eventBusMessage.addFireType(EventBusFireType.fireLocalNeighbor);
-        eventBusMessage.addFireType(EventBusFireType.fireLocal);
 
         // 发送事件
         this.invokeSubscriber(eventBusMessage, async, subscribers);
-    }
-
-    public void fireMe(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
-        this.fireMe(eventBusMessage);
-    }
-
-    /**
-     * 仅给当前 EventBus 的订阅者发送事件消息
-     * <pre>
-     *     已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者
-     * </pre>
-     *
-     * @param eventBusMessage 事件消息
-     */
-    public void fireMe(EventBusMessage eventBusMessage) {
-        this.fireMe(eventBusMessage, true);
-    }
-
-    public void fireMeSync(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
-        fireMeSync(eventBusMessage);
-    }
-
-    /**
-     * 仅给当前 EventBus 的订阅者发送事件消息
-     * <pre>
-     *     已注册到 {@link EventBus#register(EventBusSubscriber)} 的订阅者
-     *
-     *     [同步]
-     * </pre>
-     *
-     * @param eventBusMessage 事件消息
-     */
-    public void fireMeSync(EventBusMessage eventBusMessage) {
-        fireMe(eventBusMessage, false);
-    }
-
-    private void fireMe(EventBusMessage eventBusMessage, boolean async) {
-        Collection<Subscriber> subscribers = this.listSubscriber(eventBusMessage);
-
-        if (CollKit.isEmpty(subscribers)) {
-            return;
-        }
-
-        eventBusMessage.addFireType(EventBusFireType.fireMe);
-        eventBusMessage.addFireType(EventBusFireType.fireLocal);
-
-        this.invokeSubscriber(eventBusMessage, async, subscribers);
-    }
-
-    void fireRemote(EventBusMessage eventBusMessage) {
-        var messageSet = EventBusRegion
-                .listAcrossProgressEventBrokerClientMessage(eventBusMessage);
-
-        if (CollKit.isEmpty(messageSet)) {
-            return;
-        }
-
-        // 如果其他进程中存在当前事件源的订阅者，将事件源发布到其他进程中
-        eventBusMessage.setEventBrokerClientMessageSet(messageSet);
-        eventBusMessage.addFireType(EventBusFireType.fireRemote);
-
-        extractedPrint(eventBusMessage);
-
-        try {
-            this.brokerClientContext.oneway(eventBusMessage);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
     }
 
     private void extractedPrint(EventBusMessage eventBusMessage) {
@@ -268,45 +310,30 @@ public final class EventBus {
 
     private void invokeSubscriber(EventBusMessage eventBusMessage, boolean async, Collection<Subscriber> subscribers) {
         for (Subscriber subscriber : subscribers) {
-            SubscriberInvoke subscriberInvoke = this.subscriberInvokeCreate.create(subscriber, eventBusMessage);
+            SubscriberInvoke subscriberInvoke = this.subscriberInvokeCreator.create(subscriber, eventBusMessage);
 
             if (async) {
                 // 根据策略得到对应的执行器
                 ThreadExecutor threadExecutor = this.subscribeExecutorSelector.select(subscriber, eventBusMessage);
-                threadExecutor.execute(subscriberInvoke::invoke);
+                threadExecutor.execute(() -> this.invoke(subscriberInvoke, eventBusMessage));
             } else {
                 // 同步执行
-                subscriberInvoke.invoke();
+                this.invoke(subscriberInvoke, eventBusMessage);
             }
+        }
+    }
+
+    private void invoke(SubscriberInvoke subscriberInvoke, EventBusMessage eventBusMessage) {
+        try {
+            subscriberInvoke.invoke();
+        } catch (Throwable e) {
+            this.eventBusListener.invokeException(e, eventBusMessage.getEventSource(), eventBusMessage);
         }
     }
 
     private Collection<Subscriber> listSubscriber(EventBusMessage eventBusMessage) {
         var eventSource = eventBusMessage.getEventSource();
-        return this.listSubscriber(eventSource);
-    }
-
-    private Collection<Subscriber> listSubscriber(Object eventSource) {
         return this.subscriberRegistry.listSubscriber(eventSource);
-    }
-
-    public EventBusMessage createEventBusMessage(Object eventSource) {
-        return eventBusMessageCreate.create(eventSource);
-    }
-
-    public EventTopicMessage getEventTopicMessage() {
-
-        // 当前 eventKing 所订阅的所有事件源主题
-        Set<Class<?>> eventSourceClassSet = this.subscriberRegistry.eventSourceClassSet;
-
-        Set<String> collect = eventSourceClassSet.stream()
-                .map(Class::getName)
-                .collect(Collectors.toSet());
-
-        EventTopicMessage message = new EventTopicMessage();
-        message.setTopicSet(collect);
-
-        return message;
     }
 
     enum EventBusStatus {
