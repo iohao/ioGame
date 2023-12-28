@@ -100,16 +100,6 @@ public final class StrictBrokerClientRegion implements BrokerClientRegion {
         return this.brokerClientProxyMap;
     }
 
-    @Override
-    public BrokerClientProxy getBoltClientProxy(HeadMetadata headMetadata) {
-        throw new RuntimeException("请使用 getBrokerClientProxy 方法");
-    }
-
-    @Override
-    public Map<Integer, BrokerClientProxy> getBoltClientProxyMap() {
-        throw new RuntimeException("请使用 getBrokerClientProxyMap 方法");
-    }
-
     private void resetSelector() {
         this.withElementSelector = new DefaultWithElementSelector(this.brokerClientProxyMap);
     }

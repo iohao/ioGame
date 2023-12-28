@@ -38,7 +38,7 @@ import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientRegionFacto
 import com.iohao.game.bolt.broker.server.balanced.region.StrictBrokerClientRegion;
 import com.iohao.game.bolt.broker.server.enhance.BrokerEnhances;
 import com.iohao.game.bolt.broker.server.processor.*;
-import com.iohao.game.bolt.broker.server.processor.connection.ConnectionEventBrokerProcessor;
+import com.iohao.game.bolt.broker.server.processor.ConnectionEventBrokerProcessor;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.bolt.broker.server.service.DefaultBrokerClientModules;
 import lombok.AccessLevel;

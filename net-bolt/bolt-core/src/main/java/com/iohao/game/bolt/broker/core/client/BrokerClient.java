@@ -27,7 +27,6 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.SkeletonAttr;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
-import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.processor.SimpleServerInfo;
 import com.iohao.game.bolt.broker.core.GroupWith;
 import com.iohao.game.bolt.broker.core.aware.AwareInject;
@@ -44,7 +43,6 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -192,41 +190,6 @@ public class BrokerClient implements BrokerClientContext, GroupWith, AttrOptionD
     void invokeWithCallback(Object request) throws RemotingException {
         BrokerClientItem nextClient = next();
         nextClient.invokeWithCallback(request);
-    }
-
-    /**
-     * 使用 BroadcastContext 代替，方法将在下个大版本中移除
-     *
-     * @param responseMessage responseMessage
-     * @param userIdList      userIdList
-     */
-    @Deprecated
-    public void broadcast(ResponseMessage responseMessage, Collection<Long> userIdList) {
-        BrokerClientItem nextClient = next();
-        nextClient.broadcast(responseMessage, userIdList);
-    }
-
-    /**
-     * 使用 BroadcastContext 代替，方法将在下个大版本中移除
-     *
-     * @param responseMessage responseMessage
-     * @param userId          userId
-     */
-    @Deprecated
-    public void broadcast(ResponseMessage responseMessage, long userId) {
-        BrokerClientItem nextClient = next();
-        nextClient.broadcast(responseMessage, userId);
-    }
-
-    /**
-     * 使用 BroadcastContext 代替，方法将在下个大版本中移除
-     *
-     * @param responseMessage responseMessage
-     */
-    @Deprecated
-    public void broadcast(ResponseMessage responseMessage) {
-        BrokerClientItem nextClient = next();
-        nextClient.broadcast(responseMessage);
     }
 
     @Override

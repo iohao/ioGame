@@ -52,7 +52,7 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
      * </pre>
      */
     @Getter
-    final Map<Integer, BrokerClientProxy> boltClientProxyMap = new NonBlockingHashMap<>();
+    final Map<Integer, BrokerClientProxy> brokerClientProxyMap = new NonBlockingHashMap<>();
     final String tag;
 
     ElementSelector<BrokerClientProxy> elementSelector;
@@ -62,11 +62,11 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
     }
 
     @Override
-    public BrokerClientProxy getBoltClientProxy(HeadMetadata headMetadata) {
+    public BrokerClientProxy getBrokerClientProxy(HeadMetadata headMetadata) {
         int endPointClientId = headMetadata.getEndPointClientId();
 
         // 得到指定的逻辑服
-        if (endPointClientId != 0 && this.boltClientProxyMap.containsKey(endPointClientId)) {
+        if (endPointClientId != 0 && this.brokerClientProxyMap.containsKey(endPointClientId)) {
 
             /*
              * 查看当前 endPointClientId 是否属于当前 Region
@@ -78,7 +78,7 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
              */
 
             // 如果找到了就返回，没找到则使用继续往下找
-            BrokerClientProxy brokerClientProxy = this.boltClientProxyMap.get(endPointClientId);
+            BrokerClientProxy brokerClientProxy = this.brokerClientProxyMap.get(endPointClientId);
             if (Objects.nonNull(brokerClientProxy)) {
                 return brokerClientProxy;
             }
@@ -95,13 +95,13 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
     @Override
     public void add(BrokerClientProxy brokerClientProxy) {
         int id = brokerClientProxy.getIdHash();
-        this.boltClientProxyMap.put(id, brokerClientProxy);
+        this.brokerClientProxyMap.put(id, brokerClientProxy);
         this.resetSelector();
     }
 
     @Override
     public void remove(int id) {
-        this.boltClientProxyMap.remove(id);
+        this.brokerClientProxyMap.remove(id);
         this.resetSelector();
     }
 
@@ -112,12 +112,12 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
 
     @Override
     public int count() {
-        return this.boltClientProxyMap.size();
+        return this.brokerClientProxyMap.size();
     }
 
     private void resetSelector() {
         // 随机选择器
-        List<BrokerClientProxy> list = new ArrayList<>(boltClientProxyMap.values());
+        List<BrokerClientProxy> list = new ArrayList<>(brokerClientProxyMap.values());
         this.elementSelector = new RandomElementSelector<>(list);
     }
 }

@@ -99,28 +99,6 @@ public final class BarSkeletonBuilderParamConfig {
     }
 
     /**
-     * 业务 action 类
-     * <pre>
-     *     需要扫描的类
-     *     内部会扫描当前类路径和子包路径 下的所有类
-     *     类需要是 @ActionController 注解的
-     * </pre>
-     * <pre>
-     *     因为名字的原因，会给开发者带来理解上的混乱，因此将方法标记为过时的，
-     *     请使用 {@link BarSkeletonBuilderParamConfig#scanActionPackage(Class)} 方法代替，
-     *     将在下个大版本中移除
-     * </pre>
-     *
-     * @param actionControllerClass actionControllerClass
-     * @return this
-     */
-    @Deprecated
-    public BarSkeletonBuilderParamConfig addActionController(Class<?> actionControllerClass) {
-        this.actionControllerClassList.add(actionControllerClass);
-        return this;
-    }
-
-    /**
      * 扫描 action 类所在包
      * <pre>
      *     内部会扫描当前 acton 类的路径和子包路径下的所有类
@@ -132,28 +110,6 @@ public final class BarSkeletonBuilderParamConfig {
      */
     public BarSkeletonBuilderParamConfig scanActionPackage(Class<?> actionControllerClass) {
         this.actionControllerClassList.add(actionControllerClass);
-        return this;
-    }
-
-    /**
-     * 推送消息的文档
-     * <pre>
-     *     需要扫描的类
-     *     内部会扫描当前类路径和子包路径
-     *     类需要是 @DocActionSends 注解的
-     * </pre>
-     * <pre>
-     *     因为名字的原因，会给开发者带来理解上的混乱，因此将方法标记为过时的，
-     *     请使用 {@link BarSkeletonBuilderParamConfig#scanActionSendPackage(Class)} 方法代替，
-     *     将在下个大版本中移除
-     * </pre>
-     *
-     * @param actionSendClass actionSendClass
-     * @return this
-     */
-    @Deprecated
-    public BarSkeletonBuilderParamConfig addActionSend(Class<?> actionSendClass) {
-        this.actionSendClassList.add(actionSendClass);
         return this;
     }
 

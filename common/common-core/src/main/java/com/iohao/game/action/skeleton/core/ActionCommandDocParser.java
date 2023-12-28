@@ -65,7 +65,7 @@ final class ActionCommandDocParser {
             int cmd = controllerClazz.getAnnotation(ActionController.class).value();
 
             // 过期的方法，将来需要删除的部分
-            extractedDeprecated(actionCommandRegions, controllerClazz, javaClassDocInfo, cmd);
+            extractedDeprecate(actionCommandRegions, controllerClazz, javaClassDocInfo, cmd);
 
             // action 文档
             ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
@@ -84,7 +84,7 @@ final class ActionCommandDocParser {
         });
     }
 
-    private static void extractedDeprecated(ActionCommandRegions actionCommandRegions, Class<?> controllerClazz, JavaClassDocInfo javaClassDocInfo, int cmd) {
+    private static void extractedDeprecate(ActionCommandRegions actionCommandRegions, Class<?> controllerClazz, JavaClassDocInfo javaClassDocInfo, int cmd) {
         var actionCommandRegion = actionCommandRegions.getActionCommandRegion(cmd);
         actionCommandRegion.setActionControllerClazz(controllerClazz);
         actionCommandRegion.setJavaClassDocInfo(javaClassDocInfo);

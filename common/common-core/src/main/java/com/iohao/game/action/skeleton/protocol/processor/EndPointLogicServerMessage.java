@@ -91,46 +91,4 @@ public class EndPointLogicServerMessage implements Serializable {
             this.logicServerIdSet = new HashSet<>();
         }
     }
-
-    /**
-     * 设置需要绑定的逻辑服id
-     *
-     * <pre>
-     *     兼容老版本的写法，将在下个大版本中移除，请使用 addLogicServerId 代替
-     * </pre>
-     *
-     * @param logicServerId 需要绑定的游戏逻辑服 id
-     * @return this
-     */
-    @Deprecated
-    public EndPointLogicServerMessage setLogicServerId(String logicServerId) {
-        return addLogicServerId(logicServerId);
-    }
-
-    /**
-     * 绑定类型
-     * <pre>
-     *     true 绑定逻辑服id
-     *     false 清除绑定的逻辑服id
-     *
-     *     兼容老版本的写法，将在下个大版本中移除，请使用 setOperation 代替
-     *
-     *     {@code EndPointLogicServerMessage.setOperation(EndPointOperationEnum.COVER_BINDING); }
-     *
-     *     现在框架支持多个游戏逻辑服的动态绑定，使用 EndPointOperationEnum 具备更强的语义，在代码阅读上更清晰
-     * </pre>
-     *
-     * @param binding 绑定类型
-     * @return this
-     */
-    @Deprecated
-    public EndPointLogicServerMessage setBinding(boolean binding) {
-        if (binding) {
-            this.operation = EndPointOperationEnum.COVER_BINDING;
-        } else {
-            this.operation = EndPointOperationEnum.CLEAR;
-        }
-
-        return this;
-    }
 }

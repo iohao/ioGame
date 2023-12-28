@@ -99,37 +99,6 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
         return this.inputCommandCreate.ofInputCommandString(subCmd);
     }
 
-    /**
-     * 广播监听
-     * <pre>
-     *     监听游戏服务器广播的消息
-     * </pre>
-     *
-     * <pre>
-     *     请使用 {@code this.ofListen} 代替
-     * </pre>
-     * example:
-     * <pre>{@code
-     *             ofListen(result -> {
-     *                 DemoBroadcastMessage value = result.getValue(DemoBroadcastMessage.class);
-     *                 log.info("broadcastMessage ========== \n{}", value);
-     *             }, DemoBroadcastCmd.broadcastMsg, "helloBroadcast1");
-     * }
-     * </pre>
-     *
-     * @param subCmd        子路由
-     * @param responseClass 响应后使用这个 class 来解析 data 数据
-     * @param callback      结果回调（游戏服务器回传的结果）
-     * @param title         描述
-     */
-    @Deprecated
-    protected void listenBroadcast(Class<?> responseClass, CallbackDelegate callback, int subCmd, String title) {
-        ofListen(subCmd)
-                .setTitle(title)
-                .setResponseClass(responseClass)
-                .setCallback(callback);
-    }
-
     protected void ofListen(CallbackDelegate callback, int subCmd, String title) {
         this.ofListen(subCmd)
                 .setCallback(callback)
@@ -153,7 +122,7 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
      * @return 请求命令执行
      */
     public RequestCommand ofRequestCommand(int subCmd) {
-        CmdInfo cmdInfo = this.inputCommandCreate.getCmdInfo(subCmd);
+        CmdInfo cmdInfo = this.inputCommandCreate.ofCmdInfo(subCmd);
         ClientUserInputCommands clientUserInputCommands = this.inputCommandCreate.clientUserInputCommands;
         return clientUserInputCommands.ofRequestCommand(cmdInfo);
     }

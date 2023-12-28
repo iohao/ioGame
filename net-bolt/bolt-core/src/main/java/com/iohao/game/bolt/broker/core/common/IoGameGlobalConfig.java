@@ -39,19 +39,19 @@ import java.util.concurrent.Executor;
 @UtilityClass
 public class IoGameGlobalConfig {
     /** broker （游戏网关）默认端口 */
-    public int brokerPort = BrokerGlobalConfig.brokerPort;
+    public int brokerPort = 10200;
     /** bolt 消息发送超时时间 */
-    public int timeoutMillis = BrokerGlobalConfig.timeoutMillis;
+    public int timeoutMillis = 3000;
     /** 集群默认监听端口 Gossip listen port */
-    public int gossipListenPort = BrokerGlobalConfig.gossipListenPort;
+    public int gossipListenPort = 30056;
     /** true 开启日志 */
-    public boolean openLog = BrokerGlobalConfig.openLog;
+    public boolean openLog = true;
     /** true 开启请求响应相关日志，默认为 false */
-    public boolean requestResponseLog = BrokerGlobalConfig.requestResponseLog;
+    public boolean requestResponseLog;
     /** true 开启对外服相关日志，默认为 false */
-    public boolean externalLog = BrokerGlobalConfig.externalLog;
+    public boolean externalLog;
     /** true 开启广播相关日志，默认为 false */
-    public boolean broadcastLog = BrokerGlobalConfig.broadcastLog;
+    public boolean broadcastLog;
     /**
      * Broker（游戏网关）转发消息容错配置
      * <pre>
@@ -95,7 +95,7 @@ public class IoGameGlobalConfig {
     public boolean brokerSniperToggleAK47 = true;
 
     /** true 开启集群相关日志 */
-    public boolean brokerClusterLog = BrokerGlobalConfig.brokerClusterLog;
+    public boolean brokerClusterLog = true;
     /** true 使用调度器打印集群信息，默认 30 秒打印一次（目前不提供打印频率设置） */
     public boolean brokerClusterFixedRateLog;
     /** true 表示开启 traceId 特性 */
@@ -142,6 +142,4 @@ public class IoGameGlobalConfig {
         IoGameGlobalConfig.eventBusLog = eventBusLog;
         IoGameCommonCoreConfig.eventBusLog = eventBusLog;
     }
-
-
 }

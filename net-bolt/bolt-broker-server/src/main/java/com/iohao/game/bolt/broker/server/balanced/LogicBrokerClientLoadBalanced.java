@@ -92,26 +92,6 @@ public final class LogicBrokerClientLoadBalanced implements BrokerClientLoadBala
     }
 
     /**
-     * 请使用 {@link LogicBrokerClientLoadBalanced#getBrokerClientRegion(int)} 代替。
-     * <p>
-     * 方法将在下个大版本中移除
-     *
-     * @param cmdMerge cmdMerge
-     * @return BrokerClientRegion
-     */
-    @Deprecated
-    public BrokerClientRegion getBoltClientRegion(int cmdMerge) {
-        // 通过 路由信息 得到对应的逻辑服列表（域）
-        BrokerClientRegion region = this.cmdClientRegionMap.get(cmdMerge);
-
-        if (Objects.isNull(region)) {
-            return null;
-        }
-
-        return region;
-    }
-
-    /**
      * get BrokerClientRegion
      *
      * @param cmdMerge cmdMerge

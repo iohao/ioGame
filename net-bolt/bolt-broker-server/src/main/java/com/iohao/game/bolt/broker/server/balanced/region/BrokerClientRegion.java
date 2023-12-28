@@ -58,49 +58,18 @@ public interface BrokerClientRegion {
 
     /**
      * 根据请求元信息得到一个 逻辑服
-     * <pre>
-     *     请使用 getBrokerClientProxy 代替
-     *
-     *     方法将在下个大版本中移除
-     * </pre>
      *
      * @param headMetadata 请求元信息
      * @return 逻辑服信息
      */
-    @Deprecated
-    BrokerClientProxy getBoltClientProxy(HeadMetadata headMetadata);
-
-    /**
-     * 根据请求元信息得到一个 逻辑服
-     *
-     * @param headMetadata 请求元信息
-     * @return 逻辑服信息
-     */
-    default BrokerClientProxy getBrokerClientProxy(HeadMetadata headMetadata) {
-        return this.getBoltClientProxy(headMetadata);
-    }
-
-    /**
-     * BrokerClientProxy map
-     * <pre>
-     *     请使用 getBrokerClientProxyMap 代替
-     *
-     *     方法将在下个大版本中移除
-     * </pre>
-     *
-     * @return map
-     */
-    @Deprecated
-    Map<Integer, BrokerClientProxy> getBoltClientProxyMap();
+    BrokerClientProxy getBrokerClientProxy(HeadMetadata headMetadata);
 
     /**
      * BrokerClientProxy map
      *
      * @return map
      */
-    default Map<Integer, BrokerClientProxy> getBrokerClientProxyMap() {
-        return getBoltClientProxyMap();
-    }
+    Map<Integer, BrokerClientProxy> getBrokerClientProxyMap();
 
     /**
      * 域下的所有 逻辑服

@@ -60,13 +60,13 @@ public class DefaultAccessAuthenticationHook implements AccessAuthenticationHook
     boolean verifyIdentity;
 
     @Override
-    public void addIgnoreAuthenticationCmd(int cmd, int subCmd) {
+    public void addIgnoreAuthCmd(int cmd, int subCmd) {
         int cmdMerge = CmdKit.merge(cmd, subCmd);
         this.cmdMergeSet.add(cmdMerge);
     }
 
     @Override
-    public void addIgnoreAuthenticationCmd(int cmd) {
+    public void addIgnoreAuthCmd(int cmd) {
         this.cmdSet.add(cmd);
     }
 

@@ -20,9 +20,8 @@ package com.iohao.game.action.skeleton.core.flow.parser;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.protocol.wrapper.*;
-import lombok.AccessLevel;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +34,7 @@ import java.util.function.Supplier;
  * @author 渔民小镇
  * @date 2022-06-26
  */
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@UtilityClass
 public final class MethodParsers {
     /**
      * 方法解析器 map
@@ -46,80 +45,53 @@ public final class MethodParsers {
      *     如 int 与对应的包装类 Integer 在这里规划为基础类型
      * </pre>
      */
-    static final Map<Class<?>, MethodParser> methodParserMap = new HashMap<>();
-    static final Map<Class<?>, Supplier<?>> paramSupplierMap = new HashMap<>();
+    final Map<Class<?>, MethodParser> methodParserMap = new HashMap<>();
+    final Map<Class<?>, Supplier<?>> paramSupplierMap = new HashMap<>();
 
     /** action 业务方法参数的默认解析器 */
     @Setter
-    static MethodParser methodParser = DefaultMethodParser.me();
+    MethodParser methodParser = DefaultMethodParser.me();
 
     static {
         init();
     }
 
-    /**
-     * 临时兼容
-     * <pre>
-     *     将在下个大版本移除
-     *
-     *     此方法是为了兼容 IntPb、IntListPb、LongPb、LongListPb 的用法，
-     *     如果你的项目中没有使用上面提到的这几个，是不需要调用此方法的，
-     *     如果有使用到上面提到的这几个，请尽快的做相应的替换。
-     * </pre>
-     */
-    @Deprecated
-    public static void tempCompatibility() {
-        // 表示在 action 参数中，遇见 int 类型的参数，用 IntPbMethodParser 来解析
-        mapping(int.class, IntPbMethodParser.me());
-        mapping(Integer.class, IntPbMethodParser.me());
-        // 表示在 action 参数中，遇见 long 类型的参数，用 LongPbMethodParser 来解析
-        mapping(long.class, LongPbMethodParser.me());
-        mapping(Long.class, LongPbMethodParser.me());
-
-        mapping(IntPb.class, DefaultMethodParser.me(), IntPb::new);
-        mapping(IntListPb.class, DefaultMethodParser.me(), IntListPb::new);
-
-        mapping(LongPb.class, DefaultMethodParser.me(), LongPb::new);
-        mapping(LongListPb.class, DefaultMethodParser.me(), LongListPb::new);
-    }
-
-    public static void mappingParamSupplier(Class<?> paramClass, Supplier<?> supplier) {
+    public void mappingParamSupplier(Class<?> paramClass, Supplier<?> supplier) {
         paramSupplierMap.put(paramClass, supplier);
     }
 
-    public static void mapping(Class<?> paramClass, MethodParser methodParamParser) {
+    public void mapping(Class<?> paramClass, MethodParser methodParamParser) {
         methodParserMap.put(paramClass, methodParamParser);
     }
 
-    public static MethodParser getMethodParser(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo) {
+    public MethodParser getMethodParser(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo) {
         Class<?> methodResultClass = actionMethodReturnInfo.getActualTypeArgumentClazz();
         return getMethodParser(methodResultClass);
     }
 
-    public static MethodParser getMethodParser(ActionCommand.ParamInfo paramInfo) {
+    public MethodParser getMethodParser(ActionCommand.ParamInfo paramInfo) {
         Class<?> actualTypeArgumentClazz = paramInfo.getActualTypeArgumentClazz();
         return getMethodParser(actualTypeArgumentClazz);
     }
 
-    public static MethodParser getMethodParser(Class<?> paramClazz) {
+    public MethodParser getMethodParser(Class<?> paramClazz) {
         return methodParserMap.getOrDefault(paramClazz, methodParser);
     }
 
-    public static void clear() {
+    public void clear() {
         methodParserMap.clear();
         paramSupplierMap.clear();
     }
 
-    public static boolean containsKey(Class<?> clazz) {
+    public boolean containsKey(Class<?> clazz) {
         return methodParserMap.containsKey(clazz);
     }
 
-    public static Set<Class<?>> keySet() {
+    public Set<Class<?>> keySet() {
         return methodParserMap.keySet();
     }
 
-
-    private static void init() {
+    private void init() {
         // 表示在 action 参数中，遇见 int 类型的参数，用 IntValueMethodParser 来解析
         mapping(int.class, IntValueMethodParser.me());
         mapping(Integer.class, IntValueMethodParser.me());
@@ -152,7 +124,7 @@ public final class MethodParsers {
         mapping(StringValueList.class, DefaultMethodParser.me(), StringValueList::new);
     }
 
-    static Object newObject(Class<?> paramClass) {
+    Object newObject(Class<?> paramClass) {
         if (paramSupplierMap.containsKey(paramClass)) {
             return paramSupplierMap.get(paramClass).get();
         }
@@ -160,7 +132,7 @@ public final class MethodParsers {
         return null;
     }
 
-    private static void mapping(Class<?> paramClass, MethodParser methodParamParser, Supplier<?> supplier) {
+    private void mapping(Class<?> paramClass, MethodParser methodParamParser, Supplier<?> supplier) {
         mapping(paramClass, methodParamParser);
 
         /*
@@ -170,26 +142,5 @@ public final class MethodParsers {
          * 具体使用可参考 DefaultMethodParser
          */
         mappingParamSupplier(paramClass, supplier);
-    }
-
-    private MethodParsers() {
-    }
-
-    /**
-     * 已经标记过期，将在下个大版本移除
-     * <pre>
-     *     请直接使用静态方法代替； MethodParsers.xxx
-     * </pre>
-     *
-     * @return MethodParsers
-     */
-    @Deprecated
-    public static MethodParsers me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final MethodParsers ME = new MethodParsers();
     }
 }

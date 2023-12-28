@@ -41,45 +41,17 @@ public interface AccessAuthenticationHook {
     /**
      * 添加需要忽略的路由，这些忽略的路由不需要登录也能访问
      *
-     * <pre>
-     *     请使用 {@link AccessAuthenticationHook#addIgnoreAuthCmd(int, int)}  方法代替
-     * </pre>
-     *
      * @param cmd    cmd
      * @param subCmd subCmd
      */
-    @Deprecated
-    void addIgnoreAuthenticationCmd(int cmd, int subCmd);
-
-    /**
-     * 添加需要忽略的路由，这些忽略的路由不需要登录也能访问
-     *
-     * @param cmd    cmd
-     * @param subCmd subCmd
-     */
-    default void addIgnoreAuthCmd(int cmd, int subCmd) {
-        this.addIgnoreAuthenticationCmd(cmd, subCmd);
-    }
-
-    /**
-     * 添加需要忽略的主路由，这些忽略的主路由不需要登录也能访问
-     * <pre>
-     *     请使用 {@link AccessAuthenticationHook#addIgnoreAuthCmd(int)} 方法代替
-     * </pre>
-     *
-     * @param cmd 主路由
-     */
-    @Deprecated
-    void addIgnoreAuthenticationCmd(int cmd);
+    void addIgnoreAuthCmd(int cmd, int subCmd);
 
     /**
      * 添加需要忽略的主路由，这些忽略的主路由不需要登录也能访问
      *
      * @param cmd 主路由
      */
-    default void addIgnoreAuthCmd(int cmd) {
-        this.addIgnoreAuthenticationCmd(cmd);
-    }
+    void addIgnoreAuthCmd(int cmd);
 
     /**
      * 移除需要忽略的路由

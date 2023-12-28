@@ -59,18 +59,13 @@ public class InputCommandCreate {
 
     ClientUserInputCommands clientUserInputCommands;
 
-    @Deprecated
-    public CmdInfo getCmdInfo(int subCmd) {
-        return this.ofCmdInfo(subCmd);
-    }
-
     public CmdInfo ofCmdInfo(int subCmd) {
         AssertKit.assertTrueThrow(cmd < 0, "cmd 不能小于 0");
         return CmdInfo.of(cmd, subCmd);
     }
 
     public InputCommand getInputCommand(int subCmd) {
-        CmdInfo cmdInfo = getCmdInfo(subCmd);
+        CmdInfo cmdInfo = ofCmdInfo(subCmd);
         InputCommand inputCommand = clientUserInputCommands.getInputCommand(cmdInfo);
         Objects.requireNonNull(inputCommand, "没有对应的请求配置");
         return inputCommand;
@@ -88,7 +83,7 @@ public class InputCommandCreate {
 
     private InputCommand ofInputCommand(int subCmd, RequestDataDelegate requestData) {
 
-        CmdInfo cmdInfo = getCmdInfo(subCmd);
+        CmdInfo cmdInfo = ofCmdInfo(subCmd);
 
         // 唯一性路由命令检测，先检查命令是否存在
         extractedChecked(cmdInfo);

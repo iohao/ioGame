@@ -62,36 +62,4 @@ public final class DevConfig {
     public static void put(Integer cmdMerge, Class<?> dataClass) {
         cmdDataClassMap.putIfAbsent(cmdMerge, dataClass);
     }
-
-    /**
-     * 请使用 DevConfig.put 方法
-     *
-     * @return map
-     */
-    @Deprecated
-    public static Map<Integer, Class<?>> getCmdDataClassMap() {
-        return cmdDataClassMap;
-    }
-
-    private DevConfig() {
-
-    }
-
-    /**
-     * 已经标记过期，将在下个大版本移除
-     * <pre>
-     *     请直接使用静态方法代替； DevConfig.xxx
-     * </pre>
-     *
-     * @return me
-     */
-    @Deprecated
-    public static DevConfig me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final DevConfig ME = new DevConfig();
-    }
 }

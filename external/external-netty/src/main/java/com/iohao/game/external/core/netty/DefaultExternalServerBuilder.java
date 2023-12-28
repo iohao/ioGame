@@ -23,7 +23,6 @@ import com.iohao.game.external.core.ExternalCore;
 import com.iohao.game.external.core.ExternalServer;
 import com.iohao.game.external.core.broker.client.ExternalBrokerClientStartup;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
-import com.iohao.game.external.core.hook.internal.IdleProcessSetting;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,21 +61,6 @@ public final class DefaultExternalServerBuilder {
      */
     public DefaultExternalServerBuilder externalJoinEnum(ExternalJoinEnum joinEnum) {
         this.setting.setExternalJoinEnum(joinEnum);
-        return this;
-    }
-
-    /**
-     * 开启心跳
-     * <pre>
-     *     对之前的游戏对外服做个兼容设置，将在下个大版本中移除
-     * </pre>
-     *
-     * @param idleProcessSetting 心跳设置
-     * @return this
-     */
-    @Deprecated
-    public DefaultExternalServerBuilder enableIdle(IdleProcessSetting idleProcessSetting) {
-        this.setting.setIdleProcessSetting(idleProcessSetting);
         return this;
     }
 

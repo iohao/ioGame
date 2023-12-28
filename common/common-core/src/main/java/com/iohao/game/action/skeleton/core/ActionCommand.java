@@ -248,6 +248,12 @@ public final class ActionCommand {
          * </pre>
          */
         final Class<?> actualClazz;
+        /**
+         * 是否扩展属性
+         * <pre>
+         *     true 表示是扩展属性
+         * </pre>
+         */
         final boolean extension;
         final boolean customMethodParser;
         /** JSR380 验证组 */
@@ -290,42 +296,10 @@ public final class ActionCommand {
             this.extension = FlowContext.class.isAssignableFrom(paramClazz);
         }
 
-        /**
-         * 废弃的方法，请使用 toString 代替
-         *
-         * @return name
-         */
-        @Deprecated
-        public String toStringShort() {
-            return actualClazz.getSimpleName() + " " + name;
-        }
 
         @Override
         public String toString() {
             return this.toString(false);
-        }
-
-        /**
-         * 是否扩展属性
-         *
-         * @return true 是扩展属性
-         */
-        public boolean isExtension() {
-            return extension;
-        }
-
-        /**
-         * 废弃的方法
-         *
-         * @return name
-         */
-        @Deprecated
-        public String getMethodParamClassName() {
-            if (this.isCustomMethodParser() || MethodParsers.containsKey(this.actualClazz)) {
-                return this.actualClazz.getSimpleName();
-            }
-
-            return this.actualClazz.getName();
         }
 
         public String toString(boolean fullName) {
@@ -424,20 +398,6 @@ public final class ActionCommand {
          */
         public boolean isVoid() {
             return Void.TYPE == this.returnTypeClazz;
-        }
-
-        /**
-         * 废弃，没什么作用了
-         *
-         * @return name
-         */
-        @Deprecated
-        public String getReturnTypeClazzName() {
-            if (this.isCustomMethodParser() || MethodParsers.containsKey(this.actualClazz)) {
-                return this.actualClazz.getSimpleName();
-            }
-
-            return this.actualClazz.getName();
         }
 
         @Override

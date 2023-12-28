@@ -21,12 +21,10 @@ package com.iohao.game.bolt.broker.server.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
-import com.alipay.remoting.rpc.RpcServer;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
-import com.iohao.game.bolt.broker.core.client.BrokerClientType;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
@@ -35,7 +33,6 @@ import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerClientModulesAware;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
-import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import com.iohao.game.bolt.broker.server.kit.BrokerPrintKit;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.consts.IoGameLogName;
@@ -45,7 +42,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -86,70 +82,6 @@ public final class RegisterBrokerClientModuleMessageBrokerProcessor extends Asyn
 
         var context = new LineKit.Context(brokerServer, brokerClientModules, cmdRegions, brokerClientModuleMessage);
         LineKit.online(context);
-
-//        if (IoGameGlobalConfig.isSendBrokerClientModuleMessage()) {
-//            this.sendBrokerClientModuleMessage(brokerClientModuleMessage);
-//        }
-    }
-
-    @Deprecated
-    private void sendBrokerClientModuleMessage(BrokerClientModuleMessage moduleMessage) {
-        this.notifyOnline(moduleMessage);
-    }
-
-    private void notifyOnline(BrokerClientModuleMessage moduleMessage) {
-
-        BrokerClientType brokerClientType = moduleMessage.getBrokerClientType();
-
-        if (brokerClientType == BrokerClientType.LOGIC) {
-            extractedLogic(moduleMessage);
-        }
-
-        if (brokerClientType == BrokerClientType.EXTERNAL) {
-            extractedExternal(moduleMessage);
-        }
-    }
-
-    @Deprecated
-    private void extractedExternal(BrokerClientModuleMessage moduleMessage) {
-        // 将所有游戏逻辑服的信息发送给当前游戏对外服
-        String address = moduleMessage.getAddress();
-        RpcServer rpcServer = this.brokerServer.getRpcServer();
-
-        Consumer<BrokerClientModuleMessage> consumer = message -> {
-            try {
-                // 将【游戏逻辑服】的模块信息发送给【游戏对外服】
-                rpcServer.oneway(address, message);
-            } catch (RemotingException | InterruptedException e) {
-                log.error(e.getMessage(), e);
-            }
-        };
-
-        this.brokerClientModules.listBrokerClientModuleMessage()
-                .stream()
-                .filter(message -> message.getBrokerClientType() == BrokerClientType.LOGIC)
-                .forEach(consumer);
-    }
-
-    @Deprecated
-    private void extractedLogic(BrokerClientModuleMessage moduleMessage) {
-        cmdRegions.loading(moduleMessage);
-
-        // 将当前游戏逻辑服的信息，发送给所有的游戏对外服
-        Consumer<BrokerClientProxy> consumer = proxy -> {
-            try {
-                // 将【游戏逻辑服】的模块信息发送给【游戏对外服】
-                proxy.oneway(moduleMessage);
-            } catch (RemotingException | InterruptedException e) {
-                log.error(e.getMessage(), e);
-            }
-        };
-
-        this.brokerServer
-                .getBalancedManager()
-                .getExternalLoadBalanced()
-                .listBrokerClientProxy()
-                .forEach(consumer);
     }
 
     private void printCluster(BrokerClusterMessage brokerClusterMessage) {
@@ -205,17 +137,11 @@ public final class RegisterBrokerClientModuleMessageBrokerProcessor extends Asyn
             return;
         }
 
-        if (fixedRateFlag.compareAndSet(false, true)) {
-//            ExecutorKit.newSingleScheduled("print").scheduleAtFixedRate(() -> {
-//                BrokerPrintKit.print(this.brokerServer);
-//
-//                BrokerClusterManager brokerClusterManager = brokerServer.getBrokerClusterManager();
-//                BrokerClusterMessage brokerClusterMessage = brokerClusterManager.getBrokerClusterMessage();
-//
-//                this.printCluster(brokerClusterMessage);
-//
-//            }, 5, 30, TimeUnit.SECONDS);
+        if (fixedRateFlag.get()) {
+            return;
+        }
 
+        if (fixedRateFlag.compareAndSet(false, true)) {
             TaskKit.runIntervalMinute(() -> {
                 BrokerPrintKit.print(brokerServer);
 
