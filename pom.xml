@@ -27,10 +27,6 @@
         <module>net-bolt/bolt-broker-server</module>
         <!-- BrokerClient （逻辑服） -->
         <module>net-bolt/bolt-client</module>
-        <!-- 网络游戏框架 : 对外的服务器 （面向真实用户） -->
-        <module>net-bolt/bolt-external</module>
-        <!-- 单体启动辅助，一个进程内可以启动 ： 对外服、游戏网关、游戏逻辑服 -->
-        <module>net-bolt/bolt-run-one</module>
 
         <!-- 小部件 : 任务延时器 -->
         <module>widget/light-timer-task</module>
