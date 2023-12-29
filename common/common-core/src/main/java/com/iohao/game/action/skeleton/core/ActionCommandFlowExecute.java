@@ -54,4 +54,8 @@ public interface ActionCommandFlowExecute {
      * @param flowContext FlowContext
      */
     void execute(FlowContext flowContext);
+
+    static ActionCommandFlowExecute defaultInstance() {
+        return DefaultActionCommandFlowExecute.me();
+    }
 }

@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 class InternalSystemPropsKit {
 
     /**
-     * 取得系统属性，如果因为Java安全的限制而失败，则将错误打在Log中，然后返回 {@code null}
+     * 取得系统属性，如果因为 Java 安全的限制而失败，则将错误打在 Log 中，然后返回 {@code null}
      *
      * @param name  属性名
      * @param quiet 安静模式，不将出错信息打在{@code System.err}中

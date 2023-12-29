@@ -18,22 +18,21 @@
  */
 package com.iohao.game.common.kit.system;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.experimental.FieldDefaults;
+import lombok.experimental.UtilityClass;
 
 /**
  * @author 渔民小镇
  * @date 2023-01-19
  */
-
-@Getter
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@UtilityClass
 public class OsInfo {
+    @Getter
     final String osName = InternalSystemPropsKit.get("os.name", false);
+    @Getter
     final boolean linux = getOsMatches("Linux") || getOsMatches("LINUX");
+    @Getter
     final boolean mac = getOsMatches("Mac") || getOsMatches("Mac OS X");
-
 
     private boolean getOsMatches(String osNamePrefix) {
         if (osName == null) {
@@ -41,19 +40,5 @@ public class OsInfo {
         }
 
         return osName.startsWith(osNamePrefix);
-    }
-
-
-    private OsInfo() {
-
-    }
-
-    public static OsInfo me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final OsInfo ME = new OsInfo();
     }
 }

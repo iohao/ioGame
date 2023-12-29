@@ -105,18 +105,4 @@ public class RoomService {
     public <T extends AbstractRoom> Collection<T> listRoom() {
         return (Collection<T>) this.roomMap.values();
     }
-
-    /**
-     * 将在下处大版本中移除，请开发者直接构造
-     */
-    @Deprecated
-    public static RoomService me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final RoomService ME = new RoomService();
-    }
-
 }

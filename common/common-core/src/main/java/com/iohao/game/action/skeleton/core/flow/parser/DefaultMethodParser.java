@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
  * @author 渔民小镇
  * @date 2022-06-26
  */
-
 class DefaultMethodParser implements MethodParser {
     @Override
     public Class<?> getActualClazz(ActionCommand.MethodParamResultInfo methodParamResultInfo) {
@@ -73,6 +72,7 @@ class DefaultMethodParser implements MethodParser {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
 
         if (actionMethodReturnInfo.isList()) {
@@ -96,7 +96,6 @@ class DefaultMethodParser implements MethodParser {
     }
 
     private DefaultMethodParser() {
-
     }
 
     public static DefaultMethodParser me() {

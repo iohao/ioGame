@@ -23,5 +23,6 @@ package com.iohao.game.external.client.command;
  * @date 2023-09-19
  */
 @FunctionalInterface
-public interface CallbackDelegate extends InputCallback {
+public interface CallbackDelegate {
+    void callback(CommandResult result);
 }

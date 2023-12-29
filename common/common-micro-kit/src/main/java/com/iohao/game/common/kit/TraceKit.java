@@ -57,7 +57,6 @@ public class TraceKit {
      */
     @FunctionalInterface
     public interface TraceIdSupplier extends Supplier<String> {
-
     }
 
     private class SnowTraceIdSupplier implements TraceIdSupplier {

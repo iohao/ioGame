@@ -18,7 +18,6 @@
  */
 package com.iohao.game.external.client;
 
-import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.external.client.user.ClientUser;
 import lombok.AccessLevel;
 import lombok.Getter;

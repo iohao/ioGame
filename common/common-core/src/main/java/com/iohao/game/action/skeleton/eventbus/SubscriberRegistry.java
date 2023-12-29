@@ -29,7 +29,7 @@ import org.jctools.maps.NonBlockingHashSet;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.concurrent.atomic.LongAdder;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 /**
@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PACKAGE)
 final class SubscriberRegistry {
-    static final LongAdder threadIndexAdder = new LongAdder();
+    static final AtomicLong subscriberId = new AtomicLong();
     final ListMultiMap<Class<?>, Subscriber> subscriberMultiMap = ListMultiMap.create();
     final Set<Class<?>> eventBusSubscriberSet = new NonBlockingHashSet<>();
 
@@ -71,9 +71,7 @@ final class SubscriberRegistry {
             var executorSelector = annotation.value();
             int order = Math.abs(annotation.order());
 
-            threadIndexAdder.increment();
-
-            Subscriber subscriber = new Subscriber(threadIndexAdder.longValue())
+            Subscriber subscriber = new Subscriber(subscriberId.incrementAndGet())
                     .setMethodAccess(methodAccess)
                     .setConstructorAccess(constructorAccess)
                     .setMethodName(methodName)

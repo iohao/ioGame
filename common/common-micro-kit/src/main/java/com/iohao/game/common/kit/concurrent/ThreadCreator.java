@@ -61,6 +61,5 @@ public class ThreadCreator {
     protected String nextThreadName() {
         String format = "%s-%d";
         return String.format(format, this.threadNamePrefix, this.threadCount.incrementAndGet());
-
     }
 }

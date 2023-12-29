@@ -45,7 +45,6 @@ public class MethodRefInfo {
     MethodAccess methodAccess;
 
     MethodRefInfo() {
-
     }
 
     /**

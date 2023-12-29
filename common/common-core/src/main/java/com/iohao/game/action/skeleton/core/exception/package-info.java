@@ -21,7 +21,7 @@
  *
  * <pre>
  *     关于异常机制的解释可以参考这里:
- *     https://www.yuque.com/iohao/game/avlo99
+ *     <a href="https://www.yuque.com/iohao/game/avlo99">断言 + 异常机制 = 清晰简洁的代码</a>
  * </pre>
  *
  * @author 渔民小镇

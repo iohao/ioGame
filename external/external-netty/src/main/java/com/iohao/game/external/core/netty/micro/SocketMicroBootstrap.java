@@ -77,16 +77,15 @@ public final class SocketMicroBootstrap extends AbstractMicroBootstrap {
         }
     }
 
-    protected GroupChannelOption createGroupChannelOption() {
+    private GroupChannelOption createGroupChannelOption() {
         // 根据环境自动选择，开发者也可以重写此方法，做些自定义
         GroupChannelOption groupChannelOption;
-        OsInfo osInfo = OsInfo.me();
 
         // 根据系统内核来优化
-        if (osInfo.isLinux()) {
+        if (OsInfo.isLinux()) {
             // linux
             groupChannelOption = new GroupChannelOptionForLinux();
-        } else if (osInfo.isMac()) {
+        } else if (OsInfo.isMac()) {
             // mac
             groupChannelOption = new GroupChannelOptionForMac();
         } else {

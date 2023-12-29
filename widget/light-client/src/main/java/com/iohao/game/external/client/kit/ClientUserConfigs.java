@@ -41,10 +41,6 @@ public class ClientUserConfigs {
     /** true 开启广播监听触发日志 */
     public boolean openLogListenBroadcast = true;
 
-    /** true 开启 client action 回调日志 */
-    @Deprecated
-    public boolean openLogAction = true;
-
     /** true 开启客户端向服务器发送请求的日志 */
     public boolean openLogRequestCommand = true;
 
@@ -67,7 +63,6 @@ public class ClientUserConfigs {
      */
     public void closeLog() {
         openLogListenBroadcast = false;
-        openLogAction = false;
         openLogRequestCommand = false;
         openLogRequestCallback = false;
     }

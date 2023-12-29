@@ -32,7 +32,7 @@ import com.iohao.game.action.skeleton.core.flow.FlowContext;
  * @author 渔民小镇
  * @date 2021-12-17
  */
-public final class DefaultActionCommandFlowExecute implements ActionCommandFlowExecute {
+final class DefaultActionCommandFlowExecute implements ActionCommandFlowExecute {
 
     @Override
     public void execute(final FlowContext flowContext) {
@@ -78,11 +78,7 @@ public final class DefaultActionCommandFlowExecute implements ActionCommandFlowE
         inOutManager.fuckOut(flowContext);
     }
 
-    private DefaultActionCommandFlowExecute() {
-
-    }
-
-    public static DefaultActionCommandFlowExecute me() {
+    static DefaultActionCommandFlowExecute me() {
         return Holder.ME;
     }
 

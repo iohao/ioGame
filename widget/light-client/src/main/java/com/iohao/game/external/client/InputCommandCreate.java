@@ -22,15 +22,12 @@ import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
-import com.iohao.game.external.client.command.CallbackDelegate;
 import com.iohao.game.external.client.command.InputCommand;
-import com.iohao.game.external.client.command.ListenCommand;
 import com.iohao.game.external.client.command.RequestDataDelegate;
 import com.iohao.game.external.client.kit.AssertKit;
 import com.iohao.game.external.client.kit.ClientKit;
 import com.iohao.game.external.client.kit.ClientUserConfigs;
 import com.iohao.game.external.client.kit.ScannerKit;
-import com.iohao.game.external.client.user.ClientUserChannel;
 import com.iohao.game.external.client.user.ClientUserInputCommands;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -164,29 +161,5 @@ public class InputCommandCreate {
 
             return StringValue.of(s);
         };
-    }
-
-    /**
-     * 广播监听
-     * <pre>
-     *     监听游戏服务器广播的消息
-     * </pre>
-     *
-     * @param subCmd        子路由
-     * @param responseClass 响应后使用这个 class 来解析 data 数据
-     * @param callback      结果回调（游戏服务器回传的结果）
-     * @param title         描述
-     */
-    @Deprecated
-    public void listenBroadcast(Class<?> responseClass, CallbackDelegate callback, int subCmd, String title) {
-        CmdInfo cmdInfo = ofCmdInfo(subCmd);
-        ClientUserChannel clientUserChannel = clientUserInputCommands.getClientUserChannel();
-
-        ListenCommand listenCommand = new ListenCommand(cmdInfo)
-                .setTitle(title)
-                .setResponseClass(responseClass)
-                .setCallback(callback);
-
-        clientUserChannel.addListen(listenCommand);
     }
 }

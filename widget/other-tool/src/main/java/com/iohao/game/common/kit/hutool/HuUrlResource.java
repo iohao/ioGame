@@ -26,11 +26,6 @@ class HuUrlResource implements HuResource, Serializable {
         this.name = HuObjectUtil.defaultIfNull(name, () -> (null != url ? HuFileUtil.getName(url.getPath()) : null));
     }
 
-    @Deprecated
-    public HuUrlResource(File file) {
-        this.url = HuUrlUtil.getURL(file);
-    }
-
     @Override
     public String getName() {
         return this.name;

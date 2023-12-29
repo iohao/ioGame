@@ -24,7 +24,7 @@ package com.iohao.game.action.skeleton.core;
  * @author 渔民小镇
  * @date 2021-12-12
  */
-public final class DefaultActionFactoryBean<T> implements ActionFactoryBean<T> {
+final class DefaultActionFactoryBean<T> implements ActionFactoryBean<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T getBean(ActionCommand actionCommand) {

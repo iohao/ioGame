@@ -43,9 +43,6 @@ public class ListenCommand {
     CallbackDelegate callback;
     ClientUserChannel clientUserChannel;
 
-    @Deprecated
-    Class<?> responseClass;
-
     public ListenCommand(CmdInfo cmdInfo) {
         this.cmdInfo = cmdInfo;
     }

@@ -25,8 +25,10 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
+
 
 /**
  * class asm相关信息
@@ -39,10 +41,12 @@ import java.util.Map;
  * @author 渔民小镇
  * @date 2022-01-02
  */
-@ToString
 @Getter
+@ToString
+@SuppressWarnings("unchecked")
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public final class ClassRefInfo implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4297558765639660029L;
     /** 类信息 */
     Class<?> clazz;
@@ -73,7 +77,6 @@ public final class ClassRefInfo implements Serializable {
      * @param <T> t
      * @return 对象
      */
-    @SuppressWarnings("unchecked")
     public <T> T newInstance() {
         return (T) this.constructorAccess.newInstance();
     }
@@ -119,7 +122,7 @@ public final class ClassRefInfo implements Serializable {
      * @param <T>       t
      * @return 字段属性值
      */
-    @SuppressWarnings("unchecked")
+
     public <T> T invokeGetter(Object object, String filedName) {
         FieldRefInfo filedRefInfo = filedRefInfoMap.get(filedName);
 

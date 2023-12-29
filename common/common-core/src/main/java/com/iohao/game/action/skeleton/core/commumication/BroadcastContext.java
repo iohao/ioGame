@@ -28,7 +28,7 @@ import java.util.Collection;
  * 广播通讯上下文
  * <pre>
  *     see:
- *     https://www.yuque.com/iohao/game/qv4qfo#nJage
+ *     <a href="https://www.yuque.com/iohao/game/qv4qfo#nJage">广播、推送</a>
  * </pre>
  *
  * @author 渔民小镇

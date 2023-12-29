@@ -116,18 +116,4 @@ public class GameFlow {
     public RuleInfo getRuleInfo(String ruleInfoJson) throws MsgException {
         return this.roomRuleInfoCustom.getRuleInfo(ruleInfoJson);
     }
-
-    /**
-     * 将在下处大版本中移除，请开发者直接构造
-     */
-    @Deprecated
-    public static GameFlow me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final GameFlow ME = new GameFlow();
-    }
-
 }

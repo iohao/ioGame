@@ -38,7 +38,7 @@ class ActionCommandHandler implements Handler {
             // 设置 flowContext 的一些属性
             this.settingFlowContext(flowContext);
             // actionCommand 命令流程执行器
-            DefaultActionCommandFlowExecute.me().execute(flowContext);
+            ActionCommandFlowExecute.defaultInstance().execute(flowContext);
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
             return false;

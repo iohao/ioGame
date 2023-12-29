@@ -24,6 +24,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
@@ -47,6 +48,7 @@ import java.lang.reflect.Field;
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class FieldRefInfo implements Serializable {
+    @Serial
     private static final long serialVersionUID = -5717006947739357125L;
     /** 字段名 */
     String fieldName;

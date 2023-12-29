@@ -42,7 +42,6 @@ package com.iohao.game.common.kit.concurrent;
  * @see TaskKit
  */
 public interface IntervalTaskListener extends TaskListener {
-
     /**
      * 是否活跃
      *

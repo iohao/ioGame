@@ -183,6 +183,7 @@ public final class BarSkeletonBuilderParamConfig {
 
     private static void extracted() {
         if (IoGameBanner.flag57 != "1") {
+            System.out.print("");
         }
     }
 }

@@ -94,12 +94,7 @@ public class ClientUserInputCommands {
                 .setCmdMerge(inputCommand.getCmdInfo().getCmdMerge())
                 .setRequestData(inputCommand.getRequestData())
                 .setCallback(inputCommand.getCallback())
-                .setResponseClass(inputCommand.getResponseClass());
-    }
-
-    public void request(CmdInfo cmdInfo) {
-        String inputName = ClientKit.toInputName(cmdInfo);
-        request(inputName);
+                ;
     }
 
     /**

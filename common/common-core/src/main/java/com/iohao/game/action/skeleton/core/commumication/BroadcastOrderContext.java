@@ -31,7 +31,7 @@ import java.util.Collection;
  *     如果没有特殊业务需求，建议使用 BroadcastContext
  *
  *     see:
- *     https://www.yuque.com/iohao/game/qv4qfo#nJage
+ *     <a href="https://www.yuque.com/iohao/game/qv4qfo#nJage">广播、推送</a>
  * </pre>
  *
  * @author 渔民小镇

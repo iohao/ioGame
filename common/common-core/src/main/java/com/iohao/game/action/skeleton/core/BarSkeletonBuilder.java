@@ -66,7 +66,6 @@ public final class BarSkeletonBuilder {
     /** 错误码相关的文档 */
     final ErrorCodeDocs errorCodeDocs = new ErrorCodeDocs();
     /** action工厂 */
-    @SuppressWarnings("unchecked")
     ActionFactoryBean<Object> actionFactoryBean = new DefaultActionFactoryBean<>();
     /** action 执行完后，最后需要做的事。 一般用于将数据发送到 Broker（游戏网关） */
     ActionAfter actionAfter = new DefaultActionAfter();

@@ -109,7 +109,7 @@ public class TimeKit {
 
         public SecondUpdateCurrentTimeMillis() {
             TaskKit.runInterval(() -> {
-                // 每秒种更新一次当前时间
+                // 每秒更新一次当前时间
                 currentTimeMillis = System.currentTimeMillis();
             }, 1, TimeUnit.SECONDS);
         }

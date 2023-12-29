@@ -50,7 +50,6 @@ public class FileKit {
         return AdapterHuUtils.file(path);
     }
 
-
     /**
      * 将String写入文件，覆盖模式，字符集为UTF-8
      *

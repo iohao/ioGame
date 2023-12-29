@@ -86,59 +86,18 @@ public class ClientUserChannel {
         this.clientUser = clientUser;
     }
 
-    @Deprecated
     public void request(InputCommand inputCommand) {
         CmdInfo cmdInfo = inputCommand.getCmdInfo();
         // 生成请求参数
         RequestDataDelegate requestData = inputCommand.getRequestData();
 
-        // 回调相关
-        Class<?> responseClass = inputCommand.getResponseClass();
         CallbackDelegate callback = inputCommand.getCallback();
 
         RequestCommand requestCommand = new RequestCommand()
                 .setCmdMerge(cmdInfo.getCmdMerge())
                 .setTitle(inputCommand.getTitle())
                 .setRequestData(requestData)
-                .setResponseClass(responseClass)
                 .setCallback(callback);
-
-        this.execute(requestCommand);
-    }
-
-    @Deprecated
-    public void request(RequestCommand command, Object data) {
-        RequestCommand requestCommand = new RequestCommand()
-                .setTitle(command.getTitle())
-                .setCmdMerge(command.getCmdMerge())
-                .setResponseClass(command.getResponseClass())
-                .setCallback(command.getCallback());
-
-        if (Objects.nonNull(data)) {
-            if (data instanceof RequestDataDelegate requestDataDelegate) {
-                requestCommand.setRequestData(requestDataDelegate);
-            } else {
-                requestCommand.setRequestData(() -> data);
-            }
-        }
-
-        this.execute(requestCommand);
-    }
-
-    @Deprecated
-    public void request(CmdInfo cmdInfo, Object data, Class<?> responseClass, CallbackDelegate callback) {
-        RequestCommand requestCommand = new RequestCommand()
-                .setCmdMerge(cmdInfo.getCmdMerge())
-                .setResponseClass(responseClass)
-                .setCallback(callback);
-
-        if (Objects.nonNull(data)) {
-            if (data instanceof RequestDataDelegate requestDataDelegate) {
-                requestCommand.setRequestData(requestDataDelegate);
-            } else {
-                requestCommand.setRequestData(() -> data);
-            }
-        }
 
         this.execute(requestCommand);
     }
@@ -190,32 +149,6 @@ public class ClientUserChannel {
 
         // 发送数据到游戏服务器
         this.clientChannel.accept(message);
-    }
-
-    /**
-     * 广播监听
-     * <pre>
-     *     监听游戏服务器广播的消息
-     * </pre>
-     *
-     * @param cmdInfo       监听的路由
-     * @param responseClass 响应后使用这个 class 来解析 data 数据
-     * @param callback      结果回调（游戏服务器回传的结果）
-     * @param title         广播描述
-     */
-    @Deprecated
-    public void listenBroadcast(CmdInfo cmdInfo
-            , Class<?> responseClass
-            , CallbackDelegate callback
-            , String title
-    ) {
-
-        ListenCommand listenCommand = new ListenCommand(cmdInfo)
-                .setTitle(title)
-                .setResponseClass(responseClass)
-                .setCallback(callback);
-
-        this.addListen(listenCommand);
     }
 
     public void addListen(ListenCommand listenCommand) {
