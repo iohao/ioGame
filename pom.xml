@@ -56,7 +56,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.101.Final</netty.version>
+        <netty.version>4.1.104.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.6</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
@@ -100,25 +100,25 @@
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 
         <!-- temp spring boot https://mvnrepository.com/artifact/org.springframework/spring-core -->
-        <spring.version>5.3.27</spring.version>
+        <spring.version>6.1.2</spring.version>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
-        <springboot.version>2.7.11</springboot.version>
+        <springboot.version>3.2.1</springboot.version>
         <!--  junit https://mvnrepository.com/artifact/junit/junit  -->
         <junit.version>4.13.2</junit.version>
 
         <!-- slf4j https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-        <slf4j-api.version>1.7.36</slf4j-api.version>
+        <slf4j-api.version>2.0.10</slf4j-api.version>
         <!-- slf4j https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-        <logback.version>1.2.11</logback.version>
+        <logback.version>1.4.14</logback.version>
 
         <!--
         jprotobuf是针对Java程序开发一套简易类库，目的是简化java语言对protobuf类库的使用
         https://github.com/jhunters/jprotobuf/
         https://mvnrepository.com/artifact/com.baidu/jprotobuf
         -->
-        <jprotobuf.version>2.4.18</jprotobuf.version>
+        <jprotobuf.version>2.4.20</jprotobuf.version>
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
-        <protobuf-java.version>3.22.4</protobuf-java.version>
+        <protobuf-java.version>3.25.1</protobuf-java.version>
 
         <!-- 后期整理需要移除的 https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
         <snakeyaml.version>1.33</snakeyaml.version>

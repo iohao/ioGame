@@ -144,10 +144,10 @@ public class TaskKit {
     private final HashedWheelTimer wheelTimer = new HashedWheelTimer();
     /** 内置的 cacheExecutor 执行器 */
     @Getter
-    final ExecutorService cacheExecutor = ExecutorKit.newCacheThreadPool("ioGameThread");
+    final ExecutorService cacheExecutor = ExecutorKit.newCacheThreadPool("ioGameThread-");
     /** 虚拟线程执行器 */
     @Getter
-    final ExecutorService virtualExecutor = ExecutorKit.newVirtualExecutor("ioGameVirtual");
+    final ExecutorService virtualExecutor = ExecutorKit.newVirtualExecutor("ioGameVirtual-");
     final SetMultiMap<TickTimeUnit, IntervalTaskListener> intervalTaskListenerMap = SetMultiMap.create();
 
     record TickTimeUnit(long tick, TimeUnit timeUnit) {

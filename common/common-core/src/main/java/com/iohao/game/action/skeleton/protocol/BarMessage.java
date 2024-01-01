@@ -18,7 +18,6 @@
  */
 package com.iohao.game.action.skeleton.protocol;
 
-import com.baidu.bjf.remoting.protobuf.annotation.Ignore;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.common.consts.CommonConst;
