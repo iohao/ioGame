@@ -66,6 +66,7 @@ public final class EndPointLogicServerMessageExternalProcessor extends AbstractA
                         break;
                     case REMOVE_BINDING:
                         collect.forEach(bindingLogicServerIdSet::remove);
+                        break;
                     default:
                         bindingLogicServerIdSet.clear();
                 }

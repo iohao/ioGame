@@ -54,7 +54,9 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
     public void fuckOut(FlowContext flowContext) {
         ThreadExecutor threadExecutor = flowContext.option(FlowAttr.threadExecutor);
 
-        region.update(flowContext.getInOutTime(), threadExecutor);
+        if (Objects.nonNull(threadExecutor)) {
+            region.update(flowContext.getInOutTime(), threadExecutor);
+        }
     }
 
     @Getter
