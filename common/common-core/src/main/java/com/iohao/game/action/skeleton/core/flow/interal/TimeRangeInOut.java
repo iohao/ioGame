@@ -20,7 +20,6 @@ package com.iohao.game.action.skeleton.core.flow.interal;
 
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.TimeKit;
 import com.iohao.game.common.kit.concurrent.TaskKit;
@@ -30,6 +29,7 @@ import org.jctools.maps.NonBlockingHashMap;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
@@ -81,13 +81,10 @@ import java.util.stream.Stream;
  */
 @Getter
 public final class TimeRangeInOut implements ActionMethodInOut {
-    public static final FlowOption<LocalDate> localDate = FlowOption.valueOf("TimeRangeInOut-LocalDate");
-    public static final FlowOption<LocalTime> localTime = FlowOption.valueOf("TimeRangeInOut-LocalTime");
 
     final TimeRangeDayRegion region = new TimeRangeDayRegion();
 
-    ChangeListener listener = new ChangeListener() {
-    };
+    ChangeListener listener = new DefaultChangeListener();
 
     public void setListener(ChangeListener listener) {
         this.listener = Objects.requireNonNull(listener);
@@ -95,14 +92,12 @@ public final class TimeRangeInOut implements ActionMethodInOut {
 
     @Override
     public void fuckIn(FlowContext flowContext) {
-        flowContext.option(localDate, listener.nowLocalDate());
-        flowContext.option(localTime, listener.nowLocalTime());
     }
 
     @Override
     public void fuckOut(FlowContext flowContext) {
-        LocalDate localDate = flowContext.option(TimeRangeInOut.localDate);
-        LocalTime localTime = flowContext.option(TimeRangeInOut.localTime);
+        LocalDate localDate = listener.nowLocalDate();
+        LocalTime localTime = listener.nowLocalTime();
 
         this.region.update(localDate, localTime, flowContext);
     }
@@ -115,13 +110,13 @@ public final class TimeRangeInOut implements ActionMethodInOut {
             this.map.forEach(action);
         }
 
-        public void update(LocalDate localDate, LocalTime localTime, FlowContext flowContext) {
+        void update(LocalDate localDate, LocalTime localTime, FlowContext flowContext) {
 
             TimeRangeDay timeRangeDay = this.getTimeRangeDay(localDate);
             timeRangeDay.increment(localTime);
 
             // 变更回调
-//            listener.changed(timeRangeDay, localTime, flowContext);
+            listener.changed(timeRangeDay, localTime, flowContext);
         }
 
         public TimeRangeDay getTimeRangeDay(LocalDate localDate) {
@@ -275,7 +270,6 @@ public final class TimeRangeInOut implements ActionMethodInOut {
         }
     }
 
-
     /**
      * 分钟范围记录
      *
@@ -307,8 +301,8 @@ public final class TimeRangeInOut implements ActionMethodInOut {
      */
     public interface ChangeListener {
 
-//        default void changed(TimeRangeDay timeRangeDay, LocalTime localTime, FlowContext flowContext) {
-//        }
+        default void changed(TimeRangeDay timeRangeDay, LocalTime localTime, FlowContext flowContext) {
+        }
 
         /**
          * 插件会在每天的 0:00 触发 callbackYesterday 方法，并将昨日的 TimeRangeDay 对象传入方法中
@@ -345,6 +339,33 @@ public final class TimeRangeInOut implements ActionMethodInOut {
 
         default List<TimeRangeMinute> createListenerTimeRangeMinuteList() {
             return Collections.emptyList();
+        }
+    }
+
+    private static class DefaultChangeListener implements ChangeListener {
+        LocalDate nowLocalDate = LocalDate.now();
+        LocalTime nowLocalTime = LocalTime.now();
+
+        DefaultChangeListener() {
+            TaskKit.runInterval(() -> {
+                // default 10 seconds update
+                nowLocalTime = LocalTime.now();
+            }, 10, TimeUnit.SECONDS);
+
+            TaskKit.runIntervalMinute(() -> {
+                // 1 minute update
+                nowLocalDate = LocalDate.now();
+            }, 1);
+        }
+
+        @Override
+        public LocalDate nowLocalDate() {
+            return this.nowLocalDate;
+        }
+
+        @Override
+        public LocalTime nowLocalTime() {
+            return this.nowLocalTime;
         }
     }
 }

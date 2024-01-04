@@ -1,5 +1,6 @@
 package com.iohao.game.widget.light.redis.lock.spring.service.config;
 
+import jakarta.annotation.Resource;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -7,7 +8,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -23,7 +23,7 @@ public class RedissonConfig {
     @Resource
     private DistibutedLockProperties distibutedLockProperties;
 
-    @Bean(destroyMethod="shutdown")
+    @Bean(destroyMethod = "shutdown")
     @ConditionalOnMissingBean
     public RedissonClient redissonClient() throws Exception {
         Config config = null;

@@ -117,20 +117,28 @@ interface SimpleAttachment extends SimpleCommunication {
     /**
      * 得到元附加信息
      * <p>
-     * 使用参考
+     * example
      * <pre>{@code
+     *     // 自定义 FlowContext
      *     public class MyFlowContext extends FlowContext {
      *         MyAttachment attachment;
      *
      *         @Override
      *         @SuppressWarnings("unchecked")
      *         public MyAttachment getAttachment() {
+     *
      *             if (Objects.isNull(attachment)) {
      *                 this.attachment = this.getAttachment(MyAttachment.class);
      *             }
      *
      *             return this.attachment;
      *         }
+     *     }
+     *
+     *     // 自定义元信息类
+     *     public class MyAttachment implements Attachment {
+     *         @Getter
+     *         long userId;
      *     }
      * }
      * </pre>
@@ -1211,6 +1219,15 @@ interface SimpleCommon extends FlowOptionDynamic {
     HeadMetadata getHeadMetadata();
 
     /**
+     * 当前请求的路由
+     *
+     * @return 路由
+     */
+    default CmdInfo getCmdInfo() {
+        return this.getHeadMetadata().getCmdInfo();
+    }
+
+    /**
      * userId
      *
      * @return userId
@@ -1255,6 +1272,10 @@ interface SimpleCommon extends FlowOptionDynamic {
                 MDC.clear();
             }
         });
+    }
+
+    default RequestMessage createRequestMessage(CmdInfo cmdInfo) {
+        return createRequestMessage(cmdInfo, null);
     }
 
     /**

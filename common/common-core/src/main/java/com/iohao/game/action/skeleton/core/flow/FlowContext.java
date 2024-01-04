@@ -101,10 +101,6 @@ public class FlowContext implements SimpleContext {
     @Setter(AccessLevel.PRIVATE)
     long inOutTime;
 
-    public CmdInfo getCmdInfo() {
-        return this.getHeadMetadata().getCmdInfo();
-    }
-
     /**
      * 设置响应结果
      *
@@ -112,6 +108,7 @@ public class FlowContext implements SimpleContext {
      * @return this
      */
     public FlowContext setMethodResult(Object methodResult) {
+
         if (Objects.nonNull(methodResult)) {
             this.methodResult = methodResult;
         }
@@ -122,10 +119,6 @@ public class FlowContext implements SimpleContext {
     @Override
     public HeadMetadata getHeadMetadata() {
         return this.request.getHeadMetadata();
-    }
-
-    public RequestMessage createRequestMessage(CmdInfo cmdInfo) {
-        return this.createRequestMessage(cmdInfo, null);
     }
 
     /**
@@ -144,10 +137,14 @@ public class FlowContext implements SimpleContext {
 
     /**
      * InOut 执行完成后所消耗的时间
+     * <pre>
+     *     在此之前，确保调用了 {@code this.inOutStartTime()} 方法
+     * </pre>
      *
      * @return 消耗时间 = System.currentTimeMillis - inOutStartTime
      */
     public long getInOutTime() {
+
         if (this.inOutStartTime == 0) {
             // 表示开发者没有主动调用开始的时间记录 inOutStartTime() 方法
             return Long.MAX_VALUE;
