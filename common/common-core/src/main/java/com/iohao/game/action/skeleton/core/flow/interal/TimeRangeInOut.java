@@ -347,14 +347,10 @@ public final class TimeRangeInOut implements ActionMethodInOut {
         LocalTime nowLocalTime = LocalTime.now();
 
         DefaultChangeListener() {
-            TaskKit.runInterval(() -> {
-                // default 10 seconds update
-                nowLocalTime = LocalTime.now();
-            }, 10, TimeUnit.SECONDS);
-
             TaskKit.runIntervalMinute(() -> {
                 // 1 minute update
                 nowLocalDate = LocalDate.now();
+                nowLocalTime = LocalTime.now();
             }, 1);
         }
 
