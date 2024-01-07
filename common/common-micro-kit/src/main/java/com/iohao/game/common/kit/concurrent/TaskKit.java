@@ -207,6 +207,15 @@ public class TaskKit {
     }
 
     /**
+     * 一秒后执行 OnceTaskListener 监听回调，只会执行一次
+     *
+     * @param taskListener taskListener
+     */
+    public void runOnceSeconds(OnceTaskListener taskListener) {
+        runOnce(taskListener, 1, TimeUnit.SECONDS);
+    }
+
+    /**
      * 添加 OnceTaskListener 监听回调，只会执行一次
      *
      * @param taskListener      taskListener
