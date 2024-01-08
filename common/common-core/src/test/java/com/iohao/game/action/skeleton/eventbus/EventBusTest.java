@@ -45,7 +45,7 @@ public class EventBusTest {
         message.setName("ok");
 
         EventBusMessage eventBusMessage = this.eventBus.createEventBusMessage(message);
-        eventBusMessage.setUserId(1);
+        eventBusMessage.setThreadIndex(1);
 
         this.eventBus.fire(eventBusMessage);
 //        this.eventBus.fire(message);

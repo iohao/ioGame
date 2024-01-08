@@ -70,7 +70,7 @@ public @interface EventSubscribe {
      *
      *     想要确保按顺序执行，订阅者需要使用相同的线程执行器。
      *     比如可以搭配 userExecutor、simpleExecutor 等策略来使用。
-     *     这些策略通过 {@link EventBusMessage#getUserId()} 来确定所使用线程执行器。
+     *     这些策略通过 {@link EventBusMessage#getThreadIndex()} 来确定所使用线程执行器。
      * </pre>
      *
      * @return 执行顺序
@@ -126,7 +126,7 @@ public @interface EventSubscribe {
          * [线程安全] 在线程执行器中执行
          * <pre>
          *     该策略与 userExecutor 类似，但使用的是独立的线程执行器（{@link SimpleThreadExecutorRegion}）。
-         *     使用时，需要开发者设置 {@link EventBusMessage#setUserId(long)} 的值（ 该值需要 > 0）。
+         *     使用时，需要开发者设置 {@link EventBusMessage#setThreadIndex(long)} 的值（ 该值需要 > 0）。
          * </pre>
          *
          * @see SimpleThreadExecutorRegion

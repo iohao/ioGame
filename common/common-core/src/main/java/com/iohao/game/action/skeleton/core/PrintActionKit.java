@@ -52,7 +52,7 @@ class PrintActionKit {
         }
 
         if (setting.isPrintInout()) {
-            var list = List.of(barSkeleton.inOutManager.getInOuts());
+            var list = barSkeleton.inOutManager.listInOut();
             PrintActionKit.printInout(list);
         }
 

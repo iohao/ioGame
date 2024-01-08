@@ -43,6 +43,7 @@ public abstract class AbstractEventBusRunner implements Runner {
         EventBus eventBus = new EventBus(brokerClientId);
         skeleton.option(SkeletonAttr.eventBus, eventBus);
 
+        // EventBus 默认设置
         eventBus.setSubscribeExecutorSelector(SubscribeExecutorSelector.defaultInstance());
         eventBus.setSubscriberInvokeCreator(SubscriberInvokeCreator.defaultInstance());
         eventBus.setEventBusMessageCreator(EventBusMessageCreator.defaultInstance());
@@ -51,14 +52,15 @@ public abstract class AbstractEventBusRunner implements Runner {
         eventBus.setBrokerClientContext(brokerClientContext);
         eventBus.setEventBrokerClientMessage(eventBrokerClientMessage);
 
-        this.registerEventBus(eventBus);
+        // EventBus 注册订阅者
+        this.registerEventBus(eventBus, skeleton);
 
         eventBus.setStatus(EventBus.EventBusStatus.run);
 
         EventBusRegion.addLocal(eventBus);
     }
 
-    private static EventBrokerClientMessage getEventBrokerClientMessage(BrokerClientContext brokerClientContext) {
+    private EventBrokerClientMessage getEventBrokerClientMessage(BrokerClientContext brokerClientContext) {
         SimpleServerInfo simpleServerInfo = brokerClientContext.getSimpleServerInfo();
         String id = simpleServerInfo.getId();
         String appName = simpleServerInfo.getName();
@@ -77,6 +79,7 @@ public abstract class AbstractEventBusRunner implements Runner {
      * </pre>
      *
      * @param eventBus EventBus
+     * @param skeleton 业务框架
      */
-    abstract protected void registerEventBus(EventBus eventBus);
+    abstract protected void registerEventBus(EventBus eventBus, BarSkeleton skeleton);
 }

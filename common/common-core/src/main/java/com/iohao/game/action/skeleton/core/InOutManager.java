@@ -21,10 +21,11 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * InOut 插件相关
@@ -39,7 +40,6 @@ public final class InOutManager {
     /** true : 开放拦截 out */
     final boolean openOut;
     /** inOuts */
-    @Getter
     final ActionMethodInOut[] inOuts;
 
     InOutManager(BarSkeletonSetting setting, List<ActionMethodInOut> inOutList) {
@@ -87,5 +87,28 @@ public final class InOutManager {
         for (ActionMethodInOut inOut : this.inOuts) {
             inOut.fuckOut(flowContext);
         }
+    }
+
+    /**
+     * 通过 clazz 找到对应的 inOut 对象
+     *
+     * @param clazz inOut class
+     * @param <T>   ActionMethodInOut
+     * @return any optional
+     * @see ActionMethodInOut
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends ActionMethodInOut> Optional<T> getOptional(Class<? extends T> clazz) {
+        for (ActionMethodInOut inOut : this.inOuts) {
+            if (Objects.equals(inOut.getClass(), clazz)) {
+                return (Optional<T>) Optional.of(inOut);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    List<ActionMethodInOut> listInOut() {
+        return List.of(this.inOuts);
     }
 }

@@ -177,7 +177,7 @@ public final class StatActionInOut implements ActionMethodInOut {
             }
 
             this.cmdInfo = cmdInfo;
-            this.lastTimeRange = this.timeRangeList.get(this.timeRangeList.size() - 1);
+            this.lastTimeRange = this.timeRangeList.getLast();
         }
 
         private void update(FlowContext flowContext, long time) {

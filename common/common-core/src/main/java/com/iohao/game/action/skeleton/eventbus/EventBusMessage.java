@@ -42,13 +42,12 @@ public final class EventBusMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = -1661393033598374515L;
     /**
-     * userId
+     * threadIndex 主要作用是确定使用哪个线程执行器。
      * <pre>
-     *     通常，我们可以将 userId 看成是 threadIndex， 因为该属性的主要作用是确定使用哪个线程执行器。
      *     当该值为 0 时，框架会分配一个值。
      * </pre>
      */
-    long userId;
+    long threadIndex;
 
     String traceId;
     /** 事件源 */

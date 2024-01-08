@@ -36,7 +36,7 @@ final class DefaultEventBusListener implements EventBusListener {
         Object eventSource = eventBusMessage.getEventSource();
         Class<?> clazz = eventSource.getClass();
         String simpleName = clazz.getName();
-        log.warn("事件源[{}]，没有配置订阅者。{}", clazz.getSimpleName(), simpleName);
+        log.warn("事件源[{}]没有配置订阅者 {}", clazz.getSimpleName(), simpleName);
     }
 
     static DefaultEventBusListener me() {

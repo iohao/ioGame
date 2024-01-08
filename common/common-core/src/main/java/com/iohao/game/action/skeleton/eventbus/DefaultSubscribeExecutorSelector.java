@@ -60,7 +60,7 @@ final class DefaultSubscribeExecutorSelector implements SubscribeExecutorSelecto
     }
 
     long getThreadIndex(EventBusMessage eventBusMessage) {
-        long userId = eventBusMessage.getUserId();
+        long userId = eventBusMessage.getThreadIndex();
 
         if (userId != 0) {
             return userId;

@@ -28,7 +28,7 @@ import java.util.Objects;
  * @date 2023-12-24
  */
 @Data
-public class EventBrokerClientMessage implements Serializable {
+public final class EventBrokerClientMessage implements Serializable {
     final String appName;
     final String tag;
     final String brokerClientType;

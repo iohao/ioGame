@@ -44,7 +44,7 @@ import java.util.Set;
  */
 @Slf4j
 @UtilityClass
-public class EventBusRegion {
+public final class EventBusRegion {
     /**
      * EventBus map
      * <pre>

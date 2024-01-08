@@ -1171,7 +1171,7 @@ interface SimpleCommunication extends SimpleCommon {
 
         var eventBusMessage = new EventBusMessage();
         eventBusMessage.setEventSource(eventSource);
-        eventBusMessage.setUserId(userId);
+        eventBusMessage.setThreadIndex(userId);
         eventBusMessage.setTraceId(traceId);
 
         return eventBusMessage;
