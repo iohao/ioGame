@@ -25,6 +25,8 @@ import lombok.experimental.FieldDefaults;
 import java.util.concurrent.*;
 
 /**
+ * 线程执行器管理域父类
+ *
  * @author 渔民小镇
  * @date 2023-12-01
  */
@@ -32,14 +34,14 @@ import java.util.concurrent.*;
 abstract sealed class AbstractThreadExecutorRegion implements ThreadExecutorRegion
         permits
         UserThreadExecutorRegion,
-        UserVirtualExecutorRegion,
+        UserVirtualThreadExecutorRegion,
         SimpleThreadExecutorRegion {
 
     final int executorLength;
     /** 线程执行器 */
     final ThreadExecutor[] threadExecutors;
 
-    public AbstractThreadExecutorRegion(String threadName, int executorSize) {
+    AbstractThreadExecutorRegion(String threadName, int executorSize) {
         this.executorLength = executorSize;
         this.threadExecutors = new ThreadExecutor[executorSize];
 

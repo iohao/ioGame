@@ -19,20 +19,21 @@
 package com.iohao.game.common.kit.concurrent.executor;
 
 import com.iohao.game.common.kit.ExecutorKit;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ExecutorService;
 
 /**
  * 用户虚拟线程执行器
+ * <pre>
+ *     该执行器主要用于消费 io 的相关业务（如 DB 入库）。
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-19
  */
-@Slf4j
-public final class UserVirtualExecutorRegion extends AbstractThreadExecutorRegion {
+final class UserVirtualThreadExecutorRegion extends AbstractThreadExecutorRegion {
 
-    public UserVirtualExecutorRegion(String threadName) {
+    UserVirtualThreadExecutorRegion(String threadName) {
         super(threadName, UserThreadExecutorRegion.availableProcessors2n());
     }
 
@@ -48,27 +49,17 @@ public final class UserVirtualExecutorRegion extends AbstractThreadExecutorRegio
         return this.threadExecutors[index];
     }
 
-    /**
-     * 没有实现，不要使用
-     *
-     * @param runnable 任务
-     */
-    @Override
-    public void execute(Runnable runnable) {
-        throw new RuntimeException("不支持");
-    }
-
     @Override
     protected ExecutorService createExecutorService(String name) {
         return ExecutorKit.newVirtualExecutor(name);
     }
 
-    public static UserVirtualExecutorRegion me() {
+    static UserVirtualThreadExecutorRegion me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final UserVirtualExecutorRegion ME = new UserVirtualExecutorRegion("UserVirtual");
+        static final UserVirtualThreadExecutorRegion ME = new UserVirtualThreadExecutorRegion("UserVirtualExecutor");
     }
 }

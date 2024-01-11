@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * 谐音:拳皇98中的 round one ready go!
  * <pre>
  *     注意：
- *          这个工具只适合单机的开发或本地一体化的开发, 对于分步式不适合。
+ *          这个工具只适合单机的开发或本地一体化的开发, 对于分布式不适合。
  *
  * </pre>
  * 集群介绍

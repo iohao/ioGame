@@ -27,17 +27,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @EventBusSubscriber
 public class CustomEvent {
-    @EventSubscribe(order = 1, value = EventSubscribe.ExecutorSelector.simpleExecutor)
+    @EventSubscribe(order = 1, value = ExecutorSelector.simpleExecutor)
     public void myMessage1(MyMessage message) {
         log.info("###myMessage1 : {}", message);
     }
 
-    @EventSubscribe(order = 3, value = EventSubscribe.ExecutorSelector.simpleExecutor)
+    @EventSubscribe(order = 3, value = ExecutorSelector.simpleExecutor)
     public void myMessage2(MyMessage message) {
         log.info("###myMessage2 : {}", message);
     }
 
-    @EventSubscribe(order = 2, value = EventSubscribe.ExecutorSelector.simpleExecutor)
+    @EventSubscribe(order = 2, value = ExecutorSelector.simpleExecutor)
     public void myMessage3(MyMessage message) {
         log.info("###myMessage3 : {}", message);
     }

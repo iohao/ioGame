@@ -35,7 +35,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * EventBus 是逻辑服事件总线，与业务框架、逻辑服是 1:1:1 的关系
+ * EventBus 是逻辑服事件总线。
+ * EventBus、业务框架、逻辑服三者是 1:1:1 的关系。
  * <p>
  * example1 - 通过 FlowContext 获取对应的 eventBus
  * <pre>{@code
@@ -65,7 +66,7 @@ public final class EventBus {
     final SubscriberRegistry subscriberRegistry = new SubscriberRegistry();
     final String id;
 
-    SubscribeExecutorSelector subscribeExecutorSelector;
+    SubscribeSelectorStrategy subscribeSelectorStrategy;
     SubscriberInvokeCreator subscriberInvokeCreator;
     EventBusMessageCreator eventBusMessageCreator;
     EventBusListener eventBusListener;
@@ -314,7 +315,7 @@ public final class EventBus {
 
             if (async) {
                 // 根据策略得到对应的执行器
-                ThreadExecutor threadExecutor = this.subscribeExecutorSelector.select(subscriber, eventBusMessage);
+                ThreadExecutor threadExecutor = this.subscribeSelectorStrategy.select(subscriber, eventBusMessage);
                 threadExecutor.execute(() -> this.invoke(subscriberInvoke, eventBusMessage));
             } else {
                 // 同步执行

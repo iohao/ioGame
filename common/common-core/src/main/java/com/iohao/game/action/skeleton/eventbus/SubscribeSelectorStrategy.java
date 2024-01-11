@@ -26,7 +26,7 @@ import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
  * @author 渔民小镇
  * @date 2023-12-24
  */
-public interface SubscribeExecutorSelector {
+public interface SubscribeSelectorStrategy {
     /**
      * 得到对应的线程执行器
      *
@@ -36,7 +36,7 @@ public interface SubscribeExecutorSelector {
      */
     ThreadExecutor select(Subscriber subscriber, EventBusMessage eventBusMessage);
 
-    static SubscribeExecutorSelector defaultInstance() {
-        return DefaultSubscribeExecutorSelector.me();
+    static SubscribeSelectorStrategy defaultInstance() {
+        return DefaultSubscribeSelectorStrategy.me();
     }
 }

@@ -21,23 +21,24 @@ package com.iohao.game.common.kit.concurrent.executor;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
-import java.util.concurrent.atomic.LongAdder;
-
 /**
  * 简单的线程执行器管理域
  * <pre>
- *     执行器的数量与 Runtime.getRuntime().availableProcessors() 相同
+ *     执行器的数量与 Runtime.getRuntime().availableProcessors() 相同。
+ *
+ *     SimpleThreadExecutorRegion - 简单的线程执行器管理域
+ *     该执行器与 {@link UserThreadExecutorRegion} 类似。
+ *     可通过 index 来得到对应的 ThreadExecutor 执行业务，从而避免并发问题。
+ *     如果业务是计算密集型的，又不想占用 {@link UserThreadExecutorRegion} 线程资源时，可使用该执行器。
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-01
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class SimpleThreadExecutorRegion extends AbstractThreadExecutorRegion {
+final class SimpleThreadExecutorRegion extends AbstractThreadExecutorRegion {
 
-    final LongAdder count = new LongAdder();
-
-    public SimpleThreadExecutorRegion(String threadName) {
+    SimpleThreadExecutorRegion(String threadName) {
         super(threadName, Runtime.getRuntime().availableProcessors());
     }
 
@@ -47,13 +48,7 @@ public final class SimpleThreadExecutorRegion extends AbstractThreadExecutorRegi
         return this.threadExecutors[i];
     }
 
-    @Override
-    public void execute(Runnable runnable) {
-        this.execute(runnable, this.count.sum());
-        this.count.increment();
-    }
-
-    public static SimpleThreadExecutorRegion me() {
+    static SimpleThreadExecutorRegion me() {
         return Holder.ME;
     }
 

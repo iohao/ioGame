@@ -20,10 +20,11 @@ package com.iohao.game.action.skeleton.core.flow;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.core.SkeletonAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
+import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
@@ -53,6 +54,7 @@ import java.util.Objects;
  *
  * @author 渔民小镇
  * @date 2021-12-21
+ * @see FlowAttr FlowContext 动态属性
  */
 @Setter
 @Getter
@@ -121,6 +123,11 @@ public class FlowContext implements SimpleContext {
         return this.request.getHeadMetadata();
     }
 
+    @Override
+    public EventBus getEventBus() {
+        return this.getBarSkeleton().option(SkeletonAttr.eventBus);
+    }
+
     /**
      * 开始时间记录，用于 InOut 插件 fuckIn 方法的时间记录
      * <pre>
@@ -156,4 +163,6 @@ public class FlowContext implements SimpleContext {
 
         return inOutTime;
     }
+
+
 }

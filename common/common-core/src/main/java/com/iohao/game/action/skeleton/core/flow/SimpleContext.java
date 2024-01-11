@@ -35,8 +35,8 @@ import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
 import com.iohao.game.common.kit.TraceKit;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
-import com.iohao.game.common.kit.concurrent.executor.UserVirtualExecutorRegion;
 import org.slf4j.MDC;
 
 import java.io.Serializable;
@@ -1078,9 +1078,7 @@ interface SimpleCommunication extends SimpleCommon {
      *
      * @return EventBus
      */
-    default EventBus getEventBus() {
-        return this.option(FlowAttr.eventBus);
-    }
+    EventBus getEventBus();
 
     /**
      * 发送事件给订阅者
@@ -1246,7 +1244,7 @@ interface SimpleCommon extends FlowOptionDynamic {
         final HeadMetadata headMetadata = this.getHeadMetadata();
         var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
 
-        ThreadExecutor threadExecutor = UserVirtualExecutorRegion.me().getThreadExecutor(executorIndex);
+        ThreadExecutor threadExecutor = ExecutorRegionKit.getUserVirtualExecutor(executorIndex);
         return threadExecutor.executor();
     }
 
@@ -1340,4 +1338,3 @@ interface SimpleCommon extends FlowOptionDynamic {
         return responseMessage;
     }
 }
-

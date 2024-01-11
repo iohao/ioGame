@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * 分步式事件总线的 listener
+ * 分布式事件总线的 listener
  *
  * @author 渔民小镇
  * @date 2023-12-24

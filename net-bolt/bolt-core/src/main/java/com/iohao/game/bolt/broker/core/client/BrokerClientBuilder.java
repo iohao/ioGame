@@ -229,7 +229,7 @@ public class BrokerClientBuilder {
             this.clientProcessorHooks = new ClientProcessorHooks();
         }
 
-        // 处理分步式事件总线的 listener
+        // 处理分布式事件总线的 listener
         this.addListener(new EventBusBrokerClientListener());
 
         for (Class<?> removeClass : this.removeProcessorList) {

@@ -22,7 +22,6 @@ import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 
 /**
@@ -50,6 +49,4 @@ public interface FlowAttr {
     FlowOption<Object> actionBizParam = FlowOption.valueOf("actionBizParam");
     /** 当前线程执行器 */
     FlowOption<ThreadExecutor> threadExecutor = FlowOption.valueOf("threadExecutor");
-    /** EventBus 是逻辑服事件总线，与业务框架、逻辑服是 1:1:1 的关系 */
-    FlowOption<EventBus> eventBus = FlowOption.valueOf("eventBus");
 }

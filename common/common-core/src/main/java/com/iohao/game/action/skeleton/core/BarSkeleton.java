@@ -42,6 +42,7 @@ import lombok.experimental.Accessors;
  *
  * @author 渔民小镇
  * @date 2021-12-12
+ * @see SkeletonAttr 业务框架动态属性
  */
 @Getter
 @Accessors(chain = true)

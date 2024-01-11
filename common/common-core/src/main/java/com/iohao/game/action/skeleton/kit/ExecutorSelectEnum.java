@@ -30,13 +30,13 @@ import java.io.Serializable;
  *
  *     可将枚举设置到 {@link HeadMetadata#setExecutorSelect(ExecutorSelectEnum)} 中。框架会在执行 action 前，根据 ExecutorSelectEnum 值来选择对应的执行器。
  *
- *     当为 null 或 userExecutor 时，使用 UserThreadExecutorRegion 策略，该策略【保证线程安全】
+ *     当为 null 或 userExecutor 时，使用 {@link ExecutorRegion#getUserThreadExecutorRegion()} 策略，该策略【保证线程安全】
  *     该策略可以确保同一玩家的 action 请求在同一线程执行器中执行。
  *
- *     当为 userVirtualExecutor 时，使用 UserVirtualExecutorRegion 策略，该策略【不保证线程安全】
+ *     当为 userVirtualExecutor 时，使用 {@link ExecutorRegion#getUserVirtualThreadExecutorRegion()} ()} 策略，该策略【不保证线程安全】
  *     该策略使用虚拟线程执行 action 请求，如果你能确定你的某些 action 执行较为耗时，且不需要保证线程的，可以使用该策略。
  *
- *     当为 currentThread 时，不使用任何线程执行器，而是在 bolt 线程中执行 action 请求；该策略【不保证线程安全】
+ *     当为 currentThread 时，不使用任何线程执行器，而是在 netty 线程中执行 action 请求；该策略【不保证线程安全】
  *     (具体可阅读 RequestMessageClientProcessor、DefaultRequestMessageClientProcessorHook 相关源码)
  *
  *     customExecutor 则是预留给开发者的，如果框架提供的以上策略都满足不了业务的，可以考虑扩展 RequestMessageClientProcessorHook 接口
@@ -45,20 +45,20 @@ import java.io.Serializable;
  *
  * @author 渔民小镇
  * @date 2023-12-19
- * @see UserThreadExecutorRegion
- * @see UserVirtualExecutorRegion
+ * @see ExecutorRegion#getUserThreadExecutorRegion()
+ * @see ExecutorRegion#getUserVirtualThreadExecutorRegion()
  */
 public enum ExecutorSelectEnum implements Serializable {
     /**
      * 在用户线程执行器中执行
      *
-     * @see UserThreadExecutorRegion
+     * @see ExecutorRegion#getUserThreadExecutorRegion()
      */
     userExecutor,
     /**
      * 在虚拟线程执行器中执行
      *
-     * @see UserVirtualExecutorRegion
+     * @see ExecutorRegion#getUserVirtualThreadExecutorRegion()
      */
     userVirtualExecutor,
     /** netty 线程中执行 action 请求 */

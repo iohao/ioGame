@@ -22,7 +22,7 @@ public class EventBusTest {
 
     private void initEventBus(EventBus eventBus) {
 
-        eventBus.setSubscribeExecutorSelector(SubscribeExecutorSelector.defaultInstance());
+        eventBus.setSubscribeSelectorStrategy(SubscribeSelectorStrategy.defaultInstance());
         eventBus.setSubscriberInvokeCreator(SubscriberInvokeCreator.defaultInstance());
         eventBus.setEventBusMessageCreator(EventBusMessageCreator.defaultInstance());
         eventBus.setEventBusListener(EventBusListener.defaultInstance());

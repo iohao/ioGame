@@ -50,10 +50,12 @@ public final class Subscriber {
     String methodName;
     /** EventSubscribe class */
     Class<?> targetClazz;
+    @Getter
     Object target;
     /** 方法对象 */
     Method method;
     /** 方法下标 (配合 MethodAccess 使用) */
+    @Getter
     int methodIndex;
     /** 方法参数名 */
     String parameterName;
@@ -65,12 +67,12 @@ public final class Subscriber {
      *     想要确保按顺序执行，需要确定使用的是相同的线程执行器
      * </pre>
      *
-     * @see com.iohao.game.action.skeleton.eventbus.EventSubscribe.ExecutorSelector
+     * @see ExecutorSelector
      */
     int order;
     /** 执行器选择策略 */
     @Getter
-    EventSubscribe.ExecutorSelector executorSelect;
+    ExecutorSelector executorSelect;
 
     Subscriber(long id) {
         this.id = id;

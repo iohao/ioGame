@@ -20,7 +20,7 @@ package com.iohao.game.action.skeleton.eventbus;
 
 import com.iohao.game.common.kit.collect.ListMultiMap;
 import com.iohao.game.common.kit.collect.SetMultiMap;
-import com.iohao.game.common.kit.concurrent.executor.SimpleThreadExecutorRegion;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
@@ -100,7 +100,8 @@ public final class EventBusRegion {
     void addLocal(EventBus eventBus) {
         eventBusMap.put(eventBus.id, eventBus);
 
-        SimpleThreadExecutorRegion.me().execute(EventBusRegion::resetLocalSubscriber, 1);
+        ExecutorRegionKit.getSimpleThreadExecutor(1)
+                .execute(EventBusRegion::resetLocalSubscriber);
     }
 
     /**

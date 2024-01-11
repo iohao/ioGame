@@ -19,7 +19,7 @@
 package com.iohao.game.common.kit.concurrent.executor;
 
 /**
- * 线程执行器管理域
+ * 用户线程执行器管理域
  * <pre>
  *     执行器具体数量是不大于 Runtime.getRuntime().availableProcessors() 的 2 次幂。
  *     当 availableProcessors 的值分别为 4、8、12、16、32 时，对应的数量则是 4、8、8、16、32。
@@ -27,12 +27,17 @@ package com.iohao.game.common.kit.concurrent.executor;
  *     4、8、12、16、32 （availableProcessors 的值）
  *     4、8、 8、16、32 （对应的数量）
  * </pre>
+ * <pre>
+ *     UserThreadExecutorRegion - 用户线程执行器管理域
+ *     该执行器主要用于消费 action 业务，或者说消费玩家相关的业务。
+ *     通过 userId 来得到对应的 ThreadExecutor 执行业务，从而避免并发问题。
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-01
  */
-public final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion {
-    public UserThreadExecutorRegion(String threadName) {
+final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion {
+    UserThreadExecutorRegion(String threadName) {
         super(threadName, availableProcessors2n());
     }
 
@@ -48,17 +53,7 @@ public final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion
         return this.threadExecutors[index];
     }
 
-    /**
-     * 没有实现，不要使用
-     *
-     * @param runnable 任务
-     */
-    @Override
-    public void execute(Runnable runnable) {
-        throw new RuntimeException("不支持");
-    }
-
-    public static UserThreadExecutorRegion me() {
+    static UserThreadExecutorRegion me() {
         return UserThreadExecutorRegion.Holder.ME;
     }
 

@@ -25,8 +25,11 @@ import com.iohao.game.action.skeleton.pulse.core.PulseTransmit;
 import com.iohao.game.common.kit.attr.AttrOption;
 
 /**
+ * 业务框架动态属性
+ *
  * @author 渔民小镇
  * @date 2023-04-21
+ * @see BarSkeleton
  */
 public interface SkeletonAttr {
     /** 脉冲管理器 */
@@ -39,6 +42,6 @@ public interface SkeletonAttr {
     AttrOption<PulseTransmit> producerPulseTransmit = AttrOption.valueOf("producerPulseTransmit");
     /** 脉冲消费者的发射器 */
     AttrOption<PulseTransmit> consumerPulseTransmit = AttrOption.valueOf("consumerPulseTransmit");
-    /** EventBus */
+    /** EventBus 是逻辑服事件总线，与业务框架、逻辑服是 1:1:1 的关系 */
     AttrOption<EventBus> eventBus = AttrOption.valueOf("eventBus");
 }

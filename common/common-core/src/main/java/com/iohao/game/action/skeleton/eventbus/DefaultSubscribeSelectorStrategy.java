@@ -18,45 +18,43 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
-import com.iohao.game.common.kit.concurrent.executor.SimpleThreadExecutorRegion;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
-import com.iohao.game.common.kit.concurrent.executor.UserThreadExecutorRegion;
-import com.iohao.game.common.kit.concurrent.executor.UserVirtualExecutorRegion;
 
-import java.util.concurrent.atomic.LongAdder;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author 渔民小镇
  * @date 2023-12-24
  */
-final class DefaultSubscribeExecutorSelector implements SubscribeExecutorSelector {
-    static final LongAdder threadIndexAdder = new LongAdder();
+final class DefaultSubscribeSelectorStrategy implements SubscribeSelectorStrategy {
+    static final AtomicLong threadIndexNo = new AtomicLong();
 
     @Override
     public ThreadExecutor select(Subscriber subscriber, EventBusMessage eventBusMessage) {
 
-        EventSubscribe.ExecutorSelector executorSelect = subscriber.getExecutorSelect();
+        ExecutorSelector executorSelect = subscriber.getExecutorSelect();
 
         // 虚拟线程中执行
-        if (executorSelect == EventSubscribe.ExecutorSelector.userVirtualExecutor) {
+        if (executorSelect == ExecutorSelector.userVirtualExecutor) {
             long threadIndex = getThreadIndex(eventBusMessage);
-            return UserVirtualExecutorRegion.me().getThreadExecutor(threadIndex);
+            return ExecutorRegionKit.getUserVirtualExecutor(threadIndex);
         }
 
         // [线程安全] 用户线程中执行
-        if (executorSelect == EventSubscribe.ExecutorSelector.userExecutor) {
+        if (executorSelect == ExecutorSelector.userExecutor) {
             long threadIndex = getThreadIndex(eventBusMessage);
-            return UserThreadExecutorRegion.me().getThreadExecutor(threadIndex);
+            return ExecutorRegionKit.getUserThreadExecutor(threadIndex);
         }
 
         // [线程安全] 相同的订阅者使用同一个线程执行器
-        if (executorSelect == EventSubscribe.ExecutorSelector.methodExecutor) {
+        if (executorSelect == ExecutorSelector.methodExecutor) {
             long threadIndex = subscriber.id;
-            return SimpleThreadExecutorRegion.me().getThreadExecutor(threadIndex);
+            return ExecutorRegionKit.getSimpleThreadExecutor(threadIndex);
         }
 
         long threadIndex = getThreadIndex(eventBusMessage);
-        return SimpleThreadExecutorRegion.me().getThreadExecutor(threadIndex);
+        return ExecutorRegionKit.getSimpleThreadExecutor(threadIndex);
     }
 
     long getThreadIndex(EventBusMessage eventBusMessage) {
@@ -66,16 +64,15 @@ final class DefaultSubscribeExecutorSelector implements SubscribeExecutorSelecto
             return userId;
         }
 
-        threadIndexAdder.increment();
-        return threadIndexAdder.longValue();
+        return threadIndexNo.incrementAndGet();
     }
 
-    static DefaultSubscribeExecutorSelector me() {
+    static DefaultSubscribeSelectorStrategy me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final DefaultSubscribeExecutorSelector ME = new DefaultSubscribeExecutorSelector();
+        static final DefaultSubscribeSelectorStrategy ME = new DefaultSubscribeSelectorStrategy();
     }
 }

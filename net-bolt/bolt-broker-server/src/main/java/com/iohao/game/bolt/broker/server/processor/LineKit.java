@@ -26,7 +26,7 @@ import com.iohao.game.bolt.broker.core.message.BrokerClientOnlineMessage;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.common.kit.MoreKit;
-import com.iohao.game.common.kit.concurrent.executor.SimpleThreadExecutorRegion;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.core.common.cmd.BrokerClientId;
 import com.iohao.game.core.common.cmd.CmdRegions;
 import lombok.experimental.UtilityClass;
@@ -47,6 +47,8 @@ import java.util.stream.Stream;
 @Slf4j
 @UtilityClass
 class LineKit {
+    long executorIndex = 0;
+
     record Context(BrokerServer brokerServer
             , BrokerClientModules brokerClientModules
             , CmdRegions cmdRegions
@@ -55,10 +57,10 @@ class LineKit {
 
     void online(Context context) {
         // 避免并发，使用同一个执行器
-        SimpleThreadExecutorRegion.me().execute(() -> {
+        ExecutorRegionKit.getSimpleThreadExecutor(executorIndex).execute(() -> {
             // online logic
             internalOnline(context);
-        }, 0);
+        });
     }
 
     private void internalOnline(Context context) {
@@ -113,11 +115,10 @@ class LineKit {
     }
 
     void offline(Context context) {
-        // 避免并发，使用同一个执行器
-        SimpleThreadExecutorRegion.me().execute(() -> {
-            // online logic
+        ExecutorRegionKit.getSimpleThreadExecutor(executorIndex).execute(() -> {
+            // offline logic
             internalOffline(context);
-        }, 0);
+        });
     }
 
     private static void internalOffline(Context context) {

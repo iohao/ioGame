@@ -22,15 +22,16 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
-import com.iohao.game.common.kit.concurrent.executor.UserThreadExecutorRegion;
-import com.iohao.game.common.kit.concurrent.executor.UserVirtualExecutorRegion;
 import lombok.experimental.UtilityClass;
 
 import java.util.Objects;
 import java.util.Optional;
 
 /**
+ * 线程执行器相关工具
+ *
  * @author 渔民小镇
  * @date 2023-12-19
  */
@@ -50,9 +51,9 @@ public class ExecutorSelectKit {
         final ExecutorSelectEnum executorSelect = headMetadata.getExecutorSelect();
 
         final ThreadExecutor threadExecutor = switch (executorSelect) {
-            case null -> UserThreadExecutorRegion.me().getThreadExecutor(executorIndex);
-            case userVirtualExecutor -> UserVirtualExecutorRegion.me().getThreadExecutor(executorIndex);
-            case userExecutor -> UserThreadExecutorRegion.me().getThreadExecutor(executorIndex);
+            case null -> ExecutorRegionKit.getUserThreadExecutor(executorIndex);
+            case userVirtualExecutor -> ExecutorRegionKit.getUserVirtualExecutor(executorIndex);
+            case userExecutor -> ExecutorRegionKit.getUserThreadExecutor(executorIndex);
             default -> null;
         };
 

@@ -25,7 +25,7 @@ import com.iohao.game.action.skeleton.core.runner.Runner;
 import com.iohao.game.action.skeleton.protocol.processor.SimpleServerInfo;
 
 /**
- * 分步式事件总线 Runner
+ * 分布式事件总线 Runner
  *
  * @author 渔民小镇
  * @date 2023-12-24
@@ -44,7 +44,7 @@ public abstract class AbstractEventBusRunner implements Runner {
         skeleton.option(SkeletonAttr.eventBus, eventBus);
 
         // EventBus 默认设置
-        eventBus.setSubscribeExecutorSelector(SubscribeExecutorSelector.defaultInstance());
+        eventBus.setSubscribeSelectorStrategy(SubscribeSelectorStrategy.defaultInstance());
         eventBus.setSubscriberInvokeCreator(SubscriberInvokeCreator.defaultInstance());
         eventBus.setEventBusMessageCreator(EventBusMessageCreator.defaultInstance());
         eventBus.setEventBusListener(EventBusListener.defaultInstance());

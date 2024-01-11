@@ -18,9 +18,6 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
-import com.iohao.game.common.kit.concurrent.executor.SimpleThreadExecutorRegion;
-import com.iohao.game.common.kit.concurrent.executor.*;
-
 import java.lang.annotation.*;
 
 /**
@@ -49,7 +46,7 @@ import java.lang.annotation.*;
  *
  * @author 渔民小镇
  * @date 2023-12-24
- * @see DefaultSubscribeExecutorSelector
+ * @see DefaultSubscribeSelectorStrategy
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -58,7 +55,7 @@ public @interface EventSubscribe {
     /**
      * 执行器策略选择
      * <pre>
-     *     注意，只要异步发送事件时，该配置才会生效。
+     *     注意，只有在发送异步事件时，该配置才会生效。
      * </pre>
      */
     ExecutorSelector value() default ExecutorSelector.userVirtualExecutor;
@@ -77,65 +74,4 @@ public @interface EventSubscribe {
      * @see ExecutorSelector
      */
     int order() default 0;
-
-    /**
-     * 线程执行器选择策略
-     */
-    enum ExecutorSelector {
-        /**
-         * [线程安全] 在用户线程执行器中执行
-         * <pre>
-         *     该策略将使用 action 的线程执行器，可确保同一用户（userId）在消费事件和消费 action 时，
-         *     使用的是相同的线程执行器，以避免并发问题。
-         *
-         *     注意，不要做耗时 io 相关操作，避免阻塞 action 的消费。
-         * </pre>
-         *
-         * @see UserThreadExecutorRegion
-         */
-        userExecutor,
-
-        /**
-         * 在虚拟线程执行器中执行
-         * <pre>
-         *     耗时相关的操作，可选择此策略
-         * </pre>
-         *
-         * @see UserVirtualExecutorRegion
-         */
-        userVirtualExecutor,
-
-        /**
-         * [线程安全] 在线程执行器中执行
-         * <pre>
-         *     该策略将使用 Subscriber.id 来确定线程执行器，可确保相同的订阅者方法在消费事件时，
-         *     使用的是相同的线程执行器，以避免并发问题。
-         *
-         *     注意，不要做耗时 io 相关操作，避免阻塞其他订阅者的消费。
-         *
-         *     其他补充说明：
-         *     Subscriber.id 由框架分配。该策略与 userExecutor、simpleExecutor 策略类似。
-         *     userExecutor、simpleExecutor 使用 userId 来确定线程执行器，
-         *     而 methodExecutor 则使用订阅者自身的 Subscriber.id 来确定线程执行器（你可以理解为按订阅者方法来划分）。
-         * </pre>
-         *
-         * @see SimpleThreadExecutorRegion
-         */
-        methodExecutor,
-        /**
-         * [线程安全] 在线程执行器中执行
-         * <pre>
-         *     该策略与 userExecutor 类似，但使用的是独立的线程执行器（{@link SimpleThreadExecutorRegion}）。
-         *     使用时，需要开发者设置 {@link EventBusMessage#setThreadIndex(long)} 的值（ 该值需要 > 0）。
-         * </pre>
-         *
-         * @see SimpleThreadExecutorRegion
-         */
-        simpleExecutor,
-
-        /**
-         * 预留给开发者的
-         */
-        customExecutor
-    }
 }
