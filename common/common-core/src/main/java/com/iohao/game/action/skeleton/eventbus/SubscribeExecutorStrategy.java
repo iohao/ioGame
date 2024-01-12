@@ -21,12 +21,12 @@ package com.iohao.game.action.skeleton.eventbus;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 
 /**
- * 线程执行器选择策略
+ * 订阅者线程执行器选择策略
  *
  * @author 渔民小镇
  * @date 2023-12-24
  */
-public interface SubscribeSelectorStrategy {
+public interface SubscribeExecutorStrategy {
     /**
      * 得到对应的线程执行器
      *
@@ -36,7 +36,7 @@ public interface SubscribeSelectorStrategy {
      */
     ThreadExecutor select(Subscriber subscriber, EventBusMessage eventBusMessage);
 
-    static SubscribeSelectorStrategy defaultInstance() {
-        return DefaultSubscribeSelectorStrategy.me();
+    static SubscribeExecutorStrategy defaultInstance() {
+        return DefaultSubscribeExecutorStrategy.me();
     }
 }

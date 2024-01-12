@@ -43,6 +43,7 @@ public final class Subscriber {
     @Getter
     final long id;
     /** 方法访问器 */
+    @Getter
     MethodAccess methodAccess;
     /** 类访问器 */
     ConstructorAccess<?> constructorAccess;
@@ -73,13 +74,11 @@ public final class Subscriber {
     /** 执行器选择策略 */
     @Getter
     ExecutorSelector executorSelect;
+    /** 订阅者执行 */
+    @Getter
+    SubscriberInvoke subscriberInvoke;
 
     Subscriber(long id) {
         this.id = id;
-    }
-
-    void invoke(Object param) {
-        // 调用开发者在 action 类中编写的业务方法，即 action
-        methodAccess.invoke(target, methodIndex, param);
     }
 }

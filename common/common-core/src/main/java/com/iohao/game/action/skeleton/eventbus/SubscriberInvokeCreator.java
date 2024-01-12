@@ -19,12 +19,20 @@
 package com.iohao.game.action.skeleton.eventbus;
 
 /**
+ * create SubscriberInvoke
+ *
  * @author 渔民小镇
  * @date 2023-12-24
  */
 public interface SubscriberInvokeCreator {
 
-    SubscriberInvoke create(Subscriber subscriber, EventBusMessage eventBusMessage);
+    /**
+     * 创建订阅者 invoke
+     *
+     * @param subscriber 订阅者
+     * @return 订阅者执行
+     */
+    SubscriberInvoke create(Subscriber subscriber);
 
     static SubscriberInvokeCreator defaultInstance() {
         return DefaultSubscriberInvokeCreator.me();

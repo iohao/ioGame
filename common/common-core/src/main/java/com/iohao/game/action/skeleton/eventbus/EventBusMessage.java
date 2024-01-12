@@ -48,7 +48,6 @@ public final class EventBusMessage implements Serializable {
      * </pre>
      */
     long threadIndex;
-
     String traceId;
     /** 事件源 */
     Object eventSource;

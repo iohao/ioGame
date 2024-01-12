@@ -37,7 +37,7 @@ public interface EventBusListener {
     /**
      * 事件消息没有对应的订阅者时，触发的监听回调
      * <pre>
-     *     注意，默认情况下只有调用 {@link EventBus#fire} 方法时才会检测。
+     *     注意，默认情况下只有调用 {@link EventBus#fire} 系列方法时才会检测。
      * </pre>
      *
      * @param eventBusMessage 事件消息

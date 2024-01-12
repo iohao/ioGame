@@ -27,7 +27,9 @@ package com.iohao.game.action.skeleton.eventbus;
 public interface SubscriberInvoke {
     /**
      * 执行订阅者方法
+     *
+     * @param eventBusMessage 事件消息
+     * @see EventSubscribe
      */
-    void invoke();
-
+    void invoke(EventBusMessage eventBusMessage);
 }

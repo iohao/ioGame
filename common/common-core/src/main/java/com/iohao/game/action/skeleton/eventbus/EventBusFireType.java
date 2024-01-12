@@ -32,7 +32,7 @@ public interface EventBusFireType {
      *     表示所使用的 EventBus 中的订阅者接收了事件消息。
      *
      *     举例：
-     *     EventBus 是逻辑服事件总线，与业务框架、逻辑服是 1:1:1 的关系。
+     *     EventBus 是逻辑服事件总线。 EventBus、业务框架、逻辑服三者是 1:1:1 的关系。
      *
      *     假设我们有两个游戏逻辑服，分别是 UserServer 和 EmailServer；那么每个游戏逻辑服会对应一个 EventBus，
      *     假设 user EventBus 使用 fireMe 发布事件，只会被 user 上注册的订阅者接收到消息。

@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author 渔民小镇
  * @date 2023-12-24
  */
-final class DefaultSubscribeSelectorStrategy implements SubscribeSelectorStrategy {
+final class DefaultSubscribeExecutorStrategy implements SubscribeExecutorStrategy {
     static final AtomicLong threadIndexNo = new AtomicLong();
 
     @Override
@@ -67,12 +67,12 @@ final class DefaultSubscribeSelectorStrategy implements SubscribeSelectorStrateg
         return threadIndexNo.incrementAndGet();
     }
 
-    static DefaultSubscribeSelectorStrategy me() {
+    static DefaultSubscribeExecutorStrategy me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final DefaultSubscribeSelectorStrategy ME = new DefaultSubscribeSelectorStrategy();
+        static final DefaultSubscribeExecutorStrategy ME = new DefaultSubscribeExecutorStrategy();
     }
 }

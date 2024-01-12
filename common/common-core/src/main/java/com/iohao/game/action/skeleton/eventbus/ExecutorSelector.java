@@ -25,7 +25,7 @@ import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
  * example
  * <pre>{@code
  *     public class YourEventBusSubscriber implements EventBusSubscriber {
- *         @EventSubscribe(SubscribeSelector.userExecutor)
+ *         @EventSubscribe(ExecutorSelector.userExecutor)
  *         public void userLogin(YourEventMessage message) {
  *             log.info("event - 玩家[{}]登录", message.getUserId());
  *         }
@@ -99,7 +99,7 @@ public enum ExecutorSelector {
     /**
      * 预留给开发者的
      * <pre>
-     *     上述策略都不能满足业务的，开发者可以通过实现 {@link SubscribeSelectorStrategy} 接口来做自定义扩展
+     *     上述策略都不能满足业务的，开发者可以通过实现 {@link SubscribeExecutorStrategy} 接口来做自定义扩展
      * </pre>
      * example
      * <pre>{@code
@@ -108,13 +108,13 @@ public enum ExecutorSelector {
      *             @Override
      *             public void registerEventBus(EventBus eventBus, BarSkeleton skeleton) {
      *                 // 你的线程执行器选择策略
-     *                 eventBus.setSubscribeSelectorStrategy(new YourSubscribeSelectorStrategy());
+     *                 eventBus.setSubscribeExecutorStrategy(new YourSubscribeExecutorStrategy());
      *             }
      *         });
      * }
      * </pre>
      *
-     * @see SubscribeSelectorStrategy
+     * @see SubscribeExecutorStrategy
      */
     customExecutor
 }

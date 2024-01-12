@@ -22,7 +22,7 @@ public class EventBusTest {
 
     private void initEventBus(EventBus eventBus) {
 
-        eventBus.setSubscribeSelectorStrategy(SubscribeSelectorStrategy.defaultInstance());
+        eventBus.setSubscribeExecutorStrategy(SubscribeExecutorStrategy.defaultInstance());
         eventBus.setSubscriberInvokeCreator(SubscriberInvokeCreator.defaultInstance());
         eventBus.setEventBusMessageCreator(EventBusMessageCreator.defaultInstance());
         eventBus.setEventBusListener(EventBusListener.defaultInstance());
@@ -65,6 +65,9 @@ public class EventBusTest {
 
         this.eventBus.fire(message);
         this.eventBus.fire(myRecord);
+
+        this.eventBus.fireSync(message);
+        this.eventBus.fireSync(myRecord);
 
         this.eventBus.fireMe(myRecord);
         this.eventBus.fireMeSync(myRecord);

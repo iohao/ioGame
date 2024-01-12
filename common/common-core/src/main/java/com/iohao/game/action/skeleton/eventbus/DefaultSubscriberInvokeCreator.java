@@ -18,11 +18,6 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
-import com.iohao.game.common.kit.TraceKit;
-import org.slf4j.MDC;
-
-import java.util.Objects;
-
 /**
  * @author 渔民小镇
  * @date 2023-12-24
@@ -30,8 +25,8 @@ import java.util.Objects;
 final class DefaultSubscriberInvokeCreator implements SubscriberInvokeCreator {
 
     @Override
-    public SubscriberInvoke create(Subscriber subscriber, EventBusMessage eventBusMessage) {
-        return new DefaultSubscriberInvoke(subscriber, eventBusMessage);
+    public SubscriberInvoke create(Subscriber subscriber) {
+        return new DefaultSubscriberInvoke(subscriber);
     }
 
     static DefaultSubscriberInvokeCreator me() {
@@ -41,28 +36,5 @@ final class DefaultSubscriberInvokeCreator implements SubscriberInvokeCreator {
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
         static final DefaultSubscriberInvokeCreator ME = new DefaultSubscriberInvokeCreator();
-    }
-
-    record DefaultSubscriberInvoke(Subscriber subscriber, EventBusMessage eventBusMessage) implements SubscriberInvoke {
-
-        @Override
-        public void invoke() {
-            var eventSource = eventBusMessage.getEventSource();
-            var traceId = eventBusMessage.getTraceId();
-
-            final boolean test = Objects.isNull(traceId) || Objects.nonNull(MDC.get(TraceKit.traceName));
-            if (test) {
-                subscriber.invoke(eventSource);
-                return;
-            }
-
-            try {
-                // traceId
-                MDC.put(TraceKit.traceName, traceId);
-                subscriber.invoke(eventSource);
-            } finally {
-                MDC.clear();
-            }
-        }
     }
 }

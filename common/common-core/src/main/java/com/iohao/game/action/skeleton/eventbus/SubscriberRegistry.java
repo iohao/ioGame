@@ -45,7 +45,7 @@ final class SubscriberRegistry {
     final ListMultiMap<Class<?>, Subscriber> subscriberMultiMap = ListMultiMap.create();
     final Set<Class<?>> eventBusSubscriberSet = new NonBlockingHashSet<>();
 
-    void register(Object eventBusSubscriber) {
+    void register(Object eventBusSubscriber, SubscriberInvokeCreator subscriberInvokeCreator) {
 
         Class<?> clazz = eventBusSubscriber.getClass();
 
@@ -83,6 +83,9 @@ final class SubscriberRegistry {
                     .setParameterClass(parameterClass)
                     .setOrder(order)
                     .setExecutorSelect(executorSelector);
+
+            SubscriberInvoke subscriberInvoke = subscriberInvokeCreator.create(subscriber);
+            subscriber.setSubscriberInvoke(subscriberInvoke);
 
             this.subscriberMultiMap.put(parameterClass, subscriber);
         });

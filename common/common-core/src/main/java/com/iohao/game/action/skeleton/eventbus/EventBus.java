@@ -18,9 +18,9 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
+import com.iohao.game.action.skeleton.core.IoGameCommonCoreConfig;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.IoGameCommonCoreConfig;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.AccessLevel;
@@ -66,7 +66,7 @@ public final class EventBus {
     final SubscriberRegistry subscriberRegistry = new SubscriberRegistry();
     final String id;
 
-    SubscribeSelectorStrategy subscribeSelectorStrategy;
+    SubscribeExecutorStrategy subscribeExecutorStrategy;
     SubscriberInvokeCreator subscriberInvokeCreator;
     EventBusMessageCreator eventBusMessageCreator;
     EventBusListener eventBusListener;
@@ -90,7 +90,7 @@ public final class EventBus {
         }
 
         // 注册
-        this.subscriberRegistry.register(eventBusSubscriber);
+        this.subscriberRegistry.register(eventBusSubscriber, this.subscriberInvokeCreator);
     }
 
     public EventBusMessage createEventBusMessage(Object eventSource) {
@@ -113,7 +113,7 @@ public final class EventBus {
     }
 
     /**
-     * 发送事件给订阅者
+     * [异步]发送事件给订阅者
      * <pre>
      *     1 给当前进程所有逻辑服的订阅者发送事件消息
      *     2 给其他进程的订阅者发送事件消息
@@ -132,9 +132,56 @@ public final class EventBus {
         }
     }
 
+    /**
+     * [同步]发送事件给订阅者。
+     * <pre>
+     *     1 [同步] 给当前进程所有逻辑服的订阅者发送事件消息
+     *     2 [异步] 给其他进程的订阅者发送事件消息
+     *
+     *     注意，这里的同步仅指当前进程订阅者的同步，对其他进程中的订阅者无效（处理远程订阅者使用的是异步）。
+     * </pre>
+     *
+     * @param eventBusMessage 事件消息
+     */
+    public void fireSync(EventBusMessage eventBusMessage) {
+        // 给当前进程所有逻辑服的订阅者发送事件消息
+        this.fireLocalSync(eventBusMessage);
+        // 给其他进程的订阅者发送事件
+        this.fireRemote(eventBusMessage);
+
+        if (eventBusMessage.emptyFireType()) {
+            this.eventBusListener.emptySubscribe(eventBusMessage, this);
+        }
+    }
+
+    /**
+     * [异步]发送事件给订阅者
+     * <pre>
+     *     1 给当前进程所有逻辑服的订阅者发送事件消息
+     *     2 给其他进程的订阅者发送事件消息
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
     public void fire(Object eventSource) {
         EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
         this.fire(eventBusMessage);
+    }
+
+    /**
+     * [同步]发送事件给订阅者。
+     * <pre>
+     *     1 [同步] 给当前进程所有逻辑服的订阅者发送事件消息
+     *     2 [异步] 给其他进程的订阅者发送事件消息
+     *
+     *     注意，这里的同步仅指当前进程订阅者的同步，对其他进程中的订阅者无效（处理远程订阅者使用的是异步）。
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    public void fireSync(Object eventSource) {
+        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        this.fireSync(eventBusMessage);
     }
 
     public void fireLocal(Object eventSource) {
@@ -310,15 +357,19 @@ public final class EventBus {
     }
 
     private void invokeSubscriber(EventBusMessage eventBusMessage, boolean async, Collection<Subscriber> subscribers) {
-        for (Subscriber subscriber : subscribers) {
-            SubscriberInvoke subscriberInvoke = this.subscriberInvokeCreator.create(subscriber, eventBusMessage);
-
-            if (async) {
+        if (async) {
+            // 异步执行
+            for (Subscriber subscriber : subscribers) {
                 // 根据策略得到对应的执行器
-                ThreadExecutor threadExecutor = this.subscribeSelectorStrategy.select(subscriber, eventBusMessage);
+                ThreadExecutor threadExecutor = this.subscribeExecutorStrategy.select(subscriber, eventBusMessage);
+
+                SubscriberInvoke subscriberInvoke = subscriber.getSubscriberInvoke();
                 threadExecutor.execute(() -> this.invoke(subscriberInvoke, eventBusMessage));
-            } else {
-                // 同步执行
+            }
+        } else {
+            // 同步执行
+            for (Subscriber subscriber : subscribers) {
+                SubscriberInvoke subscriberInvoke = subscriber.getSubscriberInvoke();
                 this.invoke(subscriberInvoke, eventBusMessage);
             }
         }
@@ -326,7 +377,7 @@ public final class EventBus {
 
     private void invoke(SubscriberInvoke subscriberInvoke, EventBusMessage eventBusMessage) {
         try {
-            subscriberInvoke.invoke();
+            subscriberInvoke.invoke(eventBusMessage);
         } catch (Throwable e) {
             this.eventBusListener.invokeException(e, eventBusMessage.getEventSource(), eventBusMessage);
         }

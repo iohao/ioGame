@@ -39,12 +39,12 @@ public abstract class AbstractEventBusRunner implements Runner {
 
         EventBrokerClientMessage eventBrokerClientMessage = getEventBrokerClientMessage(brokerClientContext);
 
-        // 事件总线与逻辑服是 1:1 的关系
+        // EventBus 是逻辑服事件总线。 EventBus、业务框架、逻辑服三者是 1:1:1 的关系。
         EventBus eventBus = new EventBus(brokerClientId);
         skeleton.option(SkeletonAttr.eventBus, eventBus);
 
         // EventBus 默认设置
-        eventBus.setSubscribeSelectorStrategy(SubscribeSelectorStrategy.defaultInstance());
+        eventBus.setSubscribeExecutorStrategy(SubscribeExecutorStrategy.defaultInstance());
         eventBus.setSubscriberInvokeCreator(SubscriberInvokeCreator.defaultInstance());
         eventBus.setEventBusMessageCreator(EventBusMessageCreator.defaultInstance());
         eventBus.setEventBusListener(EventBusListener.defaultInstance());

@@ -46,7 +46,7 @@ import java.lang.annotation.*;
  *
  * @author 渔民小镇
  * @date 2023-12-24
- * @see DefaultSubscribeSelectorStrategy
+ * @see DefaultSubscribeExecutorStrategy
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -58,7 +58,7 @@ public @interface EventSubscribe {
      *     注意，只有在发送异步事件时，该配置才会生效。
      * </pre>
      */
-    ExecutorSelector value() default ExecutorSelector.userVirtualExecutor;
+    ExecutorSelector value() default ExecutorSelector.userExecutor;
 
     /**
      * 订阅者的执行顺序（优先级）

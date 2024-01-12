@@ -1097,6 +1097,24 @@ interface SimpleCommunication extends SimpleCommon {
     }
 
     /**
+     * [同步]发送事件给订阅者。
+     * <pre>
+     *     1 [同步] 给当前进程所有逻辑服的订阅者发送事件消息
+     *     2 [异步] 给其他进程的订阅者发送事件消息
+     *
+     *     注意，这里的同步仅指当前进程订阅者的同步，对其他进程中的订阅者无效（处理远程订阅者使用的是异步）。
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireSync(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireSync(eventBusMessage);
+    }
+
+    /**
      * 发送事件给订阅者
      * <pre>
      *     仅给当前进程所有逻辑服的订阅者发送事件消息
