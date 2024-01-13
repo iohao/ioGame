@@ -53,15 +53,6 @@ public class TraceKit {
         return defaultTraceIdSupplier.get();
     }
 
-    public void decorate(String traceId, Runnable command) {
-        try {
-            MDC.put(TraceKit.traceName, traceId);
-            command.run();
-        } finally {
-            MDC.clear();
-        }
-    }
-
     /**
      * TraceId 生成策略
      */

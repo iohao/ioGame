@@ -126,7 +126,6 @@ interface SimpleAttachment extends SimpleCommunication {
         this.getVirtualExecutor().execute(this::updateAttachment);
     }
 
-
     /**
      * 得到元附加信息
      * <pre>
@@ -421,14 +420,7 @@ interface SimpleCommunication extends SimpleCommon {
             return;
         }
 
-        this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(responseMessage -> {
-            try {
-                MDC.put(TraceKit.traceName, traceId);
-                callback.accept(responseMessage);
-            } finally {
-                MDC.clear();
-            }
-        }, virtualExecutor);
+        this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(decorator(traceId, callback), virtualExecutor);
     }
 
     /**
@@ -617,14 +609,19 @@ interface SimpleCommunication extends SimpleCommon {
             return;
         }
 
-        this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(responseCollectMessage -> {
+        this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(decorator(traceId, callback), virtualExecutor);
+    }
+
+    private <T> Consumer<T> decorator(String traceId, Consumer<T> callback) {
+        // 装饰者
+        return response -> {
             try {
                 MDC.put(TraceKit.traceName, traceId);
-                callback.accept(responseCollectMessage);
+                callback.accept(response);
             } finally {
                 MDC.clear();
             }
-        }, virtualExecutor);
+        };
     }
 
     /**
@@ -870,14 +867,7 @@ interface SimpleCommunication extends SimpleCommon {
             return;
         }
 
-        this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(responseCollectExternalMessage -> {
-            try {
-                MDC.put(TraceKit.traceName, traceId);
-                callback.accept(responseCollectExternalMessage);
-            } finally {
-                MDC.clear();
-            }
-        }, virtualExecutor);
+        this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(decorator(traceId, callback), virtualExecutor);
     }
 
     /**
@@ -1330,7 +1320,7 @@ interface SimpleCommon extends FlowOptionDynamic {
             return;
         }
 
-        this.getExecutor().execute(() -> TraceKit.decorate(traceId, command));
+        this.getExecutor().execute(decorator(traceId, command));
     }
 
     /**
@@ -1350,7 +1340,19 @@ interface SimpleCommon extends FlowOptionDynamic {
             return;
         }
 
-        this.getVirtualExecutor().execute(() -> TraceKit.decorate(traceId, command));
+        this.getVirtualExecutor().execute(decorator(traceId, command));
+    }
+
+    private Runnable decorator(String traceId, Runnable command) {
+        // 装饰者
+        return () -> {
+            try {
+                MDC.put(TraceKit.traceName, traceId);
+                command.run();
+            } finally {
+                MDC.clear();
+            }
+        };
     }
 
     default RequestMessage createRequestMessage(CmdInfo cmdInfo) {
