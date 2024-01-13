@@ -20,6 +20,7 @@ package com.iohao.game.common.kit;
 
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
+import org.slf4j.MDC;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -50,6 +51,15 @@ public class TraceKit {
 
     public String newTraceId() {
         return defaultTraceIdSupplier.get();
+    }
+
+    public void decorate(String traceId, Runnable command) {
+        try {
+            MDC.put(TraceKit.traceName, traceId);
+            command.run();
+        } finally {
+            MDC.clear();
+        }
     }
 
     /**

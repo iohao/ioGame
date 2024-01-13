@@ -82,8 +82,6 @@ public final class BarSkeletonBuilder {
     /** 业务框架 flow 上下文 工厂 */
     FlowContextFactory flowContextFactory = FlowContext::new;
 
-    String id;
-
     BarSkeletonBuilder() {
     }
 

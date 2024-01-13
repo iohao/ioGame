@@ -23,7 +23,7 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.random.RandomGenerator;
 
 /**
  * @author 渔民小镇
@@ -31,6 +31,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 @UtilityClass
 public class RandomKit {
+    final RandomGenerator generator = RandomGenerator.getDefault();
+
     /**
      * 获得指定范围内的随机数 [0,limit)
      *
@@ -39,7 +41,7 @@ public class RandomKit {
      * @see Random#nextInt(int)
      */
     public int randomInt(int limit) {
-        return ThreadLocalRandom.current().nextInt(limit);
+        return generator.nextInt(limit);
     }
 
     /**
@@ -50,7 +52,7 @@ public class RandomKit {
      * @return 随机数
      */
     public int randomInt(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max);
+        return generator.nextInt(min, max);
     }
 
     /**
@@ -61,7 +63,7 @@ public class RandomKit {
      * @return 随机数
      */
     public int random(int start, int end) {
-        return start + ThreadLocalRandom.current().nextInt(end - start + 1);
+        return start + generator.nextInt(end - start + 1);
     }
 
     /**
@@ -71,7 +73,7 @@ public class RandomKit {
      * @return 随机数
      */
     public int random(int end) {
-        return ThreadLocalRandom.current().nextInt(end + 1);
+        return generator.nextInt(end + 1);
     }
 
     /**
@@ -80,7 +82,7 @@ public class RandomKit {
      * @return bool 值
      */
     public boolean randomBoolean() {
-        return ThreadLocalRandom.current().nextBoolean();
+        return generator.nextBoolean();
     }
 
     public <T> T randomEle(List<T> list) {

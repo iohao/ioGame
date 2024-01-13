@@ -52,7 +52,7 @@ public class ExecutorSelectKit {
 
         final ThreadExecutor threadExecutor = switch (executorSelect) {
             case null -> ExecutorRegionKit.getUserThreadExecutor(executorIndex);
-            case userVirtualExecutor -> ExecutorRegionKit.getUserVirtualExecutor(executorIndex);
+            case userVirtualExecutor -> ExecutorRegionKit.getUserVirtualThreadExecutor(executorIndex);
             case userExecutor -> ExecutorRegionKit.getUserThreadExecutor(executorIndex);
             default -> null;
         };

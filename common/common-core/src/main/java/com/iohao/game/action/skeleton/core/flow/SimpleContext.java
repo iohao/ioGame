@@ -62,11 +62,12 @@ interface SimpleContext extends SimpleAttachment {
  * @date 2023-12-27
  */
 interface SimpleAttachment extends SimpleCommunication {
-
     /**
      * 更新元信息
      * <pre>
-     *     将元信息同步到玩家所在的游戏对外服中
+     *     [同步更新]
+     *
+     *     将元信息更新到玩家所在的游戏对外服中
      * </pre>
      *
      * @param attachment 元信息
@@ -89,13 +90,42 @@ interface SimpleAttachment extends SimpleCommunication {
     /**
      * 更新元信息
      * <pre>
-     *     将元信息同步到玩家所在的游戏对外服中
+     *     [异步更新]
+     *
+     *     将元信息更新到玩家所在的游戏对外服中
+     * </pre>
+     *
+     * @param attachment 元信息
+     */
+    default void updateAttachmentAsync(UserAttachment attachment) {
+        this.getVirtualExecutor().execute(() -> this.updateAttachment(attachment));
+    }
+
+    /**
+     * 更新元信息
+     * <pre>
+     *     [同步更新]
+     *
+     *     将元信息更新到玩家所在的游戏对外服中
      * </pre>
      */
     default void updateAttachment() {
         UserAttachment attachment = this.getAttachment();
         this.updateAttachment(attachment);
     }
+
+    /**
+     * 更新元信息
+     * <pre>
+     *     [异步更新]
+     *
+     *     将元信息更新到玩家所在的游戏对外服中
+     * </pre>
+     */
+    default void updateAttachmentAsync() {
+        this.getVirtualExecutor().execute(this::updateAttachment);
+    }
+
 
     /**
      * 得到元附加信息
@@ -1262,12 +1292,52 @@ interface SimpleCommon extends FlowOptionDynamic {
         final HeadMetadata headMetadata = this.getHeadMetadata();
         var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
 
-        ThreadExecutor threadExecutor = ExecutorRegionKit.getUserVirtualExecutor(executorIndex);
+        ThreadExecutor threadExecutor = ExecutorRegionKit.getUserVirtualThreadExecutor(executorIndex);
         return threadExecutor.executor();
     }
 
     /**
+     * 玩家对应的用户线程执行器
+     * <pre>
+     *     该执行器也是消费 action 的执行器
+     * </pre>
+     *
+     * @return 用户线程执行器
+     */
+    default Executor getExecutor() {
+        // 得到用户对应的用户线程执行器
+        final HeadMetadata headMetadata = this.getHeadMetadata();
+        var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
+
+        ThreadExecutor threadExecutor = ExecutorRegionKit.getUserThreadExecutor(executorIndex);
+        return threadExecutor.executor();
+    }
+
+    /**
+     * 使用用户线程执行任务
+     * <pre>
+     *     该方法具备全链路调用日志跟踪
+     * </pre>
+     *
+     * @param command 任务
+     */
+    default void execute(Runnable command) {
+        HeadMetadata headMetadata = this.getHeadMetadata();
+        String traceId = headMetadata.getTraceId();
+
+        if (Objects.isNull(traceId)) {
+            this.getExecutor().execute(command);
+            return;
+        }
+
+        this.getExecutor().execute(() -> TraceKit.decorate(traceId, command));
+    }
+
+    /**
      * 使用虚拟线程执行任务
+     * <pre>
+     *     该方法具备全链路调用日志跟踪
+     * </pre>
      *
      * @param command 任务
      */
@@ -1280,14 +1350,7 @@ interface SimpleCommon extends FlowOptionDynamic {
             return;
         }
 
-        this.getVirtualExecutor().execute(() -> {
-            try {
-                MDC.put(TraceKit.traceName, traceId);
-                command.run();
-            } finally {
-                MDC.clear();
-            }
-        });
+        this.getVirtualExecutor().execute(() -> TraceKit.decorate(traceId, command));
     }
 
     default RequestMessage createRequestMessage(CmdInfo cmdInfo) {

@@ -38,7 +38,7 @@ final class DefaultSubscribeExecutorStrategy implements SubscribeExecutorStrateg
         // 虚拟线程中执行
         if (executorSelect == ExecutorSelector.userVirtualExecutor) {
             long threadIndex = getThreadIndex(eventBusMessage);
-            return ExecutorRegionKit.getUserVirtualExecutor(threadIndex);
+            return ExecutorRegionKit.getUserVirtualThreadExecutor(threadIndex);
         }
 
         // [线程安全] 用户线程中执行

@@ -58,7 +58,7 @@ public class ExecutorRegionKit {
      * @param index index
      * @return 用户虚拟线程执行器
      */
-    public ThreadExecutor getUserVirtualExecutor(long index) {
+    public ThreadExecutor getUserVirtualThreadExecutor(long index) {
         return executorRegion.getUserVirtualThreadExecutor(index);
     }
 
