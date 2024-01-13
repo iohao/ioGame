@@ -48,6 +48,15 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
+ * FlowContext 能力增强接口
+ * <pre>
+ *     {@link SimpleCommon} 动态属性相关的能力
+ *     {@link SimpleBarMessageCreator} 创建 barMessage 消息相关的能力
+ *     {@link SimpleExecutor} 线程执行器相关的能力
+ *     {@link SimpleCommunication} 通信相关的能力
+ *     {@link SimpleAttachment} 元信息相关的能力
+ * </pre>
+ *
  * @author 渔民小镇
  * @date 2023-12-27
  */
@@ -199,7 +208,7 @@ interface SimpleAttachment extends SimpleCommunication {
  * @date 2023-12-21
  * @see FlowContext
  */
-interface SimpleCommunication extends SimpleCommon {
+interface SimpleCommunication extends SimpleExecutor, SimpleBarMessageCreator {
 
     /**
      * 游戏逻辑服
@@ -1251,33 +1260,10 @@ interface SimpleCommunication extends SimpleCommon {
     }
 }
 
-interface SimpleCommon extends FlowOptionDynamic {
-
-    /**
-     * FlowContext request HeadMetadata
-     *
-     * @return HeadMetadata
-     */
-    HeadMetadata getHeadMetadata();
-
-    /**
-     * 当前请求的路由
-     *
-     * @return 路由
-     */
-    default CmdInfo getCmdInfo() {
-        return this.getHeadMetadata().getCmdInfo();
-    }
-
-    /**
-     * userId
-     *
-     * @return userId
-     */
-    default long getUserId() {
-        return this.getHeadMetadata().getUserId();
-    }
-
+/**
+ * 帮助 FlowContext 得到线程执行器的能力
+ */
+interface SimpleExecutor extends SimpleCommon {
     /**
      * 玩家对应的虚拟线程执行器
      *
@@ -1360,7 +1346,12 @@ interface SimpleCommon extends FlowOptionDynamic {
             }
         };
     }
+}
 
+/**
+ * 帮助 FlowContext 得到创建 barMessage 消息的能力
+ */
+interface SimpleBarMessageCreator extends SimpleCommon {
     default RequestMessage createRequestMessage(CmdInfo cmdInfo) {
         return createRequestMessage(cmdInfo, null);
     }
@@ -1425,5 +1416,33 @@ interface SimpleCommon extends FlowOptionDynamic {
         responseMessage.setData(data);
 
         return responseMessage;
+    }
+}
+
+interface SimpleCommon extends FlowOptionDynamic {
+
+    /**
+     * FlowContext request HeadMetadata
+     *
+     * @return HeadMetadata
+     */
+    HeadMetadata getHeadMetadata();
+
+    /**
+     * 当前请求的路由
+     *
+     * @return 路由
+     */
+    default CmdInfo getCmdInfo() {
+        return this.getHeadMetadata().getCmdInfo();
+    }
+
+    /**
+     * userId
+     *
+     * @return userId
+     */
+    default long getUserId() {
+        return this.getHeadMetadata().getUserId();
     }
 }
