@@ -208,7 +208,9 @@ interface SimpleAttachment extends SimpleCommunication {
  * @date 2023-12-21
  * @see FlowContext
  */
-interface SimpleCommunication extends SimpleExecutor, SimpleBarMessageCreator {
+interface SimpleCommunication extends SimpleExecutor
+        , SimpleCommunicationEventBus
+        , SimpleBarMessageCreator {
 
     /**
      * 游戏逻辑服
@@ -1108,8 +1110,45 @@ interface SimpleCommunication extends SimpleExecutor, SimpleBarMessageCreator {
         broadcastOrderContext.broadcastOrder(responseMessage, userId);
     }
 
+
+    private <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) {
+        return CompletableFuture.supplyAsync(supplier, this.getVirtualExecutor());
+    }
+
+    private void employTraceId(ResponseMessage responseMessage) {
+        String traceId = this.getHeadMetadata().getTraceId();
+
+        if (Objects.nonNull(traceId)) {
+            HeadMetadata headMetadata = responseMessage.getHeadMetadata();
+            headMetadata.setTraceId(traceId);
+        }
+    }
+
+    private void extractedSourceClientId(ResponseMessage responseMessage, long userId) {
+        HeadMetadata responseMessageHeadMetadata = responseMessage.getHeadMetadata();
+        if (responseMessageHeadMetadata.getSourceClientId() != 0) {
+            // 说明已经指定了需要精准广播的游戏对外服
+            return;
+        }
+
+        // userId 等于自己，这里就精准广播到玩家所在的对外服中（即使启动了多个游戏对外服，也能精准到玩家所在的对外服中）
+        HeadMetadata headMetadata = this.getHeadMetadata();
+        if (userId != headMetadata.getUserId()) {
+            return;
+        }
+
+        // 指定游戏对外服广播（当前玩家所在的游戏对外服）
+        int sourceClientId = headMetadata.getSourceClientId();
+        responseMessageHeadMetadata.setSourceClientId(sourceClientId);
+    }
+}
+
+/**
+ * 帮助 FlowContext 得到通信的能力（事件发布）
+ */
+interface SimpleCommunicationEventBus extends SimpleCommon {
     /**
-     * EventBus 是逻辑服事件总线，与业务框架、逻辑服是 1:1:1 的关系
+     * EventBus 是逻辑服事件总线。 EventBus、业务框架、逻辑服三者是 1:1:1 的关系。
      *
      * @return EventBus
      */
@@ -1215,7 +1254,7 @@ interface SimpleCommunication extends SimpleExecutor, SimpleBarMessageCreator {
         eventBus.fireMeSync(eventBusMessage);
     }
 
-    private EventBusMessage createEventBusMessage(Object eventSource) {
+    default EventBusMessage createEventBusMessage(Object eventSource) {
         HeadMetadata headMetadata = this.getHeadMetadata();
         long userId = headMetadata.getUserId();
         String traceId = headMetadata.getTraceId();
@@ -1226,37 +1265,6 @@ interface SimpleCommunication extends SimpleExecutor, SimpleBarMessageCreator {
         eventBusMessage.setTraceId(traceId);
 
         return eventBusMessage;
-    }
-
-    private <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) {
-        return CompletableFuture.supplyAsync(supplier, this.getVirtualExecutor());
-    }
-
-    private void employTraceId(ResponseMessage responseMessage) {
-        String traceId = this.getHeadMetadata().getTraceId();
-
-        if (Objects.nonNull(traceId)) {
-            HeadMetadata headMetadata = responseMessage.getHeadMetadata();
-            headMetadata.setTraceId(traceId);
-        }
-    }
-
-    private void extractedSourceClientId(ResponseMessage responseMessage, long userId) {
-        HeadMetadata responseMessageHeadMetadata = responseMessage.getHeadMetadata();
-        if (responseMessageHeadMetadata.getSourceClientId() != 0) {
-            // 说明已经指定了需要精准广播的游戏对外服
-            return;
-        }
-
-        // userId 等于自己，这里就精准广播到玩家所在的对外服中（即使启动了多个游戏对外服，也能精准到玩家所在的对外服中）
-        HeadMetadata headMetadata = this.getHeadMetadata();
-        if (userId != headMetadata.getUserId()) {
-            return;
-        }
-
-        // 指定游戏对外服广播（当前玩家所在的游戏对外服）
-        int sourceClientId = headMetadata.getSourceClientId();
-        responseMessageHeadMetadata.setSourceClientId(sourceClientId);
     }
 }
 
