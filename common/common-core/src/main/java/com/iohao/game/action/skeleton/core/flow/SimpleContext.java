@@ -420,7 +420,10 @@ interface SimpleCommunication extends SimpleCommon {
             return;
         }
 
-        this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(decorator(traceId, callback), virtualExecutor);
+        this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(responseMessage -> {
+            // 简单装饰
+            this.decorate(traceId, callback, responseMessage);
+        }, virtualExecutor);
     }
 
     /**
@@ -609,19 +612,19 @@ interface SimpleCommunication extends SimpleCommon {
             return;
         }
 
-        this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(decorator(traceId, callback), virtualExecutor);
+        this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(responseCollectMessage -> {
+            // 简单装饰
+            this.decorate(traceId, callback, responseCollectMessage);
+        }, virtualExecutor);
     }
 
-    private <T> Consumer<T> decorator(String traceId, Consumer<T> callback) {
-        // 装饰者
-        return response -> {
-            try {
-                MDC.put(TraceKit.traceName, traceId);
-                callback.accept(response);
-            } finally {
-                MDC.clear();
-            }
-        };
+    private <T> void decorate(String traceId, Consumer<T> callback, T response) {
+        try {
+            MDC.put(TraceKit.traceName, traceId);
+            callback.accept(response);
+        } finally {
+            MDC.clear();
+        }
     }
 
     /**
@@ -867,7 +870,10 @@ interface SimpleCommunication extends SimpleCommon {
             return;
         }
 
-        this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(decorator(traceId, callback), virtualExecutor);
+        this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(responseCollectExternalMessage -> {
+            // 简单装饰
+            this.decorate(traceId, callback, responseCollectExternalMessage);
+        }, virtualExecutor);
     }
 
     /**
