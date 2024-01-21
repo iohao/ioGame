@@ -26,7 +26,7 @@ import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMe
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalItemMessage;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.common.consts.IoGameLogName;
-import com.iohao.game.common.kit.TraceKit;
+import com.iohao.game.common.kit.trace.TraceKit;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegion;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegionContext;

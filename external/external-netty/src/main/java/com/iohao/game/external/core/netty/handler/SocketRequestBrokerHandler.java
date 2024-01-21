@@ -24,7 +24,7 @@ import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.consts.IoGameLogName;
-import com.iohao.game.common.kit.TraceKit;
+import com.iohao.game.common.kit.trace.TraceKit;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.netty.session.SocketUserSession;
 import com.iohao.game.external.core.netty.session.SocketUserSessions;

@@ -21,7 +21,7 @@ package com.iohao.game.action.skeleton.core.flow.interal;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.common.kit.TraceKit;
+import com.iohao.game.common.kit.trace.TraceKit;
 import org.slf4j.MDC;
 
 import java.util.Objects;

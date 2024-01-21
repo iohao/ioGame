@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.common.kit;
+package com.iohao.game.common.kit.trace;
 
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Trace 相关工具
@@ -52,13 +51,6 @@ public class TraceKit {
         return defaultTraceIdSupplier.get();
     }
 
-    /**
-     * TraceId 生成策略
-     */
-    @FunctionalInterface
-    public interface TraceIdSupplier extends Supplier<String> {
-    }
-
     private class SnowTraceIdSupplier implements TraceIdSupplier {
         final static long START_TIMESTAMP = 1480166465631L;
 
@@ -78,9 +70,7 @@ public class TraceKit {
         final long dataCenterId;
         /** 机器标识 */
         final long machineId;
-        /** 序列号 */
         long sequence = 0L;
-        /** 上一次时间戳 */
         long lastTimestamp = -1L;
 
         public SnowTraceIdSupplier(long dataCenterId, long machineId) {
@@ -96,11 +86,6 @@ public class TraceKit {
             this.machineId = machineId;
         }
 
-        /**
-         * 产生下一个ID
-         *
-         * @return 下一个ID
-         */
         @Override
         public String get() {
             return Long.toString(nextId());
@@ -138,11 +123,6 @@ public class TraceKit {
                     | sequence;
         }
 
-        /**
-         * 获取下一个毫秒数
-         *
-         * @return 下一个毫秒数
-         */
         long getNextTimestamp() {
             long timestamp = getTimestamp();
             while (timestamp <= lastTimestamp) {
@@ -151,11 +131,6 @@ public class TraceKit {
             return timestamp;
         }
 
-        /**
-         * 获取当前的时间戳
-         *
-         * @return 当前的时间戳
-         */
         long getTimestamp() {
             return System.currentTimeMillis();
         }
