@@ -19,7 +19,7 @@
 package com.iohao.game.action.skeleton.eventbus;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
-import com.iohao.game.common.kit.TraceKit;
+import com.iohao.game.common.kit.trace.TraceKit;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.experimental.UtilityClass;
