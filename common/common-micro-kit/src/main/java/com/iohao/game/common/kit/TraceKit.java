@@ -20,7 +20,6 @@ package com.iohao.game.common.kit;
 
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
-import org.slf4j.MDC;
 
 import java.util.Map;
 import java.util.function.Supplier;

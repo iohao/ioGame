@@ -21,9 +21,12 @@ package com.iohao.game.action.skeleton.eventbus;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
+ * 事件总线逻辑服相关信息
+ *
  * @author 渔民小镇
  * @date 2023-12-24
  */
@@ -33,12 +36,19 @@ public final class EventBrokerClientMessage implements Serializable {
     final String tag;
     final String brokerClientType;
     final String brokerClientId;
+    transient boolean remote;
+    /** 订阅者主题 */
+    transient EventTopicMessage eventTopicMessage;
 
     public EventBrokerClientMessage(String appName, String tag, String brokerClientType, String brokerClientId) {
         this.appName = appName;
         this.tag = tag;
         this.brokerClientType = brokerClientType;
         this.brokerClientId = Objects.requireNonNull(brokerClientId);
+    }
+
+    public Collection<String> getTopics() {
+        return eventTopicMessage.topicSet();
     }
 
     @Override

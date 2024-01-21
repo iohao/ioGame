@@ -24,6 +24,8 @@ import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.runner.Runner;
 import com.iohao.game.action.skeleton.protocol.processor.SimpleServerInfo;
 
+import java.util.Set;
+
 /**
  * 分布式事件总线 Runner
  *
@@ -54,6 +56,9 @@ public abstract class AbstractEventBusRunner implements Runner {
 
         // EventBus 注册订阅者
         this.registerEventBus(eventBus, skeleton);
+
+        Set<String> topic = eventBus.listTopic();
+        eventBrokerClientMessage.setEventTopicMessage(new EventTopicMessage(topic));
 
         eventBus.setStatus(EventBus.EventBusStatus.run);
 

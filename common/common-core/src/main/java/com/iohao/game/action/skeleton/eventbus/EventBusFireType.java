@@ -40,13 +40,9 @@ public interface EventBusFireType {
      * </pre>
      */
     int fireMe = 1;
-    /**
-     * 当前进程的其他 EventBus
-     */
+    /** 当前进程的其他 EventBus */
     int fireLocalNeighbor = 2;
-    /**
-     * 当前进程所有订阅者收了事件消息
-     */
+    /** 当前进程所有订阅者收了事件消息 */
     int fireLocal = 4;
     /**
      * 远程

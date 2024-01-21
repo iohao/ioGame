@@ -37,6 +37,7 @@ import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalM
 import com.iohao.game.common.kit.TraceKit;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
+import lombok.experimental.UtilityClass;
 import org.slf4j.MDC;
 
 import java.io.Serializable;
@@ -50,18 +51,43 @@ import java.util.function.Supplier;
 /**
  * FlowContext 能力增强接口
  * <pre>
+ *     {@link SimpleAttachment} 元信息相关的能力
+ *
  *     {@link SimpleCommon} 动态属性相关的能力
  *     {@link SimpleBarMessageCreator} 创建 barMessage 消息相关的能力
  *     {@link SimpleExecutor} 线程执行器相关的能力
- *     {@link SimpleCommunication} 通信相关的能力
- *     {@link SimpleAttachment} 元信息相关的能力
+ * </pre>
+ * 通信相关的能力
+ * <pre>
+ *     分布式事件总线相关通信
+ *     {@link SimpleCommunicationEventBus}
+ *
+ *     广播相关通信
+ *     {@link SimpleCommunicationBroadcast}
+ *
+ *     与游戏逻辑服相关通信
+ *     {@link SimpleCommunicationInvokeModule}
+ *     {@link SimpleCommunicationInvokeModuleVoid}
+ *     {@link SimpleCommunicationInvokeModuleCollect}
+ *
+ *     与游戏对外服相关通信
+ *     {@link SimpleCommunicationInvokeExternalModule}
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-27
  */
-interface SimpleContext extends SimpleAttachment {
-
+interface SimpleContext extends SimpleAttachment
+        // 分布式事件总线相关通信
+        , SimpleCommunicationEventBus
+        // 广播相关通信
+        , SimpleCommunicationBroadcast
+        // 与游戏逻辑服相关通信
+        , SimpleCommunicationInvokeModule
+        , SimpleCommunicationInvokeModuleVoid
+        , SimpleCommunicationInvokeModuleCollect
+        // 与游戏对外服相关通信
+        , SimpleCommunicationInvokeExternalModule {
 }
 
 /**
@@ -70,7 +96,7 @@ interface SimpleContext extends SimpleAttachment {
  * @author 渔民小镇
  * @date 2023-12-27
  */
-interface SimpleAttachment extends SimpleCommunication {
+interface SimpleAttachment extends SimpleCommunicationInvokeExternalModule {
     /**
      * 更新元信息
      * <pre>
@@ -209,7 +235,6 @@ interface SimpleAttachment extends SimpleCommunication {
  * @see FlowContext
  */
 interface SimpleCommunication extends SimpleExecutor
-        , SimpleCommunicationEventBus
         , SimpleBarMessageCreator {
 
     /**
@@ -282,160 +307,15 @@ interface SimpleCommunication extends SimpleExecutor
         return this.aggregationContext();
     }
 
-    /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     同步调用
-     * </pre>
-     *
-     * @param cmdInfo 路由
-     * @return ResponseMessage
-     */
-    default ResponseMessage invokeModuleMessage(final CmdInfo cmdInfo) {
-        return this.invokeModuleMessage(cmdInfo, null);
+    default <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) {
+        return CompletableFuture.supplyAsync(supplier, this.getVirtualExecutor());
     }
+}
 
-    /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     同步调用
-     * </pre>
-     *
-     * @param cmdInfo cmdInfo
-     * @param data    请求参数
-     * @return ResponseMessage
-     */
-    default ResponseMessage invokeModuleMessage(final CmdInfo cmdInfo, final Object data) {
-        var requestMessage = this.createRequestMessage(cmdInfo, data);
-        return invokeModuleMessage(requestMessage);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     同步调用
-     * </pre>
-     *
-     * @param requestMessage requestMessage
-     * @return ResponseMessage
-     */
-    default ResponseMessage invokeModuleMessage(final RequestMessage requestMessage) {
-        var invokeModuleContext = this.getInvokeModuleContext();
-        return invokeModuleContext.invokeModuleMessage(requestMessage);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用
-     * </pre>
-     *
-     * @param cmdInfo 路由
-     * @return CompletableFuture ResponseMessage
-     */
-    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final CmdInfo cmdInfo) {
-        return invokeModuleMessageFuture(cmdInfo, null);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用
-     * </pre>
-     *
-     * @param cmdInfo 路由
-     * @param data    业务数据
-     * @return CompletableFuture ResponseMessage
-     */
-    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final CmdInfo cmdInfo, final Object data) {
-        var requestMessage = this.createRequestMessage(cmdInfo, data);
-        return invokeModuleMessageFuture(requestMessage);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用
-     * </pre>
-     *
-     * @param requestMessage requestMessage
-     * @return CompletableFuture ResponseMessage
-     */
-    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final RequestMessage requestMessage) {
-        return this.supplyAsync(() -> this.invokeModuleMessage(requestMessage));
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
-     *
-     * @param cmdInfo  路由
-     * @param callback 异步回调方法
-     */
-    default void invokeModuleMessageAsync(final CmdInfo cmdInfo, final Consumer<ResponseMessage> callback) {
-        this.invokeModuleMessageAsync(cmdInfo, null, callback);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
-     *
-     * @param cmdInfo  路由
-     * @param data     业务数据
-     * @param callback 异步回调方法
-     */
-    default void invokeModuleMessageAsync(final CmdInfo cmdInfo, final Object data, final Consumer<ResponseMessage> callback) {
-        var requestMessage = this.createRequestMessage(cmdInfo, data);
-        this.invokeModuleMessageAsync(requestMessage, callback);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
-     *
-     * @param requestMessage requestMessage
-     * @param callback       异步回调方法
-     */
-    default void invokeModuleMessageAsync(final RequestMessage requestMessage, final Consumer<ResponseMessage> callback) {
-        final HeadMetadata headMetadata = requestMessage.getHeadMetadata();
-        var traceId = headMetadata.getTraceId();
-
-        var virtualExecutor = this.getVirtualExecutor();
-
-        if (Objects.isNull(traceId)) {
-            this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(callback, virtualExecutor);
-            return;
-        }
-
-        this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(responseMessage -> {
-            // 简单装饰
-            this.decorate(traceId, callback, responseMessage);
-        }, virtualExecutor);
-    }
+/**
+ * 帮助 FlowContext 得到与其他游戏逻辑服通信的能力（模块之间的访问，访问【同类型】的多个逻辑服）
+ */
+interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
 
     /**
      * 模块之间的访问，访问【同类型】的多个逻辑服
@@ -496,7 +376,6 @@ interface SimpleCommunication extends SimpleExecutor
         var invokeModuleContext = this.getInvokeModuleContext();
         return invokeModuleContext.invokeModuleCollectMessage(requestMessage);
     }
-
 
     /**
      * 模块之间的访问，访问【同类型】的多个逻辑服
@@ -597,6 +476,7 @@ interface SimpleCommunication extends SimpleExecutor
         this.invokeModuleCollectMessageAsync(requestMessage, callback);
     }
 
+
     /**
      * 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
@@ -613,278 +493,73 @@ interface SimpleCommunication extends SimpleExecutor
      * @param callback       异步回调方法
      */
     default void invokeModuleCollectMessageAsync(final RequestMessage requestMessage, final Consumer<ResponseCollectMessage> callback) {
+        this.invokeModuleCollectMessageAsync(requestMessage, callback, this.getExecutor());
+    }
+
+    /**
+     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * <pre>
+     *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
+     *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
+     *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
+     *
+     *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
+     *
+     *     异步调用，回调编码风格，具备 traceId
+     * </pre>
+     *
+     * @param requestMessage   requestMessage
+     * @param callback         异步回调方法
+     * @param callbackExecutor 处理回调的 Executor
+     */
+    default void invokeModuleCollectMessageAsync(final RequestMessage requestMessage
+            , final Consumer<ResponseCollectMessage> callback, final Executor callbackExecutor) {
+
         final HeadMetadata headMetadata = requestMessage.getHeadMetadata();
         var traceId = headMetadata.getTraceId();
 
-        var virtualExecutor = this.getVirtualExecutor();
-
         if (Objects.isNull(traceId)) {
-            this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(callback, virtualExecutor);
+            this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(callback, callbackExecutor);
             return;
         }
 
         this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(responseCollectMessage -> {
             // 简单装饰
-            this.decorate(traceId, callback, responseCollectMessage);
-        }, virtualExecutor);
+            InternalKit.decorate(traceId, callback, responseCollectMessage);
+        }, callbackExecutor);
     }
 
-    private <T> void decorate(String traceId, Consumer<T> callback, T response) {
-        try {
-            MDC.put(TraceKit.traceName, traceId);
-            callback.accept(response);
-        } finally {
-            MDC.clear();
+}
+
+/**
+ * 帮助 FlowContext 得到广播通信的能力
+ */
+interface SimpleCommunicationBroadcast extends SimpleCommunication {
+    private void employTraceId(ResponseMessage responseMessage) {
+        String traceId = this.getHeadMetadata().getTraceId();
+
+        if (Objects.nonNull(traceId)) {
+            HeadMetadata headMetadata = responseMessage.getHeadMetadata();
+            headMetadata.setTraceId(traceId);
         }
     }
 
-    /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
-     * <pre>
-     *     异步无阻塞的方法，因为没有返回值；
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">文档 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">文档 - 单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
-     * </pre>
-     * example
-     * <pre>{@code
-     *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
-     *     InvokeModuleContext invokeModuleContext = ...
-     *     // 请求房间逻辑服来创建房间，并且不需要返回值
-     *     // 路由、业务参数
-     *     invokeModuleContext.invokeModuleVoidMessage(cmdInfo);
-     * }
-     * </pre>
-     *
-     * @param cmdInfo 路由
-     */
-    default void invokeModuleVoidMessage(final CmdInfo cmdInfo) {
-        this.invokeModuleVoidMessage(cmdInfo, null);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
-     * <pre>
-     *     异步无阻塞的方法，因为没有返回值；
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">文档 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">文档 - 单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
-     * </pre>
-     * example
-     * <pre>{@code
-     *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
-     *     InvokeModuleContext invokeModuleContext = ...
-     *     // 请求房间逻辑服来创建房间，并且不需要返回值
-     *     // 路由、业务参数
-     *     invokeModuleContext.invokeModuleVoidMessage(cmdInfo, data);
-     * }
-     * </pre>
-     *
-     * @param cmdInfo 路由
-     * @param data    业务数据
-     */
-    default void invokeModuleVoidMessage(final CmdInfo cmdInfo, final Object data) {
-        var requestMessage = this.createRequestMessage(cmdInfo, data);
-        this.invokeModuleVoidMessage(requestMessage);
-    }
-
-    /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
-     * <pre>
-     *     异步无阻塞的方法，因为没有返回值；
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">文档 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">文档 - 单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
-     * </pre>
-     * example
-     * <pre>{@code
-     *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
-     *     InvokeModuleContext invokeModuleContext = ...
-     *     // 请求房间逻辑服来创建房间，并且不需要返回值
-     *     // 路由、业务参数
-     *     invokeModuleContext.invokeModuleVoidMessage(requestMessage);
-     * }
-     * </pre>
-     *
-     * @param requestMessage requestMessage
-     */
-    default void invokeModuleVoidMessage(final RequestMessage requestMessage) {
-        var invokeModuleContext = this.getInvokeModuleContext();
-        invokeModuleContext.invokeModuleVoidMessage(requestMessage);
-    }
-
-    /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     同步调用
-     * </pre>
-     *
-     * @param bizCode bizCode
-     * @return ResponseCollectExternalMessage 一定不为 null
-     */
-    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(final int bizCode) {
-        return this.invokeExternalModuleCollectMessage(bizCode, null);
-    }
-
-    /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     同步调用
-     * </pre>
-     *
-     * @param bizCode bizCode
-     * @param data    业务数据
-     * @return ResponseCollectExternalMessage 一定不为 null
-     */
-    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(final int bizCode, final Serializable data) {
-        RequestCollectExternalMessage request = createRequestCollectExternalMessage(bizCode, data);
-        return this.invokeExternalModuleCollectMessage(request);
-    }
-
-    private RequestCollectExternalMessage createRequestCollectExternalMessage(final int bizCode, final Serializable data) {
-        // 得到发起请求的游戏对外服 id
-        HeadMetadata headMetadata = this.getHeadMetadata();
-        var sourceClientId = headMetadata.getSourceClientId();
-
-        return new RequestCollectExternalMessage()
-                // 根据业务码，调用游戏对外服与业务码对应的业务实现类
-                .setBizCode(bizCode)
-                // 业务数据
-                .setData(data)
-                // 强制指定需要访问的游戏对外服；当指定 id 后，将不会访问所有的游戏对外服
-                .setSourceClientId(sourceClientId)
-                .setTraceId(headMetadata.getTraceId())
-                ;
-    }
-
-    /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服。
-     * <p>
-     * 如果需要访问多个游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     同步调用
-     * </pre>
-     *
-     * @param request request
-     * @return ResponseCollectExternalMessage 一定不为 null
-     */
-    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(final RequestCollectExternalMessage request) {
-        // MDC
-        var traceId = this.getHeadMetadata().getTraceId();
-        request.setTraceId(traceId);
-
-        // 【游戏逻辑服】与【游戏对外服】通讯上下文
-        var invokeExternalModuleContext = this.getInvokeExternalModuleContext();
-        return invokeExternalModuleContext.invokeExternalModuleCollectMessage(request);
-    }
-
-    /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用
-     * </pre>
-     *
-     * @param bizCode bizCode
-     * @return ResponseCollectExternalMessage 一定不为 null
-     */
-    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final int bizCode) {
-        return this.invokeExternalModuleCollectMessageFuture(bizCode, null);
-    }
-
-    /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用
-     * </pre>
-     *
-     * @param bizCode bizCode
-     * @param data    业务数据
-     * @return ResponseCollectExternalMessage 一定不为 null
-     */
-    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final int bizCode, final Serializable data) {
-        var requestCollectExternalMessage = this.createRequestCollectExternalMessage(bizCode, data);
-        return this.invokeExternalModuleCollectMessageFuture(requestCollectExternalMessage);
-    }
-
-    /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用
-     * </pre>
-     *
-     * @param request request
-     * @return ResponseCollectExternalMessage 一定不为 null
-     */
-    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final RequestCollectExternalMessage request) {
-        return this.supplyAsync(() -> this.invokeExternalModuleCollectMessage(request));
-    }
-
-    /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
-     *
-     * @param bizCode  bizCode
-     * @param callback 异步回调方法
-     */
-    default void invokeExternalModuleCollectMessageAsync(final int bizCode, final Consumer<ResponseCollectExternalMessage> callback) {
-        this.invokeExternalModuleCollectMessageAsync(bizCode, null, callback);
-    }
-
-    /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
-     *
-     * @param bizCode  bizCode
-     * @param data     业务数据
-     * @param callback 异步回调方法
-     */
-    default void invokeExternalModuleCollectMessageAsync(final int bizCode, final Serializable data, final Consumer<ResponseCollectExternalMessage> callback) {
-        var requestCollectExternalMessage = this.createRequestCollectExternalMessage(bizCode, data);
-        this.invokeExternalModuleCollectMessageAsync(requestCollectExternalMessage, callback);
-    }
-
-    /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
-     *
-     * @param request  request
-     * @param callback 异步回调方法
-     */
-    default void invokeExternalModuleCollectMessageAsync(final RequestCollectExternalMessage request, final Consumer<ResponseCollectExternalMessage> callback) {
-        var traceId = request.getTraceId();
-
-        var virtualExecutor = this.getVirtualExecutor();
-
-        if (Objects.isNull(traceId)) {
-            this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(callback, virtualExecutor);
+    private void extractedSourceClientId(ResponseMessage responseMessage, long userId) {
+        HeadMetadata responseMessageHeadMetadata = responseMessage.getHeadMetadata();
+        if (responseMessageHeadMetadata.getSourceClientId() != 0) {
+            // 说明已经指定了需要精准广播的游戏对外服
             return;
         }
 
-        this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(responseCollectExternalMessage -> {
-            // 简单装饰
-            this.decorate(traceId, callback, responseCollectExternalMessage);
-        }, virtualExecutor);
+        // userId 等于自己，这里就精准广播到玩家所在的对外服中（即使启动了多个游戏对外服，也能精准到玩家所在的对外服中）
+        HeadMetadata headMetadata = this.getHeadMetadata();
+        if (userId != headMetadata.getUserId()) {
+            return;
+        }
+
+        // 指定游戏对外服广播（当前玩家所在的游戏对外服）
+        int sourceClientId = headMetadata.getSourceClientId();
+        responseMessageHeadMetadata.setSourceClientId(sourceClientId);
     }
 
     /**
@@ -1110,43 +785,466 @@ interface SimpleCommunication extends SimpleExecutor
         broadcastOrderContext.broadcastOrder(responseMessage, userId);
     }
 
+}
 
-    private <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) {
-        return CompletableFuture.supplyAsync(supplier, this.getVirtualExecutor());
+/**
+ * 帮助 FlowContext 得到与游戏对外服通信的能力
+ */
+interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
+
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     同步调用
+     * </pre>
+     *
+     * @param bizCode bizCode
+     * @return ResponseCollectExternalMessage 一定不为 null
+     */
+    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(final int bizCode) {
+        return this.invokeExternalModuleCollectMessage(bizCode, null);
     }
 
-    private void employTraceId(ResponseMessage responseMessage) {
-        String traceId = this.getHeadMetadata().getTraceId();
-
-        if (Objects.nonNull(traceId)) {
-            HeadMetadata headMetadata = responseMessage.getHeadMetadata();
-            headMetadata.setTraceId(traceId);
-        }
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     同步调用
+     * </pre>
+     *
+     * @param bizCode bizCode
+     * @param data    业务数据
+     * @return ResponseCollectExternalMessage 一定不为 null
+     */
+    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(final int bizCode, final Serializable data) {
+        RequestCollectExternalMessage request = createRequestCollectExternalMessage(bizCode, data);
+        return this.invokeExternalModuleCollectMessage(request);
     }
 
-    private void extractedSourceClientId(ResponseMessage responseMessage, long userId) {
-        HeadMetadata responseMessageHeadMetadata = responseMessage.getHeadMetadata();
-        if (responseMessageHeadMetadata.getSourceClientId() != 0) {
-            // 说明已经指定了需要精准广播的游戏对外服
-            return;
-        }
-
-        // userId 等于自己，这里就精准广播到玩家所在的对外服中（即使启动了多个游戏对外服，也能精准到玩家所在的对外服中）
+    private RequestCollectExternalMessage createRequestCollectExternalMessage(final int bizCode, final Serializable data) {
+        // 得到发起请求的游戏对外服 id
         HeadMetadata headMetadata = this.getHeadMetadata();
-        if (userId != headMetadata.getUserId()) {
+        var sourceClientId = headMetadata.getSourceClientId();
+
+        return new RequestCollectExternalMessage()
+                // 根据业务码，调用游戏对外服与业务码对应的业务实现类
+                .setBizCode(bizCode)
+                // 业务数据
+                .setData(data)
+                // 强制指定需要访问的游戏对外服；当指定 id 后，将不会访问所有的游戏对外服
+                .setSourceClientId(sourceClientId)
+                .setTraceId(headMetadata.getTraceId())
+                ;
+    }
+
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服。
+     * <p>
+     * 如果需要访问多个游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     同步调用
+     * </pre>
+     *
+     * @param request request
+     * @return ResponseCollectExternalMessage 一定不为 null
+     */
+    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(final RequestCollectExternalMessage request) {
+        // MDC
+        var traceId = this.getHeadMetadata().getTraceId();
+        request.setTraceId(traceId);
+
+        // 【游戏逻辑服】与【游戏对外服】通讯上下文
+        var invokeExternalModuleContext = this.getInvokeExternalModuleContext();
+        return invokeExternalModuleContext.invokeExternalModuleCollectMessage(request);
+    }
+
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     异步调用
+     * </pre>
+     *
+     * @param bizCode bizCode
+     * @return ResponseCollectExternalMessage 一定不为 null
+     */
+    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final int bizCode) {
+        return this.invokeExternalModuleCollectMessageFuture(bizCode, null);
+    }
+
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     异步调用
+     * </pre>
+     *
+     * @param bizCode bizCode
+     * @param data    业务数据
+     * @return ResponseCollectExternalMessage 一定不为 null
+     */
+    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final int bizCode, final Serializable data) {
+        var requestCollectExternalMessage = this.createRequestCollectExternalMessage(bizCode, data);
+        return this.invokeExternalModuleCollectMessageFuture(requestCollectExternalMessage);
+    }
+
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     异步调用
+     * </pre>
+     *
+     * @param request request
+     * @return ResponseCollectExternalMessage 一定不为 null
+     */
+    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final RequestCollectExternalMessage request) {
+        return this.supplyAsync(() -> this.invokeExternalModuleCollectMessage(request));
+    }
+
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     异步调用，回调编码风格，具备 traceId
+     * </pre>
+     *
+     * @param bizCode  bizCode
+     * @param callback 异步回调方法
+     */
+    default void invokeExternalModuleCollectMessageAsync(final int bizCode, final Consumer<ResponseCollectExternalMessage> callback) {
+        this.invokeExternalModuleCollectMessageAsync(bizCode, null, callback);
+    }
+
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     异步调用，回调编码风格，具备 traceId
+     * </pre>
+     *
+     * @param bizCode  bizCode
+     * @param data     业务数据
+     * @param callback 异步回调方法
+     */
+    default void invokeExternalModuleCollectMessageAsync(final int bizCode, final Serializable data, final Consumer<ResponseCollectExternalMessage> callback) {
+        var requestCollectExternalMessage = this.createRequestCollectExternalMessage(bizCode, data);
+        this.invokeExternalModuleCollectMessageAsync(requestCollectExternalMessage, callback);
+    }
+
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     异步调用，回调编码风格，具备 traceId
+     * </pre>
+     *
+     * @param request  request
+     * @param callback 异步回调方法
+     */
+    default void invokeExternalModuleCollectMessageAsync(final RequestCollectExternalMessage request, final Consumer<ResponseCollectExternalMessage> callback) {
+        this.invokeExternalModuleCollectMessageAsync(request, callback, this.getExecutor());
+    }
+
+    /**
+     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
+     *
+     *     异步调用，回调编码风格，具备 traceId
+     * </pre>
+     *
+     * @param request          request
+     * @param callback         异步回调方法
+     * @param callbackExecutor 处理回调的 Executor
+     */
+    default void invokeExternalModuleCollectMessageAsync(final RequestCollectExternalMessage request
+            , final Consumer<ResponseCollectExternalMessage> callback, final Executor callbackExecutor) {
+
+        var traceId = request.getTraceId();
+
+        if (Objects.isNull(traceId)) {
+            this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(callback, callbackExecutor);
             return;
         }
 
-        // 指定游戏对外服广播（当前玩家所在的游戏对外服）
-        int sourceClientId = headMetadata.getSourceClientId();
-        responseMessageHeadMetadata.setSourceClientId(sourceClientId);
+        this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(responseCollectExternalMessage -> {
+            // 简单装饰
+            InternalKit.decorate(traceId, callback, responseCollectExternalMessage);
+        }, callbackExecutor);
+    }
+}
+
+/**
+ * 帮助 FlowContext 得到与其他游戏逻辑服通信的能力
+ */
+interface SimpleCommunicationInvokeModuleVoid extends SimpleCommunication {
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
+     * <pre>
+     *     异步无阻塞的方法，因为没有返回值；
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">文档 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">文档 - 单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
+     *     InvokeModuleContext invokeModuleContext = ...
+     *     // 请求房间逻辑服来创建房间，并且不需要返回值
+     *     // 路由、业务参数
+     *     invokeModuleContext.invokeModuleVoidMessage(cmdInfo);
+     * }
+     * </pre>
+     *
+     * @param cmdInfo 路由
+     */
+    default void invokeModuleVoidMessage(final CmdInfo cmdInfo) {
+        this.invokeModuleVoidMessage(cmdInfo, null);
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
+     * <pre>
+     *     异步无阻塞的方法，因为没有返回值；
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">文档 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">文档 - 单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
+     *     InvokeModuleContext invokeModuleContext = ...
+     *     // 请求房间逻辑服来创建房间，并且不需要返回值
+     *     // 路由、业务参数
+     *     invokeModuleContext.invokeModuleVoidMessage(cmdInfo, data);
+     * }
+     * </pre>
+     *
+     * @param cmdInfo 路由
+     * @param data    业务数据
+     */
+    default void invokeModuleVoidMessage(final CmdInfo cmdInfo, final Object data) {
+        var requestMessage = this.createRequestMessage(cmdInfo, data);
+        this.invokeModuleVoidMessage(requestMessage);
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
+     * <pre>
+     *     异步无阻塞的方法，因为没有返回值；
+     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">文档 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">文档 - 单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
+     * </pre>
+     * example
+     * <pre>{@code
+     *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
+     *     InvokeModuleContext invokeModuleContext = ...
+     *     // 请求房间逻辑服来创建房间，并且不需要返回值
+     *     // 路由、业务参数
+     *     invokeModuleContext.invokeModuleVoidMessage(requestMessage);
+     * }
+     * </pre>
+     *
+     * @param requestMessage requestMessage
+     */
+    default void invokeModuleVoidMessage(final RequestMessage requestMessage) {
+        var invokeModuleContext = this.getInvokeModuleContext();
+        invokeModuleContext.invokeModuleVoidMessage(requestMessage);
+    }
+}
+
+/**
+ * 帮助 FlowContext 得到与其他游戏逻辑服通信的能力
+ */
+interface SimpleCommunicationInvokeModule extends SimpleCommunication {
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     同步调用
+     * </pre>
+     *
+     * @param cmdInfo 路由
+     * @return ResponseMessage
+     */
+    default ResponseMessage invokeModuleMessage(final CmdInfo cmdInfo) {
+        return this.invokeModuleMessage(cmdInfo, null);
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     同步调用
+     * </pre>
+     *
+     * @param cmdInfo cmdInfo
+     * @param data    请求参数
+     * @return ResponseMessage
+     */
+    default ResponseMessage invokeModuleMessage(final CmdInfo cmdInfo, final Object data) {
+        var requestMessage = this.createRequestMessage(cmdInfo, data);
+        return invokeModuleMessage(requestMessage);
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     同步调用
+     * </pre>
+     *
+     * @param requestMessage requestMessage
+     * @return ResponseMessage
+     */
+    default ResponseMessage invokeModuleMessage(final RequestMessage requestMessage) {
+        var invokeModuleContext = this.getInvokeModuleContext();
+        return invokeModuleContext.invokeModuleMessage(requestMessage);
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     异步调用
+     * </pre>
+     *
+     * @param cmdInfo 路由
+     * @return CompletableFuture ResponseMessage
+     */
+    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final CmdInfo cmdInfo) {
+        return invokeModuleMessageFuture(cmdInfo, null);
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     异步调用
+     * </pre>
+     *
+     * @param cmdInfo 路由
+     * @param data    业务数据
+     * @return CompletableFuture ResponseMessage
+     */
+    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final CmdInfo cmdInfo, final Object data) {
+        var requestMessage = this.createRequestMessage(cmdInfo, data);
+        return invokeModuleMessageFuture(requestMessage);
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     异步调用
+     * </pre>
+     *
+     * @param requestMessage requestMessage
+     * @return CompletableFuture ResponseMessage
+     */
+    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final RequestMessage requestMessage) {
+        return this.supplyAsync(() -> this.invokeModuleMessage(requestMessage));
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     异步调用，回调编码风格，具备 traceId
+     * </pre>
+     *
+     * @param cmdInfo  路由
+     * @param callback 异步回调方法
+     */
+    default void invokeModuleMessageAsync(final CmdInfo cmdInfo, final Consumer<ResponseMessage> callback) {
+        this.invokeModuleMessageAsync(cmdInfo, null, callback);
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     异步调用，回调编码风格，具备 traceId
+     * </pre>
+     *
+     * @param cmdInfo  路由
+     * @param data     业务数据
+     * @param callback 异步回调方法
+     */
+    default void invokeModuleMessageAsync(final CmdInfo cmdInfo, final Object data, final Consumer<ResponseMessage> callback) {
+        var requestMessage = this.createRequestMessage(cmdInfo, data);
+        this.invokeModuleMessageAsync(requestMessage, callback);
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     异步调用，回调编码风格，具备 traceId
+     * </pre>
+     *
+     * @param requestMessage requestMessage
+     * @param callback       异步回调方法
+     */
+    default void invokeModuleMessageAsync(final RequestMessage requestMessage, final Consumer<ResponseMessage> callback) {
+        this.invokeModuleMessageAsync(requestMessage, callback, this.getExecutor());
+    }
+
+    /**
+     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
+     * <pre>
+     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
+     *
+     *     异步调用，回调编码风格，具备 traceId
+     * </pre>
+     *
+     * @param requestMessage   requestMessage
+     * @param callback         异步回调方法
+     * @param callbackExecutor 处理回调的 Executor
+     */
+    default void invokeModuleMessageAsync(final RequestMessage requestMessage
+            , final Consumer<ResponseMessage> callback, final Executor callbackExecutor) {
+
+        final HeadMetadata headMetadata = requestMessage.getHeadMetadata();
+        var traceId = headMetadata.getTraceId();
+
+        if (Objects.isNull(traceId)) {
+            this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(callback, callbackExecutor);
+            return;
+        }
+
+        this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(responseMessage -> {
+            // 简单装饰
+            InternalKit.decorate(traceId, callback, responseMessage);
+        }, callbackExecutor);
     }
 }
 
 /**
  * 帮助 FlowContext 得到通信的能力（事件发布）
  */
-interface SimpleCommunicationEventBus extends SimpleCommon {
+interface SimpleCommunicationEventBus extends SimpleCommunication {
     /**
      * EventBus 是逻辑服事件总线。 EventBus、业务框架、逻辑服三者是 1:1:1 的关系。
      *
@@ -1186,6 +1284,52 @@ interface SimpleCommunicationEventBus extends SimpleCommon {
 
         EventBus eventBus = this.getEventBus();
         eventBus.fireSync(eventBusMessage);
+    }
+
+    /**
+     * 发送事件给订阅者
+     * <pre>
+     *     1 给当前进程所有逻辑服的订阅者发送事件消息
+     *     2 给其他进程的订阅者发送事件消息
+     * </pre>
+     * 使用场景：
+     * <pre>
+     *     假设现在有一个发放奖励的邮件逻辑服，我们启动了两个（或者说多个）邮件逻辑服实例来处理业务。
+     *     当我们使用 fireAny 方法发送事件时，只会给其中一个实例发送事件。
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireAny(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireAny(eventBusMessage);
+    }
+
+    /**
+     * [同步]发送事件给同类型逻辑服的订阅者。
+     * <p>
+     * 这里的同类型指的是相同类型的逻辑服，也就是拥有相同 tag 的逻辑服。
+     * <pre>
+     *     1 [同步] 给当前进程所有逻辑服的订阅者发送事件消息
+     *     2 [异步] 给其他进程的订阅者发送事件消息
+     *
+     *     注意，这里的同步仅指当前进程订阅者的同步，对其他进程中的订阅者无效（处理远程订阅者使用的是异步）。
+     * </pre>
+     * 使用场景：
+     * <pre>
+     *     假设现在有一个发放奖励的邮件逻辑服，我们启动了两个（或者说多个）邮件逻辑服实例来处理业务。
+     *     当我们使用 fireAny 方法发送事件时，只会给其中一个实例发送事件。
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireAnySync(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+
+        EventBus eventBus = this.getEventBus();
+        eventBus.fireAnySync(eventBusMessage);
     }
 
     /**
@@ -1452,5 +1596,17 @@ interface SimpleCommon extends FlowOptionDynamic {
      */
     default long getUserId() {
         return this.getHeadMetadata().getUserId();
+    }
+}
+
+@UtilityClass
+class InternalKit {
+    <T> void decorate(String traceId, Consumer<T> callback, T response) {
+        try {
+            MDC.put(TraceKit.traceName, traceId);
+            callback.accept(response);
+        } finally {
+            MDC.clear();
+        }
     }
 }

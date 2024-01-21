@@ -54,8 +54,7 @@ final class EventBusBrokerClientListener implements BrokerClientListener {
         }
 
         // 记录当前 EventBus 的订阅者信息到 moduleMessage 中
-        EventTopicMessage eventTopicMessage = eventBus.getEventTopicMessage();
-        Set<String> topicSet = eventTopicMessage.getTopicSet();
+        Set<String> topicSet = eventBus.listTopic();
 
         if (CollKit.isEmpty(topicSet)) {
             return;
@@ -71,10 +70,8 @@ final class EventBusBrokerClientListener implements BrokerClientListener {
                 log.info("##卸载## {} 卸载 远程订阅者 {}", client.getAppName(), otherModuleMessage.getName());
             }
 
-            Set<String> topics = result.topicSet();
             EventBrokerClientMessage eventBrokerClientMessage = result.eventBrokerClientMessage();
-
-            EventBusRegion.unloadRemoteTopic(topics, eventBrokerClientMessage);
+            EventBusRegion.unloadRemoteTopic(eventBrokerClientMessage);
         });
     }
 
@@ -85,9 +82,8 @@ final class EventBusBrokerClientListener implements BrokerClientListener {
                 log.info("##加载## {} 加载 远程订阅者 {}", client.getAppName(), otherModuleMessage.getName());
             }
 
-            Set<String> topics = result.topicSet();
             EventBrokerClientMessage eventBrokerClientMessage = result.eventBrokerClientMessage();
-            EventBusRegion.loadRemoteEventTopic(topics, eventBrokerClientMessage);
+            EventBusRegion.loadRemoteEventTopic(eventBrokerClientMessage);
         });
     }
 
@@ -102,26 +98,35 @@ final class EventBusBrokerClientListener implements BrokerClientListener {
         Set<String> topicSet = otherModuleMessage.getHeader(this.eventBusTopicName);
         if (CollKit.isEmpty(topicSet)) {
             // 说明该逻辑服没有订阅者，不做任何处理
-            return new Result(false, null, null);
+            return new Result(false, null);
         }
 
         // 检查该逻辑服是否在同一个进程中
         BrokerClientModuleMessage moduleMessage = client.getBrokerClientModuleMessage();
         if (Objects.equals(otherModuleMessage.getIoGamePid(), moduleMessage.getIoGamePid())) {
             // 在同一个进程中，不做处理
-            return new Result(false, null, null);
+            return new Result(false, null);
         }
 
         // 将其他进程的订阅者主题添加到管理域中
+        EventBrokerClientMessage eventBrokerClientMessage = createEventBrokerClientMessage(otherModuleMessage, topicSet);
+
+        return new Result(true, eventBrokerClientMessage);
+    }
+
+    private EventBrokerClientMessage createEventBrokerClientMessage(BrokerClientModuleMessage otherModuleMessage, Set<String> topicSet) {
         String id = otherModuleMessage.getId();
         String appName = otherModuleMessage.getName();
         String tag = otherModuleMessage.getTag();
         String typeName = otherModuleMessage.getBrokerClientType().name();
 
         EventBrokerClientMessage eventBrokerClientMessage = new EventBrokerClientMessage(appName, tag, typeName, id);
-        return new Result(true, topicSet, eventBrokerClientMessage);
+        eventBrokerClientMessage.setRemote(true);
+        eventBrokerClientMessage.setEventTopicMessage(new EventTopicMessage(topicSet));
+
+        return eventBrokerClientMessage;
     }
 
-    private record Result(boolean process, Set<String> topicSet, EventBrokerClientMessage eventBrokerClientMessage) {
+    private record Result(boolean process, EventBrokerClientMessage eventBrokerClientMessage) {
     }
 }

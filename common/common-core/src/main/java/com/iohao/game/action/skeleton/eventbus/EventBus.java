@@ -24,14 +24,12 @@ import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -68,6 +66,7 @@ public final class EventBus {
 
     SubscribeExecutorStrategy subscribeExecutorStrategy;
     SubscriberInvokeCreator subscriberInvokeCreator;
+    @Getter
     EventBusMessageCreator eventBusMessageCreator;
     EventBusListener eventBusListener;
 
@@ -97,19 +96,13 @@ public final class EventBus {
         return this.eventBusMessageCreator.create(eventSource);
     }
 
-    public EventTopicMessage getEventTopicMessage() {
-
+    public Set<String> listTopic() {
         // 当前 eventBus 订阅的所有事件源主题
-        var eventSourceClassSet = this.subscriberRegistry.listEventSourceClass();
-
-        Set<String> collect = eventSourceClassSet.stream()
+        return this.subscriberRegistry
+                .listEventSourceClass()
+                .stream()
                 .map(Class::getName)
                 .collect(Collectors.toSet());
-
-        EventTopicMessage message = new EventTopicMessage();
-        message.setTopicSet(collect);
-
-        return message;
     }
 
     /**
@@ -164,7 +157,7 @@ public final class EventBus {
      * @param eventSource 事件源
      */
     public void fire(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fire(eventBusMessage);
     }
 
@@ -180,12 +173,12 @@ public final class EventBus {
      * @param eventSource 事件源
      */
     public void fireSync(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireSync(eventBusMessage);
     }
 
     public void fireLocal(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireLocal(eventBusMessage);
     }
 
@@ -199,7 +192,7 @@ public final class EventBus {
     }
 
     public void fireLocalSync(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireLocalSync(eventBusMessage);
     }
 
@@ -228,14 +221,18 @@ public final class EventBus {
     }
 
     void fireRemote(EventBusMessage eventBusMessage) {
-        var messageSet = EventBusRegion.listRemoteEventBrokerClientMessage(eventBusMessage);
+        var messages = EventBusRegion.listRemoteEventBrokerClientMessage(eventBusMessage);
 
-        if (CollKit.isEmpty(messageSet)) {
+        this.fireRemote(eventBusMessage, messages);
+    }
+
+    void fireRemote(EventBusMessage eventBusMessage, Collection<EventBrokerClientMessage> messages) {
+        if (CollKit.isEmpty(messages)) {
             return;
         }
 
         // 如果其他进程中存在当前事件源的订阅者，将事件源发布到其他进程中
-        eventBusMessage.setEventBrokerClientMessageSet(messageSet);
+        eventBusMessage.setEventBrokerClientMessages(messages);
         eventBusMessage.addFireType(EventBusFireType.fireRemote);
 
         this.extractedPrint(eventBusMessage);
@@ -248,7 +245,7 @@ public final class EventBus {
     }
 
     public void fireMe(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireMe(eventBusMessage);
     }
 
@@ -265,7 +262,7 @@ public final class EventBus {
     }
 
     public void fireMeSync(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireMeSync(eventBusMessage);
     }
 
@@ -295,8 +292,60 @@ public final class EventBus {
         this.invokeSubscriber(eventBusMessage, async, subscribers);
     }
 
+    public void fireAny(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        this.fireAny(eventBusMessage);
+    }
+
+    public void fireAny(EventBusMessage eventBusMessage) {
+        AnyTagViewData anyTagViewData = EventBusAnyTagRegion.getAnyTagData(eventBusMessage);
+
+        List<EventBrokerClientMessage> messages = anyTagViewData.getLocalMessages();
+        this.fireAny(eventBusMessage, messages, true);
+
+        List<EventBrokerClientMessage> remoteMessages = anyTagViewData.getRemoteMessages();
+        this.fireRemote(eventBusMessage, remoteMessages);
+
+        if (eventBusMessage.emptyFireType()) {
+            this.eventBusListener.emptySubscribe(eventBusMessage, this);
+        }
+    }
+
+    public void fireAnySync(Object eventSource) {
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        this.fireAnySync(eventBusMessage);
+    }
+
+    public void fireAnySync(EventBusMessage eventBusMessage) {
+        AnyTagViewData anyTagViewData = EventBusAnyTagRegion.getAnyTagData(eventBusMessage);
+
+        List<EventBrokerClientMessage> messages = anyTagViewData.getLocalMessages();
+        this.fireAny(eventBusMessage, messages, false);
+
+        List<EventBrokerClientMessage> remoteMessages = anyTagViewData.getRemoteMessages();
+        this.fireRemote(eventBusMessage, remoteMessages);
+
+        if (eventBusMessage.emptyFireType()) {
+            this.eventBusListener.emptySubscribe(eventBusMessage, this);
+        }
+    }
+
+    void fireAny(EventBusMessage eventBusMessage, List<EventBrokerClientMessage> list, boolean async) {
+
+        if (CollKit.isEmpty(list)) {
+            return;
+        }
+
+        for (EventBrokerClientMessage brokerClientMessage : list) {
+            EventBus eventBus = EventBusRegion.getEventBus(brokerClientMessage.brokerClientId);
+            if (Objects.nonNull(eventBus)) {
+                eventBus.fireMe(eventBusMessage, async);
+            }
+        }
+    }
+
     public void fireLocalNeighbor(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireLocalNeighbor(eventBusMessage);
     }
 
@@ -305,7 +354,7 @@ public final class EventBus {
     }
 
     public void fireLocalNeighborSync(Object eventSource) {
-        EventBusMessage eventBusMessage = createEventBusMessage(eventSource);
+        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireLocalNeighborSync(eventBusMessage);
     }
 
@@ -320,15 +369,12 @@ public final class EventBus {
      * @param async           true 表示异步执行
      */
     private void fireLocalNeighbor(EventBusMessage eventBusMessage, boolean async) {
-        int size = EventBusRegion.eventBusMap.size();
-        if (size == 1) {
-            // 当只有一个 eventBus 时，通常是自己，就也是当前 eventBus;
+        if (!EventBusRegion.hasLocalNeighbor()) {
+            // 当前进程仅有一个逻辑服
             return;
         }
 
-        var subscribers = EventBusRegion.eventBusMap
-                .values()
-                .stream()
+        var subscribers = EventBusRegion.streamLocalEventBus()
                 // 排除自己（当前 EventBus）
                 .filter(eventBus -> !Objects.equals(this, eventBus))
                 // 得到所有的订阅者
@@ -348,7 +394,7 @@ public final class EventBus {
     private void extractedPrint(EventBusMessage eventBusMessage) {
         if (IoGameCommonCoreConfig.eventBusLog) {
             log.info("###### 触发远程逻辑服的订阅者 - {} -  : {}", this.eventBrokerClientMessage.getAppName(), eventBusMessage);
-            for (EventBrokerClientMessage eventBrokerClientMessage : eventBusMessage.getEventBrokerClientMessageSet()) {
+            for (EventBrokerClientMessage eventBrokerClientMessage : eventBusMessage.getEventBrokerClientMessages()) {
                 log.info("远程逻辑服 : {}", eventBrokerClientMessage.getAppName());
             }
 
@@ -384,8 +430,7 @@ public final class EventBus {
     }
 
     private Collection<Subscriber> listSubscriber(EventBusMessage eventBusMessage) {
-        var eventSource = eventBusMessage.getEventSource();
-        return this.subscriberRegistry.listSubscriber(eventSource);
+        return this.subscriberRegistry.listSubscriber(eventBusMessage);
     }
 
     enum EventBusStatus {
@@ -403,7 +448,7 @@ public final class EventBus {
             return false;
         }
 
-        return Objects.equals(id, eventBus.id);
+        return this.id.equals(eventBus.id);
     }
 
     @Override

@@ -160,17 +160,6 @@ class LineKit {
                 .filter(message -> !Objects.equals(message.getId(), moduleMessage.getId()));
     }
 
-//    void streamOtherClient(Context context, Consumer<BrokerClientModuleMessage> consumer) {
-//        BrokerClientModuleMessage moduleMessage = context.moduleMessage();
-//
-//        context.brokerClientModules()
-//                .listBrokerClientModuleMessage()
-//                .stream()
-//                // 排除自己
-//                .filter(message -> !Objects.equals(message.getId(), moduleMessage.getId()))
-//                .forEach(consumer);
-//    }
-
     @UtilityClass
     private class ModuleMessageDelegates {
         Map<String, ModuleMessageDelegate> map = new NonBlockingHashMap<>();

@@ -18,21 +18,13 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-
-import java.io.Serializable;
 import java.util.Set;
 
 /**
+ * 事件源主题
+ *
  * @author 渔民小镇
  * @date 2023-12-24
  */
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public final class EventTopicMessage implements Serializable {
-    Set<String> topicSet;
+public record EventTopicMessage(Set<String> topicSet) {
 }

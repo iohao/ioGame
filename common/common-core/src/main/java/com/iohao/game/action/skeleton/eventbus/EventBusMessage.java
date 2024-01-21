@@ -26,7 +26,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * 事件消息
@@ -52,7 +52,7 @@ public final class EventBusMessage implements Serializable {
     /** 事件源 */
     Object eventSource;
     /** 其他进程的信息 */
-    Set<EventBrokerClientMessage> eventBrokerClientMessageSet;
+    Collection<EventBrokerClientMessage> eventBrokerClientMessages;
 
     @Getter(AccessLevel.PACKAGE)
     transient int fireType;
@@ -80,5 +80,13 @@ public final class EventBusMessage implements Serializable {
 
     boolean emptyFireType() {
         return fireType == 0;
+    }
+
+    String getTopic() {
+        return this.eventSource.getClass().getName();
+    }
+
+    Class<?> getTopicClass() {
+        return this.eventSource.getClass();
     }
 }

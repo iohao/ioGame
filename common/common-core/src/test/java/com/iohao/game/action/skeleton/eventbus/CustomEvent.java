@@ -20,6 +20,8 @@ package com.iohao.game.action.skeleton.eventbus;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.atomic.LongAdder;
+
 /**
  * @author 渔民小镇
  * @date 2023-12-24
@@ -27,28 +29,36 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @EventBusSubscriber
 public class CustomEvent {
+    static LongAdder myMessageLong = new LongAdder();
+    static LongAdder myRecordLong = new LongAdder();
+
     @EventSubscribe(order = 1, value = ExecutorSelector.simpleExecutor)
     public void myMessage1(MyMessage message) {
         log.info("###myMessage1 : {}", message);
+        myMessageLong.increment();
     }
 
     @EventSubscribe(order = 3, value = ExecutorSelector.simpleExecutor)
-    public void myMessage2(MyMessage message) {
-        log.info("###myMessage2 : {}", message);
+    public void myMessage3(MyMessage message) {
+        log.info("###myMessage3 : {}", message);
+        myMessageLong.increment();
     }
 
     @EventSubscribe(order = 2, value = ExecutorSelector.simpleExecutor)
-    public void myMessage3(MyMessage message) {
-        log.info("###myMessage3 : {}", message);
+    public void myMessage2(MyMessage message) {
+        log.info("###myMessage2 : {}", message);
+        myMessageLong.increment();
     }
 
     @EventSubscribe
     public void myRecord1(MyRecord message) {
         log.info("myRecord1 : {}", message);
+        myRecordLong.increment();
     }
 
     @EventSubscribe
     public void myRecord2(MyRecord message) {
         log.info("myRecord2 : {} - {}", message, message.getClass());
+        myRecordLong.increment();
     }
 }

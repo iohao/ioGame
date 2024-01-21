@@ -90,15 +90,16 @@ final class SubscriberRegistry {
             this.subscriberMultiMap.put(parameterClass, subscriber);
         });
 
-        this.subscriberMultiMap.asMap().values().forEach(EventBusRegion::sort);
+        this.subscriberMultiMap.asMap().values().forEach(EventBusKit::sort);
     }
 
     Collection<Class<?>> listEventSourceClass() {
         return this.subscriberMultiMap.keySet();
     }
 
-    Collection<Subscriber> listSubscriber(Object eventSource) {
-        Class<?> methodParamClazz = eventSource.getClass();
+    Collection<Subscriber> listSubscriber(EventBusMessage eventBusMessage) {
+
+        Class<?> methodParamClazz = eventBusMessage.getTopicClass();
 
         return this.subscriberMultiMap.containsKey(methodParamClazz)
                 ? this.subscriberMultiMap.get(methodParamClazz)

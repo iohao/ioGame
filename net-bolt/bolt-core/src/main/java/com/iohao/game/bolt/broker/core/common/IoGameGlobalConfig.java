@@ -28,10 +28,6 @@ import java.util.concurrent.Executor;
 
 /**
  * ioGame 全局默认配置
- * <pre>
- *     当前大版本会兼容 BrokerGlobalConfig 配置，
- *     下个大版本将会移除 BrokerGlobalConfig；
- * </pre>
  *
  * @author 渔民小镇
  * @date 2022-11-11
@@ -138,7 +134,7 @@ public class IoGameGlobalConfig {
         return openLog && brokerClusterFixedRateLog;
     }
 
-    public static void setEventBusLog(boolean eventBusLog) {
+    public void setEventBusLog(boolean eventBusLog) {
         IoGameGlobalConfig.eventBusLog = eventBusLog;
         IoGameCommonCoreConfig.eventBusLog = eventBusLog;
     }

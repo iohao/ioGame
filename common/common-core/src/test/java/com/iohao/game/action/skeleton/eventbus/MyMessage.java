@@ -19,7 +19,9 @@
 package com.iohao.game.action.skeleton.eventbus;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 /**
@@ -27,7 +29,11 @@ import lombok.experimental.FieldDefaults;
  * @date 2023-12-24
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MyMessage {
     String name;
+
+
 }

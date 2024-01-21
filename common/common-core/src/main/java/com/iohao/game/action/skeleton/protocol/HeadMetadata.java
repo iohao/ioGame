@@ -118,11 +118,11 @@ public final class HeadMetadata implements Serializable {
     /**
      * netty 的 channelId。
      * <pre>
-     *     框架存放 netty 的 channelId 是为了能在对外服查找到对应的连接，
-     *     一但玩家登录后，框架将会使用玩家的 userId 而不是 channelId 来查找对应的连接（channel），
-     *     因为 channelId 的字符串实在太长了，每次将该值传输到逻辑服会小小的影响性能。
+     *     框架存放 netty 的 channelId 是为了能在对外服查找到对应的连接。
+     *     当玩家登录后，框架将会使用玩家的 userId 来查找对应的连接（channel），而不是 channelId ；
+     *     因为 channelId 的字符串太长了，每次将该值传输到逻辑服会小小的影响性能。
      *
-     *     一但玩家登录后，框架不会在使用这个属性了；开发者如果有需要，可以把这个字段利用起来。
+     *     当玩家登录后，框架将不会使用该属性了；开发者如果有需要，可以把这个字段利用起来。
      * </pre>
      */
     String channelId;

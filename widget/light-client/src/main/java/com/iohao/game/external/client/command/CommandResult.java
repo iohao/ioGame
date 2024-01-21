@@ -70,13 +70,6 @@ public class CommandResult {
         return (T) value;
     }
 
-    /**
-     * 得到
-     *
-     * @param clazz
-     * @param <T>
-     * @return
-     */
     @SuppressWarnings("unchecked")
     public <T> List<T> listValue(Class<? extends T> clazz) {
         return (List<T>) this.getValue(ByteValueList.class)

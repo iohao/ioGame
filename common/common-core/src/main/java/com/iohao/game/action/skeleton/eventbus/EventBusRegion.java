@@ -18,17 +18,11 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
-import com.iohao.game.common.kit.collect.ListMultiMap;
-import com.iohao.game.common.kit.collect.SetMultiMap;
-import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
-import org.jctools.maps.NonBlockingHashMap;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * 事件总线管理域
@@ -42,66 +36,24 @@ import java.util.Set;
  * @author 渔民小镇
  * @date 2023-12-24
  */
-@Slf4j
 @UtilityClass
 public final class EventBusRegion {
-    /**
-     * EventBus map
-     * <pre>
-     *     key : brokerClientId
-     * </pre>
-     */
-    final Map<String, EventBus> eventBusMap = new NonBlockingHashMap<>();
-    /**
-     * 其他进程的订阅者
-     * <pre>
-     *     key : eventSource class name
-     *     value : across progress brokerClientId
-     * </pre>
-     */
-    final SetMultiMap<String, EventBrokerClientMessage> remoteTopicMultiMap = SetMultiMap.create();
-    /**
-     * 事件源与订阅者的映射
-     * <pre>
-     *     key : 事件源
-     *     value : 订阅者集合。（当前进程内的所有订阅者）
-     * </pre>
-     */
-    final ListMultiMap<Class<?>, Subscriber> subscriberListMap = ListMultiMap.create();
-
     public EventBus getEventBus(String brokerClientId) {
-        return eventBusMap.get(brokerClientId);
-    }
-
-    /**
-     * 加载其他进程的订阅者主题
-     *
-     * @param topics                   订阅者主题
-     * @param eventBrokerClientMessage 其他进程的逻辑服信息
-     */
-    public void loadRemoteEventTopic(Collection<String> topics, EventBrokerClientMessage eventBrokerClientMessage) {
-        topics.forEach(topic -> remoteTopicMultiMap.put(topic, eventBrokerClientMessage));
-    }
-
-    public void unloadRemoteTopic(Collection<String> topics, EventBrokerClientMessage eventBrokerClientMessage) {
-        for (String topic : topics) {
-            Set<EventBrokerClientMessage> eventBrokerClientMessages = remoteTopicMultiMap.get(topic);
-            eventBrokerClientMessages.remove(eventBrokerClientMessage);
-        }
-    }
-
-    Set<EventBrokerClientMessage> listRemoteEventBrokerClientMessage(EventBusMessage eventBusMessage) {
-        Object eventSource = eventBusMessage.getEventSource();
-        Class<?> eventSourceClass = eventSource.getClass();
-        String name = eventSourceClass.getName();
-        return remoteTopicMultiMap.get(name);
+        return EventBusLocalRegion.getEventBus(brokerClientId);
     }
 
     void addLocal(EventBus eventBus) {
-        eventBusMap.put(eventBus.id, eventBus);
+        EventBusLocalRegion.addLocal(eventBus);
 
-        ExecutorRegionKit.getSimpleThreadExecutor(1)
-                .execute(EventBusRegion::resetLocalSubscriber);
+        EventBusAnyTagRegion.add(eventBus.eventBrokerClientMessage);
+    }
+
+    Stream<EventBus> streamLocalEventBus() {
+        return EventBusLocalRegion.streamEventBus();
+    }
+
+    boolean hasLocalNeighbor() {
+        return EventBusLocalRegion.hasLocalNeighbor();
     }
 
     /**
@@ -111,42 +63,22 @@ public final class EventBusRegion {
      * @return 当前进程所有的订阅者
      */
     List<Subscriber> listLocalSubscriber(EventBusMessage eventBusMessage) {
-        Object eventSource = eventBusMessage.getEventSource();
-        Class<?> eventSourceClazz = eventSource.getClass();
-        return subscriberListMap.get(eventSourceClazz);
+        return EventBusLocalRegion.listLocalSubscriber(eventBusMessage);
     }
 
-    private void resetLocalSubscriber() {
+    public void loadRemoteEventTopic(EventBrokerClientMessage eventBrokerClientMessage) {
+        EventBusRemoteRegion.loadRemoteEventTopic(eventBrokerClientMessage);
 
-        ListMultiMap<Class<?>, Subscriber> tempMultiMap = ListMultiMap.create();
-        for (EventBus eventBus : eventBusMap.values()) {
-
-            SubscriberRegistry subscriberRegistry = eventBus.subscriberRegistry;
-            var multiMap = subscriberRegistry.subscriberMultiMap;
-
-            if (multiMap.isEmpty()) {
-                continue;
-            }
-
-            for (var entry : multiMap.entrySet()) {
-                Class<?> key = entry.getKey();
-                tempMultiMap.of(key).addAll(entry.getValue());
-            }
-        }
-
-        subscriberListMap.clear();
-
-        for (Map.Entry<Class<?>, List<Subscriber>> entry : tempMultiMap.entrySet()) {
-            var subscribers = entry.getValue();
-
-            sort(subscribers);
-
-            subscriberListMap.of(entry.getKey()).addAll(subscribers);
-        }
+        EventBusAnyTagRegion.add(eventBrokerClientMessage);
     }
 
-    void sort(List<Subscriber> subscribers) {
-        // order 排序
-        subscribers.sort((o1, o2) -> o2.order - o1.order);
+    public void unloadRemoteTopic(EventBrokerClientMessage eventBrokerClientMessage) {
+        EventBusRemoteRegion.unloadRemoteTopic(eventBrokerClientMessage);
+
+        EventBusAnyTagRegion.remove(eventBrokerClientMessage);
+    }
+
+    Set<EventBrokerClientMessage> listRemoteEventBrokerClientMessage(EventBusMessage eventBusMessage) {
+        return EventBusRemoteRegion.listRemoteEventBrokerClientMessage(eventBusMessage);
     }
 }

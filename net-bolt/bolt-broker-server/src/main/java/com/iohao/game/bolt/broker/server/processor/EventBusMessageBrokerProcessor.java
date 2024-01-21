@@ -32,8 +32,8 @@ import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -61,7 +61,7 @@ public class EventBusMessageBrokerProcessor extends AbstractAsyncUserProcessor<E
         };
 
         BalancedManager balancedManager = this.brokerServer.getBalancedManager();
-        Set<EventBrokerClientMessage> eventBrokerClientMessageSet = eventBusMessage.getEventBrokerClientMessageSet();
+        Collection<EventBrokerClientMessage> eventBrokerClientMessageSet = eventBusMessage.getEventBrokerClientMessages();
 
         for (EventBrokerClientMessage eventBrokerClientMessage : eventBrokerClientMessageSet) {
 
