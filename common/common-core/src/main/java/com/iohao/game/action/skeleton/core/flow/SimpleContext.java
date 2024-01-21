@@ -34,7 +34,7 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
-import com.iohao.game.common.kit.TraceKit;
+import com.iohao.game.common.kit.trace.TraceKit;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import org.slf4j.MDC;

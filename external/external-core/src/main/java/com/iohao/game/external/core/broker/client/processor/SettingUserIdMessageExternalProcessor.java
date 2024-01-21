@@ -26,7 +26,7 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
 import com.iohao.game.common.consts.IoGameLogName;
-import com.iohao.game.common.kit.TraceKit;
+import com.iohao.game.common.kit.trace.TraceKit;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.session.UserChannelId;
 import com.iohao.game.external.core.session.UserSessions;

@@ -18,7 +18,7 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
-import com.iohao.game.common.kit.TraceKit;
+import com.iohao.game.common.kit.trace.TraceKit;
 import org.slf4j.MDC;
 
 /**
