@@ -24,7 +24,7 @@ import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
 import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.core.flow.*;
-import com.iohao.game.action.skeleton.core.flow.interal.*;
+import com.iohao.game.action.skeleton.core.flow.internal.*;
 import com.iohao.game.action.skeleton.core.runner.Runner;
 import com.iohao.game.action.skeleton.core.runner.Runners;
 import lombok.Getter;

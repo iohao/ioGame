@@ -107,7 +107,7 @@ interface SimpleAttachment extends SimpleCommunicationInvokeExternalModule {
      *
      * @param attachment 元信息
      */
-    default void updateAttachment(UserAttachment attachment) {
+    default void updateAttachment(final UserAttachment attachment) {
         Objects.requireNonNull(attachment);
 
         HeadMetadata headMetadata = this.getHeadMetadata();
@@ -172,7 +172,7 @@ interface SimpleAttachment extends SimpleCommunicationInvokeExternalModule {
      * @param <T>   t
      * @return 元附加信息
      */
-    default <T extends UserAttachment> T getAttachment(Class<T> clazz) {
+    default <T extends UserAttachment> T getAttachment(final Class<T> clazz) {
         HeadMetadata headMetadata = this.getHeadMetadata();
         byte[] attachmentData = headMetadata.getAttachmentData();
         return DataCodecKit.decode(attachmentData, clazz);
@@ -332,7 +332,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
      * @param cmdInfo 路由
      * @return ResponseCollectMessage
      */
-    default ResponseCollectMessage invokeModuleCollectMessage(final CmdInfo cmdInfo) {
+    default ResponseCollectMessage invokeModuleCollectMessage(CmdInfo cmdInfo) {
         return invokeModuleCollectMessage(cmdInfo, null);
     }
 
@@ -352,7 +352,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
      * @param data    业务数据
      * @return ResponseCollectMessage
      */
-    default ResponseCollectMessage invokeModuleCollectMessage(final CmdInfo cmdInfo, final Object data) {
+    default ResponseCollectMessage invokeModuleCollectMessage(CmdInfo cmdInfo, Object data) {
         var requestMessage = createRequestMessage(cmdInfo, data);
         return invokeModuleCollectMessage(requestMessage);
     }
@@ -372,7 +372,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
      * @param requestMessage requestMessage
      * @return ResponseCollectMessage
      */
-    default ResponseCollectMessage invokeModuleCollectMessage(final RequestMessage requestMessage) {
+    default ResponseCollectMessage invokeModuleCollectMessage(RequestMessage requestMessage) {
         var invokeModuleContext = this.getInvokeModuleContext();
         return invokeModuleContext.invokeModuleCollectMessage(requestMessage);
     }
@@ -392,7 +392,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
      * @param cmdInfo 路由
      * @return CompletableFuture ResponseCollectMessage
      */
-    default CompletableFuture<ResponseCollectMessage> invokeModuleCollectMessageFuture(final CmdInfo cmdInfo) {
+    default CompletableFuture<ResponseCollectMessage> invokeModuleCollectMessageFuture(CmdInfo cmdInfo) {
         return this.invokeModuleCollectMessageFuture(cmdInfo, null);
     }
 
@@ -412,7 +412,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
      * @param data    业务数据
      * @return CompletableFuture ResponseCollectMessage
      */
-    default CompletableFuture<ResponseCollectMessage> invokeModuleCollectMessageFuture(final CmdInfo cmdInfo, final Object data) {
+    default CompletableFuture<ResponseCollectMessage> invokeModuleCollectMessageFuture(CmdInfo cmdInfo, Object data) {
         var requestMessage = createRequestMessage(cmdInfo, data);
         return this.invokeModuleCollectMessageFuture(requestMessage);
     }
@@ -432,7 +432,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
      * @param requestMessage requestMessage
      * @return CompletableFuture ResponseCollectMessage
      */
-    default CompletableFuture<ResponseCollectMessage> invokeModuleCollectMessageFuture(final RequestMessage requestMessage) {
+    default CompletableFuture<ResponseCollectMessage> invokeModuleCollectMessageFuture(RequestMessage requestMessage) {
         return this.supplyAsync(() -> this.invokeModuleCollectMessage(requestMessage));
     }
 
@@ -451,7 +451,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
      * @param cmdInfo  路由
      * @param callback 异步回调方法
      */
-    default void invokeModuleCollectMessageAsync(final CmdInfo cmdInfo, final Consumer<ResponseCollectMessage> callback) {
+    default void invokeModuleCollectMessageAsync(CmdInfo cmdInfo, Consumer<ResponseCollectMessage> callback) {
         this.invokeModuleCollectMessageAsync(cmdInfo, null, callback);
     }
 
@@ -471,7 +471,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
      * @param data     业务数据
      * @param callback 异步回调方法
      */
-    default void invokeModuleCollectMessageAsync(final CmdInfo cmdInfo, final Object data, final Consumer<ResponseCollectMessage> callback) {
+    default void invokeModuleCollectMessageAsync(CmdInfo cmdInfo, Object data, Consumer<ResponseCollectMessage> callback) {
         var requestMessage = this.createRequestMessage(cmdInfo, data);
         this.invokeModuleCollectMessageAsync(requestMessage, callback);
     }
@@ -492,7 +492,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
      * @param requestMessage requestMessage
      * @param callback       异步回调方法
      */
-    default void invokeModuleCollectMessageAsync(final RequestMessage requestMessage, final Consumer<ResponseCollectMessage> callback) {
+    default void invokeModuleCollectMessageAsync(RequestMessage requestMessage, Consumer<ResponseCollectMessage> callback) {
         this.invokeModuleCollectMessageAsync(requestMessage, callback, this.getExecutor());
     }
 
@@ -515,7 +515,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     default void invokeModuleCollectMessageAsync(final RequestMessage requestMessage
             , final Consumer<ResponseCollectMessage> callback, final Executor callbackExecutor) {
 
-        final HeadMetadata headMetadata = requestMessage.getHeadMetadata();
+        var headMetadata = requestMessage.getHeadMetadata();
         var traceId = headMetadata.getTraceId();
 
         if (Objects.isNull(traceId)) {
@@ -525,7 +525,7 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
 
         this.invokeModuleCollectMessageFuture(requestMessage).thenAcceptAsync(responseCollectMessage -> {
             // 简单装饰
-            InternalKit.decorate(traceId, callback, responseCollectMessage);
+            InternalFlowContextKit.decorate(traceId, callback, responseCollectMessage);
         }, callbackExecutor);
     }
 
@@ -545,20 +545,20 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
     }
 
     private void extractedSourceClientId(ResponseMessage responseMessage, long userId) {
-        HeadMetadata responseMessageHeadMetadata = responseMessage.getHeadMetadata();
+        var responseMessageHeadMetadata = responseMessage.getHeadMetadata();
         if (responseMessageHeadMetadata.getSourceClientId() != 0) {
             // 说明已经指定了需要精准广播的游戏对外服
             return;
         }
 
         // userId 等于自己，这里就精准广播到玩家所在的对外服中（即使启动了多个游戏对外服，也能精准到玩家所在的对外服中）
-        HeadMetadata headMetadata = this.getHeadMetadata();
+        var headMetadata = this.getHeadMetadata();
         if (userId != headMetadata.getUserId()) {
             return;
         }
 
         // 指定游戏对外服广播（当前玩家所在的游戏对外服）
-        int sourceClientId = headMetadata.getSourceClientId();
+        var sourceClientId = headMetadata.getSourceClientId();
         responseMessageHeadMetadata.setSourceClientId(sourceClientId);
     }
 
@@ -572,8 +572,8 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @see HeadMetadata#getCmdInfo()
      */
     default void broadcastMe(Object bizData) {
-        final HeadMetadata headMetadata = this.getHeadMetadata();
-        CmdInfo cmdInfo = headMetadata.getCmdInfo();
+        var headMetadata = this.getHeadMetadata();
+        var cmdInfo = headMetadata.getCmdInfo();
         this.broadcastMe(cmdInfo, bizData);
     }
 
@@ -584,7 +584,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param bizData 业务数据
      */
     default void broadcastMe(CmdInfo cmdInfo, Object bizData) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        var responseMessage = this.createResponseMessage(cmdInfo, bizData);
         this.broadcastMe(responseMessage);
     }
 
@@ -605,7 +605,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param bizData 业务数据
      */
     default void broadcast(CmdInfo cmdInfo, Object bizData) {
-        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
+        var responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcast(responseMessage);
     }
 
@@ -629,7 +629,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param userId  userId
      */
     default void broadcast(CmdInfo cmdInfo, Object bizData, long userId) {
-        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
+        var responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcast(responseMessage, userId);
     }
 
@@ -639,7 +639,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param responseMessage 消息
      * @param userId          userId
      */
-    default void broadcast(ResponseMessage responseMessage, long userId) {
+    default void broadcast(final ResponseMessage responseMessage, final long userId) {
 
         employTraceId(responseMessage);
 
@@ -657,7 +657,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param userIdList 指定用户列表
      */
     default void broadcast(CmdInfo cmdInfo, Object bizData, Collection<Long> userIdList) {
-        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
+        var responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcast(responseMessage, userIdList);
     }
 
@@ -667,7 +667,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param responseMessage 消息
      * @param userIdList      指定用户列表 (如果为 null 或 empty 就不会触发)
      */
-    default void broadcast(ResponseMessage responseMessage, Collection<Long> userIdList) {
+    default void broadcast(final ResponseMessage responseMessage, final Collection<Long> userIdList) {
         employTraceId(responseMessage);
 
         BroadcastContext broadcastContext = this.getBroadcastContext();
@@ -684,8 +684,8 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @see HeadMetadata#getCmdInfo()
      */
     default void broadcastOrderMe(Object bizData) {
-        final HeadMetadata headMetadata = this.getHeadMetadata();
-        CmdInfo cmdInfo = headMetadata.getCmdInfo();
+        var headMetadata = this.getHeadMetadata();
+        var cmdInfo = headMetadata.getCmdInfo();
         this.broadcastOrderMe(cmdInfo, bizData);
     }
 
@@ -696,7 +696,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param bizData 业务数据
      */
     default void broadcastOrderMe(CmdInfo cmdInfo, Object bizData) {
-        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo, bizData);
+        var responseMessage = this.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrderMe(responseMessage);
     }
 
@@ -717,7 +717,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param bizData 业务数据
      */
     default void broadcastOrder(CmdInfo cmdInfo, Object bizData) {
-        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
+        var responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrder(responseMessage);
     }
 
@@ -726,7 +726,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      *
      * @param responseMessage 消息
      */
-    default void broadcastOrder(ResponseMessage responseMessage) {
+    default void broadcastOrder(final ResponseMessage responseMessage) {
         employTraceId(responseMessage);
 
         BroadcastOrderContext broadcastOrderContext = this.getBroadcastOrderContext();
@@ -741,7 +741,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param userIdList 指定用户列表
      */
     default void broadcastOrder(CmdInfo cmdInfo, Object bizData, Collection<Long> userIdList) {
-        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
+        var responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrder(responseMessage, userIdList);
     }
 
@@ -766,7 +766,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param userId  userId
      */
     default void broadcastOrder(CmdInfo cmdInfo, Object bizData, long userId) {
-        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
+        var responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
         this.broadcastOrder(responseMessage, userId);
     }
 
@@ -776,7 +776,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @param responseMessage 消息
      * @param userId          userId
      */
-    default void broadcastOrder(ResponseMessage responseMessage, long userId) {
+    default void broadcastOrder(final ResponseMessage responseMessage, final long userId) {
         employTraceId(responseMessage);
 
         extractedSourceClientId(responseMessage, userId);
@@ -803,7 +803,7 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      * @param bizCode bizCode
      * @return ResponseCollectExternalMessage 一定不为 null
      */
-    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(final int bizCode) {
+    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(int bizCode) {
         return this.invokeExternalModuleCollectMessage(bizCode, null);
     }
 
@@ -819,14 +819,14 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      * @param data    业务数据
      * @return ResponseCollectExternalMessage 一定不为 null
      */
-    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(final int bizCode, final Serializable data) {
-        RequestCollectExternalMessage request = createRequestCollectExternalMessage(bizCode, data);
+    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(int bizCode, Serializable data) {
+        var request = createRequestCollectExternalMessage(bizCode, data);
         return this.invokeExternalModuleCollectMessage(request);
     }
 
-    private RequestCollectExternalMessage createRequestCollectExternalMessage(final int bizCode, final Serializable data) {
+    private RequestCollectExternalMessage createRequestCollectExternalMessage(int bizCode, Serializable data) {
         // 得到发起请求的游戏对外服 id
-        HeadMetadata headMetadata = this.getHeadMetadata();
+        var headMetadata = this.getHeadMetadata();
         var sourceClientId = headMetadata.getSourceClientId();
 
         return new RequestCollectExternalMessage()
@@ -853,7 +853,7 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      * @param request request
      * @return ResponseCollectExternalMessage 一定不为 null
      */
-    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(final RequestCollectExternalMessage request) {
+    default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(RequestCollectExternalMessage request) {
         // MDC
         var traceId = this.getHeadMetadata().getTraceId();
         request.setTraceId(traceId);
@@ -874,7 +874,7 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      * @param bizCode bizCode
      * @return ResponseCollectExternalMessage 一定不为 null
      */
-    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final int bizCode) {
+    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(int bizCode) {
         return this.invokeExternalModuleCollectMessageFuture(bizCode, null);
     }
 
@@ -890,9 +890,11 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      * @param data    业务数据
      * @return ResponseCollectExternalMessage 一定不为 null
      */
-    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final int bizCode, final Serializable data) {
-        var requestCollectExternalMessage = this.createRequestCollectExternalMessage(bizCode, data);
-        return this.invokeExternalModuleCollectMessageFuture(requestCollectExternalMessage);
+    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(
+            int bizCode, Serializable data) {
+
+        RequestCollectExternalMessage message = this.createRequestCollectExternalMessage(bizCode, data);
+        return this.invokeExternalModuleCollectMessageFuture(message);
     }
 
     /**
@@ -906,7 +908,9 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      * @param request request
      * @return ResponseCollectExternalMessage 一定不为 null
      */
-    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(final RequestCollectExternalMessage request) {
+    default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(
+            RequestCollectExternalMessage request) {
+
         return this.supplyAsync(() -> this.invokeExternalModuleCollectMessage(request));
     }
 
@@ -921,7 +925,9 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      * @param bizCode  bizCode
      * @param callback 异步回调方法
      */
-    default void invokeExternalModuleCollectMessageAsync(final int bizCode, final Consumer<ResponseCollectExternalMessage> callback) {
+    default void invokeExternalModuleCollectMessageAsync(int bizCode
+            , Consumer<ResponseCollectExternalMessage> callback) {
+
         this.invokeExternalModuleCollectMessageAsync(bizCode, null, callback);
     }
 
@@ -937,9 +943,11 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      * @param data     业务数据
      * @param callback 异步回调方法
      */
-    default void invokeExternalModuleCollectMessageAsync(final int bizCode, final Serializable data, final Consumer<ResponseCollectExternalMessage> callback) {
-        var requestCollectExternalMessage = this.createRequestCollectExternalMessage(bizCode, data);
-        this.invokeExternalModuleCollectMessageAsync(requestCollectExternalMessage, callback);
+    default void invokeExternalModuleCollectMessageAsync(int bizCode
+            , Serializable data, Consumer<ResponseCollectExternalMessage> callback) {
+
+        RequestCollectExternalMessage message = this.createRequestCollectExternalMessage(bizCode, data);
+        this.invokeExternalModuleCollectMessageAsync(message, callback);
     }
 
     /**
@@ -953,7 +961,9 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      * @param request  request
      * @param callback 异步回调方法
      */
-    default void invokeExternalModuleCollectMessageAsync(final RequestCollectExternalMessage request, final Consumer<ResponseCollectExternalMessage> callback) {
+    default void invokeExternalModuleCollectMessageAsync(RequestCollectExternalMessage request
+            , Consumer<ResponseCollectExternalMessage> callback) {
+
         this.invokeExternalModuleCollectMessageAsync(request, callback, this.getExecutor());
     }
 
@@ -981,7 +991,7 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
 
         this.invokeExternalModuleCollectMessageFuture(request).thenAcceptAsync(responseCollectExternalMessage -> {
             // 简单装饰
-            InternalKit.decorate(traceId, callback, responseCollectExternalMessage);
+            InternalFlowContextKit.decorate(traceId, callback, responseCollectExternalMessage);
         }, callbackExecutor);
     }
 }
@@ -1010,7 +1020,7 @@ interface SimpleCommunicationInvokeModuleVoid extends SimpleCommunication {
      *
      * @param cmdInfo 路由
      */
-    default void invokeModuleVoidMessage(final CmdInfo cmdInfo) {
+    default void invokeModuleVoidMessage(CmdInfo cmdInfo) {
         this.invokeModuleVoidMessage(cmdInfo, null);
     }
 
@@ -1034,7 +1044,7 @@ interface SimpleCommunicationInvokeModuleVoid extends SimpleCommunication {
      * @param cmdInfo 路由
      * @param data    业务数据
      */
-    default void invokeModuleVoidMessage(final CmdInfo cmdInfo, final Object data) {
+    default void invokeModuleVoidMessage(CmdInfo cmdInfo, Object data) {
         var requestMessage = this.createRequestMessage(cmdInfo, data);
         this.invokeModuleVoidMessage(requestMessage);
     }
@@ -1058,7 +1068,7 @@ interface SimpleCommunicationInvokeModuleVoid extends SimpleCommunication {
      *
      * @param requestMessage requestMessage
      */
-    default void invokeModuleVoidMessage(final RequestMessage requestMessage) {
+    default void invokeModuleVoidMessage(RequestMessage requestMessage) {
         var invokeModuleContext = this.getInvokeModuleContext();
         invokeModuleContext.invokeModuleVoidMessage(requestMessage);
     }
@@ -1080,7 +1090,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
      * @param cmdInfo 路由
      * @return ResponseMessage
      */
-    default ResponseMessage invokeModuleMessage(final CmdInfo cmdInfo) {
+    default ResponseMessage invokeModuleMessage(CmdInfo cmdInfo) {
         return this.invokeModuleMessage(cmdInfo, null);
     }
 
@@ -1096,7 +1106,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
      * @param data    请求参数
      * @return ResponseMessage
      */
-    default ResponseMessage invokeModuleMessage(final CmdInfo cmdInfo, final Object data) {
+    default ResponseMessage invokeModuleMessage(CmdInfo cmdInfo, Object data) {
         var requestMessage = this.createRequestMessage(cmdInfo, data);
         return invokeModuleMessage(requestMessage);
     }
@@ -1112,7 +1122,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
      * @param requestMessage requestMessage
      * @return ResponseMessage
      */
-    default ResponseMessage invokeModuleMessage(final RequestMessage requestMessage) {
+    default ResponseMessage invokeModuleMessage(RequestMessage requestMessage) {
         var invokeModuleContext = this.getInvokeModuleContext();
         return invokeModuleContext.invokeModuleMessage(requestMessage);
     }
@@ -1128,7 +1138,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
      * @param cmdInfo 路由
      * @return CompletableFuture ResponseMessage
      */
-    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final CmdInfo cmdInfo) {
+    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(CmdInfo cmdInfo) {
         return invokeModuleMessageFuture(cmdInfo, null);
     }
 
@@ -1144,7 +1154,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
      * @param data    业务数据
      * @return CompletableFuture ResponseMessage
      */
-    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final CmdInfo cmdInfo, final Object data) {
+    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(CmdInfo cmdInfo, Object data) {
         var requestMessage = this.createRequestMessage(cmdInfo, data);
         return invokeModuleMessageFuture(requestMessage);
     }
@@ -1160,7 +1170,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
      * @param requestMessage requestMessage
      * @return CompletableFuture ResponseMessage
      */
-    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(final RequestMessage requestMessage) {
+    default CompletableFuture<ResponseMessage> invokeModuleMessageFuture(RequestMessage requestMessage) {
         return this.supplyAsync(() -> this.invokeModuleMessage(requestMessage));
     }
 
@@ -1175,7 +1185,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
      * @param cmdInfo  路由
      * @param callback 异步回调方法
      */
-    default void invokeModuleMessageAsync(final CmdInfo cmdInfo, final Consumer<ResponseMessage> callback) {
+    default void invokeModuleMessageAsync(CmdInfo cmdInfo, Consumer<ResponseMessage> callback) {
         this.invokeModuleMessageAsync(cmdInfo, null, callback);
     }
 
@@ -1191,7 +1201,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
      * @param data     业务数据
      * @param callback 异步回调方法
      */
-    default void invokeModuleMessageAsync(final CmdInfo cmdInfo, final Object data, final Consumer<ResponseMessage> callback) {
+    default void invokeModuleMessageAsync(CmdInfo cmdInfo, Object data, Consumer<ResponseMessage> callback) {
         var requestMessage = this.createRequestMessage(cmdInfo, data);
         this.invokeModuleMessageAsync(requestMessage, callback);
     }
@@ -1207,7 +1217,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
      * @param requestMessage requestMessage
      * @param callback       异步回调方法
      */
-    default void invokeModuleMessageAsync(final RequestMessage requestMessage, final Consumer<ResponseMessage> callback) {
+    default void invokeModuleMessageAsync(RequestMessage requestMessage, Consumer<ResponseMessage> callback) {
         this.invokeModuleMessageAsync(requestMessage, callback, this.getExecutor());
     }
 
@@ -1226,7 +1236,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     default void invokeModuleMessageAsync(final RequestMessage requestMessage
             , final Consumer<ResponseMessage> callback, final Executor callbackExecutor) {
 
-        final HeadMetadata headMetadata = requestMessage.getHeadMetadata();
+        var headMetadata = requestMessage.getHeadMetadata();
         var traceId = headMetadata.getTraceId();
 
         if (Objects.isNull(traceId)) {
@@ -1236,7 +1246,7 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
 
         this.invokeModuleMessageFuture(requestMessage).thenAcceptAsync(responseMessage -> {
             // 简单装饰
-            InternalKit.decorate(traceId, callback, responseMessage);
+            InternalFlowContextKit.decorate(traceId, callback, responseMessage);
         }, callbackExecutor);
     }
 }
@@ -1262,7 +1272,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      * @param eventSource 事件源
      */
     default void fire(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        var eventBusMessage = this.createEventBusMessage(eventSource);
 
         EventBus eventBus = this.getEventBus();
         eventBus.fire(eventBusMessage);
@@ -1280,7 +1290,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      * @param eventSource 事件源
      */
     default void fireSync(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        var eventBusMessage = this.createEventBusMessage(eventSource);
 
         EventBus eventBus = this.getEventBus();
         eventBus.fireSync(eventBusMessage);
@@ -1301,7 +1311,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      * @param eventSource 事件源
      */
     default void fireAny(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        var eventBusMessage = this.createEventBusMessage(eventSource);
 
         EventBus eventBus = this.getEventBus();
         eventBus.fireAny(eventBusMessage);
@@ -1326,7 +1336,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      * @param eventSource 事件源
      */
     default void fireAnySync(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        var eventBusMessage = this.createEventBusMessage(eventSource);
 
         EventBus eventBus = this.getEventBus();
         eventBus.fireAnySync(eventBusMessage);
@@ -1341,7 +1351,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      * @param eventSource 事件源
      */
     default void fireLocal(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        var eventBusMessage = this.createEventBusMessage(eventSource);
 
         EventBus eventBus = this.getEventBus();
         eventBus.fireLocal(eventBusMessage);
@@ -1358,7 +1368,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      * @param eventSource 事件源
      */
     default void fireLocalSync(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        var eventBusMessage = this.createEventBusMessage(eventSource);
 
         EventBus eventBus = this.getEventBus();
         eventBus.fireLocalSync(eventBusMessage);
@@ -1374,7 +1384,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      * @param eventSource 事件源
      */
     default void fireMe(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        var eventBusMessage = this.createEventBusMessage(eventSource);
 
         EventBus eventBus = this.getEventBus();
         eventBus.fireMe(eventBusMessage);
@@ -1392,16 +1402,16 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      * @param eventSource 事件源
      */
     default void fireMeSync(Object eventSource) {
-        EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
+        var eventBusMessage = this.createEventBusMessage(eventSource);
 
         EventBus eventBus = this.getEventBus();
         eventBus.fireMeSync(eventBusMessage);
     }
 
     default EventBusMessage createEventBusMessage(Object eventSource) {
-        HeadMetadata headMetadata = this.getHeadMetadata();
-        long userId = headMetadata.getUserId();
-        String traceId = headMetadata.getTraceId();
+        var headMetadata = this.getHeadMetadata();
+        var userId = headMetadata.getUserId();
+        var traceId = headMetadata.getTraceId();
 
         var eventBusMessage = new EventBusMessage();
         eventBusMessage.setEventSource(eventSource);
@@ -1423,7 +1433,7 @@ interface SimpleExecutor extends SimpleCommon {
      */
     default Executor getVirtualExecutor() {
         // 得到用户对应的虚拟线程执行器
-        final HeadMetadata headMetadata = this.getHeadMetadata();
+        var headMetadata = this.getHeadMetadata();
         var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
 
         ThreadExecutor threadExecutor = ExecutorRegionKit.getUserVirtualThreadExecutor(executorIndex);
@@ -1440,7 +1450,7 @@ interface SimpleExecutor extends SimpleCommon {
      */
     default Executor getExecutor() {
         // 得到用户对应的用户线程执行器
-        final HeadMetadata headMetadata = this.getHeadMetadata();
+        var headMetadata = this.getHeadMetadata();
         var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
 
         ThreadExecutor threadExecutor = ExecutorRegionKit.getUserThreadExecutor(executorIndex);
@@ -1456,15 +1466,15 @@ interface SimpleExecutor extends SimpleCommon {
      * @param command 任务
      */
     default void execute(Runnable command) {
-        HeadMetadata headMetadata = this.getHeadMetadata();
-        String traceId = headMetadata.getTraceId();
+        var headMetadata = this.getHeadMetadata();
+        var traceId = headMetadata.getTraceId();
 
         if (Objects.isNull(traceId)) {
             this.getExecutor().execute(command);
             return;
         }
 
-        this.getExecutor().execute(decorator(traceId, command));
+        this.getExecutor().execute(InternalFlowContextKit.decorator(traceId, command));
     }
 
     /**
@@ -1476,28 +1486,18 @@ interface SimpleExecutor extends SimpleCommon {
      * @param command 任务
      */
     default void executeVirtual(Runnable command) {
-        HeadMetadata headMetadata = this.getHeadMetadata();
-        String traceId = headMetadata.getTraceId();
+        var headMetadata = this.getHeadMetadata();
+        var traceId = headMetadata.getTraceId();
 
         if (Objects.isNull(traceId)) {
             this.getVirtualExecutor().execute(command);
             return;
         }
 
-        this.getVirtualExecutor().execute(decorator(traceId, command));
+        this.getVirtualExecutor().execute(InternalFlowContextKit.decorator(traceId, command));
     }
 
-    private Runnable decorator(String traceId, Runnable command) {
-        // 装饰者
-        return () -> {
-            try {
-                MDC.put(TraceKit.traceName, traceId);
-                command.run();
-            } finally {
-                MDC.clear();
-            }
-        };
-    }
+
 }
 
 /**
@@ -1523,11 +1523,12 @@ interface SimpleBarMessageCreator extends SimpleCommon {
      * @return request
      */
     default RequestMessage createRequestMessage(final CmdInfo cmdInfo, final Object data) {
-        HeadMetadata headMetadata = this.getHeadMetadata()
+
+        var headMetadata = this.getHeadMetadata()
                 .cloneHeadMetadata()
                 .setCmdInfo(cmdInfo);
 
-        RequestMessage requestMessage = new RequestMessage();
+        var requestMessage = new RequestMessage();
         requestMessage.setHeadMetadata(headMetadata);
 
         if (Objects.nonNull(data)) {
@@ -1554,16 +1555,16 @@ interface SimpleBarMessageCreator extends SimpleCommon {
          * 创建一个 HeadMetadata，并使用原有的一些信息；
          * 在广播时，只会给 HeadMetadata 中指定的游戏对外服广播。
          */
-        HeadMetadata headMetadata = this.getHeadMetadata();
+        var headMetadata = this.getHeadMetadata();
 
-        HeadMetadata headMetadataClone = headMetadata
+        var headMetadataClone = headMetadata
                 .cloneHeadMetadata()
                 .setCmdInfo(cmdInfo)
                 .setEndPointClientId(headMetadata.getEndPointClientId())
                 .setSourceClientId(headMetadata.getSourceClientId());
 
         // 创建一个响应对象
-        ResponseMessage responseMessage = new ResponseMessage();
+        var responseMessage = new ResponseMessage();
         responseMessage.setHeadMetadata(headMetadataClone);
         responseMessage.setData(data);
 
@@ -1600,7 +1601,7 @@ interface SimpleCommon extends FlowOptionDynamic {
 }
 
 @UtilityClass
-class InternalKit {
+class InternalFlowContextKit {
     <T> void decorate(String traceId, Consumer<T> callback, T response) {
         try {
             MDC.put(TraceKit.traceName, traceId);
@@ -1608,5 +1609,17 @@ class InternalKit {
         } finally {
             MDC.clear();
         }
+    }
+
+    Runnable decorator(String traceId, Runnable command) {
+        // 装饰者
+        return () -> {
+            try {
+                MDC.put(TraceKit.traceName, traceId);
+                command.run();
+            } finally {
+                MDC.clear();
+            }
+        };
     }
 }

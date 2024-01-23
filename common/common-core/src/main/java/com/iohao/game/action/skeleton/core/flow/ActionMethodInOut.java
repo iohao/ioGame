@@ -20,6 +20,7 @@ package com.iohao.game.action.skeleton.core.flow;
 
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
+import com.iohao.game.action.skeleton.core.flow.internal.DebugInOut;
 
 /**
  * inout 接口
@@ -33,7 +34,7 @@ import com.iohao.game.action.skeleton.core.ActionCommand;
  *     通过这个接口,你可以做很多事情，当然这要看你的想象力有多丰富了
  *
  *     例如: 日志记录，执行时间打印。 等等 (可参考框架内置的实现类)
- *     see {@link com.iohao.game.action.skeleton.core.flow.interal.DebugInOut}
+ *     see {@link DebugInOut}
  * </pre>
  *
  * @author 渔民小镇

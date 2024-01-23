@@ -23,7 +23,7 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.action.BeeAction;
-import com.iohao.game.action.skeleton.core.flow.interal.DebugInOut;
+import com.iohao.game.action.skeleton.core.flow.internal.DebugInOut;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.common.kit.ClassScanner;

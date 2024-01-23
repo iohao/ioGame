@@ -16,31 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.flow.interal;
+package com.iohao.game.action.skeleton.core.flow.internal;
 
-import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
-import com.iohao.game.action.skeleton.core.exception.MsgException;
-import com.iohao.game.action.skeleton.core.flow.ActionMethodExceptionProcess;
-import lombok.extern.slf4j.Slf4j;
+import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.common.kit.trace.TraceKit;
+import org.slf4j.MDC;
+
+import java.util.Objects;
 
 /**
- * default 异常处理
+ * MDC traceId 日志插件
  *
  * @author 渔民小镇
- * @date 2021-12-20
+ * @date 2023-12-20
  */
-@Slf4j
-public final class DefaultActionMethodExceptionProcess implements ActionMethodExceptionProcess {
+public final class TraceIdInOut implements ActionMethodInOut {
     @Override
-    public MsgException processException(final Throwable e) {
+    public void fuckIn(FlowContext flowContext) {
 
-        if (e instanceof MsgException msgException) {
-            return msgException;
+        HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
+        String traceId = headMetadata.getTraceId();
+
+        if (Objects.nonNull(traceId)) {
+            MDC.put(TraceKit.traceName, traceId);
         }
+    }
 
-        // 到这里，一般不是用户自定义的错误，很可能是开发者引入的第三方包或自身未捕获的错误等情况
-        log.error(e.getMessage(), e);
-
-        return new MsgException(ActionErrorEnum.systemOtherErrCode);
+    @Override
+    public void fuckOut(FlowContext flowContext) {
+        MDC.clear();
     }
 }

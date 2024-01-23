@@ -1,21 +1,23 @@
 package com.iohao.game.common.kit.trace;
 
-import org.junit.AfterClass;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
+import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.MDC;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 /**
  * @author 渔民小镇
  * @date 2024-01-21
  */
+@Slf4j
 public class TraceKitTest {
     static final ExecutorService executorService = Executors.newCachedThreadPool();
     final int internalLoop = 10000;
@@ -23,9 +25,11 @@ public class TraceKitTest {
     final CountDownLatch countDownLatch = new CountDownLatch(mainLoop);
     final Map<String, String> map = new ConcurrentHashMap<>();
 
-    @AfterClass
-    public static void afterClass() {
+    @After
+    public void tearDown() {
         executorService.shutdown();
+
+        sleep(22);
     }
 
     @Test
@@ -106,4 +110,84 @@ public class TraceKitTest {
         });
     }
 
+    @Test
+    public void name() {
+        String traceIdName = "uuid";
+
+        String id1 = TraceKit.newTraceId(traceIdName);
+        Assert.assertNotNull(id1);
+        log.info("traceId : {}", id1);
+
+        TraceKit.putTraceIdSupplier(traceIdName, () -> UUID.randomUUID().toString());
+        String id2 = TraceKit.newTraceId(traceIdName);
+        Assert.assertNotNull(id2);
+        log.info("traceId : {}", id2);
+    }
+
+    @Test
+    public void testMDC() {
+
+        long userId = 1;
+
+        ExecutorRegionKit.getUserThreadExecutor(userId).execute(() -> {
+            MDC.put(TraceKit.traceName, "user thread");
+            extractedVirtual(userId);
+            MDC.clear();
+        });
+
+        sleep(55);
+    }
+
+    private void extractedVirtual(long userId) {
+        ThreadExecutor userVirtualThreadExecutor = ExecutorRegionKit.getUserVirtualThreadExecutor(userId);
+
+        log.info("0-1 : {}", MDC.get(TraceKit.traceName));
+        Assert.assertEquals("user thread", MDC.get(TraceKit.traceName));
+
+        extracted(userVirtualThreadExecutor, "3-1", () -> {
+            log.info("3-1 : {}", MDC.get(TraceKit.traceName));
+
+            Assert.assertEquals("3-1", MDC.get(TraceKit.traceName));
+        });
+
+        extracted(userVirtualThreadExecutor, "4-1", () -> {
+            log.info("4-1 : {}", MDC.get(TraceKit.traceName));
+
+            Assert.assertEquals("4-1", MDC.get(TraceKit.traceName));
+        });
+
+        sleep(50);
+
+        log.info("0-2 : {}", MDC.get(TraceKit.traceName));
+        Assert.assertEquals("user thread", MDC.get(TraceKit.traceName));
+
+        sleep(10);
+
+    }
+
+    private void extracted(ThreadExecutor userVirtualThreadExecutor, String traceId, Runnable command) {
+        userVirtualThreadExecutor.execute(() -> {
+            try {
+                log.info("1-1 : {} - {}", MDC.get(TraceKit.traceName), traceId);
+                Assert.assertNull(MDC.get(TraceKit.traceName));
+
+                MDC.put(TraceKit.traceName, traceId);
+
+                command.run();
+
+                log.info("1-2 : {} - {}", MDC.get(TraceKit.traceName), traceId);
+                Assert.assertEquals(MDC.get(TraceKit.traceName), traceId);
+            } finally {
+                MDC.clear();
+            }
+        });
+    }
+
+    void sleep(int milliseconds) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

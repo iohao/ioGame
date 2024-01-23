@@ -21,7 +21,7 @@ package com.iohao.game.action.skeleton.kit;
 import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
 import com.iohao.game.action.skeleton.core.BarSkeletonBuilderParamConfig;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
-import com.iohao.game.action.skeleton.core.flow.interal.DebugInOut;
+import com.iohao.game.action.skeleton.core.flow.internal.DebugInOut;
 import lombok.experimental.UtilityClass;
 
 import java.util.LinkedList;

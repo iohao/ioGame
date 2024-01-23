@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.protocol;
 import com.baidu.bjf.remoting.protobuf.annotation.Ignore;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdInfoFlyweightFactory;
+import com.iohao.game.action.skeleton.core.flow.internal.DefaultActionAfter;
 import com.iohao.game.action.skeleton.kit.ExecutorSelectEnum;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -102,7 +103,7 @@ public final class HeadMetadata implements Serializable {
      *     业务框架保持与 bolt 的风格一至，使用 RpcCommandType。不同的是，业务框架会用 RpcCommandType 区别使用什么方式来发送响应。
      *
      *     如果 rpcCommandType != RpcCommandType.REQUEST_ONEWAY，就使用 com.alipay.remoting.AsyncContext#sendResponse 来发送响应。
-     *     具体发送逻辑可读 {@link com.iohao.game.action.skeleton.core.flow.interal.DefaultActionAfter} 源码
+     *     具体发送逻辑可读 {@link DefaultActionAfter} 源码
      * </pre>
      */
     byte rpcCommandType;

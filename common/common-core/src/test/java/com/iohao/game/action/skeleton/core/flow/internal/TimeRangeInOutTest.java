@@ -1,4 +1,4 @@
-package com.iohao.game.action.skeleton.core.flow.interal;
+package com.iohao.game.action.skeleton.core.flow.internal;
 
 import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.CmdInfo;

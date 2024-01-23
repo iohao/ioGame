@@ -56,7 +56,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.104.Final</netty.version>
+        <netty.version>4.1.106.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.6</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
@@ -107,7 +107,7 @@
         <junit.version>4.13.2</junit.version>
 
         <!-- slf4j https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-        <slf4j-api.version>2.0.10</slf4j-api.version>
+        <slf4j-api.version>2.0.11</slf4j-api.version>
         <!-- slf4j https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <logback.version>1.4.14</logback.version>
 

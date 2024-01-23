@@ -211,7 +211,7 @@ public class TaskKit {
      *
      * @param taskListener taskListener
      */
-    public void runOnceSeconds(OnceTaskListener taskListener) {
+    public void runOnceSecond(OnceTaskListener taskListener) {
         runOnce(taskListener, 1, TimeUnit.SECONDS);
     }
 
