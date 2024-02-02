@@ -54,6 +54,6 @@ final class SimpleThreadExecutorRegion extends AbstractThreadExecutorRegion {
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final SimpleThreadExecutorRegion ME = new SimpleThreadExecutorRegion("SimpleExecutor");
+        static final SimpleThreadExecutorRegion ME = new SimpleThreadExecutorRegion("Simple");
     }
 }

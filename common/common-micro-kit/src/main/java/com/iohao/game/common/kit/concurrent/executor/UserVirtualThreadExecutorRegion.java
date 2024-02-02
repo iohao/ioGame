@@ -60,6 +60,6 @@ final class UserVirtualThreadExecutorRegion extends AbstractThreadExecutorRegion
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final UserVirtualThreadExecutorRegion ME = new UserVirtualThreadExecutorRegion("UserVirtualExecutor");
+        static final UserVirtualThreadExecutorRegion ME = new UserVirtualThreadExecutorRegion("UserVirtual");
     }
 }

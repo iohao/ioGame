@@ -94,7 +94,6 @@ public class WebSocketVerifyHandler extends ChannelInboundHandlerAdapter
                 .parameters()
                 .entrySet()
                 .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().get(0)));
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getFirst()));
     }
-
 }

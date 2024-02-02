@@ -48,6 +48,16 @@ public interface IdleHook<IdleEvent> {
      * <pre>
      *     开发者可以给心跳消息添加一些额外信息，比如当前时间之类的。
      * </pre>
+     * example
+     * <pre>{@code
+     *     @Override
+     *     public void pongBefore(BarMessage idleMessage) {
+     *         // 把当前时间戳给到心跳接收端
+     *         LongValue data = LongValue.of(TimeKit.currentTimeMillis());
+     *         idleMessage.setData(data);
+     *     }
+     * }
+     * </pre>
      *
      * @param idleMessage 心跳消息
      */

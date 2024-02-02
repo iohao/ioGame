@@ -94,7 +94,7 @@ public class RandomKit {
         int size = list.size();
 
         return size == 1
-                ? list.get(0)
+                ? list.getFirst()
                 : list.get(randomInt(size));
     }
 

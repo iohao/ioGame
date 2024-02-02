@@ -80,7 +80,7 @@ public class Validation {
                 throw new Exception("缺少类: " + className);
             }
 
-            Class<?> clazz = classList.get(0);
+            Class<?> clazz = classList.getFirst();
             validator = (Validator) clazz.getConstructor().newInstance();
 
         } finally {

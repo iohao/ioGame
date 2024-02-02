@@ -50,13 +50,13 @@ public final class RandomElementSelector<T> implements ElementSelector<T> {
             T element = elements.get(random.nextInt(size));
 
             if (Objects.isNull(element)) {
-                element = elements.get(0);
+                element = elements.getFirst();
             }
 
             return element;
 
         } else if (size == 1) {
-            return elements.get(0);
+            return elements.getFirst();
         }
 
         return null;

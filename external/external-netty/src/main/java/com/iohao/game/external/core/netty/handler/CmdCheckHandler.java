@@ -63,7 +63,6 @@ public final class CmdCheckHandler extends SimpleChannelInboundHandler<BarMessag
         this.cmdRegions = cmdRegions;
     }
 
-
     public CmdCheckHandler() {
     }
 
