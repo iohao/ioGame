@@ -23,7 +23,6 @@ import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
-import com.iohao.game.external.core.kit.ExternalKit;
 
 /**
  * 默认的游戏对外服协议编解码
@@ -86,11 +85,6 @@ public final class DefaultExternalCodec implements ExternalCodec {
                 .setCustomData(externalMessage.getCustomData());
 
         byte[] data = externalMessage.getData();
-
-        if (externalMessage.getCmdCode() == ExternalMessageCmdCode.bizCache) {
-            int cacheCondition = ExternalKit.getCacheCondition(data);
-            headMetadata.setCacheCondition(cacheCondition);
-        }
 
         // 请求
         RequestMessage requestMessage = new RequestMessage();

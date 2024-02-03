@@ -76,11 +76,10 @@ public final class CmdCacheOption {
          *     默认是每 5 分钟做一次缓存数据的检测
          *
          *     注意事项：
-         *     检测时间是为了避免频繁的对缓存做检测。
-         *     所以缓存的过期时间会有一些误差，
-         *     误差范围值 = expireTime 正负 expireCheckTime
+         *         设置缓存过期检测时间，是为了避免频繁的对缓存做检测，所以缓存的过期时间会有一些误差。
+         *         误差范围值 = expireTime (+-) expireCheckTime
          *
-         *     如果你想很精准的控制缓存时间，可以设置为每秒做一次检测。
+         *         如果你想很精准的控制缓存时间，可以设置为每秒做一次检测。
          * </pre>
          */
         Duration expireCheckTime = Duration.ofMinutes(5);

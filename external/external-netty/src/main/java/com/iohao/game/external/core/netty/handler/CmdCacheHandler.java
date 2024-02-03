@@ -34,7 +34,7 @@ import java.util.Objects;
  * @date 2023-07-02
  */
 @ChannelHandler.Sharable
-public class CmdCacheHandler extends SimpleChannelInboundHandler<BarMessage> {
+public final class CmdCacheHandler extends SimpleChannelInboundHandler<BarMessage> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

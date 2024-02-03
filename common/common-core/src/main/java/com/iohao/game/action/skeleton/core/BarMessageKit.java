@@ -46,7 +46,12 @@ public class BarMessageKit {
 
     public void employ(RequestMessage requestMessage, CmdInfo cmdInfo, Object data) {
 
-        requestMessage.setHeadMetadata(new HeadMetadata().setCmdInfo(cmdInfo));
+        var headMetadata = new HeadMetadata()
+                .setCmdInfo(cmdInfo)
+                // 请求命令类型: 0 心跳，1 业务; see ExternalMessageCmdCode
+                .setCmdCode(1);
+
+        requestMessage.setHeadMetadata(headMetadata);
 
         if (Objects.nonNull(data)) {
             requestMessage.setData(data);

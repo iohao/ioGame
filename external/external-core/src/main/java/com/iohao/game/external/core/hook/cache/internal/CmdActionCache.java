@@ -24,7 +24,6 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.external.core.hook.cache.CmdCacheOption;
 import com.iohao.game.external.core.kit.ExternalKit;
-import com.iohao.game.external.core.message.ExternalMessageCmdCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -67,10 +66,11 @@ final class CmdActionCache {
         byte[] data = message.getData();
         int cacheCondition = ExternalKit.getCacheCondition(data);
         CacheNode cacheNode = cacheDataMap.get(cacheCondition);
+
         if (Objects.isNull(cacheNode)) {
+            // 当没有找到缓存时，将请求的具体业务参数作为缓存条件，用于后续处理。see ResponseMessageExternalProcessor
             HeadMetadata headMetadata = message.getHeadMetadata();
-            // 当缓存中找不到缓存数据时，将 CmdCode 变更为 bizCache，方便后续的业务扩展
-            headMetadata.setCmdCode(ExternalMessageCmdCode.bizCache);
+            headMetadata.setCacheCondition(cacheCondition);
             return null;
         }
 

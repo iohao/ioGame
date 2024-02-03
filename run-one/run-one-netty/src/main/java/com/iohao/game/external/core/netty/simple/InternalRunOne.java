@@ -86,9 +86,13 @@ class InternalRunOne {
      * 添加游戏对外服
      *
      * @param externalServer 游戏对外服
-     * @return this
      */
     void setExternalServer(ExternalServer externalServer) {
+
+        if (Objects.isNull(externalServer)) {
+            return;
+        }
+
         if (Objects.isNull(this.externalServerList)) {
             this.externalServerList = new ArrayList<>();
         }

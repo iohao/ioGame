@@ -33,6 +33,8 @@
   <strong>无 spring 强依赖</strong>
   <br>
   <strong>零学习成本</strong>
+  <br>
+  <strong>javaSE</strong>
 </p>
 <p align="center">
 	<a href="http://game.iohao.com">http://game.iohao.com</a>
@@ -541,7 +543,7 @@ ioGame 具备[全链路调用日志跟踪](https://www.yuque.com/iohao/game/zuru
 
 
 
-在开发体验方面，ioGame 非常注重开发者的开发体验；框架提供了 [JSR380 验证](https://www.yuque.com/iohao/game/ghng6g)、[断言 + 异常机制](https://www.yuque.com/iohao/game/avlo99)、[业务代码定位](https://www.yuque.com/iohao/game/pf3sx0)... ...等诸多丰富的功能，使得开发者的业务代码更加的清晰、简洁；
+在开发体验方面，ioGame 非常注重开发者的开发体验；框架提供了 [JSR380 验证](https://www.yuque.com/iohao/game/ghng6g)、[断言 + 异常机制](https://www.yuque.com/iohao/game/avlo99)、[业务代码定位](https://www.yuque.com/iohao/game/pf3sx0)，action 支持自动装箱、拆箱基础类型，用于解决[协议碎片](https://www.yuque.com/iohao/game/ieimzn)的问题 ...等。诸多丰富的功能，使得开发者的业务代码更加的清晰、简洁；
 
 
 
