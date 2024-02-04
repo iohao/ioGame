@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class IoGameBanner {
     /** 特殊字段，开发者不要使用 */
-    public static String flag57;
+    public static String flag21;
     final AtomicBoolean trigger = new AtomicBoolean(false);
     Date startTime = new Date();
 
@@ -186,7 +186,7 @@ public final class IoGameBanner {
     }
 
     public static IoGameBanner me() {
-        flag57 = "1";
+        flag21 = "ioGame21";
         return Holder.ME;
     }
 

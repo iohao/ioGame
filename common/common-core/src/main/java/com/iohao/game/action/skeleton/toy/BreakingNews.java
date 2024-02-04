@@ -83,30 +83,31 @@ class BreakingNews {
         list.add(new News("同进程亲和性", "https://www.yuque.com/iohao/game/unp26u"));
 
         // 游戏逻辑服
-        list.add(new News("动态绑定游戏逻辑服", "https://www.yuque.com/iohao/game/idl1wm"));
-        list.add(new News("解决协议碎片", "https://www.yuque.com/iohao/game/ieimzn"));
-        list.add(new News("元信息-附加信息", "https://www.yuque.com/iohao/game/sw1y8u"));
+        list.add(new News("游戏逻辑服 - 动态绑定游戏逻辑服", "https://www.yuque.com/iohao/game/idl1wm"));
+        list.add(new News("游戏逻辑服 - 解决协议碎片", "https://www.yuque.com/iohao/game/ieimzn"));
+        list.add(new News("游戏逻辑服 - 元信息、附加信息", "https://www.yuque.com/iohao/game/sw1y8u"));
 
         // 游戏对外服
-        list.add(new News("对外服协议说明", "https://www.yuque.com/iohao/game/xeokui"));
-        list.add(new News("新游戏对外服设计", "https://www.yuque.com/iohao/game/wotnhl"));
-        list.add(new News("新游戏对外服使用", "https://www.yuque.com/iohao/game/ea6geg"));
-        list.add(new News("心跳设置与心跳钩子", "https://www.yuque.com/iohao/game/uueq3i"));
-        list.add(new News("用户上线、下线钩子", "https://www.yuque.com/iohao/game/hv5qqh"));
-        list.add(new News("路由访问权限控制", "https://www.yuque.com/iohao/game/nap5y8p5fevhv99y"));
-        list.add(new News("游戏对外服缓存", "https://www.yuque.com/iohao/game/khg23pvbh59a7spm"));
-        list.add(new News("ws token 鉴权、校验", "https://www.yuque.com/iohao/game/tb1126szmgfu6u55"));
+        list.add(new News("游戏对外服 - 统一协议说明", "https://www.yuque.com/iohao/game/xeokui"));
+        list.add(new News("游戏对外服 - 设计", "https://www.yuque.com/iohao/game/wotnhl"));
+        list.add(new News("游戏对外服 - 使用", "https://www.yuque.com/iohao/game/ea6geg"));
+        list.add(new News("游戏对外服 - 心跳设置与心跳钩子", "https://www.yuque.com/iohao/game/uueq3i"));
+        list.add(new News("游戏对外服 - 用户上线、下线钩子", "https://www.yuque.com/iohao/game/hv5qqh"));
+        list.add(new News("游戏对外服 - 路由访问权限控制", "https://www.yuque.com/iohao/game/nap5y8p5fevhv99y"));
+        list.add(new News("游戏对外服 - 游戏对外服缓存", "https://www.yuque.com/iohao/game/khg23pvbh59a7spm"));
+        list.add(new News("游戏对外服 - ws token 鉴权、校验", "https://www.yuque.com/iohao/game/tb1126szmgfu6u55"));
 
         // 通讯方式
-        list.add(new News("脉冲通讯方式", "https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn"));
-        list.add(new News("游戏逻辑服之间的交互", "https://www.yuque.com/iohao/game/anguu6"));
-        list.add(new News("请求同类型多个逻辑服通信结果", "https://www.yuque.com/iohao/game/rf9rb9"));
-        list.add(new News("获取游戏对外服的数据与扩展", "https://www.yuque.com/iohao/game/ivxsw5"));
+        list.add(new News("通讯方式 - 脉冲通讯方式", "https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn"));
+        list.add(new News("通讯方式 - 游戏逻辑服之间的交互", "https://www.yuque.com/iohao/game/anguu6"));
+        list.add(new News("通讯方式 - 请求同类型多个逻辑服通信结果", "https://www.yuque.com/iohao/game/rf9rb9"));
+        list.add(new News("通讯方式 - 获取游戏对外服的数据与扩展", "https://www.yuque.com/iohao/game/ivxsw5"));
+        list.add(new News("通讯方式 - 分布式事件总线", "https://www.yuque.com/iohao/game/gmxz33"));
 
         // 小部件
-        list.add(new News("领域事件可解决多人同一业务的并发问题", "https://www.yuque.com/iohao/game/gmfy1k"));
-        list.add(new News("任务延时器", "https://www.yuque.com/iohao/game/niflk0"));
-        list.add(new News("压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
+        list.add(new News("小部件 - 领域事件可解决多人同一业务的并发问题", "https://www.yuque.com/iohao/game/gmfy1k"));
+        list.add(new News("小部件 - 任务延时器", "https://www.yuque.com/iohao/game/niflk0"));
+        list.add(new News("小部件 - 压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
 
         // 插件相关
         list.add(new News("业务框架 - 插件介绍", "https://www.yuque.com/iohao/game/bsgvzglvlr5tenao"));
@@ -114,6 +115,13 @@ class BreakingNews {
         list.add(new News("插件 - action 调用统计插件", "https://www.yuque.com/iohao/game/znapzm1dqgehdyw8"));
         list.add(new News("插件 - 业务线程监控插件", "https://www.yuque.com/iohao/game/zoqabk4gez3bckis"));
         list.add(new News("插件 - 各时间段调用统计插件", "https://www.yuque.com/iohao/game/umzk2d6lovo4n9gz"));
+        list.add(new News("插件 - 全链路调用日志跟踪", "https://www.yuque.com/iohao/game/xhvpqy"));
+
+        // 业务框架
+        list.add(new News("业务框架简介", "https://www.yuque.com/iohao/game/wiwpwusmktrv35i4"));
+        list.add(new News("业务框架 - FlowContext", "https://www.yuque.com/iohao/game/zz8xiz"));
+        list.add(new News("业务框架 - 断言 + 异常机制 = 清晰简洁的代码", "https://www.yuque.com/iohao/game/avlo99"));
+        list.add(new News("业务框架 - 开启 JSR380 验证规范", "https://www.yuque.com/iohao/game/ghng6g"));
 
         return RandomKit.randomEle(list);
     }

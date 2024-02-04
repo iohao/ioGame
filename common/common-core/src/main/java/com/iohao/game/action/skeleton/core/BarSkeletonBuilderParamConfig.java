@@ -182,8 +182,8 @@ public final class BarSkeletonBuilderParamConfig {
     }
 
     private static void extracted() {
-        if (IoGameBanner.flag57 != "1") {
-            System.out.print("");
+        if (!Objects.equals(IoGameBanner.flag21, "ioGame21")) {
+            System.out.println("http://game.iohao.com");
         }
     }
 }

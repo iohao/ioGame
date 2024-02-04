@@ -8,7 +8,7 @@
     <artifactId>ioGame</artifactId>
     <version>21.0.snapshot</version>
     <name>ioGame</name>
-    <description>ioGame 网络游戏服务器框架；ioGame 适用于网络游戏服务器、物联网、内部系统及各种需要长连接的场景；</description>
+    <description>ioGame 网络游戏服务器框架；ioGame 适用于网络游戏服务器、物联网、内部系统及各种需要长连接的场景；生产资料公有制；</description>
     <url>http://game.iohao.com</url>
 
     <modules>
@@ -62,12 +62,13 @@
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
         <hessian.version>4.0.66</hessian.version>
         <!--  Jansi 控制台输出彩色文字 https://mvnrepository.com/artifact/org.fusesource.jansi/jansi  -->
-        <jansi.version>2.4.0</jansi.version>
+        <jansi.version>2.4.1</jansi.version>
         <!-- Java文档解析器 https://mvnrepository.com/artifact/com.thoughtworks.qdox/qdox -->
-        <qdox.version>2.0.3</qdox.version>
+<!--        <qdox.version>2.0.3</qdox.version>-->
+        <qdox.version>2.1.0</qdox.version>
 
         <!-- JCTools 是一款对jdk并发数据结构进行增强的并发工具 see http://jctools.github.io/JCTools/ https://mvnrepository.com/artifact/org.jctools/jctools-core -->
-        <jctools-core.version>4.0.1</jctools-core.version>
+        <jctools-core.version>4.0.2</jctools-core.version>
 
         <!-- lombok 消除冗长的 Java 代码 https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <lombok.version>1.18.30</lombok.version>
@@ -75,7 +76,7 @@
         <!-- redis internal : https://mvnrepository.com/artifact/org.redisson/redisson -->
         <redisson.version>3.17.7</redisson.version>
         <!-- json 解析器 : https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
-        <fastjson.version>2.0.23</fastjson.version>
+        <fastjson.version>2.0.46</fastjson.version>
 
         <!--  reflectasm 高性能的反射处理 https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm  -->
         <reflectasm.version>1.11.9</reflectasm.version>

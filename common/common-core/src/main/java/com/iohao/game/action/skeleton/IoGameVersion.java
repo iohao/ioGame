@@ -36,6 +36,6 @@ public final class IoGameVersion {
                 .replace("</version>", "")
         ;
 
-        a = IoGameBanner.flag57;
+        a = IoGameBanner.flag21;
     }
 }
