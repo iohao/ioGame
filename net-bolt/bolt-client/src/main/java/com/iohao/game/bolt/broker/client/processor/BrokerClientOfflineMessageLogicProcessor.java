@@ -23,7 +23,6 @@ import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListenerRegion;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClientOfflineMessage;
 import lombok.Setter;
@@ -40,15 +39,12 @@ public final class BrokerClientOfflineMessageLogicProcessor extends AsyncUserPro
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientOfflineMessage message) {
+        // BrokerClientOnlineMessage 是 Broker（游戏网关）发送过来的信息，表示有逻辑服下线
         BrokerClientModuleMessage moduleMessage = message.getModuleMessage();
 
-        // BrokerClientOnlineMessage 是 Broker（游戏网关）发送过来的信息，表示有逻辑服下线
-        BrokerClientListenerRegion listenerRegion = brokerClient.getBrokerClientListenerRegion();
-        listenerRegion.forEach(listener -> {
-            switch (moduleMessage.getBrokerClientType()) {
-                case EXTERNAL -> listener.offlineExternal(moduleMessage, brokerClient);
-                case LOGIC -> listener.offlineLogic(moduleMessage, brokerClient);
-            }
+        BrokerClientLineKit.executeSafe(moduleMessage, () -> {
+            // offline process
+            BrokerClientLineKit.offlineProcess(moduleMessage, brokerClient);
         });
     }
 

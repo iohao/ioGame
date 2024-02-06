@@ -86,24 +86,7 @@ public final class DefaultCmdRegions implements CmdRegions {
     }
 
     @Override
-    public int endPointLogicServerId(int cmdMerge, Set<Integer> bindingLogicServerIdSet) {
-
-        if (bindingLogicServerIdSet.isEmpty()) {
-            return 0;
-        }
-
-        CmdRegion cmdRegion = this.cmdRegionMap.get(cmdMerge);
-
-        if (Objects.isNull(cmdRegion)) {
-            return 0;
-        }
-
-        return cmdRegion.endPointLogicServerId(bindingLogicServerIdSet);
-    }
-
-    @Override
     public int endPointLogicServerId(int cmdMerge, int[] idHashArray) {
-        // 这里暂时不做 idHashArray 空数组的判断了
 
         CmdRegion cmdRegion = this.cmdRegionMap.get(cmdMerge);
         if (Objects.isNull(cmdRegion)) {

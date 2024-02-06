@@ -55,11 +55,12 @@ import java.util.function.Supplier;
  * 对外服、逻辑服都是 broker 的 client
  * <pre>
  *     see {@link BrokerClientBuilder#build()}
- *     see {@link BrokerClientHelper}
  * </pre>
  *
  * @author 渔民小镇
  * @date 2022-05-14
+ * @see BrokerClientHelper
+ * @see BrokerClientAttr
  */
 @Slf4j
 @Getter

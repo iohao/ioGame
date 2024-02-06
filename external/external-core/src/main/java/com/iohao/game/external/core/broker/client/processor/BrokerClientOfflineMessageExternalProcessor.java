@@ -20,11 +20,11 @@ package com.iohao.game.external.core.broker.client.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
+import com.iohao.game.bolt.broker.client.processor.BrokerClientLineKit;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
-import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListenerRegion;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClientOfflineMessage;
 import com.iohao.game.core.common.cmd.CmdRegions;
@@ -46,18 +46,14 @@ public final class BrokerClientOfflineMessageExternalProcessor extends AbstractA
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientOfflineMessage message) {
-        BrokerClientModuleMessage moduleMessage = message.getModuleMessage();
 
         // BrokerClientOfflineMessage 是 Broker（游戏网关）发送过来的信息，表示有逻辑服下线
+        BrokerClientModuleMessage moduleMessage = message.getModuleMessage();
 
-        brokerClient.option(BrokerClientExternalAttr.cmdRegions, cmdRegions);
-
-        BrokerClientListenerRegion listenerRegion = brokerClient.getBrokerClientListenerRegion();
-        listenerRegion.forEach(listener -> {
-            switch (moduleMessage.getBrokerClientType()) {
-                case EXTERNAL -> listener.offlineExternal(moduleMessage, brokerClient);
-                case LOGIC -> listener.offlineLogic(moduleMessage, brokerClient);
-            }
+        BrokerClientLineKit.executeSafe(moduleMessage, () -> {
+            // offline process
+            brokerClient.option(BrokerClientExternalAttr.cmdRegions, cmdRegions);
+            BrokerClientLineKit.offlineProcess(moduleMessage, brokerClient);
         });
     }
 

@@ -82,6 +82,7 @@ public final class RequestMessageBrokerProcessor extends AbstractAsyncUserProces
         }
 
         EndPointClientIdKit.endPointClientId(headMetadata, this.cmdRegions);
+
         headMetadata.setWithNo(this.brokerServer.getWithNo());
         // 从游戏逻辑服区域中查找一个游戏逻辑服，用于处理请求
         BrokerClientProxy brokerClientProxy = brokerClientRegion.getBrokerClientProxy(headMetadata);

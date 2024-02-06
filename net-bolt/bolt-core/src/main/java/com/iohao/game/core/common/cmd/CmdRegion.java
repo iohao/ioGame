@@ -18,8 +18,6 @@
  */
 package com.iohao.game.core.common.cmd;
 
-import java.util.Set;
-
 /**
  * @author 渔民小镇
  * @date 2023-05-01
@@ -29,7 +27,6 @@ public interface CmdRegion {
 
     void removeIdHash(BrokerClientId brokerClientId);
 
-    int endPointLogicServerId(Set<Integer> idHashSet);
     int endPointLogicServerId(int[] idHashArray);
 
     boolean hasIdHash();

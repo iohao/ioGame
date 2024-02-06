@@ -88,6 +88,8 @@ public final class DefaultExternalCodec implements ExternalCodec {
 
         // 请求
         RequestMessage requestMessage = new RequestMessage();
+        requestMessage.setResponseStatus(externalMessage.getResponseStatus());
+        requestMessage.setValidatorMsg(externalMessage.getValidMsg());
         requestMessage.setHeadMetadata(headMetadata);
         requestMessage.setData(data);
 

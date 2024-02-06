@@ -52,16 +52,6 @@ public final class DefaultCmdRegion implements CmdRegion {
         this.clientIdHashSet.remove(brokerClientId.idHash());
     }
 
-    public int endPointLogicServerId(Set<Integer> idHashSet) {
-        for (BrokerClientId brokerClientId : this.clientIdSet) {
-            if (idHashSet.contains(brokerClientId.idHash())) {
-                return brokerClientId.idHash();
-            }
-        }
-
-        return 0;
-    }
-
     @Override
     public int endPointLogicServerId(int[] idHashArray) {
         for (int idHash : idHashArray) {
@@ -75,7 +65,7 @@ public final class DefaultCmdRegion implements CmdRegion {
 
     @Override
     public boolean hasIdHash() {
-        return this.clientIdSet.size() > 0;
+        return !this.clientIdSet.isEmpty();
     }
 
     @Override

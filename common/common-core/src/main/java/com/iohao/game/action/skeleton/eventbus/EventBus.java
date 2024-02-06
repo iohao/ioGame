@@ -410,7 +410,11 @@ public final class EventBus {
                 ThreadExecutor threadExecutor = this.subscribeExecutorStrategy.select(subscriber, eventBusMessage);
 
                 SubscriberInvoke subscriberInvoke = subscriber.getSubscriberInvoke();
-                threadExecutor.execute(() -> this.invoke(subscriberInvoke, eventBusMessage));
+
+                threadExecutor.execute(() -> {
+                    // invoke subscriber
+                    this.invoke(subscriberInvoke, eventBusMessage);
+                });
             }
         } else {
             // 同步执行

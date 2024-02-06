@@ -23,7 +23,6 @@ import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListenerRegion;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClientOnlineMessage;
 import lombok.Setter;
@@ -44,16 +43,12 @@ public final class BrokerClientOnlineMessageLogicProcessor extends AsyncUserProc
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientOnlineMessage message) {
-
+        // 在线上的其他逻辑服（其他逻辑服指的是除自己外的其他游戏对外服、其他游戏逻辑服）
         BrokerClientModuleMessage moduleMessage = message.getModuleMessage();
 
-        // BrokerClientOnlineMessage 是 Broker（游戏网关）发送过来的信息，
-        BrokerClientListenerRegion listenerRegion = brokerClient.getBrokerClientListenerRegion();
-        listenerRegion.forEach(listener -> {
-            switch (moduleMessage.getBrokerClientType()) {
-                case EXTERNAL -> listener.onlineExternal(moduleMessage, brokerClient);
-                case LOGIC -> listener.onlineLogic(moduleMessage, brokerClient);
-            }
+        BrokerClientLineKit.executeSafe(moduleMessage, () -> {
+            // online process
+            BrokerClientLineKit.onlineProcess(moduleMessage, brokerClient);
         });
     }
 

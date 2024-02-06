@@ -140,7 +140,7 @@ public class BarSkeletonDoc {
         ErrorCodeDocsRegion errorCodeDocsRegion = this.createErrorCodeDocsRegion();
 
 
-        String separator = System.getProperty("line.separator");
+        String separator = System.lineSeparator();
 
         docContentList.add("==================== 错误码 ====================");
         docContentList.add(separator);
@@ -162,7 +162,7 @@ public class BarSkeletonDoc {
             return;
         }
 
-        String separator = System.getProperty("line.separator");
+        String separator = System.lineSeparator();
 
         docContentList.add("==================== 其它广播推送 ====================");
         docContentList.add(separator);

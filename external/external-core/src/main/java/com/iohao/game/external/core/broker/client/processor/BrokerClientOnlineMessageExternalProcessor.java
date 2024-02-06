@@ -20,11 +20,11 @@ package com.iohao.game.external.core.broker.client.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
+import com.iohao.game.bolt.broker.client.processor.BrokerClientLineKit;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
-import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListenerRegion;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClientOnlineMessage;
 import com.iohao.game.core.common.cmd.CmdRegions;
@@ -36,7 +36,7 @@ import lombok.Setter;
  * @date 2023-12-14
  */
 @Setter
-public class BrokerClientOnlineMessageExternalProcessor extends AbstractAsyncUserProcessor<BrokerClientOnlineMessage>
+public final class BrokerClientOnlineMessageExternalProcessor extends AbstractAsyncUserProcessor<BrokerClientOnlineMessage>
         implements CmdRegionsAware, BrokerClientAware {
 
     BrokerClient brokerClient;
@@ -44,16 +44,13 @@ public class BrokerClientOnlineMessageExternalProcessor extends AbstractAsyncUse
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClientOnlineMessage message) {
+        // 在线上的其他逻辑服（其他逻辑服指的是除自己外的其他游戏对外服、其他游戏逻辑服）
         BrokerClientModuleMessage moduleMessage = message.getModuleMessage();
-        brokerClient.option(BrokerClientExternalAttr.cmdRegions, cmdRegions);
 
-        // BrokerClientOnlineMessage 是 Broker（游戏网关）发送过来的信息，表示有新的逻辑服上线
-        BrokerClientListenerRegion listenerRegion = brokerClient.getBrokerClientListenerRegion();
-        listenerRegion.forEach(listener -> {
-            switch (moduleMessage.getBrokerClientType()) {
-                case EXTERNAL -> listener.onlineExternal(moduleMessage, brokerClient);
-                case LOGIC -> listener.onlineLogic(moduleMessage, brokerClient);
-            }
+        BrokerClientLineKit.executeSafe(moduleMessage, () -> {
+            // online process
+            brokerClient.option(BrokerClientExternalAttr.cmdRegions, cmdRegions);
+            BrokerClientLineKit.onlineProcess(moduleMessage, brokerClient);
         });
     }
 

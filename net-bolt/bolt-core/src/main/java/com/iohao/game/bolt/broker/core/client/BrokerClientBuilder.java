@@ -38,6 +38,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashMap;
+import org.jctools.maps.NonBlockingHashSet;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -200,6 +201,8 @@ public class BrokerClientBuilder {
                 .setAwareInject(this.awareInject)
                 .setStatus(this.status);
 
+        brokerClient.option(BrokerClientAttr.onlineListenerRecordSet, new NonBlockingHashSet<>());
+        brokerClient.option(BrokerClientAttr.offlineListenerRecordSet, new NonBlockingHashSet<>());
         brokerClient.setWithNo(this.withNo);
 
         // 保存一下 BrokerClient 的引用

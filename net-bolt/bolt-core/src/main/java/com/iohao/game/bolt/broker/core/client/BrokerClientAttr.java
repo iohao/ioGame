@@ -1,6 +1,6 @@
 /*
  * ioGame
- * Copyright (C) 2021 - 2023  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
+ * Copyright (C) 2021 - 2024  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.core.common.cmd;
+package com.iohao.game.bolt.broker.core.client;
 
-import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
+import com.iohao.game.common.kit.attr.AttrOption;
+
+import java.util.Set;
 
 /**
  * @author 渔民小镇
- * @date 2023-05-01
+ * @date 2024-02-06
  */
-public interface CmdRegions {
-    void loading(BrokerClientModuleMessage moduleMessage);
-
-    void unLoading(BrokerClientId brokerClientId);
-
-    boolean existCmdMerge(int cmdMerge);
-
-    int endPointLogicServerId(int cmdMerge, int[] idHashArray);
+public interface BrokerClientAttr {
+    AttrOption<Set<String>> onlineListenerRecordSet = AttrOption.valueOf("onlineListenerRecordSet");
+    AttrOption<Set<String>> offlineListenerRecordSet = AttrOption.valueOf("offlineListenerRecordSet");
 }

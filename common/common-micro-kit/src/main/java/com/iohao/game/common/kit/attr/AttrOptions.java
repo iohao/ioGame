@@ -46,7 +46,7 @@ public class AttrOptions implements Serializable {
      * 如果选项不存在，返回默认值。
      *
      * @param option 选项值
-     * @return 如果option不存在，则默认的option值。
+     * @return 如果 option 不存在，则使用默认的 option 值。
      */
     @SuppressWarnings("unchecked")
     public <T> T option(AttrOption<T> option) {
