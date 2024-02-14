@@ -20,9 +20,7 @@ package com.iohao.game.external.core.netty.hook;
 
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.BarMessage;
-import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import com.iohao.game.common.consts.IoGameLogName;
-import com.iohao.game.common.kit.TimeKit;
 import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.session.UserSession;
 import io.netty.handler.timeout.IdleState;
@@ -37,13 +35,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j(topic = IoGameLogName.CommonStdout)
 public final class DefaultSocketIdleHook implements SocketIdleHook {
-
-    @Override
-    public void pongBefore(BarMessage idleMessage) {
-        // 把当前时间戳给到心跳接收端
-        LongValue data = LongValue.of(TimeKit.currentTimeMillis());
-        idleMessage.setData(data);
-    }
 
     @Override
     public boolean callback(UserSession userSession, IdleStateEvent event) {
