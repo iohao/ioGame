@@ -234,7 +234,7 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 
 
-![](https://user-images.githubusercontent.com/26356013/288954555-67ec5f44-3d75-41f1-98aa-16a16035ca65.png)
+![](https://foruda.gitee.com/images/1707826063452005074/b4b96239_5475.png)
 
 
 
@@ -1114,14 +1114,52 @@ public class HelloReq {
 
 游戏服务器的编程，游戏服务器接收业务数据后，对业务数据进行处理；下面这段代码可以同时支持 TCP、WebSocket、UDP 通信方式。
 
+
+
+示例代码中展示了玩家的请求与响应处理，还展示了跨服（跨进程、跨机器）的请求处理的示例。
+
 ```java
 @ActionController(1)
 public class DemoAction {
     @ActionMethod(0)
     public HelloReq here(HelloReq helloReq) {
-        HelloReq newHelloReq = new HelloReq();
+        // 业务数据
+        var newHelloReq = new HelloReq();
         newHelloReq.name = helloReq.name + ", I'm here ";
         return newHelloReq;
+    }
+
+    // 注意，这个方法只是为了演示而写的；（ioGame21 开始支持）
+    // 效果与上面的方法一样，只不过是用广播（推送）的方式将数据返回给请求方
+	  @ActionMethod(0)
+    public void here(HelloReq helloReq, FlowContext flowContext) {
+        // 业务数据
+        var newHelloReq = new HelloReq();
+        newHelloReq.name = helloReq.name + ", I'm here ";
+
+        flowContext.broadcastMe(newHelloReq);
+    }
+
+    // 跨服调用示例，下面分别展示了同步与异步回调的写法
+    void testShowInvokeModule(FlowContext flowContext) {
+        /*
+         * 框架为跨服请求提供了同步、异步、异步回调的编码风格 api。（ioGame21 开始支持）
+         */
+        var cmdInfo = CmdInfo.of(1,0);
+        var yourData = ... 你的请求参数
+        
+        // 跨服请求（异步回调 - 无阻塞）-- 路由、请求参数、回调。
+        flowContext.invokeModuleMessageAsync(cmdInfo, yourData, responseMessage -> {
+            var helloReq = responseMessage.getData(HelloReq.class);
+             // --- 此异步回调，具备全链路调用日志跟踪 ---
+            log.info("异步回调 : {}", helloReq);
+        });
+
+
+        // 跨服请求（同步 - 阻塞）-- 路由、请求参数。
+        ResponseMessage responseMessage = flowContext.invokeModuleMessage(cmdInfo, yourData);
+        var helloReq = responseMessage.getData(HelloReq.class);
+        log.info("同步调用 : {}", helloReq);
     }
 }
 ```
