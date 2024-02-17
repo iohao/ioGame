@@ -27,6 +27,11 @@
             <version>${cache2k.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.iohao.game</groupId>
+            <artifactId>common-micro-kit</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

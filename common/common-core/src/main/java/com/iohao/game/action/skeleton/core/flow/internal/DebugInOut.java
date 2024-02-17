@@ -48,18 +48,23 @@ import java.util.function.BiConsumer;
  *
  * 日志输出预览
  *
- * ┏━━━━━ Debug [.(ActivityAction.java:1).hello] ━━━ [cmd:1 - subCmd:0 - cmdMerge:65536]
- * ┣ userId: 当前发起请求的 userId
+ * ┏━━━━━ Debug. [(ActivityAction.java:1).hello] ━━━━━ [cmd:1-0 65536] ━━━━━ [逻辑服 [xxx逻辑服] - id:[76526c134cc88232379167be83e4ddfc]]
+ * ┣ userId: 1
  * ┣ 参数: active : Active(id=101, name=塔姆)
  * ┣ 响应: 塔姆, I'm here
  * ┣ 时间: 1 ms (业务方法总耗时)
- * ┗━━━━━ Debug [ActivityAction.java] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * ┗━━━━━ [ioGameVersion] ━━━━━ [线程:User-8-2] ━━━━━━━━━━ [traceId:956230991452569600] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  *
  * 参数 :  通常是游戏前端传入的值
  * 响应：通常是业务方法返回的值 （游戏后端人员编写的业务）
  * 时间：执行业务方法总耗时
- * Debug [ActivityAction.java] ：表示业务方法是在这个类运行的
- * (ActivityAction.java:1).hello ：表示运行的业务方法名是 hello
+ *
+ * [(ActivityAction.java:1).hello] 表示业务方法是在这个类运行的，其运行的业务方法名是 hello
+ * cmd : 表示当前访问的路由
+ * 逻辑服 : 当前游戏逻辑服与其 id
+ *
+ * ioGameVersion : 表示当前使用的 ioGame 版本
+ * traceId : 全链路调用日志跟踪 id，每个请求唯一
  *
  * 有了以上信息，游戏开发者可以很快的定位问题。
  * 控制台会打印方法所在的类，包括方法所在的代码行数。

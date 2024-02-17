@@ -22,10 +22,7 @@ import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
@@ -40,6 +37,7 @@ public class TimeKit {
     public ZoneId defaultZoneId = ZoneId.systemDefault();
     public DateTimeFormatter defaultFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public final DateTimeFormatter dateFormatterYMD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    final DateTimeFormatter dateFormatterYMDShort = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     /** 时间更新策略 */
     @Setter
@@ -57,6 +55,11 @@ public class TimeKit {
     public long toMilli(LocalDateTime localDateTime) {
         // 获取毫秒数
         return toInstant(localDateTime).toEpochMilli();
+    }
+
+    public long toMilli(LocalDate localDate) {
+        // 转换为毫秒
+        return localDate.toEpochDay() * 24 * 60 * 60 * 1000;
     }
 
     public Instant toInstant(LocalDateTime localDateTime) {
@@ -82,6 +85,29 @@ public class TimeKit {
     public String formatter(long milliseconds) {
         LocalDateTime localDateTime = toLocalDateTime(milliseconds);
         return localDateTime.format(defaultFormatter);
+    }
+
+    /**
+     * 将 LocalDate 转为 number
+     *
+     * @param localDate localDate
+     * @return number，格式 yyyyMMdd
+     */
+    public long localDateToNumber(LocalDate localDate) {
+        String format = dateFormatterYMDShort.format(localDate);
+        return Long.parseLong(format);
+    }
+
+    /**
+     * 过期检测
+     *
+     * @param localDateNumber 格式 yyyyMMdd
+     * @return true 表示日期已经过期
+     * @see TimeKit#localDateToNumber(LocalDate)
+     */
+    public boolean expireLocalDate(long localDateNumber) {
+        long currentLocalDate = localDateToNumber(LocalDate.now());
+        return currentLocalDate > localDateNumber;
     }
 
     /**

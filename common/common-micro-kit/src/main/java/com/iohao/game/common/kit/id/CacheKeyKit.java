@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.timer.task;
+package com.iohao.game.common.kit.id;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -35,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author 渔民小镇
  * @date 2021-12-25
  */
+@Slf4j
 @UtilityClass
 class CacheKeyKit {
 
@@ -49,8 +51,6 @@ class CacheKeyKit {
     private final int SEQUENCE_MASK = 0x3FFF;
 
     private final long NUM_100NS_INTERVALS_SINCE_UUID_EPOCH = 0x01b21dd213814000L;
-
-    private final long uuidSequence = 0;
 
     private final long least;
 
@@ -85,20 +85,22 @@ class CacheKeyKit {
                     }
                 }
             } catch (final Exception ex) {
-                ex.printStackTrace();
-                // Ignore exception
+                log.error(ex.getMessage(), ex);
             }
+
             if (mac == null || mac.length == 0) {
                 mac = address.getAddress();
             }
         } catch (final UnknownHostException e) {
             // Ignore exception
         }
+
         final Random randomGenerator = new SecureRandom();
         if (mac == null || mac.length == 0) {
             mac = new byte[6];
             randomGenerator.nextBytes(mac);
         }
+
         final int length = Math.min(mac.length, 6);
         final int index = mac.length >= 6 ? mac.length - 6 : 0;
         final byte[] node = new byte[NODE_SIZE];
@@ -107,9 +109,9 @@ class CacheKeyKit {
         for (int i = 2; i < NODE_SIZE; ++i) {
             node[i] = 0;
         }
+
         System.arraycopy(mac, index, node, index + 2, length);
         final ByteBuffer buf = ByteBuffer.wrap(node);
-        long rand = uuidSequence;
         String assigned = ASSIGNED_SEQUENCES;
         long[] sequences;
 
@@ -121,9 +123,10 @@ class CacheKeyKit {
             ++i;
         }
 
-        rand = randomGenerator.nextLong();
+        long rand = randomGenerator.nextLong();
         rand &= SEQUENCE_MASK;
         boolean duplicate;
+
         do {
             duplicate = false;
             for (final long sequence : sequences) {
@@ -136,6 +139,7 @@ class CacheKeyKit {
                 rand = (rand + 1) & SEQUENCE_MASK;
             }
         } while (duplicate);
+
         assigned = assigned + ',' + rand;
         System.setProperty(ASSIGNED_SEQUENCES, assigned);
 
@@ -165,5 +169,9 @@ class CacheKeyKit {
      */
     public String uuid() {
         return getTimeBasedUuid().toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(uuid());
     }
 }

@@ -8,7 +8,8 @@
     <artifactId>ioGame</artifactId>
     <version>21.0.snapshot</version>
     <name>ioGame</name>
-    <description>ioGame 网络游戏服务器框架；ioGame 适用于网络游戏服务器、物联网、内部系统及各种需要长连接的场景；生产资料公有制；</description>
+    <description>ioGame 网络编程框架；ioGame 适用于网络游戏服务器、物联网、内部系统及各种需要长连接的场景；生产资料公有制；
+    </description>
     <url>http://game.iohao.com</url>
 
     <modules>
@@ -56,7 +57,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.106.Final</netty.version>
+        <netty.version>4.1.107.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.6</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
@@ -64,7 +65,6 @@
         <!--  Jansi 控制台输出彩色文字 https://mvnrepository.com/artifact/org.fusesource.jansi/jansi  -->
         <jansi.version>2.4.1</jansi.version>
         <!-- Java文档解析器 https://mvnrepository.com/artifact/com.thoughtworks.qdox/qdox -->
-<!--        <qdox.version>2.0.3</qdox.version>-->
         <qdox.version>2.1.0</qdox.version>
 
         <!-- JCTools 是一款对jdk并发数据结构进行增强的并发工具 see http://jctools.github.io/JCTools/ https://mvnrepository.com/artifact/org.jctools/jctools-core -->
@@ -233,7 +233,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-<!--                <version>3.11.0</version>-->
+                <!--                <version>3.11.0</version>-->
                 <version>3.8.1</version>
                 <configuration>
                     <compilerVersion>${java.version}</compilerVersion>

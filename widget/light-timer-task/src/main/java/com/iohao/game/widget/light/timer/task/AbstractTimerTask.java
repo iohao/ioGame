@@ -18,12 +18,14 @@
  */
 package com.iohao.game.widget.light.timer.task;
 
+import com.iohao.game.common.kit.id.IdKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serial;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -38,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @FieldDefaults(level = AccessLevel.PROTECTED)
 @SuppressWarnings("unchecked")
 public abstract class AbstractTimerTask implements TimerTask {
+    @Serial
     private static final long serialVersionUID = -8201895378376640589L;
 
     /**
@@ -90,7 +93,7 @@ public abstract class AbstractTimerTask implements TimerTask {
 
         if (Objects.isNull(this.cacheKey)) {
             // 随机分配一个 key
-            this.cacheKey = CacheKeyKit.uuid();
+            this.cacheKey = IdKit.sid();
         }
 
         if (this.delayExecutionTime <= 0) {

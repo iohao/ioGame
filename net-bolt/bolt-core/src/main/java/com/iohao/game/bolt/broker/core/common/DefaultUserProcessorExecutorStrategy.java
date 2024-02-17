@@ -73,6 +73,7 @@ final class DefaultUserProcessorExecutorStrategy implements UserProcessorExecuto
             int corePoolSize = Runtime.getRuntime().availableProcessors();
             var tempExecutor = createExecutor(name, corePoolSize, corePoolSize);
             executor = MoreKit.firstNonNull(this.executorMap.putIfAbsent(name, tempExecutor), tempExecutor);
+
             if (executor != tempExecutor) {
                 // 引用不相等就 shutdown
                 ((ThreadPoolExecutor) tempExecutor).shutdown();

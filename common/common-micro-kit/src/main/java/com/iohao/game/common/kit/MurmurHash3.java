@@ -30,13 +30,13 @@ import java.nio.charset.StandardCharsets;
 /**
  * copy from alibaba-broker
  * <pre>
- *     https://github.com/alibaba/alibaba-rsocket-broker
+ *     <a href="https://github.com/alibaba/alibaba-rsocket-broker">...</a>
  * </pre>
  *
  * @author 渔民小镇
  * @date 2022-05-28
  */
-public final class MurmurHash3 {
+final class MurmurHash3 {
 
     static final int LONG_BYTES = Long.SIZE / Byte.SIZE;
 
@@ -45,8 +45,6 @@ public final class MurmurHash3 {
 
 
     static final int SHORT_BYTES = Short.SIZE / Byte.SIZE;
-
-    public static final long NULL_HASHCODE = 2862933555777941757L;
 
     private static final int C1_32 = 0xcc9e2d51;
     private static final int C2_32 = 0x1b873593;
@@ -236,7 +234,6 @@ public final class MurmurHash3 {
     public static long hash64(final long data) {
         long hash = DEFAULT_SEED;
         long k = Long.reverseBytes(data);
-        final int length = LONG_BYTES;
         // mix functions
         k *= C1;
         k = Long.rotateLeft(k, R1);
@@ -244,7 +241,7 @@ public final class MurmurHash3 {
         hash ^= k;
         hash = Long.rotateLeft(hash, R2) * M + N1;
         // finalization
-        hash ^= length;
+        hash ^= LONG_BYTES;
         hash = fmix64(hash);
         return hash;
     }
@@ -258,14 +255,13 @@ public final class MurmurHash3 {
      */
     public static long hash64(final int data) {
         long k1 = Integer.reverseBytes(data) & (-1L >>> 32);
-        final int length = INTEGER_BYTES;
         long hash = DEFAULT_SEED;
         k1 *= C1;
         k1 = Long.rotateLeft(k1, R1);
         k1 *= C2;
         hash ^= k1;
         // finalization
-        hash ^= length;
+        hash ^= INTEGER_BYTES;
         hash = fmix64(hash);
         return hash;
     }

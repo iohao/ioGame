@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.protocol;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 
 import java.io.Serial;
+import java.util.Objects;
 
 /**
  * 请求参数
@@ -82,12 +83,16 @@ public final class RequestMessage extends BarMessage {
      * @return 新的 RequestMessage
      */
     public RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
-        HeadMetadata metadata = this.headMetadata.cloneHeadMetadata();
-        metadata.setCmdInfo(cmdInfo);
+        HeadMetadata metadata = this.headMetadata
+                .cloneHeadMetadata()
+                .setCmdInfo(cmdInfo);
 
-        RequestMessage requestMessage = new RequestMessage();
+        var requestMessage = new RequestMessage();
         requestMessage.setHeadMetadata(metadata);
-        requestMessage.setData(data);
+
+        if (Objects.nonNull(data)) {
+            requestMessage.setData(data);
+        }
 
         return requestMessage;
     }
