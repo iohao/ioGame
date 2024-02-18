@@ -190,14 +190,14 @@ ioGame 已经上传到中央仓库，如果无法下载最新的框架源码，�
 
 
 
-ioGame 是轻量级的网络游戏服务器框架，**不依赖任何第三方**中间件或数据库**就能支持集群、分布式**，只需要 java 环境就可以运行。此时，你只需一个依赖即可获得整个框架，并同时支持开头介绍的全部功能特性。
+ioGame 是轻量级的网络编程框架，**不依赖任何第三方**中间件或数据库**就能支持集群、分布式**，只需要 java 环境就可以运行。此时，你只需一个依赖即可获得整个框架，并同时支持开头介绍的全部功能特性。
 
 ```xml
 <!-- https://mvnrepository.com/artifact/com.iohao.game/run-one-netty -->
 <dependency>
     <groupId>com.iohao.game</groupId>
     <artifactId>run-one-netty</artifactId>
-    <version>21.0.snapshot</version>
+    <version>21.0</version>
 </dependency>
 ```
 
@@ -457,6 +457,7 @@ ioGame 有以下特点：
 - 集群无中心节点、集群自动化、分布式的设计
 - 真轻量级，不依赖任何第三方中间件或数据库就能支持集群、分布式
 - 提供多种通讯方式，且逻辑服之间可以相互跨机器通信
+- 分布式事件总线支持
 - 框架为开发者提供了同步、异步、异步回调的方法，用于逻辑服之间的相互访问
 - ioGame 是纯 javaSE 的，使得 ioGame 能与其他框架方便的进行集成、融合；如 spring ...等
 - 学习成本低，开发体验好
@@ -469,6 +470,7 @@ ioGame 有以下特点：
 - 具备全链路调用日志跟踪特性
 - 业务框架提供了插件机制，插件是可插拨、可扩展的
 - JSR380验证、断言 + 异常机制 = 更少的维护成本
+- action 支持自动装箱、拆箱基础类型，用于解决[协议碎片](https://www.yuque.com/iohao/game/ieimzn)的问题
 
 
 
@@ -524,6 +526,10 @@ ioGame 具备[全链路调用日志跟踪](https://www.yuque.com/iohao/game/zuru
 
 
 在新增协议方面，ioGame 可做到**新增协议**和 action 时，游戏对外服与 Broker（游戏网关）**无需重启**。只需要启动对应的游戏逻辑服即可，这样既能避免玩家断线，又能避免因新增协议而重启所有机器的痛点。
+
+
+
+在协议碎片方面，action 支持自动装箱、拆箱基础类型特性，用于解决[协议碎片](https://www.yuque.com/iohao/game/ieimzn)的问题。同时该特性除了能使你的业务代码更加清晰以外，还能大幅提高开发者在该环节的生产力。
 
 
 
