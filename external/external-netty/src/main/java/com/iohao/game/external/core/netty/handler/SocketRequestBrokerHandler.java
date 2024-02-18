@@ -60,7 +60,7 @@ public final class SocketRequestBrokerHandler extends SimpleChannelInboundHandle
         }
 
         try {
-            // 请求游戏网关，在由网关转到具体的业务逻辑服
+            // 请求游戏网关，Broker（游戏网关）会将请求转发到具体的游戏逻辑服
             brokerClient.oneway(message);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

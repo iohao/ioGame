@@ -18,10 +18,7 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
@@ -34,9 +31,7 @@ import java.util.Collection;
  * @author 渔民小镇
  * @date 2023-12-24
  */
-@Getter
-@Setter
-@ToString
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class EventBusMessage implements Serializable {
     @Serial

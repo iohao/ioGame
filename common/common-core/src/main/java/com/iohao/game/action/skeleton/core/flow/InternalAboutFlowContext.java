@@ -476,7 +476,6 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
         this.invokeModuleCollectMessageAsync(requestMessage, callback);
     }
 
-
     /**
      * 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
@@ -528,7 +527,6 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
             InternalFlowContextKit.decorate(traceId, callback, responseCollectMessage);
         }, callbackExecutor);
     }
-
 }
 
 /**
@@ -1496,8 +1494,6 @@ interface SimpleExecutor extends SimpleCommon {
 
         this.getVirtualExecutor().execute(InternalFlowContextKit.decorator(traceId, command));
     }
-
-
 }
 
 /**
