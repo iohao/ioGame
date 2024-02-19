@@ -163,6 +163,4 @@ public class FlowContext implements SimpleContext {
 
         return inOutTime;
     }
-
-
 }
