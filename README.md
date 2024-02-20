@@ -8,7 +8,7 @@
   <br>
   <strong>包体小、启动快、内存占用少、更加的节约、无需配置文件、提供了优雅的路由访问权限控制</strong>
   <br>
-  <strong>让开发者使用一套业务代码，无需改动，支持多种连接方式：WebSocket、TCP、UDP</strong>
+  <strong>可同时支持多种连接方式：WS、UDP、TCP...等；框架已支持全链路调用日志跟踪特性</strong>
   <br>
   <strong>让开发者用一套业务代码，能轻松切换和扩展不同的通信协议：Protobuf、JSON</strong>
   <br>
@@ -483,11 +483,11 @@ ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar
 
 
 
-在生态融合方面，ioGame 可以很方便的[与 spring 集成](https://www.yuque.com/iohao/game/evkgnz)（5 行代码）；除了 spring 外，还能与任何其他的框架做**融合**，如：[solon](https://solon.noear.org/) ... 等，从而使用其他框架的相关生态。
+在生态融合方面，ioGame 可以很方便的[与 spring 集成](https://www.yuque.com/iohao/game/evkgnz)（5 行代码）；除了 spring 外，还能与任何其他的框架做**融合**，如：solon ...等，从而使用其他框架的相关生态。
 
 
 
-ioGame 在架构上解决了传统框架所产生的 **N\*N 问题**（[与传统框架对比](https://www.yuque.com/iohao/game/cklv8p)）。传统框架在扩展机器时，需要借助很多第三方中间件，如：Redis、MQ、ZooKeeper ...等，才能满足整体架构的运作。通常，只要引入了需要安装的中间件才能做到扩展的，那么你的架构或者说框架，基本上与轻量级无缘了。
+ioGame 在架构上解决了传统框架所产生的 **N\*N 问题**（[与传统架构对比](https://www.yuque.com/iohao/game/cklv8p)）。传统架构在扩展机器时，需要借助很多第三方中间件，如：Redis、MQ、ZooKeeper ...等，才能满足整体架构的运作。通常，只要引入了需要安装的中间件才能做到扩展的，那么你的架构或者说框架，基本上与轻量级无缘了。
 
 
 
@@ -1154,7 +1154,7 @@ public class HelloReq {
 
 
 
-示例代码中展示了玩家的请求与响应处理，还展示了跨服（跨进程、跨机器）的请求处理的示例。
+示例代码中展示了玩家的请求与响应处理，还展示了**跨服**（跨进程、跨机器）的请求处理的示例。
 
 ```java
 @ActionController(1)
