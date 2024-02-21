@@ -1,5 +1,6 @@
 package com.iohao.game.common.kit.trace;
 
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.extern.slf4j.Slf4j;
@@ -128,8 +129,8 @@ public class TraceKitTest {
     public void testMDC() {
 
         long userId = 1;
-
-        ExecutorRegionKit.getUserThreadExecutor(userId).execute(() -> {
+        ExecutorRegion executorRegion = ExecutorRegionKit.getExecutorRegion();
+        executorRegion.getUserThreadExecutor(userId).execute(() -> {
             MDC.put(TraceKit.traceName, "user thread");
             extractedVirtual(userId);
             MDC.clear();
@@ -139,7 +140,8 @@ public class TraceKitTest {
     }
 
     private void extractedVirtual(long userId) {
-        ThreadExecutor userVirtualThreadExecutor = ExecutorRegionKit.getUserVirtualThreadExecutor(userId);
+        ExecutorRegion executorRegion = ExecutorRegionKit.getExecutorRegion();
+        ThreadExecutor userVirtualThreadExecutor = executorRegion.getUserVirtualThreadExecutor(userId);
 
         log.info("0-1 : {}", MDC.get(TraceKit.traceName));
         Assert.assertEquals("user thread", MDC.get(TraceKit.traceName));

@@ -19,6 +19,7 @@
 package com.iohao.game.action.skeleton.eventbus;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import com.iohao.game.common.kit.trace.TraceKit;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
@@ -82,30 +83,30 @@ final class DefaultSubscribeExecutorStrategy implements SubscribeExecutorStrateg
     static final AtomicLong threadIndexNo = new AtomicLong();
 
     @Override
-    public ThreadExecutor select(Subscriber subscriber, EventBusMessage eventBusMessage) {
+    public ThreadExecutor select(Subscriber subscriber, EventBusMessage eventBusMessage, ExecutorRegion executorRegion) {
 
         ExecutorSelector executorSelect = subscriber.getExecutorSelect();
 
         // 虚拟线程中执行
         if (executorSelect == ExecutorSelector.userVirtualExecutor) {
             long threadIndex = getThreadIndex(eventBusMessage);
-            return ExecutorRegionKit.getUserVirtualThreadExecutor(threadIndex);
+            return executorRegion.getUserVirtualThreadExecutor(threadIndex);
         }
 
         // [线程安全] 用户线程中执行
         if (executorSelect == ExecutorSelector.userExecutor) {
             long threadIndex = getThreadIndex(eventBusMessage);
-            return ExecutorRegionKit.getUserThreadExecutor(threadIndex);
+            return executorRegion.getUserThreadExecutor(threadIndex);
         }
 
         // [线程安全] 相同的订阅者使用同一个线程执行器
         if (executorSelect == ExecutorSelector.methodExecutor) {
             long threadIndex = subscriber.id;
-            return ExecutorRegionKit.getSimpleThreadExecutor(threadIndex);
+            return executorRegion.getSimpleThreadExecutor(threadIndex);
         }
 
         long threadIndex = getThreadIndex(eventBusMessage);
-        return ExecutorRegionKit.getSimpleThreadExecutor(threadIndex);
+        return executorRegion.getSimpleThreadExecutor(threadIndex);
     }
 
     long getThreadIndex(EventBusMessage eventBusMessage) {

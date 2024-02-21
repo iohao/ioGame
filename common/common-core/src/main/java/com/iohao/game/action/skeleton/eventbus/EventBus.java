@@ -22,6 +22,7 @@ import com.iohao.game.action.skeleton.core.IoGameCommonCoreConfig;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.CollKit;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -74,6 +75,8 @@ public final class EventBus {
     EventBrokerClientMessage eventBrokerClientMessage;
     /** 逻辑服 */
     BrokerClientContext brokerClientContext;
+    /** 与业务框架所关联的线程执行器管理域 */
+    ExecutorRegion executorRegion;
 
     @Setter(AccessLevel.PACKAGE)
     EventBusStatus status = EventBusStatus.register;
@@ -407,7 +410,8 @@ public final class EventBus {
             // 异步执行
             for (Subscriber subscriber : subscribers) {
                 // 根据策略得到对应的执行器
-                ThreadExecutor threadExecutor = this.subscribeExecutorStrategy.select(subscriber, eventBusMessage);
+                ThreadExecutor threadExecutor = this.subscribeExecutorStrategy
+                        .select(subscriber, eventBusMessage, this.executorRegion);
 
                 SubscriberInvoke subscriberInvoke = subscriber.getSubscriberInvoke();
 

@@ -24,6 +24,7 @@ import com.iohao.game.action.skeleton.core.flow.*;
 import com.iohao.game.action.skeleton.core.runner.Runners;
 import com.iohao.game.common.kit.attr.AttrOptionDynamic;
 import com.iohao.game.common.kit.attr.AttrOptions;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -76,6 +77,8 @@ public final class BarSkeleton implements AttrOptionDynamic {
     ErrorCodeDocs errorCodeDocs;
     /** 业务框架 flow 上下文 工厂 */
     FlowContextFactory flowContextFactory;
+    /** 与业务框架所关联的线程执行器管理域 */
+    ExecutorRegion executorRegion;
 
     BarSkeleton(Handler[] handlers) {
         this.handlers = handlers;

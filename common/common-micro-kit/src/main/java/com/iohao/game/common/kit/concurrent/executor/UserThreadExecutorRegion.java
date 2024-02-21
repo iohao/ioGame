@@ -41,6 +41,10 @@ final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion {
         super(threadName, availableProcessors2n());
     }
 
+    UserThreadExecutorRegion() {
+        this("User");
+    }
+
     /**
      * 根据 userId 获取对应的 Executor
      *
@@ -51,15 +55,6 @@ final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion {
     public ThreadExecutor getThreadExecutor(long userId) {
         int index = (int) (userId & (this.executorLength - 1));
         return this.threadExecutors[index];
-    }
-
-    static UserThreadExecutorRegion me() {
-        return UserThreadExecutorRegion.Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final UserThreadExecutorRegion ME = new UserThreadExecutorRegion("User");
     }
 
     static int availableProcessors2n() {

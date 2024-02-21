@@ -22,6 +22,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
+import java.util.function.Supplier;
+
 /**
  * ExecutorRegion 工具类，起到类似代理的作用。
  * <pre>
@@ -38,28 +40,24 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class ExecutorRegionKit {
     @Setter
-    @Getter
-    ExecutorRegion executorRegion = new ExecutorRegion() {
+    Supplier<ExecutorRegion> executorRegionSupplier = () -> new ExecutorRegion() {
+        @Override
+        public ThreadExecutorRegion getUserThreadExecutorRegion() {
+            return new UserThreadExecutorRegion();
+        }
+
+        @Override
+        public ThreadExecutorRegion getSimpleThreadExecutorRegion() {
+            return new SimpleThreadExecutorRegion();
+        }
     };
 
-    /**
-     * user 线程执行器管理域
-     *
-     * @param index index
-     * @return user 线程执行器管理域
-     */
-    public ThreadExecutor getUserThreadExecutor(long index) {
-        return executorRegion.getUserThreadExecutor(index);
-    }
+    @Setter
+    @Getter
+    ExecutorRegion executorRegion = executorRegionSupplier.get();
 
-    /**
-     * 用户虚拟线程执行器
-     *
-     * @param index index
-     * @return 用户虚拟线程执行器
-     */
-    public ThreadExecutor getUserVirtualThreadExecutor(long index) {
-        return executorRegion.getUserVirtualThreadExecutor(index);
+    public ExecutorRegion createExecutorRegion() {
+        return executorRegionSupplier.get();
     }
 
     /**

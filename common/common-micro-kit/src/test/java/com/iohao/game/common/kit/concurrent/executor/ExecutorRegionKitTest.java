@@ -21,7 +21,8 @@ public class ExecutorRegionKitTest {
     public void userThreadExecutor() {
         long userId = 1;
 
-        ThreadExecutor userThreadExecutor = ExecutorRegionKit.getUserThreadExecutor(userId);
+        ExecutorRegion executorRegion = ExecutorRegionKit.getExecutorRegion();
+        ThreadExecutor userThreadExecutor = executorRegion.getUserThreadExecutor(userId);
 
         userThreadExecutor.execute(() -> {
             // print 1
@@ -38,7 +39,8 @@ public class ExecutorRegionKitTest {
     public void getUserVirtualThreadExecutor() {
         long userId = 1;
 
-        ThreadExecutor userVirtualThreadExecutor = ExecutorRegionKit.getUserVirtualThreadExecutor(userId);
+        ExecutorRegion executorRegion = ExecutorRegionKit.getExecutorRegion();
+        ThreadExecutor userVirtualThreadExecutor = executorRegion.getUserVirtualThreadExecutor(userId);
 
         userVirtualThreadExecutor.execute(() -> {
             // print 1

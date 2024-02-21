@@ -27,6 +27,7 @@ import com.iohao.game.action.skeleton.core.flow.*;
 import com.iohao.game.action.skeleton.core.flow.internal.*;
 import com.iohao.game.action.skeleton.core.runner.Runner;
 import com.iohao.game.action.skeleton.core.runner.Runners;
+import com.iohao.game.common.kit.concurrent.executor.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -81,6 +82,8 @@ public final class BarSkeletonBuilder {
     ResponseMessageCreate responseMessageCreate = new DefaultResponseMessageCreate();
     /** 业务框架 flow 上下文 工厂 */
     FlowContextFactory flowContextFactory = FlowContext::new;
+    /** 线程执行器 */
+    ExecutorRegion executorRegion;
 
     BarSkeletonBuilder() {
     }
@@ -119,6 +122,8 @@ public final class BarSkeletonBuilder {
                 .setErrorCodeDocs(this.errorCodeDocs)
                 // 业务框架 flow 上下文 工厂
                 .setFlowContextFactory(this.flowContextFactory)
+                // 线程执行器
+                .setExecutorRegion(this.executorRegion)
                 // runners 机制
                 .setRunners(this.runners);
 
@@ -220,6 +225,11 @@ public final class BarSkeletonBuilder {
         // 如果没有配置 handler，那么使用默认的
         if (this.handlerList.isEmpty()) {
             this.handlerList.add(new ActionCommandHandler());
+        }
+
+        // 创建线程执行器
+        if (Objects.isNull(this.executorRegion)) {
+            this.executorRegion = ExecutorRegionKit.createExecutorRegion();
         }
     }
 }

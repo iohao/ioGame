@@ -49,9 +49,7 @@ public interface ExecutorRegion {
      *
      * @return user 线程执行器管理域
      */
-    default ThreadExecutorRegion getUserThreadExecutorRegion() {
-        return UserThreadExecutorRegion.me();
-    }
+    ThreadExecutorRegion getUserThreadExecutorRegion();
 
     /**
      * 用户虚拟线程执行器
@@ -67,9 +65,7 @@ public interface ExecutorRegion {
      *
      * @return 简单的线程执行器管理域
      */
-    default ThreadExecutorRegion getSimpleThreadExecutorRegion() {
-        return SimpleThreadExecutorRegion.me();
-    }
+    ThreadExecutorRegion getSimpleThreadExecutorRegion();
 
     /**
      * user 线程执行器管理域

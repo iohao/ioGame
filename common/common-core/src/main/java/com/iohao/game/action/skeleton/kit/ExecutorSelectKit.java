@@ -22,7 +22,7 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.experimental.UtilityClass;
 
@@ -46,16 +46,8 @@ public class ExecutorSelectKit {
      */
     public boolean processLogic(BarSkeleton barSkeleton, FlowContext flowContext) {
         HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
-        final long executorIndex = getExecutorIndex(headMetadata);
 
-        final ExecutorSelectEnum executorSelect = headMetadata.getExecutorSelect();
-
-        final ThreadExecutor threadExecutor = switch (executorSelect) {
-            case null -> ExecutorRegionKit.getUserThreadExecutor(executorIndex);
-            case userVirtualExecutor -> ExecutorRegionKit.getUserVirtualThreadExecutor(executorIndex);
-            case userExecutor -> ExecutorRegionKit.getUserThreadExecutor(executorIndex);
-            default -> null;
-        };
+        final ThreadExecutor threadExecutor = getThreadExecutor(barSkeleton, headMetadata);
 
         if (Objects.isNull(threadExecutor)) {
             return false;
@@ -70,6 +62,20 @@ public class ExecutorSelectKit {
         });
 
         return true;
+    }
+
+    private ThreadExecutor getThreadExecutor(BarSkeleton barSkeleton, HeadMetadata headMetadata) {
+        final long executorIndex = getExecutorIndex(headMetadata);
+        final ExecutorRegion executorRegion = barSkeleton.getExecutorRegion();
+
+        final ExecutorSelectEnum executorSelect = headMetadata.getExecutorSelect();
+
+        return switch (executorSelect) {
+            case null -> executorRegion.getUserThreadExecutor(executorIndex);
+            case userVirtualExecutor -> executorRegion.getUserVirtualThreadExecutor(executorIndex);
+            case userExecutor -> executorRegion.getUserThreadExecutor(executorIndex);
+            default -> null;
+        };
     }
 
     public long getExecutorIndex(HeadMetadata headMetadata) {

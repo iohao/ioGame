@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 
 /**
@@ -32,9 +33,10 @@ public interface SubscribeExecutorStrategy {
      *
      * @param subscriber      订阅者
      * @param eventBusMessage 事件消息
+     * @param executorRegion  与业务框架所关联的线程执行器管理域
      * @return 线程执行器
      */
-    ThreadExecutor select(Subscriber subscriber, EventBusMessage eventBusMessage);
+    ThreadExecutor select(Subscriber subscriber, EventBusMessage eventBusMessage, ExecutorRegion executorRegion);
 
     static SubscribeExecutorStrategy defaultInstance() {
         return DefaultSubscribeExecutorStrategy.me();

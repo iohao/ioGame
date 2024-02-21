@@ -18,10 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core.flow;
 
-import com.iohao.game.action.skeleton.core.BarMessageKit;
-import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.core.IoGameCommonCoreConfig;
+import com.iohao.game.action.skeleton.core.*;
 import com.iohao.game.action.skeleton.core.commumication.*;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
@@ -34,8 +31,8 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import com.iohao.game.common.kit.trace.TraceKit;
-import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.experimental.UtilityClass;
 import org.slf4j.MDC;
@@ -1258,7 +1255,9 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      *
      * @return EventBus
      */
-    EventBus getEventBus();
+    default EventBus getEventBus() {
+        return this.getBarSkeleton().option(SkeletonAttr.eventBus);
+    }
 
     /**
      * 发送事件给订阅者
@@ -1424,6 +1423,10 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
  * 帮助 FlowContext 得到线程执行器的能力
  */
 interface SimpleExecutor extends SimpleCommon {
+    default ExecutorRegion getExecutorRegion() {
+        return this.getBarSkeleton().getExecutorRegion();
+    }
+
     /**
      * 玩家对应的虚拟线程执行器
      *
@@ -1434,7 +1437,8 @@ interface SimpleExecutor extends SimpleCommon {
         var headMetadata = this.getHeadMetadata();
         var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
 
-        ThreadExecutor threadExecutor = ExecutorRegionKit.getUserVirtualThreadExecutor(executorIndex);
+        ExecutorRegion executorRegion = this.getExecutorRegion();
+        ThreadExecutor threadExecutor = executorRegion.getUserVirtualThreadExecutor(executorIndex);
         return threadExecutor.executor();
     }
 
@@ -1451,7 +1455,8 @@ interface SimpleExecutor extends SimpleCommon {
         var headMetadata = this.getHeadMetadata();
         var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
 
-        ThreadExecutor threadExecutor = ExecutorRegionKit.getUserThreadExecutor(executorIndex);
+        ExecutorRegion executorRegion = this.getExecutorRegion();
+        ThreadExecutor threadExecutor = executorRegion.getUserThreadExecutor(executorIndex);
         return threadExecutor.executor();
     }
 
@@ -1576,6 +1581,13 @@ interface SimpleCommon extends FlowOptionDynamic {
      * @return HeadMetadata
      */
     HeadMetadata getHeadMetadata();
+
+    /**
+     * 业务框架
+     *
+     * @return 所关联的业务框架
+     */
+    BarSkeleton getBarSkeleton();
 
     /**
      * 当前请求的路由

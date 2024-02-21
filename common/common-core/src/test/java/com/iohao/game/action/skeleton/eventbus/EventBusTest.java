@@ -1,5 +1,6 @@
 package com.iohao.game.action.skeleton.eventbus;
 
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -40,6 +41,7 @@ public class EventBusTest {
         eventBus.setSubscriberInvokeCreator(SubscriberInvokeCreator.defaultInstance());
         eventBus.setEventBusMessageCreator(EventBusMessageCreator.defaultInstance());
         eventBus.setEventBusListener(EventBusListener.defaultInstance());
+        eventBus.setExecutorRegion(ExecutorRegionKit.getExecutorRegion());
 
         // 注册订阅者
         eventBus.register(new CustomEvent());

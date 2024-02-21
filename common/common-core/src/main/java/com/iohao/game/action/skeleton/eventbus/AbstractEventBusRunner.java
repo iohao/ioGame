@@ -50,6 +50,7 @@ public abstract class AbstractEventBusRunner implements Runner {
         eventBus.setSubscriberInvokeCreator(SubscriberInvokeCreator.defaultInstance());
         eventBus.setEventBusMessageCreator(EventBusMessageCreator.defaultInstance());
         eventBus.setEventBusListener(EventBusListener.defaultInstance());
+        eventBus.setExecutorRegion(skeleton.getExecutorRegion());
 
         eventBus.setBrokerClientContext(brokerClientContext);
         eventBus.setEventBrokerClientMessage(eventBrokerClientMessage);

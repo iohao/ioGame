@@ -28,6 +28,7 @@ import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -121,11 +122,6 @@ public class FlowContext implements SimpleContext {
     @Override
     public HeadMetadata getHeadMetadata() {
         return this.request.getHeadMetadata();
-    }
-
-    @Override
-    public EventBus getEventBus() {
-        return this.getBarSkeleton().option(SkeletonAttr.eventBus);
     }
 
     /**
