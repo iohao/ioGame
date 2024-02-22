@@ -6,7 +6,7 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>ioGame</artifactId>
-    <version>21.1</version>
+    <version>21.2</version>
     <name>ioGame</name>
     <description>ioGame 网络编程框架；ioGame 适用于网络游戏服务器、物联网、内部系统及各种需要长连接的场景；生产资料公有制；
     </description>
@@ -213,14 +213,22 @@
 
     <build>
         <plugins>
-            <!-- Javadoc -->
+            <!--
+            mvnd javadoc:aggregate-jar
+            Javadoc 本地生成，文档将生成在 target/apidocs 中
+             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.5.0</version>
                 <configuration>
-                    <show>private</show>
-                    <nohelp>true</nohelp>
+                    <!--                    <show>private</show>-->
+                    <!--                    <nohelp>true</nohelp>-->
+                    <classifier>javadoc</classifier>
+                    <detectJavaApiLink>true</detectJavaApiLink>
+                    <encoding>UTF-8</encoding>
+                    <charset>UTF-8</charset>
+                    <docencoding>UTF-8</docencoding>
                 </configuration>
             </plugin>
 

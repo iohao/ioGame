@@ -21,7 +21,6 @@ package com.iohao.game.external.client.join;
 import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.common.consts.IoGameLogName;
-import com.iohao.game.common.kit.ExecutorKit;
 import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.common.kit.concurrent.TaskKit;
 import com.iohao.game.external.client.ClientConnectOption;
@@ -33,7 +32,6 @@ import com.iohao.game.external.client.user.DefaultClientUser;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
 import com.iohao.game.external.core.message.ExternalCodecKit;
-import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.message.ExternalMessageCmdCode;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -62,7 +60,9 @@ public final class ClientRunOne {
 
     /** 服务器连接端口 */
     int connectPort = ExternalGlobalConfig.externalPort;
+    /** 连接 ip */
     String connectAddress = "127.0.0.1";
+    /** websocketPath , default : /websocket */
     String websocketPath = ExternalGlobalConfig.CoreOption.websocketPath;
     String websocketVerify = "";
 

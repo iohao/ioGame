@@ -56,9 +56,12 @@ class BreakingNews {
         List<News> list = new ArrayList<>();
 
         list.add(new News("支持者名单", "https://www.yuque.com/iohao/game/backers"));
-
         list.add(new News("28行代码，做个网页聊天室", "https://www.yuque.com/iohao/game/we9eppym4yno9hq2"));
         list.add(new News("web 转游戏 - 示例理解篇", "https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z"));
+
+        // 开发常见问题与小技巧
+        list.add(new News("全链路调用日志跟踪", "https://www.yuque.com/iohao/game/zurusq"));
+        list.add(new News("需要给到游戏前端的（协议与路由解析规则）", "https://www.yuque.com/iohao/game/zfg3ci"));
 
         // 授权相关、实践类产品
         list.add(new News("项目成本分析", "https://www.yuque.com/iohao/game/gd5l3b0y0h027kcv#aSk5x"));
