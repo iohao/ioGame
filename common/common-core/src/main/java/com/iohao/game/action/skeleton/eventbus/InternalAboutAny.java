@@ -21,11 +21,9 @@ package com.iohao.game.action.skeleton.eventbus;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.collect.SetMultiMap;
-import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.*;
@@ -174,7 +172,10 @@ final class AnyTagView {
         }
 
         AnyTagViewData anyTagViewData = new AnyTagViewData();
-        anyTagBrokerClients.stream().map(AnyTagBrokerClient::anyEventBrokerClientMessage).forEach(anyTagViewData::add);
+
+        anyTagBrokerClients.stream()
+                .map(AnyTagBrokerClient::anyEventBrokerClientMessage)
+                .forEach(anyTagViewData::add);
 
         return anyTagViewData;
     }

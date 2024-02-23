@@ -1111,7 +1111,7 @@ action 处理逻辑时，使用是就是这种通讯方式。将数据 return �
 >
 > **协议文件**
 >
-> 协议文件是对业务数据的描述载体，用于游戏前端与游戏服务器的数据交互。Protocol Buffers 是Google公司开发的一种数据描述语言，也简称 PB。协议文件描述还可以是 json、xml或者任意自定义的，因为最后传输时会转换为二进制，但游戏开发中 PB 是目前的最佳。
+> 协议文件是对业务数据的描述载体，用于游戏前端与游戏服务器的数据交互。Protocol Buffers 是 Google 公司开发的一种数据描述语言，也简称 PB。协议文件描述还可以是 json、xml或者任意自定义的，因为最后传输时会转换为二进制，但游戏开发中 PB 是目前的最佳。
 >
 > 
 >
@@ -1129,11 +1129,11 @@ action 处理逻辑时，使用是就是这种通讯方式。将数据 return �
 
 **协议文件定义**
 
-首先我们自定义一个协议文件，这个协议文件作为我们的业务载体描述。这个协议是纯java代码编写的，使用的是 jprotobuf，jprotobuf 是对 google protobuf 的简化使用，性能同等。
+首先我们自定义一个协议文件，这个协议文件作为我们的业务载体描述。这个协议是纯 java 代码编写的，使用的是 jprotobuf，jprotobuf 是对 google protobuf 的简化使用，性能同等。
 
 
 
-可以把这理解成DTO、POJO、业务数据载体等，其主要目的是用于业务数据的传输；
+可以把这理解成 DTO、POJO 业务数据载体等，其主要目的是用于业务数据的传输；
 
 ```java
 /** 请求 */
@@ -1311,6 +1311,7 @@ public class DemoAction {
 - [多环境切换](https://www.yuque.com/iohao/game/ekx6ve) （不同运行环境下的配置支持）
 - [light-jprotobuf ](https://www.yuque.com/iohao/game/vpe2t6) （补足 jprotobuf 不能让多个对象在单个 .proto 源文件中生成的需求，并简化jprotobuf对源文件的注释）
 - [分布式锁](https://www.yuque.com/iohao/game/wz7af5) (基于Redisson的简单实现)
+- [压测&模拟客户端请求](https://www.yuque.com/iohao/game/tc83ud)
 
 **内置的其他功能：**
 
