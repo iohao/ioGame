@@ -21,6 +21,7 @@ package com.iohao.game.bolt.broker.server.processor;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.RpcServer;
 import com.iohao.game.bolt.broker.core.client.BrokerClientType;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClientOfflineMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerClientOnlineMessage;
@@ -42,7 +43,7 @@ import java.util.stream.Stream;
 @Slf4j
 @UtilityClass
 class LineKit {
-    final long executorIndex = 0;
+    final long executorIndex = IoGameGlobalConfig.InternalConfig.executorIndex;
 
     record Context(BrokerServer brokerServer
             , BrokerClientModules brokerClientModules
@@ -52,7 +53,7 @@ class LineKit {
 
     void online(Context context) {
         // 避免并发，使用同一个执行器
-        ExecutorRegionKit.getSimpleThreadExecutor(executorIndex).execute(() -> {
+        ExecutorRegionKit.getSimpleThreadExecutor(executorIndex).executeTry(() -> {
             // online logic
             internalOnlineNew(context);
         });
@@ -95,7 +96,7 @@ class LineKit {
     }
 
     void offline(Context context) {
-        ExecutorRegionKit.getSimpleThreadExecutor(executorIndex).execute(() -> {
+        ExecutorRegionKit.getSimpleThreadExecutor(executorIndex).executeTry(() -> {
             // offline logic
             internalOfflineNew(context);
         });

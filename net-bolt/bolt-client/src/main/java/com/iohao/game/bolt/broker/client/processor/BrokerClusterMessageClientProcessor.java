@@ -23,15 +23,20 @@ import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
+import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
+import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.message.BrokerClusterMessage;
 import com.iohao.game.bolt.broker.core.message.BrokerMessage;
 import com.iohao.game.common.consts.IoGameLogName;
+import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.ExecutorKit;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -61,15 +66,26 @@ public class BrokerClusterMessageClientProcessor extends AsyncUserProcessor<Brok
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, BrokerClusterMessage message) {
+        long clusterExecutorIndex = IoGameGlobalConfig.InternalConfig.clusterExecutorIndex;
 
-        if (log.isDebugEnabled()) {
-            log.debug("==接收来自网关的集群消息 {} {}", message.getBrokerMessageList().size(), message);
+        ExecutorRegionKit
+                .getSimpleThreadExecutor(clusterExecutorIndex)
+                .executeTry(() -> extracted(message));
+    }
+
+    private void extracted(BrokerClusterMessage message) {
+        List<BrokerMessage> brokerMessageList = message.getBrokerMessageList();
+        if (CollKit.isEmpty(brokerMessageList)) {
+            return;
+        }
+
+        if (IoGameGlobalConfig.isBrokerClusterLog()) {
+            System.out.println();
+            log.info("==接收来自网关的集群消息 {} - {} - {}", brokerMessageList.size(), message.getName(), message);
         }
 
         BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
         Set<String> keySet = brokerClientManager.keySet();
-
-        List<BrokerMessage> brokerMessageList = message.getBrokerMessageList();
 
         // 新增网关
         for (BrokerMessage brokerMessage : brokerMessageList) {
@@ -82,7 +98,15 @@ public class BrokerClusterMessageClientProcessor extends AsyncUserProcessor<Brok
                 continue;
             }
 
-            log.debug("集群有新的机器 address : {}", address);
+            Map<String, BrokerClientItem> brokerClientItemMap = brokerClientManager.getBrokerClientItemMap();
+            if (brokerClientItemMap.containsKey(address)) {
+                continue;
+            }
+
+            if (IoGameGlobalConfig.isBrokerClusterLog()) {
+                log.info("集群有新的机器 address : {}", address);
+            }
+
             brokerClientManager.register(address);
         }
 

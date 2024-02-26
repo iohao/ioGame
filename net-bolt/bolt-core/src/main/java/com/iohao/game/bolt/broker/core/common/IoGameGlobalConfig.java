@@ -91,7 +91,7 @@ public class IoGameGlobalConfig {
     public boolean brokerSniperToggleAK47 = true;
 
     /** true 开启集群相关日志 */
-    public boolean brokerClusterLog = true;
+    public boolean brokerClusterLog;
     /** true 使用调度器打印集群信息，默认 30 秒打印一次（目前不提供打印频率设置） */
     public boolean brokerClusterFixedRateLog;
     /** true 表示开启 traceId 特性 */
@@ -137,5 +137,12 @@ public class IoGameGlobalConfig {
     public void setEventBusLog(boolean eventBusLog) {
         IoGameGlobalConfig.eventBusLog = eventBusLog;
         IoGameCommonCoreConfig.eventBusLog = eventBusLog;
+    }
+
+    /** 框架内部使用，开发者不要使用 */
+    public interface InternalConfig {
+        long executorIndex = 0;
+        long clusterExecutorIndex = 2;
+        long connectIndex = clusterExecutorIndex;
     }
 }

@@ -128,6 +128,7 @@ final class BrokerClusterMessageHandler implements ClusterMessageHandler, Functi
         // 集群消息
         BrokerClusterMessage brokerClusterMessage = new BrokerClusterMessage();
         brokerClusterMessage.setBrokerMessageList(brokerMessageList);
+        brokerClusterMessage.setName(this.localBroker.getBrokerAddress());
 
         return brokerClusterMessage;
     }

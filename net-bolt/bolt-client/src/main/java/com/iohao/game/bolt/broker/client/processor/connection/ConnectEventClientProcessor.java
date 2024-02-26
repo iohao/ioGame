@@ -27,6 +27,7 @@ import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
 import com.iohao.game.bolt.broker.core.client.BrokerClientManager;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.consts.IoGameLogName;
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +54,14 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
 
     @Override
     public void onEvent(String remoteAddress, Connection conn) {
+        long connectIndex = IoGameGlobalConfig.InternalConfig.connectIndex;
+
+        ExecutorRegionKit
+                .getSimpleThreadExecutor(connectIndex)
+                .executeTry(() -> extracted(remoteAddress, conn));
+    }
+
+    private void extracted(String remoteAddress, Connection conn) {
         if (IoGameGlobalConfig.openLog) {
             log.info("连接网关 ConnectionEventType:【{}】 remoteAddress:【{}】，Connection:【{}】",
                     ConnectionEventType.CONNECT, remoteAddress, conn

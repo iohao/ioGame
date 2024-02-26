@@ -39,7 +39,7 @@ import java.util.Objects;
 public class BrokerClusterMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = 2753485289174578530L;
-
+    String name;
     List<BrokerMessage> brokerMessageList;
 
     public int count() {

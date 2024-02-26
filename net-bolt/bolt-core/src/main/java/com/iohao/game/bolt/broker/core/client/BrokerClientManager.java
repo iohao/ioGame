@@ -58,7 +58,7 @@ import java.util.function.Supplier;
 public final class BrokerClientManager {
     /**
      * <pre>
-     *     key : address ，broker 的地址，格式：ip:port
+     *     key : ip:port，broker 的地址。
      *     value : 与 broker 建立连接的 bolt client
      * </pre>
      */
@@ -142,6 +142,7 @@ public final class BrokerClientManager {
     }
 
     public void remove(BrokerClientItem brokerClientItem) {
+        this.remove(brokerClientItem.getAddress());
         brokerClientItem.setStatus(BrokerClientItem.Status.DISCONNECT);
         this.resetSelector();
     }

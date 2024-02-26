@@ -36,6 +36,9 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
+import java.util.Optional;
+
 /**
  * Broker Server （游戏网关服）
  * <pre>
@@ -93,6 +96,9 @@ public class BrokerServer implements GroupWith {
 
         // 启动 bolt rpc
         this.rpcServer.startup();
+
+        // 启动集群
+        Optional.ofNullable(this.brokerClusterManager).ifPresent(BrokerClusterManager::start);
 
         log.info("启动游戏网关 port: [{}] 启动模式: [{}] ", this.port, this.brokerRunMode);
 

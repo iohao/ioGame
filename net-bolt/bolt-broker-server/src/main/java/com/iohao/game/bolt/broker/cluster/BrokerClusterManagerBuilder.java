@@ -98,13 +98,6 @@ public class BrokerClusterManagerBuilder {
                 // broker 端口（游戏网关端口）
                 .setPort(port);
 
-        try {
-            // 启动集群
-            brokerClusterManager.start();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-
         return brokerClusterManager;
     }
 
