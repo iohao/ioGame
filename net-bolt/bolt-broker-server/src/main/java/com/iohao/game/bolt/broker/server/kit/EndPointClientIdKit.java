@@ -31,11 +31,6 @@ import lombok.experimental.UtilityClass;
 public class EndPointClientIdKit {
     public void endPointClientId(HeadMetadata headMetadata, CmdRegions cmdRegions) {
 
-        if (headMetadata.getEndPointClientId() != 0) {
-            // 兼容旧的游戏对外服，旧版本的是在游戏对外服那边设置好的值。
-            return;
-        }
-
         // 玩家绑定的游戏逻辑服列表
         int[] bindingLogicServerIds = headMetadata.getBindingLogicServerIds();
         if (ArrayKit.isEmpty(bindingLogicServerIds)) {
