@@ -26,11 +26,9 @@ import com.iohao.game.external.core.config.ExternalJoinEnum;
  * <pre>
  *     连接方式：tcp、websocket、udp、kcp
  *
- *     Selector 作用是根据当前的连接方式（实现类），初始化一此属性和编解码
- *     <ui>
- *         <li>getCodecPipeline：编解码相关的 Pipeline</li>
- *         <li>defaultSetting：相关连接方式的一些默认设置</li>
- *     </ui>
+ *     Selector 作用是根据当前的连接方式（实现类），初始化相关实现类的属性和编解码
+ *         1. getCodecPipeline：编解码相关的 Pipeline
+ *         2. defaultSetting：相关连接方式的一些默认设置
  * </pre>
  *
  * @author 渔民小镇

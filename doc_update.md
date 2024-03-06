@@ -3,6 +3,949 @@ https://www.yuque.com/iohao/game/ab15oe
 
 
 
+#### 2024-02-22 - v21.2
+
+修复版本号显示错误问题（该版本没有功能上的更新与修改，不升级也不影响）
+
+
+
+####  2024-02-21 - v21.1
+
+https://github.com/game-town/ioGame/releases/tag/21.1
+
+
+
+ioGame21 首发计划
+
+| 功能支持                                                     | 完成 | 描述                   | issu                                                         |
+| ------------------------------------------------------------ | ---- | ---------------------- | ------------------------------------------------------------ |
+| [游戏对外服开放自定义协议](https://www.yuque.com/iohao/game/xeokui) | ✅    | 功能增强               | [#213](https://github.com/game-town/ioGame/issues/213)       |
+| [游戏对外服缓存](https://www.yuque.com/iohao/game/khg23pvbh59a7spm) | ✅    | 功能增强、性能提升     | [#76](https://github.com/game-town/ioGame/issues/76)         |
+| [FlowContext](https://www.yuque.com/iohao/game/zz8xiz#YQOZ5) 增加通信能力，提供同步、异步、异步回调的便捷使用 | ✅    | 功能增强               | [#235](https://github.com/game-town/ioGame/issues/235)       |
+| 虚拟线程支持;  各逻辑服之间通信阻塞部分，改为使用虚拟线程，避免阻塞业务线程 | ✅    | 功能增强、性能提升     |                                                              |
+| 默认不使用 bolt 线程池，减少上下文切换。  ioGame17：netty --> bolt 线程池 --> ioGame 线程池。  ioGame21： 1. netty --> ioGame 线程池。 2. 部分业务将直接在 netty 线程中消费业务。文档 - [ioGame 线程相关](https://www.yuque.com/iohao/game/eixd6x) | ✅    | 性能提升               |                                                              |
+| [全链路调用日志跟踪](https://www.yuque.com/iohao/game/zurusq)；日志增强 traceId | ✅    | 功能增强               | [#230](https://github.com/game-town/ioGame/issues/230)       |
+| [文档自动生成](https://www.yuque.com/iohao/game/irth38)，改为由开发者调用触发。 | ✅    | 整理                   |                                                              |
+| 移除过期代码                                                 | ✅    | 整理                   | [#237](https://github.com/game-town/ioGame/issues/239)       |
+| [分布式事件总线](https://www.yuque.com/iohao/game/gmxz33)  可以代替 redis pub sub 、 MQ ，并且具备全链路调用日志跟踪，这点是中间件产品做不到的。 | ✅    | 功能增强               | [#228](https://github.com/game-town/ioGame/issues/228)       |
+| 日志库使用新版本 slf4j 2.0                                   | ✅    |                        |                                                              |
+| [Fury](https://fury.apache.org/) 支持。  Fury 是一个基于JIT动态编译和零拷贝的高性能多语言序列化框架 |      | 在计划内，不一定会支持 | 因在发布 ioGame21 时，Fury 还未发布稳定版本，所以这里暂不支持。 |
+| [心跳响应前的回调](https://www.yuque.com/iohao/game/lxqbnb#bJ6T8) | ✅    | 功能增强               | [#234](https://github.com/game-town/ioGame/issues/234)       |
+| [FlowContext](https://www.yuque.com/iohao/game/zz8xiz#HQYmm) 增加更新、获取元信息的便捷使用 | ✅    | 功能增强               | [#236](https://github.com/game-town/ioGame/issues/236)       |
+
+
+
+### ioGame21 首发内容简介
+
+在 ioGame21 中，该版本做了数百项优化及史诗级增强。
+
+- 文档方面
+- 线程管理域方面的开放与统一、减少线程池上下文切换
+- FlowContext 得到了**史诗级**的增强。
+- 新增通讯方式 - 分布式事件总线
+- 游戏对外服方面增强
+- 全链路调用日志跟踪
+- 各逻辑服之间通信阻塞部分，改为使用虚拟线程, 避免阻塞业务线程，从而使得框架的吞吐量得到了巨大的提升。
+
+
+
+#### 游戏对外服相关
+
+[#76](https://github.com/game-town/ioGame/issues/76) 游戏对外服缓存 
+
+更多的介绍，请阅读[游戏对外服缓存](https://www.yuque.com/iohao/game/khg23pvbh59a7spm)文档。
+
+
+
+游戏对外服缓存，可以将一些热点的业务数据缓存在游戏对外服中，玩家每次访问相关路由时，会直接从游戏对外服的内存中取数据。这样可以避免反复请求游戏逻辑服，从而达到性能的超级提升；
+
+```java
+private static void extractedExternalCache() {
+    // 框架内置的缓存实现类
+    DefaultExternalCmdCache externalCmdCache = new DefaultExternalCmdCache();
+    // 添加到配置中
+    ExternalGlobalConfig.externalCmdCache = externalCmdCache;
+    // 配置缓存 3-1
+    externalCmdCache.addCmd(3, 1);
+}
+```
+
+
+
+[#213](https://github.com/game-town/ioGame/issues/213) 游戏对外服开放自定义协议 
+
+更多的介绍，请阅读[游戏对外服的协议说明](https://www.yuque.com/iohao/game/xeokui)文档。
+
+开发者可自定义游戏对外服协议，用于代替框架默认的 ExternalMessage 公共对外协议。
+
+
+
+[#234](https://github.com/game-town/ioGame/issues/234) 心跳响应前的回调 
+
+更多的介绍，请阅读[心跳设置与心跳钩子](https://www.yuque.com/iohao/game/uueq3i)文档。
+
+在部分场景下，在响应心跳前可添加当前时间，使得客户端与服务器时间同步。
+
+```java
+@Slf4j
+public class DemoIdleHook implements SocketIdleHook {
+    ... ... 省略部分代码
+    volatile byte[] timeBytes;
+
+    public DemoIdleHook() {
+        updateTime();
+        // 每秒更新当前时间
+        TaskKit.runInterval(this::updateTime, 1, TimeUnit.SECONDS);
+    }
+
+    private void updateTime() {
+        LongValue data = LongValue.of(TimeKit.currentTimeMillis());
+        // 避免重复序列化，这里提前序列化好时间数据
+        timeBytes = DataCodecKit.encode(data);
+    }
+
+    @Override
+    public void pongBefore(BarMessage idleMessage) {
+        // 把当前时间戳给到心跳接收端
+        idleMessage.setData(timeBytes);
+    }
+}
+```
+
+
+
+#### FlowContext - 跨服通信
+
+[#235](https://github.com/game-town/ioGame/issues/235) FlowContext 增加通信能力，提供同步、异步、异步回调的便捷使用 
+
+更多的介绍，请阅读 [FlowContext](https://www.yuque.com/iohao/game/zz8xiz) 文档。
+
+```java
+// 跨服请求 - 同步、异步回调演示
+void invokeModuleMessage() {
+    // 路由、请求参数
+    ResponseMessage responseMessage = flowContext.invokeModuleMessage(cmdInfo, yourData);
+    RoomNumMsg roomNumMsg = responseMessage.getData(RoomNumMsg.class);
+    log.info("同步调用 : {}", roomNumMsg.roomCount);
+
+    // --- 此回调写法，具备全链路调用日志跟踪 ---
+    // 路由、请求参数、回调
+    flowContext.invokeModuleMessageAsync(cmdInfo, yourData, responseMessage -> {
+        RoomNumMsg roomNumMsg = responseMessage.getData(RoomNumMsg.class);
+        log.info("异步回调 : {}", roomNumMsg.roomCount);
+    });
+}
+
+// 广播
+public void broadcast(FlowContext flowContext) {
+    // 全服广播 - 路由、业务数据
+    flowContext.broadcast(cmdInfo, yourData);
+
+    // 广播消息给单个用户 - 路由、业务数据、userId
+    long userId = 100;
+    flowContext.broadcast(cmdInfo, yourData, userId);
+
+    // 广播消息给指定用户列表 - 路由、业务数据、userIdList
+    List<Long> userIdList = new ArrayList<>();
+    userIdList.add(100L);
+    userIdList.add(200L);
+    flowContext.broadcast(cmdInfo, yourData, userIdList);
+
+    // 给自己发送消息 - 路由、业务数据
+    flowContext.broadcastMe(cmdInfo, yourData);
+
+    // 给自己发送消息 - 业务数据
+    // 路由则使用当前 action 的路由。
+    flowContext.broadcastMe(yourData);
+}
+```
+
+
+
+[#236](https://github.com/game-town/ioGame/issues/236) FlowContext 增加更新、获取元信息的便捷使用 
+
+更多的介绍，请阅读 [FlowContext](https://www.yuque.com/iohao/game/zz8xiz) 文档。
+
+```java
+void test(MyFlowContext flowContext) {
+    // 获取元信息
+    MyAttachment attachment = flowContext.getAttachment();
+    attachment.nickname = "渔民小镇";
+
+    // [同步]更新 - 将元信息同步到玩家所在的游戏对外服中
+    flowContext.updateAttachment();
+
+    // [异步无阻塞]更新 - 将元信息同步到玩家所在的游戏对外服中
+	flowContext.updateAttachmentAsync();
+}
+
+public class MyFlowContext extends FlowContext {
+    MyAttachment attachment;
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public MyAttachment getAttachment() {
+        if (Objects.isNull(attachment)) {
+            this.attachment = this.getAttachment(MyAttachment.class);
+        }
+
+        return this.attachment;
+    }
+}
+```
+
+
+
+#### 线程相关 - 无锁高并发
+
+更多的介绍，请阅读 [ioGame 线程相关](https://www.yuque.com/iohao/game/eixd6x)文档。
+
+
+
+虚拟线程支持，各逻辑服之间通信阻塞部分使用虚拟线程来处理，避免阻塞业务线程。
+
+
+
+默认不使用 bolt 线程池，减少上下文切换。ioGame21 业务消费的线程相关内容如下：
+
+1. netty --> ioGame 线程池。
+2. 部分业务将直接在 netty 线程中消费业务。
+
+
+
+在 ioGame21 中，框架内置了 3 个线程执行器管理域，分别是
+
+1. UserThreadExecutorRegion ，用户线程执行器管理域。
+2. UserVirtualThreadExecutorRegion ，用户虚拟线程执行器管理域。
+3. SimpleThreadExecutorRegion ，简单的线程执行器管理域。
+
+
+
+**从工具类中得到与用户（玩家）所关联的线程执行器**
+
+```java
+@Test
+public void userThreadExecutor() {
+    long userId = 1;
+
+    ThreadExecutor userThreadExecutor = ExecutorRegionKit.getUserThreadExecutor(userId);
+
+    userThreadExecutor.execute(() -> {
+        // print 1
+        log.info("userThreadExecutor : 1");
+    });
+
+    userThreadExecutor.execute(() -> {
+        // print 2
+        log.info("userThreadExecutor : 2");
+    });
+}
+
+@Test
+public void getUserVirtualThreadExecutor() {
+    long userId = 1;
+
+    ThreadExecutor userVirtualThreadExecutor = ExecutorRegionKit.getUserVirtualThreadExecutor(userId);
+
+    userVirtualThreadExecutor.execute(() -> {
+        // print 1
+        log.info("userVirtualThreadExecutor : 1");
+    });
+
+    userVirtualThreadExecutor.execute(() -> {
+        // print 2
+        log.info("userVirtualThreadExecutor : 2");
+    });
+}
+
+@Test
+public void getSimpleThreadExecutor() {
+    long userId = 1;
+
+    ThreadExecutor simpleThreadExecutor = ExecutorRegionKit.getSimpleThreadExecutor(userId);
+
+    simpleThreadExecutor.execute(() -> {
+        // print 1
+        log.info("simpleThreadExecutor : 1");
+    });
+
+    simpleThreadExecutor.execute(() -> {
+        // print 2
+        log.info("simpleThreadExecutor : 2");
+    });
+}
+```
+
+
+
+**从 FlowContext 中得到与用户（玩家）所关联的线程执行器**
+
+```java
+void executor() {
+    // 该方法具备全链路调用日志跟踪
+    flowContext.execute(() -> {
+        log.info("用户线程执行器");
+    });
+
+    // 正常提交任务到用户线程执行器中
+    // getExecutor() 用户线程执行器
+    flowContext.getExecutor().execute(() -> {
+        log.info("用户线程执行器");
+    });
+}
+
+void executeVirtual() {
+    // 该方法具备全链路调用日志跟踪
+    flowContext.executeVirtual(() -> {
+        log.info("用户虚拟线程执行器");
+    });
+
+    // 正常提交任务到用户虚拟线程执行器中
+    // getVirtualExecutor() 用户虚拟线程执行器
+    flowContext.getVirtualExecutor().execute(() -> {
+        log.info("用户虚拟线程执行器");
+    });
+
+    // 示例演示 - 更新元信息（可以使用虚拟线程执行完成一些耗时的操作）
+    flowContext.executeVirtual(() -> {
+        log.info("用户虚拟线程执行器");
+        
+        // 更新元信息
+        flowContext.updateAttachment();
+        
+        // ... ... 其他业务逻辑
+    });
+}
+```
+
+
+
+#### 日志相关
+
+日志库使用新版本 slf4j 2.x
+
+
+
+[#230](https://github.com/game-town/ioGame/issues/230) 支持全链路调用日志跟踪；
+
+更多的介绍，请阅读[全链路调用日志跟踪](https://www.yuque.com/iohao/game/zurusq)文档。
+
+
+
+**开启 traceId 特性**
+
+该配置需要在游戏对外服中设置，因为游戏对外服是玩家请求的入口。
+
+```java
+// true 表示开启 traceId 特性
+IoGameGlobalConfig.openTraceId = true;
+```
+
+
+
+将[全链路调用日志跟踪插件](https://www.yuque.com/iohao/game/xhvpqy) TraceIdInOut 添加到业务框架中，表示该游戏逻辑服需要支持全链路调用日志跟踪。如果游戏逻辑服没有添加该插件的，表示不需要记录日志跟踪。
+
+```java
+BarSkeletonBuilder builder = ...;
+// traceId
+TraceIdInOut traceIdInOut = new TraceIdInOut();
+builder.addInOut(traceIdInOut);
+```
+
+
+
+#### 分布式事件总线 - 跨服解耦
+
+[#228](https://github.com/game-town/ioGame/issues/228) 分布式事件总线是新增的通讯方式，可以代替 redis pub sub 、 MQ ...等中间件产品；分布式事件总线具备全链路调用日志跟踪，这点是中间件产品所做不到的。
+
+
+
+文档 - [分布式事件总线](https://www.yuque.com/iohao/game/gmxz33)
+
+
+
+**ioGame 分布式事件总线，特点**
+
+- 使用方式与 Guava EventBus 类似
+- 具备**全链路调用日志跟踪**。（这点是中间件产品做不到的）
+- 支持跨多个机器、多个进程通信
+- 支持与多种不同类型的多个逻辑服通信
+- 纯 javaSE，不依赖其他服务，耦合性低。（不需要安装任何中间件）
+- 事件源和事件监听器之间通过事件进行通信，从而实现了模块之间的解耦
+- 当没有任何远程订阅者时，**将不会触发网络请求**。（这点是中间件产品做不到的）
+
+
+
+下面两个订阅者是分别在**不同的进程中**的，当事件发布后，这两个订阅者都能接收到 UserLoginEventMessage 消息。
+
+```java
+@ActionController(UserCmd.cmd)
+public class UserAction {
+	... 省略部分代码
+    @ActionMethod(UserCmd.fireEvent)
+    public String fireEventUser(FlowContext flowContext) {
+        long userId = flowContext.getUserId();
+
+        log.info("fire : {} ", userId);
+        
+        // 事件源
+        var userLoginEventMessage = new UserLoginEventMessage(userId);
+        // 发布事件
+        flowContext.fire(userLoginEventMessage);
+
+        return "fireEventUser";
+    }
+}
+
+// 该订阅者在 【UserLogicStartup 逻辑服】进程中，与 UserAction 同在一个进程
+@EventBusSubscriber
+public class UserEventBusSubscriber {
+    @EventSubscribe(ExecutorSelector.userExecutor)
+    public void userLogin(UserLoginEventMessage message) {
+        log.info("event - 玩家[{}]登录，记录登录时间", message.getUserId());
+    }
+}
+
+// 该订阅者在 【EmailLogicStartup 逻辑服】进程中。
+@EventBusSubscriber
+public class EmailEventBusSubscriber {
+    @EventSubscribe
+    public void mail(UserLoginEventMessage message) {
+        long userId = message.getUserId();
+        log.info("event - 玩家[{}]登录，发放 email 奖励", userId);
+    }
+}
+```
+
+
+
+#### 小结
+
+在 ioGame21 中，该版本做了数百项优化及史诗级增强。
+
+- 在线文档方面
+- 线程管理域方面的开放与统一、减少线程池上下文切换
+- FlowContext 增强
+- 新增通讯方式 - 分布式事件总线
+- 游戏对外服方面增强
+- 全链路调用日志跟踪
+
+
+
+#### ioGame17 迁移到 ioGame21
+
+文档：[17 迁移到 ioGame21](https://www.yuque.com/iohao/game/hcgsfobyoph9r74r) 
+
+
+
+### ioGame17 - 更新日志
+
+see online [ioGame17 - 更新日志](https://www.yuque.com/iohao/game/ot5yruazqpe3uxre) 
+
+
+
+### ioGame17
+
+#### 2024-01-03 - v17.1.61
+
+https://github.com/game-town/ioGame/releases/tag/17.1.61
+
+[#223](https://github.com/game-town/ioGame/issues/223) 一天内 action 各小时的调用统计插件
+
+
+
+**打印预览**
+
+下面打印的是一天内（24小时）的业务消费量，以每小时为一个时间阶段，小时内可划分多个分钟阶段。
+
+```javascript
+2023-11-29 action 调用次数 共 [100] 次
+	0:00 共 8 次; - [15~30分钟 3 次] - [30~45分钟 2 次] - [45~59分钟 3 次]
+	1:00 共 9 次; - [0~15分钟 1 次] - [15~30分钟 4 次] - [30~45分钟 1 次] - [45~59分钟 3 次]
+	2:00 共 4 次; - [0~15分钟 1 次] - [15~30分钟 2 次] - [45~59分钟 1 次]
+	3:00 共 2 次; - [0~15分钟 1 次] - [15~30分钟 1 次]
+	4:00 共 1 次; - [0~15分钟 1 次]
+	5:00 共 4 次; - [0~15分钟 1 次] - [15~30分钟 1 次] - [30~45分钟 1 次] - [45~59分钟 1 次]
+	6:00 共 5 次; - [0~15分钟 1 次] - [15~30分钟 1 次] - [30~45分钟 1 次] - [45~59分钟 2 次]
+	7:00 共 4 次; - [15~30分钟 2 次] - [30~45分钟 1 次] - [45~59分钟 1 次]
+	8:00 共 4 次; - [0~15分钟 1 次] - [30~45分钟 3 次]
+	9:00 共 4 次; - [15~30分钟 2 次] - [30~45分钟 2 次]
+	10:00 共 5 次; - [15~30分钟 2 次] - [30~45分钟 1 次] - [45~59分钟 2 次]
+	11:00 共 3 次; - [15~30分钟 2 次] - [45~59分钟 1 次]
+	12:00 共 4 次; - [0~15分钟 2 次] - [30~45分钟 2 次]
+	13:00 共 1 次; - [30~45分钟 1 次]
+	14:00 共 5 次; - [0~15分钟 1 次] - [45~59分钟 4 次]
+	15:00 共 6 次; - [0~15分钟 1 次] - [15~30分钟 2 次] - [45~59分钟 3 次]
+	16:00 共 4 次; - [0~15分钟 1 次] - [15~30分钟 1 次] - [30~45分钟 1 次] - [45~59分钟 1 次]
+	17:00 共 7 次; - [0~15分钟 1 次] - [15~30分钟 3 次] - [30~45分钟 3 次]
+	18:00 共 2 次; - [0~15分钟 1 次] - [15~30分钟 1 次]
+	19:00 共 7 次; - [0~15分钟 1 次] - [15~30分钟 3 次] - [30~45分钟 3 次]
+	20:00 共 5 次; - [15~30分钟 3 次] - [30~45分钟 2 次]
+	21:00 共 3 次; - [15~30分钟 2 次] - [30~45分钟 1 次]
+	22:00 共 1 次; - [45~59分钟 1 次]
+	23:00 共 2 次; - [15~30分钟 1 次] - [45~59分钟 1 次]
+```
+
+
+
+**使用示例**
+
+```java
+BarSkeletonBuilder builder = ...;
+// 各时间段 action 调用统计插件，将插件添加到业务框架中
+var timeRangeInOut = new TimeRangeInOut();
+builder.addInOut(timeRangeInOut);
+```
+
+
+
+**默认的打印预览**
+
+默认配置下的打印如下，没有分钟阶段的调用次数统计，只有每小时的阶段的调用次数统计。
+
+```javascript
+2023-11-29 action 调用次数 共 [10000] 次
+	0:00 共 431 次;
+	1:00 共 416 次;
+	2:00 共 421 次;
+	3:00 共 414 次;
+	4:00 共 441 次;
+	5:00 共 423 次;
+	6:00 共 407 次;
+	7:00 共 395 次;
+	8:00 共 410 次;
+	9:00 共 413 次;
+	10:00 共 378 次;
+	11:00 共 411 次;
+	12:00 共 380 次;
+	13:00 共 413 次;
+	14:00 共 417 次;
+	15:00 共 416 次;
+	16:00 共 400 次;
+	17:00 共 430 次;
+	18:00 共 471 次;
+	19:00 共 440 次;
+	20:00 共 405 次;
+	21:00 共 430 次;
+	22:00 共 414 次;
+	23:00 共 424 次;
+```
+
+
+
+**其他**
+
+fix endPoint removeBinding.
+
+
+
+#### 2023-12-10 - v17.1.60
+
+https://github.com/game-town/ioGame/releases/tag/17.1.60
+
+
+
+[#227](https://github.com/game-town/ioGame/issues/227) 增加调度、定时器相关便捷工具，使用 HashedWheelTimer 来模拟 ScheduledExecutorService 调度
+
+```java
+public void test() {
+    // 每分钟调用一次
+    TaskKit.runIntervalMinute(() -> log.info("tick 1 Minute"), 1);
+    // 每 2 分钟调用一次
+    TaskKit.runIntervalMinute(() -> log.info("tick 2 Minute"), 2);
+
+    // 每 2 秒调用一次
+    TaskKit.runInterval(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
+    // 每 30 分钟调用一次
+    TaskKit.runInterval(() -> log.info("tick 30 Minute"), 30, TimeUnit.MINUTES);
+
+    //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 Listener
+    TaskKit.runInterval(new IntervalTaskListener() {
+        int hp = 2;
+
+        @Override
+        public void onUpdate() {
+            hp--;
+            log.info("剩余 hp:2-{}", hp);
+        }
+
+        @Override
+        public boolean isActive() {
+            // 当返回 false 则表示不活跃，会从监听列表中移除当前 Listener
+            return hp != 0;
+        }
+    }, 1, TimeUnit.SECONDS);
+
+    //【示例 - 跳过执行】每秒调用一次，当 triggerUpdate 返回值为 true，即符合条件时才执行 onUpdate 方法
+    TaskKit.runInterval(new IntervalTaskListener() {
+        int hp;
+
+        @Override
+        public void onUpdate() {
+            log.info("current hp:{}", hp);
+        }
+
+        @Override
+        public boolean triggerUpdate() {
+            hp++;
+            // 当返回值为 true 时，会执行 onUpdate 方法
+            return hp % 2 == 0;
+        }
+    }, 1, TimeUnit.SECONDS);
+
+    //【示例 - 指定线程执行器】每秒调用一次
+    // 如果有耗时的任务，比如涉及一些 io 操作的，建议指定执行器来执行当前回调（onUpdate 方法），以避免阻塞其他任务。
+    ExecutorService executorService = TaskKit.getCacheExecutor();
+
+    TaskKit.runInterval(new IntervalTaskListener() {
+        @Override
+        public void onUpdate() {
+            log.info("执行耗时的 IO 任务，开始");
+
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            log.info("执行耗时的 IO 任务，结束");
+        }
+
+        @Override
+        public Executor getExecutor() {
+            // 指定执行器来执行当前回调（onUpdate 方法），以避免阻塞其他任务。
+            return executorService;
+        }
+    }, 1, TimeUnit.SECONDS);
+
+    TimeUnit.SECONDS.sleep(20);
+}
+```
+
+
+
+[#225](https://github.com/game-town/ioGame/issues/225) 新增插件 - 业务线程监控
+
+详细文档 https://www.yuque.com/iohao/game/zoqabk4gez3bckis
+
+
+
+业务线程监控插件，主要的关注点
+
+- 各业务线程的执行 action 的次数
+- 执行时的平均耗时
+- 当前业务线程积压的任务数量（剩余未执行的任务数量，也就是我们的 action）
+
+
+
+开发者可以通过这些数据来分析各线程消费业务情况，根据这些信息适当的增加或减少硬件相关资源，也可以根据这些信息适当的调整线程相关策略。
+
+```java
+BarSkeletonBuilder builder = ...;
+// 业务线程监控插件，将插件添加到业务框架中
+var threadMonitorInOut = new ThreadMonitorInOut();
+builder.addInOut(threadMonitorInOut);
+业务线程[RequestMessage-8-1] 共执行了 1 次业务，平均耗时 1 ms, 剩余 91 个任务未执行
+业务线程[RequestMessage-8-2] 共执行了 1 次业务，平均耗时 1 ms, 剩余 0 个任务未执行
+业务线程[RequestMessage-8-3] 共执行了 1 次业务，平均耗时 1 ms, 剩余 36 个任务未执行
+业务线程[RequestMessage-8-4] 共执行了 1 次业务，平均耗时 1 ms, 剩余 0 个任务未执行
+业务线程[RequestMessage-8-5] 共执行了 1 次业务，平均耗时 1 ms, 剩余 88 个任务未执行
+业务线程[RequestMessage-8-6] 共执行了 1 次业务，平均耗时 1 ms, 剩余 0 个任务未执行
+业务线程[RequestMessage-8-7] 共执行了 7 次业务，平均耗时 1 ms, 剩余 56 个任务未执行
+业务线程[RequestMessage-8-8] 共执行了 1 次业务，平均耗时 1 ms, 剩余 0 个任务未执行
+```
+
+
+
+#### 2023-11-20 - v17.1.59
+
+https://github.com/game-town/ioGame/releases/tag/17.1.59
+
+
+
+TImeKit 新加时间更新策略，开发者可设置时间更新策略。
+
+RandomKit 功能增强，随机得到数组中的一个元素。
+
+移除 SocketUserSessionHandler exceptionCaught 的日志打印。
+
+
+
+**[**[**#221**](https://github.com/game-town/ioGame/issues/221)**] 新增 action 调用统计插件 StatisticActionInOut**
+
+[action 调用统计插件 StatisticActionInOut - 文档](https://www.yuque.com/iohao/game/znapzm1dqgehdyw8)
+
+
+
+StatActionInOut 是 action 调用统计插件，可以用来统计各 action 调用时的相关数据，如 action 的执行次数、总耗时、平均耗时、最大耗时、触发异常次数...等相关数据
+
+
+
+开发者可以通过这些数据来分析出项目中的热点方法、耗时方法，**从而做到精准优化**。
+
+
+
+**action 调用统计插件的打印预览**
+
+```javascript
+StatAction{cmd[1 - 1], 执行[50]次, 异常[0]次, 平均耗时[1833], 最大耗时[2945], 总耗时[91691] 
+	500 ~ 1000 ms 的请求共 [7] 个
+	1000 ~ 1500 ms 的请求共 [11] 个
+	1500 ~ 2000 ms 的请求共 [9] 个
+	> 2000 ms 的请求共 [23] 个
+
+StatAction{cmd[1 - 2], 执行[50]次, 异常[0]次, 平均耗时[1782], 最大耗时[2976], 总耗时[89133] 
+	500 ~ 1000 ms 的请求共 [10] 个
+	1000 ~ 1500 ms 的请求共 [7] 个
+	1500 ~ 2000 ms 的请求共 [12] 个
+	> 2000 ms 的请求共 [21] 个
+```
+
+
+
+**action 调用统计插件的使用**
+
+```java
+BarSkeletonBuilder builder = ...;
+// action 调用统计插件，将插件添加到业务框架中
+var statActionInOut = new StatActionInOut();
+builder.addInOut(statActionInOut);
+
+// 设置 StatAction 统计记录更新后的监听处理
+// 这个监听不是必需的，这里只是简单的演示一下有变动时就做个打印。与 debugInOut 类似。
+statActionInOut.setListener((statAction, time, flowContext) -> {
+    // 简单打印统计记录值 StatAction
+    System.out.println(statAction);
+});
+```
+
+
+
+**FlowContext 增强**
+
+增加 inOutStartTime 和 getInOutTime 方法，用于记录插件的开始执行时间和结束时所消耗的时间。当你扩展了多个插件时，插件中又有时间记录方面需求的，可以使用下面的方式。
+
+```java
+// 使用示例
+public final class YourInOut implements ActionMethodInOut {
+   
+    @Override
+    public void fuckIn(FlowContext flowContext) {
+        // 记录当前时间（重复调用只记录首次时间）
+        flowContext.inOutStartTime();
+    }
+
+    @Override
+    public void fuckOut(FlowContext flowContext) {
+        // 消耗时间 = System.currentTimeMillis - inOutStartTime
+        long time = flowContext.getInOutTime();
+    }
+}
+```
+
+
+
+
+
+#### 2023-11-02 - v17.1.58
+
+
+
+https://github.com/game-town/ioGame/releases/tag/17.1.58
+
+
+
+优化 FlowContext createRequestMessage
+
+
+
+[#194 ](https://github.com/game-town/ioGame/issues/194)
+
+可能在 springboot 集成 light-domain-event 时，启动报 java.lang.ClassNotFoundException
+
+
+
+[#198 ](https://github.com/game-town/ioGame/issues/198)
+
+关于改造现有或老客户端项目到 ioGame 遇到的问题
+
+HeadMetadata 增加 customData 属性；用于自定义数据，专为开发者预留的一个字段，开发者可以利用该字段来传递自定义数据。该字段由开发者自己定义，框架不会对数据做任何处理，也不会做任何检查，开发者可以利用该字段来传递任何数据，包括自定义对象。
+
+
+
+------
+
+**模拟客户端**
+
+因发展需要，模拟客户端使用新 api ，与 [SDK 风格](https://www.yuque.com/iohao/game/ru82oa0zeb6orlce)做统一。从 17.1.58 版本开始，推荐开发者使用新版本的 api。已经将老的 api 做了过期标记，将在 ioGame21 版本中完全移除这些过期的 api。整体变化不大，内容如下
+
+
+
+**请求 api**
+
+变更说明
+
+新版本反序列化消息放在 result 时解析。
+
+setDescription 使用 setTitle 代替。
+
+setInputRequestData 使用 setRequestData 代替。
+
+对于 List 类型的使用更友好
+
+
+
+```java
+########## 请求 - 旧版本 ##########
+// 创建一个模拟命令 - 【125-3】读取某个玩家的私有消息
+ofCommandUserId(ChatCmd.readPrivateMessage).callback(ByteValueList.class, result -> {
+    List<ChatMessage> list = result.toList(ChatMessage.class);
+    if (CollKit.isEmpty(list)) {
+        return;
+    }
+
+    log.info("玩家【{}】读取私聊消息数量 : {}", userId, list.size());
+    System.out.println("------------------------------");
+    list.stream().map(ClientChatKit::toString).forEach(System.out::println);
+    System.out.println("------------------------------");
+
+}).setDescription("读取某个玩家的私有消息");
+
+########## 请求 - 新版本 ##########
+// 创建一个模拟命令 - 【125-3】读取某个玩家的私有消息
+ofCommandUserId(ChatCmd.readPrivateMessage)
+        .setTitle("读取某个玩家的私有消息")
+        .callback(result -> {
+            List<ChatMessage> list = result.listValue(ChatMessage.class);
+            if (CollKit.isEmpty(list)) {
+                return;
+            }
+
+            log.info("玩家【{}】读取私聊消息数量 : {}", userId, list.size());
+            System.out.println("------------------------------");
+            list.stream().map(ClientChatKit::toString).forEach(System.out::println);
+            System.out.println("------------------------------");
+        });
+```
+
+
+
+```java
+########## 请求 - 旧版本 ##########
+// 创建一个模拟命令 - 【125-2】未读消息的发送者列表
+ofCommand(ChatCmd.listUnreadUserId).callback(LongValueList.class, result -> {
+    LongValueList longValueList = result.getValue();
+    log.info("未读消息的发送者列表 : {}", longValueList.values);
+}).setDescription("未读消息的发送者列表");
+
+########## 请求 - 新版本 ##########
+// 创建一个模拟命令 - 【125-2】未读消息的发送者列表
+ofCommand(ChatCmd.listUnreadUserId)
+        .setTitle("未读消息的发送者列表")
+        .callback(result -> {
+            List<Long> values = result.listLong();
+            log.info("未读消息的发送者列表 : {}", values);
+        });
+```
+
+
+
+```java
+########## 请求 - 旧版本 ##########
+// 创建一个模拟命令 - 【125-1】玩家与玩家的私聊
+ofCommand(ChatCmd.c_2_c)
+        // 动态请求内容 - 私聊，聊天内容
+        .setInputRequestData(() -> {
+            ... 省略部分
+
+            return chatSendMessage;
+        })
+        // 命令描述
+        .setDescription("玩家与玩家的私聊");
+
+########## 请求 - 新版本 ##########
+// 创建一个模拟命令 - 【125-1】玩家与玩家的私聊
+ofCommand(ChatCmd.c_2_c)
+        .setTitle("玩家与玩家的私聊")
+        // 动态请求内容 - 私聊，聊天内容
+        .setRequestData(() -> {
+            ... 省略部分
+
+            return chatSendMessage;
+        });
+```
+
+
+
+```java
+########## 请求 - 旧版本 ##########
+HelloReq helloReq = new HelloReq();
+helloReq.name = "abc12";
+
+ofCommand(DemoCmd.here).callback(HelloReq.class, result -> {
+    HelloReq value = result.getValue();
+    log.info("value : {}", value);
+}).setDescription("here").setRequestData(helloReq);
+
+########## 请求 - 新版本 ##########
+ofCommand(DemoCmd.here)
+// 标题
+.setTitle("here")
+// 请求参数
+.setRequestData(() -> {
+    HelloReq helloReq = new HelloReq();
+    helloReq.name = "abc12";
+    return helloReq;
+})
+// 响应
+.callback(result -> {
+    HelloReq value = result.getValue(HelloReq.class);
+    log.info("value : {}", value);
+});
+
+########## 请求 - 新版本 - 简写 ##########
+ofCommand(DemoCmd.here).setTitle("here").setRequestData(() -> {
+    HelloReq helloReq = new HelloReq();
+    helloReq.name = "abc12";
+    return helloReq;
+}).callback(result -> {
+    HelloReq value = result.getValue(HelloReq.class);
+    log.info("value : {}", value);
+});
+```
+
+
+
+**广播 api**
+
+变更说明
+
+listenBroadcast 使用 ofListen 代替。
+
+新版本反序列化消息放在 result.getValue 时解析。
+
+```java
+########## 广播 - 旧版本 ##########
+// 广播监听回调 - 监听【125-11】玩家私聊消息通知
+listenBroadcast(ChatNotifyMessage.class, result -> {
+    ChatNotifyMessage chatNotifyMessage = result.getValue();
+    // 聊天消息发送方的 userId
+    long senderId = chatNotifyMessage.senderId;
+    log.info("玩家[{}]给我的私聊通知", senderId);
+}, ChatCmd.notifyPrivate, "玩家私聊消息通知");
+
+########## 广播 - 新版本 ##########
+// 广播监听回调 - 监听【125-11】玩家私聊消息通知
+ofListen(result -> {
+    ChatNotifyMessage chatNotifyMessage = result.getValue(ChatNotifyMessage.class);
+    // 聊天消息发送方的 userId
+    long senderId = chatNotifyMessage.senderId;
+    log.info("玩家[{}]给我的私聊通知", senderId);
+}, ChatCmd.notifyPrivate, "玩家私聊消息通知");
+```
+
+
+
 
 
 #### 2023-09-06 - v17.1.55
