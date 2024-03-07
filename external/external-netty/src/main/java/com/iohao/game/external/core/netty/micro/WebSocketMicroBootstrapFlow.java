@@ -18,14 +18,17 @@
  */
 package com.iohao.game.external.core.netty.micro;
 
+import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.micro.PipelineContext;
 import com.iohao.game.external.core.netty.handler.codec.WebSocketExternalCodec;
 import com.iohao.game.external.core.netty.handler.ws.WebSocketVerifyHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
+import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolConfig;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
@@ -66,10 +69,21 @@ public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
         this.websocketHandler(context);
 
         // websocket 编解码
-        context.addLast("codec", new WebSocketExternalCodec());
+        var externalCodec = this.createExternalCodec();
+        context.addLast("codec", externalCodec);
     }
 
-    private void verifyHandler(PipelineContext context) {
+    /**
+     * 单独创建 WebSocket Codec，其他配置使用框架提供的。如果需要高度灵活定制的，可重写 pipelineCodec 方法。
+     * <pre>codec BinaryWebSocketFrame, BarMessage</pre>
+     *
+     * @return WebSocket Codec. default {@link WebSocketExternalCodec}
+     */
+    protected MessageToMessageCodec<BinaryWebSocketFrame, BarMessage> createExternalCodec() {
+        return new WebSocketExternalCodec();
+    }
+
+    protected void verifyHandler(PipelineContext context) {
         WebSocketVerifyHandler verifyHandler = this.createVerifyHandler();
         if (Objects.nonNull(verifyHandler)) {
             context.addLast("WebSocketVerifyHandler", verifyHandler);
