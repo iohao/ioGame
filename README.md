@@ -270,9 +270,7 @@ ioGame 已经接入 OSCS 墨菲安全扫描，框架的安全质量近乎100%，
 
 ## 整体预览导图
 
-
-
-![image](https://raw.githubusercontent.com/iohao/ioGameResource/main/images/ioGameMind.png)
+![image](https://user-images.githubusercontent.com/26356013/236759330-9a87bb74-db09-4fa2-b002-65770f86b892.png)
 
 
 
@@ -649,7 +647,7 @@ Bolt 名字取自迪士尼动画-闪电狗，是一个基于 Netty 最佳实践�
 <details>
 <summary>业务框架性能报告JMH--点我展开</summary>
 
-![img](https://raw.githubusercontent.com/iohao/ioGameResource/main/images/ioGameJmeter.png)
+![ioGameJmeter](https://github.com/game-town/ioGame/assets/26356013/96bb2ea9-f459-402d-8957-ff47e251285d)
 
 ----------------------------------------
 上面是在单线程中的测试数据，业务框架平均每秒执行 1152 万次。
@@ -660,7 +658,7 @@ Bolt 名字取自迪士尼动画-闪电狗，是一个基于 Netty 最佳实践�
 
 ## 架构简图
 
-![img](https://raw.githubusercontent.com/iohao/ioGameResource/main/images/ioGame.jpg)
+![ioGame](https://github.com/game-town/ioGame/assets/26356013/70c6a157-ca12-4a46-9b35-c67f329d067e)
 
 
 <p align="center" style="color:red">
@@ -864,7 +862,8 @@ ioGame 提供了[多种类型的通讯方式](https://www.yuque.com/iohao/game/n
 
 一般传统的框架只提供了接收请求，当请求处理完后使用推送的方式将数据响应给请求端。但在使用 ioGame 时，不要被过去的传统框架束缚住，可以做任何大胆的设计，因为通讯方式足够丰富；
 
-![img](https://raw.githubusercontent.com/iohao/ioGameResource/main/images/ioGameCommunication.png)
+![img](https://user-images.githubusercontent.com/26356013/289906560-56efd0ed-ef60-4c77-8eef-36793d01662c.png)
+
 
 总的来说，ioGame 支持的通讯方式分为两大类，分别是路由类和主题类；下面分别对这些通讯方式做一些应用场景举例介绍。
 
