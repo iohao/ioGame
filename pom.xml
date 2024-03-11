@@ -6,9 +6,12 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>ioGame</artifactId>
-    <version>21.2</version>
+    <version>21.3</version>
     <name>ioGame</name>
-    <description>ioGame 网络编程框架；ioGame 适用于网络游戏服务器、物联网、内部系统及各种需要长连接的场景；生产资料公有制；
+    <description>
+        生产资料公有制。
+        让网络游戏服务器的编程变得轻松简单。
+        ioGame 是一个轻量级的网络编程框架，适用于网络游戏服务器、物联网、内部系统及各种需要长连接的场景。
     </description>
     <url>http://game.iohao.com</url>
 
