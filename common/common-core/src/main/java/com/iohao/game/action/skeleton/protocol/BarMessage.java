@@ -55,12 +55,7 @@ public abstract sealed class BarMessage implements Serializable permits RequestM
     /** 元信息 */
     HeadMetadata headMetadata;
 
-    /**
-     * 业务数据的 class 信息
-     * <pre>
-     *     <a href="https://gitee.com/iohao/iogame/issues/I5G0FC">...</a>
-     * </pre>
-     */
+    /** 业务数据的 class 信息 */
     String dataClass;
     /** 实际请求的业务参数 byte[] */
     byte[] data;

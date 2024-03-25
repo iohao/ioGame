@@ -34,16 +34,10 @@ public class MultipleTaskTest {
     @Test
     public void moreTask() throws InterruptedException {
         /*
-         * https://gitee.com/iohao/iogame/issues/I5S8QC
-         *
          * 默认情况下，延时器的执行上限是 10_000 ， 如果你的业务中有更大的需求量，
          * 可以通过 Cache2Kit.createCacheBuilder 构建器来调整。
          * 如果有少许误差，可以研究 cache2k 的内核，或对 cache2k 进行升级。
-         *
-         * 
          */
-
-
         int loop = 20_000;
 
         for (int i = 0; i < loop; i++) {

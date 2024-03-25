@@ -2313,11 +2313,9 @@ v17.1.9
 
 #I5KR7T
 UserHook quit方法中调用ExternalKit.requestGateway(userSession, requestMessage); 抛出异常
-https://gitee.com/iohao/iogame/issues/I5KR7T
 
 #I5KZTP
 断言抛异常没有带异常信息
-https://gitee.com/iohao/iogame/issues/I5KZTP
 
 #### 2022-08-04 - v17.1.5 ~ v17.1.8
 
@@ -2342,7 +2340,6 @@ https://gitee.com/iohao/iogame/issues/I5KZTP
 
 #I5KLED
 CocosCreator 与综合示例联调（登录）
-前端示例代码：https://gitee.com/iohao/io-game-cocos
 综合示例代码：https://www.yuque.com/iohao/game/ruaqza#SWzpv
 服务器示例启动类： SpringGameOneApplication
 
@@ -2365,7 +2362,6 @@ CocosCreator 与综合示例联调（登录）
 
 -- 3类通讯方式相关 --
 新增：【游戏逻辑服】访问多个【游戏对外服】的上下文。
-具体可以查看 https://gitee.com/iohao/iogame/issues/I5J7JU
 
 新增：游戏对外服扩展
 游戏对外服新增 ExternalBizRegion 接口，开发者可以更好地扩展游戏对外服，通过这个接口与本次新增的上下文配合使用；开发者可以通过实现这个接口，向游戏逻辑服提供一些，如
@@ -2375,8 +2371,6 @@ CocosCreator 与综合示例联调（登录）
 框架通过这一扩展，在不到 15 行的有效代码中，就轻松实现了重复登录、顶号功能；
 ● ExistUserExternalBizRegion 查询用户（玩家）是否在线
 ● ForcedOfflineExternalBizRegion 强制用户（玩家）下线
-重复登录 具体查看 https://gitee.com/iohao/iogame/issues/I5J7G5
-顶号 具体查看 https://gitee.com/iohao/iogame/issues/I5J7GI
 ExternalBizRegion 扩展具体查看 https://www.yuque.com/iohao/game/ivxsw5
 
 
@@ -2389,7 +2383,6 @@ ExternalBizRegion 扩展具体查看 https://www.yuque.com/iohao/game/ivxsw5
 
 当设置好需要携带到游戏逻辑服的数据时，我们可以通过 FlowContext.getAttachment () 方法来获取我们在游戏对外服设置的数据
 
-具体查看 https://gitee.com/iohao/iogame/issues/I5J96X
 
 新增：严格登录，路由访问权限的控制
 严格登录指的是，如果玩家没有登录，是不能访问其他业务方法的（即 action）。
@@ -2405,7 +2398,6 @@ accessAuthenticationHook.addIgnoreAuthenticationCmd(1, 1);
 
 默认配置下，setVerifyIdentity = false ，就是不登录就可以访问所有的业务方法。
 
-具体查看 https://gitee.com/iohao/iogame/issues/I5J7HG
 
 #### 2022-07-19 - v17.1.3
 
@@ -2450,7 +2442,6 @@ InvokeModuleContext，新增无参请求方法，单个逻辑服与单个逻辑�
 
 变更 BarMessage 成员变量类型（#I5G0FC）
 BarMessage.dataClass 字段，由 Class<?> 类型改为 String类型
-具体的原因可以查看 issu https://gitee.com/iohao/iogame/issues/I5G0FC
 
 当建立多个项目时，在游戏逻辑服处理完业务却无法响应数据到请求端；但可以接收到来自请求端的请求数据； 由于 dataClass 变量是 Class<?> 类型的，如果游戏对外服、游戏网关服没有对应的 class 会造成解码失败，而引发 ClassNotFoundException
 
@@ -2502,15 +2493,11 @@ ioGame 版本规则 x.y.z
     x 一般延后 1~4 个季度，给开发者一个缓冲。即下一个 JDK LTS 出来后，那么 ioGame 的 x 会在 1~4个季度后跟上。
     也就是说，下一个 x 将会是 21;
 
-扩展库移到
-https://gitee.com/iohao/ext-iogame
-
 2022-06-30
 (#I5EVQQ)
 当开启登录验证时，客户端没登录而请求业务方法时，返回对应的错误码到请求端；
 
-将网络游戏服务器框架的示例放到单独的 git 仓库；前期放在一起是为了方便运行演示，好给开发者进行一个快速的体验；
-https://gitee.com/iohao/example-iogame
+将网络游戏服务器框架的示例放到单独的 git 仓库；
 
 移除
 BrokerClientContext.invokeModuleMessage
