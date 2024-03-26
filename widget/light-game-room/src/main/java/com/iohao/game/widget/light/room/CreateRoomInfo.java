@@ -35,5 +35,5 @@ public class CreateRoomInfo {
     /** 房间可供几个人玩 */
     int spaceSize;
     /** 创建的玩家 id */
-    int createUserId;
+    long createUserId;
 }
