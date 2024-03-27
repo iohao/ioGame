@@ -19,6 +19,7 @@
 package com.iohao.game.external.core.netty.session;
 
 
+import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.external.core.session.UserChannelId;
 import com.iohao.game.external.core.session.UserSessionState;
 import io.netty.channel.Channel;
@@ -106,25 +107,41 @@ public final class SocketUserSessions extends AbstractUserSessions<ChannelHandle
             return;
         }
 
+        long userId = userSession.getUserId();
+        ExecutorRegionKit.getSimpleThreadExecutor(userId)
+                .executeTry(() -> internalRemoveUserSession(userSession));
+    }
+
+    private void internalRemoveUserSession(SocketUserSession userSession) {
         if (userSession.getState() == UserSessionState.DEAD) {
+            removeUserSessionMap(userSession);
             return;
         }
-
-        UserChannelId userChannelId = userSession.getUserChannelId();
-        long userId = userSession.getUserId();
-
-        Channel channel = userSession.getChannel();
-        this.userIdMap.remove(userId);
-        this.userChannelIdMap.remove(userChannelId);
-        this.channelGroup.remove(channel);
 
         if (userSession.getState() == UserSessionState.ACTIVE && userSession.isVerifyIdentity()) {
             userSession.setState(UserSessionState.DEAD);
             this.userHookQuit(userSession);
         }
 
+        removeUserSessionMap(userSession);
+
         // 关闭用户的连接
-        channel.close();
+        userSession.getChannel().close();
+    }
+
+    private void removeUserSessionMap(SocketUserSession userSession) {
+        long userId = userSession.getUserId();
+        this.userIdMap.remove(userId);
+
+        UserChannelId userChannelId = userSession.getUserChannelId();
+        if (Objects.nonNull(userChannelId)) {
+            this.userChannelIdMap.remove(userChannelId);
+        }
+
+        Channel channel = userSession.getChannel();
+        if (Objects.nonNull(channel)) {
+            this.channelGroup.remove(channel);
+        }
     }
 
     @Override
