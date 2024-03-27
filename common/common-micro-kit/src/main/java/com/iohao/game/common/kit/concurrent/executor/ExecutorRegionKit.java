@@ -39,16 +39,20 @@ import java.util.function.Supplier;
  */
 @UtilityClass
 public class ExecutorRegionKit {
+    /** 定制线程策略 */
     @Setter
     Supplier<ExecutorRegion> executorRegionSupplier = () -> new ExecutorRegion() {
+        final UserThreadExecutorRegion userThreadExecutorRegion = new UserThreadExecutorRegion();
+        final SimpleThreadExecutorRegion simpleThreadExecutorRegion = new SimpleThreadExecutorRegion();
+
         @Override
         public ThreadExecutorRegion getUserThreadExecutorRegion() {
-            return new UserThreadExecutorRegion();
+            return this.userThreadExecutorRegion;
         }
 
         @Override
         public ThreadExecutorRegion getSimpleThreadExecutorRegion() {
-            return new SimpleThreadExecutorRegion();
+            return this.simpleThreadExecutorRegion;
         }
     };
 
