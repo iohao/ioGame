@@ -51,4 +51,13 @@ final class SimpleThreadExecutorRegion extends AbstractThreadExecutorRegion {
         var i = (int) (index % this.executorLength);
         return this.threadExecutors[i];
     }
+
+    static SimpleThreadExecutorRegion me() {
+        return Holder.ME;
+    }
+
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final SimpleThreadExecutorRegion ME = new SimpleThreadExecutorRegion();
+    }
 }

@@ -43,7 +43,7 @@ public class ExecutorRegionKit {
     @Setter
     Supplier<ExecutorRegion> executorRegionSupplier = () -> new ExecutorRegion() {
         final UserThreadExecutorRegion userThreadExecutorRegion = new UserThreadExecutorRegion();
-        final SimpleThreadExecutorRegion simpleThreadExecutorRegion = new SimpleThreadExecutorRegion();
+        final SimpleThreadExecutorRegion simpleThreadExecutorRegion = SimpleThreadExecutorRegion.me();
 
         @Override
         public ThreadExecutorRegion getUserThreadExecutorRegion() {
@@ -52,7 +52,7 @@ public class ExecutorRegionKit {
 
         @Override
         public ThreadExecutorRegion getSimpleThreadExecutorRegion() {
-            return this.simpleThreadExecutorRegion;
+            return simpleThreadExecutorRegion;
         }
     };
 
