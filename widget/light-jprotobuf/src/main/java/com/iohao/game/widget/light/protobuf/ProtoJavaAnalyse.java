@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.protobuf;
 
+import com.baidu.bjf.remoting.protobuf.annotation.Ignore;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.esotericsoftware.reflectasm.FieldAccess;
 import com.iohao.game.common.kit.ClassScanner;
@@ -133,7 +134,6 @@ public class ProtoJavaAnalyse {
     private void analyseField(ProtoJava protoJava) {
         Class<?> clazz = protoJava.getClazz();
         Field[] fields;
-        int order;
 
         if (clazz.isEnum()) {
             // 如果是枚举类型，需要单独处理，因为FieldAccess.get(clazz)方法中的Modifier.isStatic(modifiers)判断会过滤枚举内的属性
@@ -145,6 +145,7 @@ public class ProtoJavaAnalyse {
                     // java的Enum有一个隐藏的$VALUES(private)，需要过滤掉---枚举其他属性默认public static
                     continue;
                 }
+                
                 fieldList.add(enumField);
             }
 
@@ -152,24 +153,24 @@ public class ProtoJavaAnalyse {
             for (int i = 0; i < fieldList.size(); i++) {
                 fields[i] = fieldList.get(i);
             }
-
-            // 枚举enum的下标从0开始
-            order = 0;
         } else {
             fields = FieldAccess.get(clazz).getFields();
-            // message的下标从1开始
-            order = 1;
         }
 
         JavaClass javaClass = protoJava.getJavaClass();
+        // 枚举 enum 的下标从 0 开始，message 的下标从 1 开始
+        int order = clazz.isEnum() ? 0 : 1;
 
         for (Field field : fields) {
 
-            String fieldName = field.getName();
-            Class<?> fieldTypeClass = field.getType();
+            if (Objects.nonNull(field.getAnnotation(Ignore.class))) {
+                continue;
+            }
 
+            Class<?> fieldTypeClass = field.getType();
             boolean repeated = List.class.equals(fieldTypeClass);
 
+            String fieldName = field.getName();
             JavaField javaField = javaClass.getFieldByName(fieldName);
 
             ProtoJavaField protoJavaField = new ProtoJavaField()
@@ -267,7 +268,6 @@ public class ProtoJavaAnalyse {
     private void processMapFieldProtoJava(ProtoJavaField protoJavaField) {
 
         Map<String, String> map = new HashMap<>();
-
 
         // map 类型
         Field field = protoJavaField.getField();
