@@ -70,21 +70,18 @@ public class ClassScanner {
         try {
             this.initClassLoad();
 
-            List<URL> urlList = listResource();
+            Enumeration<URL> urlEnumeration = classLoader.getResources(packagePath);
 
-            urlList.parallelStream().forEach(url -> {
+            while (urlEnumeration.hasMoreElements()) {
+                URL url = urlEnumeration.nextElement();
                 String protocol = url.getProtocol();
-                try {
-                    if ("jar".equals(protocol)) {
-                        scanJar(url);
 
-                    } else if ("file".equals(protocol)) {
-                        scanFile(url);
-                    }
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                if ("jar".equals(protocol)) {
+                    scanJar(url);
+                } else if ("file".equals(protocol)) {
+                    scanFile(url);
                 }
-            });
+            }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -117,29 +114,37 @@ public class ClassScanner {
 
     private void scanJar(URL url) throws IOException {
         URLConnection urlConn = url.openConnection();
+
         if (urlConn instanceof JarURLConnection jarUrlConn) {
-            try (JarFile jarFile = jarUrlConn.getJarFile()) {
+            JarFile jarFile = jarUrlConn.getJarFile();
 
-                Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
-                while (jarEntryEnumeration.hasMoreElements()) {
-                    JarEntry jarEntry = jarEntryEnumeration.nextElement();
-                    String jarEntryName = jarEntry.getName();
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                // jarEntryName
+                String jarEntryName = entry.getName();
 
-                    // 扫描 packagePath 下的类
-                    if (jarEntryName.endsWith(".class") && jarEntryName.startsWith(packagePath)) {
-                        jarEntryName = jarEntryName.substring(0, jarEntryName.length() - 6).replace('/', '.');
-                        scanClazz(jarEntryName);
-                    }
+                if (jarEntryName.charAt(0) == '/') {
+                    jarEntryName = jarEntryName.substring(1);
                 }
 
+                if (entry.isDirectory() || !jarEntryName.startsWith(packagePath)) {
+                    continue;
+                }
+
+                // 扫描 packagePath 下的类
+                if (jarEntryName.endsWith(".class") && jarEntryName.startsWith(packagePath)) {
+                    jarEntryName = jarEntryName.substring(0, jarEntryName.length() - 6).replace('/', '.');
+                    loadClass(jarEntryName);
+                }
             }
         }
     }
 
     private void scanFile(URL url) {
-        String path = url.getPath();
-        path = URLDecoder.decode(path, StandardCharsets.UTF_8);
-        File file = new File(path);
+        String name = URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8);
+        File file = new File(name);
+
         String classPath = getClassPath(file);
         scanFile(file, classPath);
     }
@@ -167,8 +172,7 @@ public class ClassScanner {
                         .substring(classPath.length(), absolutePath.length() - 6)
                         .replace(File.separatorChar, '.');
 
-                scanClazz(className);
-
+                loadClass(className);
             }
         }
     }
@@ -191,7 +195,7 @@ public class ClassScanner {
         return absolutePath;
     }
 
-    private void scanClazz(String className) {
+    private void loadClass(String className) {
         Class<?> clazz = null;
 
         try {
