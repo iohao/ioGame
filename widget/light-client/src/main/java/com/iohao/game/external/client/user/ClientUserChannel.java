@@ -38,6 +38,7 @@ import org.jctools.maps.NonBlockingHashMap;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -160,62 +161,74 @@ public class ClientUserChannel {
         @Override
         public void read(BarMessage message) {
             HeadMetadata headMetadata = message.getHeadMetadata();
-
-            // 表示有异常消息;统一异常处理
             int responseStatus = message.getResponseStatus();
-            int cmdMerge = headMetadata.getCmdMerge();
-            CmdInfo cmdInfo = headMetadata.getCmdInfo();
-            int msgId = headMetadata.getMsgId();
-            RequestCommand requestCommand = callbackMap.remove(msgId);
 
+            // 表示有异常消息，统一异常处理
             if (responseStatus != 0) {
-                log.error("[错误码:{}] - [消息:{}] - {}", responseStatus, message.getValidatorMsg(), cmdInfo);
+                log.error("[错误码:{}] - [消息:{}] - {}", responseStatus, message.getValidatorMsg(), headMetadata.getCmdInfo());
                 return;
             }
 
             if (headMetadata.getCmdCode() == ExternalMessageCmdCode.idle) {
-                if (ClientUserConfigs.openLogIdle) {
-                    log.info("接收服务器心跳回调 : {}", message);
-                }
-
+                printLog(message);
                 return;
             }
 
             CommandResult commandResult = new CommandResult(message);
-
             // 有回调的，交给回调处理
+            int msgId = headMetadata.getMsgId();
+            RequestCommand requestCommand = callbackMap.remove(msgId);
+
             if (Objects.nonNull(requestCommand)) {
+                printLog(headMetadata, requestCommand);
 
-                if (ClientUserConfigs.openLogRequestCallback) {
-                    // 玩家接收服务器的响应数据
-                    long userId = clientUser.getUserId();
-
-                    log.info("玩家[{}] 接收【{}】回调 - [msgId:{}] {}"
-                            , userId
-                            , requestCommand.getTitle()
-                            , msgId
-                            , CmdKit.mergeToShort(cmdMerge)
-                    );
-                }
-
-                CallbackDelegate callback = requestCommand.getCallback();
-                callback.callback(commandResult);
+                Optional.ofNullable(requestCommand.getCallback()).ifPresent(callback -> callback.callback(commandResult));
 
                 return;
             }
 
             // 广播监听
+            int cmdMerge = headMetadata.getCmdMerge();
             ListenCommand listenCommand = listenMap.get(cmdMerge);
-            if (Objects.nonNull(listenCommand)) {
-                if (ClientUserConfigs.openLogListenBroadcast) {
-                    log.info("广播监听回调 [{}] 通知 {}"
-                            , listenCommand.getTitle()
-                            , CmdKit.mergeToShort(cmdMerge)
-                    );
-                }
 
-                CallbackDelegate callback = listenCommand.getCallback();
-                callback.callback(commandResult);
+            if (Objects.nonNull(listenCommand)) {
+                printLog(listenCommand, cmdMerge);
+                listenCommand.getCallback().callback(commandResult);
+            }
+        }
+
+        private void printLog(BarMessage message) {
+            if (ClientUserConfigs.openLogIdle) {
+                log.info("接收服务器心跳回调 : {}", message);
+            }
+        }
+
+        private void printLog(ListenCommand listenCommand, int cmdMerge) {
+            if (ClientUserConfigs.openLogListenBroadcast) {
+                log.info("广播监听回调 [{}] 通知 {}"
+                        , listenCommand.getTitle()
+                        , CmdKit.mergeToShort(cmdMerge)
+                );
+            }
+        }
+
+        private void printLog(HeadMetadata headMetadata, RequestCommand requestCommand) {
+            if (ClientUserConfigs.openLogRequestCallback) {
+                // 玩家接收服务器的响应数据
+                long userId = clientUser.getUserId();
+                int cmdMerge = headMetadata.getCmdMerge();
+
+                log.info("玩家[{}] 接收【{}】回调 - [msgId:{}] {}"
+                        , userId
+                        , requestCommand.getTitle()
+                        , headMetadata.getMsgId()
+                        , CmdKit.mergeToShort(cmdMerge)
+                );
+
+                CallbackDelegate callback = requestCommand.getCallback();
+                if (Objects.isNull(callback)) {
+                    log.warn("callback is null");
+                }
             }
         }
     }
