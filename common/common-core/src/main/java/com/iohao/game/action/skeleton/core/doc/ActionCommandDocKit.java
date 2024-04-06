@@ -23,6 +23,7 @@ import com.iohao.game.common.kit.ClassScanner;
 import com.iohao.game.common.kit.io.FileKit;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +34,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author 渔民小镇
@@ -41,6 +43,17 @@ import java.util.Map;
 @UtilityClass
 @Slf4j(topic = IoGameLogName.CommonStdout)
 public class ActionCommandDocKit {
+    @Setter
+    Function<URL, String> sourceFilePathFun = resourceUrl -> {
+        String path = resourceUrl.getPath();
+
+        return path.contains("target/classes")
+                // maven
+                ? path.replace("target/classes", "src/main/java")
+                // gradle
+                : path.replace("build/classes", "src/main/java");
+    };
+
     /**
      * java class doc map
      * <pre>
@@ -56,16 +69,13 @@ public class ActionCommandDocKit {
         final Map<String, JavaClassDocInfo> javaClassDocInfoMap = new HashMap<>(controllerList.size());
 
         for (Class<?> actionClazz : controllerList) {
-
             try {
                 String packagePath = actionClazz.getPackageName();
                 ClassScanner classScanner = new ClassScanner(packagePath, null);
                 List<URL> resources = classScanner.listResource();
 
                 for (URL resource : resources) {
-
-                    String path = resource.getPath();
-                    String srcPath = path.replace("target/classes", "src/main/java");
+                    String srcPath = sourceFilePathFun.apply(resource);
 
                     File file = new File(srcPath);
                     if (!FileKit.exist(file)) {
@@ -78,20 +88,14 @@ public class ActionCommandDocKit {
                 Collection<JavaClass> classes = javaProjectBuilder.getClasses();
 
                 for (JavaClass javaClass : classes) {
-
                     JavaClassDocInfo javaClassDocInfo = new JavaClassDocInfo(javaClass);
-
                     javaClassDocInfoMap.put(javaClass.toString(), javaClassDocInfo);
                 }
-
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
-
         }
 
         return javaClassDocInfoMap;
-
     }
-
 }
