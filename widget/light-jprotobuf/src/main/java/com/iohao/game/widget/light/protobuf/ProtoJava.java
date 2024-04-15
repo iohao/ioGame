@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.protobuf;
 
+import com.baidu.bjf.remoting.protobuf.EnumReadable;
 import com.iohao.game.common.kit.StrKit;
 import com.thoughtworks.qdox.model.JavaClass;
 import lombok.AccessLevel;
@@ -25,14 +26,20 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * @author 渔民小镇
  * @date 2022-01-24
  */
+@Slf4j
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -83,8 +90,29 @@ public class ProtoJava {
                 }
                                 
                 """;
+        String messageStr = StrKit.format(template, messageMap);
+        if (!this.rightEnumOrder(fieldsString)) {
+            log.error("enum have error.content \n{}", messageStr);
+            System.exit(0);
+        }
+        return messageStr;
+    }
 
-        return StrKit.format(template, messageMap);
+    private boolean rightEnumOrder(String enumFiled) {
+        boolean isEnum = this.clazz.isEnum();
+        if (!isEnum) {
+            return true;
+        }
+
+        if (!EnumReadable.class.isAssignableFrom(this.clazz)) {
+            return true;
+        }
+
+        return haveZeroOrder(enumFiled);
+    }
+
+    private boolean haveZeroOrder(String enumFiled) {
+        return enumFiled.indexOf("= 0;") > 0;
     }
 
 }

@@ -20,4 +20,5 @@ public class TestEnumVo {
      * 测试枚举生成
      */
     TestEnum testEnum;
+    TestCustomEnumValue customEnumValue;
 }
