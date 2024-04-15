@@ -77,6 +77,7 @@ public class ProtoGenerateFile {
             );
 
             FileKit.writeUtf8String(protoString, protoFilePath);
+            log.info("\nprotoFilePath {}", protoFilePath);
         };
 
         regionMap.values().forEach(javaRegionConsumer);
