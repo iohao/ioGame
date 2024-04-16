@@ -3,6 +3,121 @@ https://www.yuque.com/iohao/game/ab15oe
 
 
 
+#### 2024-03-28 - v21.4
+
+https://github.com/iohao/ioGame/releases/tag/21.4
+
+
+
+
+[ #253](https://github.com/iohao/ioGame/issues/253)
+
+> CreateRoomInfo.createUserId int --> long
+
+
+
+ExecutorRegion
+
+> 1. 优化默认创建策略
+> 2. 优化 ExecutorRegionKit，SimpleThreadExecutorRegion 默认使用全局单例，减少对象的创建。
+
+
+
+proto 文档生成时，默认指定为 StandardCharsets.UTF_8
+
+>  javaProjectBuilder.setEncoding(StandardCharsets.UTF_8.name());
+
+
+
+玩家下线时，使用自身所关联的线程处理。
+
+>  SocketUserSessions removeUserSession
+
+```java
+public void removeUserSession(SocketUserSession userSession) {
+
+    if (Objects.isNull(userSession)) {
+        return;
+    }
+
+    long userId = userSession.getUserId();
+    ExecutorRegionKit.getSimpleThreadExecutor(userId)
+            .executeTry(() -> internalRemoveUserSession(userSession));
+}
+```
+
+
+
+#### 2024-03-11 - v21.3
+
+https://github.com/game-town/ioGame/releases/tag/21.3
+
+
+
+[#250](https://github.com/game-town/ioGame/issues/250) 游戏对外服 - 自定义编解码 - WebSocketMicroBootstrapFlow
+
+
+
+文档 [游戏对外服-自定义编解码 (yuque.com)](https://www.yuque.com/iohao/game/ea6geg#Z8pbL)
+
+
+
+重写 WebSocketMicroBootstrapFlow createExternalCodec 方法，用于创建开发者自定义的编解码，其他配置则使用 pipelineCodec 中的默认配置。
+
+```java
+DefaultExternalServerBuilder builder = ...;
+
+builder.setting().setMicroBootstrapFlow(new WebSocketMicroBootstrapFlow() {
+    @Override
+    protected MessageToMessageCodec<BinaryWebSocketFrame, BarMessage> createExternalCodec() {
+        // 开发者自定义的编解码实现类。
+        return new YourWsExternalCodec();
+    }
+});
+```
+
+
+
+以下展示的是 WebSocketMicroBootstrapFlow pipelineCodec 相关代码
+
+```java
+public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
+    ... 省略部分代码
+    @Override
+    public void pipelineCodec(PipelineContext context) {
+        // 添加 http 相关 handler
+        this.httpHandler(context);
+
+        // 建立连接前的验证 handler
+        this.verifyHandler(context);
+
+        // 添加 websocket 相关 handler
+        this.websocketHandler(context);
+
+        // websocket 编解码
+        var externalCodec = this.createExternalCodec();
+        context.addLast("codec", externalCodec);
+    }
+
+    @Override
+    protected MessageToMessageCodec<BinaryWebSocketFrame, BarMessage> createExternalCodec() {
+        // createExternalCodec 相当于一个钩子方法。
+        return new WebSocketExternalCodec();
+    }
+};
+```
+
+
+
+[#249](https://github.com/game-town/ioGame/issues/249)
+将集群启动顺序放到 Broker（游戏网关）之后。
+
+集群增减和逻辑服 Connect 增减使用同一线程处理。
+
+IoGameGlobalConfig brokerClusterLog 集群相关日志不开启。
+
+
+
 #### 2024-02-22 - v21.2
 
 修复版本号显示错误问题（该版本没有功能上的更新与修改，不升级也不影响）
