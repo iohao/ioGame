@@ -3,6 +3,53 @@ https://www.yuque.com/iohao/game/ab15oe
 
 
 
+#### 2024-04-16 - v21.5
+
+https://github.com/iohao/ioGame/releases/tag/21.5
+
+
+
+1.  增强 ClassScanner 类 
+2.  优化模拟客户端 
+3.  [#258](about:blank) 文档生成，兼容 gradle 编译路径 
+4.  enhance jprotobuf，临时解决打包后不能在 linux java21 环境运行的问题，see [java21，springBoot3.2 打 jar 后使用异常 · Issue #211 · jhunters/jprotobuf (github.com)](https://github.com/jhunters/jprotobuf/issues/211) 
+5.  生成 .proto 时，在最后打印文件路径 
+
+1. [#255](https://github.com/iohao/ioGame/issues/255) 关于 Proto 生成排除属性问题
+
+```java
+/**
+ * 动物
+ */
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+public class Animal {
+    /** id */
+    int id;
+    /** 动物类型 - 枚举测试 */
+    AnimalType animalType;
+  	/** 年龄 - 忽略的属性*/
+    @Ignore
+    String age;
+}
+```
+
+
+
+生成后的 .proto
+
+```protobuf
+// 动物
+message Animal {
+  // id
+  int32 id = 1;
+  // 动物类型 - 枚举测试
+  AnimalType animalType = 2;
+}
+```
+
+
+
 #### 2024-03-28 - v21.4
 
 https://github.com/iohao/ioGame/releases/tag/21.4
