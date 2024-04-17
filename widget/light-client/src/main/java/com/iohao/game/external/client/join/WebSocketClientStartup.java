@@ -95,6 +95,8 @@ class WebSocketClientStartup implements ClientConnect {
             webSocketClient.send(bytes);
         });
 
+        clientUserChannel.setCloseChannel(webSocketClient::close);
+
         clientUser.getClientUserInputCommands().start();
 
         // 开始连接服务器
