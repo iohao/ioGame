@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -18,9 +18,7 @@
  */
 package com.iohao.game.external.core.broker.client.ext;
 
-import com.iohao.game.external.core.broker.client.ext.impl.AttachmentExternalBizRegion;
-import com.iohao.game.external.core.broker.client.ext.impl.ExistUserExternalBizRegion;
-import com.iohao.game.external.core.broker.client.ext.impl.ForcedOfflineExternalBizRegion;
+import com.iohao.game.external.core.broker.client.ext.impl.*;
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -48,6 +46,7 @@ public final class ExternalBizRegions {
         add(new ExistUserExternalBizRegion());
         add(new ForcedOfflineExternalBizRegion());
         add(new AttachmentExternalBizRegion());
+        add(new UserHeadMetadataExternalBizRegion());
     }
 
     public void add(ExternalBizRegion externalBizRegion) {

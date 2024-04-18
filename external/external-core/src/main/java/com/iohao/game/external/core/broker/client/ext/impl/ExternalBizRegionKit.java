@@ -19,50 +19,27 @@
 package com.iohao.game.external.core.broker.client.ext.impl;
 
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
-import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
-import com.iohao.game.core.common.client.ExternalBizCodeCont;
-import com.iohao.game.external.core.broker.client.ext.ExternalBizRegion;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegionContext;
-import com.iohao.game.external.core.message.ExternalCodecKit;
-
-import java.io.Serializable;
+import lombok.experimental.UtilityClass;
 
 /**
- * 强制用户（玩家）下线
- * <pre>
- *     对外服业务扩展
- * </pre>
- *
  * @author 渔民小镇
- * @date 2023-02-21
+ * @date 2024-04-18
  */
-public final class ForcedOfflineExternalBizRegion implements ExternalBizRegion {
-    final BarMessage response;
-
-    public ForcedOfflineExternalBizRegion() {
-        // 强制玩家下线 状态码
-        response = ExternalCodecKit.createResponse();
-        response.setResponseStatus(ActionErrorEnum.forcedOffline.getCode());
-        response.setValidatorMsg(ActionErrorEnum.forcedOffline.getMsg());
-    }
-
-    @Override
-    public int getBizCode() {
-        return ExternalBizCodeCont.forcedOffline;
-    }
-
-    @Override
-    public Serializable request(ExternalBizRegionContext regionContext) {
+@UtilityClass
+class ExternalBizRegionKit {
+    /**
+     * 检测用户是否存在，如果不存在就抛异常
+     *
+     * @param regionContext regionContext
+     */
+    public void checkUserExist(ExternalBizRegionContext regionContext) {
         RequestCollectExternalMessage request = regionContext.getRequestCollectExternalMessage();
-
+        // 检测用户是否存在
         long userId = request.getUserId();
-
-        // 发送强制下线消息
         var userSessions = regionContext.getUserSessions();
-        // 据 userId 移除 UserSession ，在移除前发送一个消息
-        userSessions.removeUserSession(userId, response);
-
-        return null;
+        boolean existUser = userSessions.existUserSession(userId);
+        ActionErrorEnum.dataNotExist.assertTrue(existUser);
     }
 }

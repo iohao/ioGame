@@ -25,6 +25,8 @@ import com.iohao.game.external.core.broker.client.ext.impl.ForcedOfflineExternal
 
 import java.io.Serializable;
 
+import com.iohao.game.core.common.client.ExternalBizCodeCont;
+
 /**
  * 对外服业务扩展
  * <pre>
@@ -43,6 +45,7 @@ import java.io.Serializable;
  *
  * @author 渔民小镇
  * @date 2023-02-21
+ * @see ExternalBizCodeCont
  */
 public interface ExternalBizRegion {
     /**

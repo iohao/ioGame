@@ -827,6 +827,7 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
         return new RequestCollectExternalMessage()
                 // 根据业务码，调用游戏对外服与业务码对应的业务实现类
                 .setBizCode(bizCode)
+                .setUserId(headMetadata.getUserId())
                 // 业务数据
                 .setData(data)
                 // 强制指定需要访问的游戏对外服；当指定 id 后，将不会访问所有的游戏对外服

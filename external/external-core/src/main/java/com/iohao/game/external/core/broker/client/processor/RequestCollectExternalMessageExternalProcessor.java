@@ -81,9 +81,10 @@ public final class RequestCollectExternalMessageExternalProcessor extends Abstra
         context.setRequestCollectExternalMessage(request);
         context.setUserSessions(this.userSessions);
 
-        try {
+        var hasTraceId = Objects.nonNull(request.getTraceId());
 
-            if (Objects.nonNull(request.getTraceId())) {
+        try {
+            if (hasTraceId) {
                 MDC.put(TraceKit.traceName, request.getTraceId());
             }
 
@@ -98,7 +99,7 @@ public final class RequestCollectExternalMessageExternalProcessor extends Abstra
                 itemMessage.setError(ActionErrorEnum.systemOtherErrCode);
             }
         } finally {
-            if (Objects.nonNull(request.getTraceId())) {
+            if (hasTraceId) {
                 MDC.clear();
             }
         }

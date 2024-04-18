@@ -15,7 +15,7 @@ public class WrapperKitTest {
         IntValue of = WrapperKit.of(1);
         log.info("of : {}", of);
 
-        Integer intV = 1;
+        int intV = 1;
         Object of1 = WrapperKit.of(intV);
         log.info("of1 : {}", of1);
     }

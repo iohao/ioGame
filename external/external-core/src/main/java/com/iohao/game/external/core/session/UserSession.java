@@ -90,10 +90,17 @@ public interface UserSession extends AttrOptionDynamic {
     void employ(BarMessage requestMessage);
 
     /**
+     * 给 HeadMetadata 加上一些 user 自身的数据
+     *
+     * @param headMetadata HeadMetadata
+     */
+    void employ(HeadMetadata headMetadata);
+
+    /**
      * writeAndFlush
      *
-     * @param message
-     * @return
+     * @param message message
+     * @return ChannelFuture
      */
     <T> T writeAndFlush(Object message);
 

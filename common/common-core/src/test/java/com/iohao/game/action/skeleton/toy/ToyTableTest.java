@@ -24,5 +24,4 @@ public class ToyTableTest {
 
         table.render();
     }
-
 }

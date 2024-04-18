@@ -65,6 +65,11 @@ abstract class AbstractUserSession implements UserSession {
 
     public void employ(BarMessage requestMessage) {
         HeadMetadata headMetadata = requestMessage.getHeadMetadata();
+        this.employ(headMetadata);
+    }
+
+    @Override
+    public void employ(HeadMetadata headMetadata) {
         // 设置请求用户的id
         headMetadata.setUserId(this.userId);
         headMetadata.setSourceClientId(this.externalClientId);

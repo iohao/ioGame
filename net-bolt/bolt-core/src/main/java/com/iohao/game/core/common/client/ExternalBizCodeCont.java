@@ -37,4 +37,6 @@ public interface ExternalBizCodeCont {
 
     /** 用户（玩家）的元信息同步，AttachmentExternalBizRegion */
     int attachment = IoGameCommonCoreConfig.ExternalBizCode.attachment;
+    /** 用户（玩家）在游戏对外服的 HeadMetadata 信息 */
+    int userHeadMetadata = -4;
 }

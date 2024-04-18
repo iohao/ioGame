@@ -19,10 +19,16 @@
 package com.iohao.game.bolt.broker.client.kit;
 
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
+import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalItemMessage;
 import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
 import com.iohao.game.core.common.client.Attachment;
 import com.iohao.game.core.common.client.ExternalBizCodeCont;
 import lombok.experimental.UtilityClass;
+
+import java.util.Optional;
 
 /**
  * 这个工具只能在游戏逻辑服中使用
@@ -39,11 +45,15 @@ public class ExternalCommunicationKit {
      * @return true 玩家在线
      */
     public boolean existUser(long userId) {
+        RequestCollectExternalMessage request = new RequestCollectExternalMessage()
+                // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （ExistUserExternalBizRegion）
+                .setBizCode(ExternalBizCodeCont.existUser)
+                .setUserId(userId);
+
         return BrokerClientHelper
                 // 【游戏逻辑服】与【游戏对外服】通讯上下文
                 .getInvokeExternalModuleContext()
-                // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （ExistUserExternalBizRegion）
-                .invokeExternalModuleCollectMessage(ExternalBizCodeCont.existUser, userId)
+                .invokeExternalModuleCollectMessage(request)
                 // 只要有一条数据存在，就表示正确的
                 .anySuccess();
     }
@@ -54,6 +64,11 @@ public class ExternalCommunicationKit {
      * @param userId 需要强制下线的 userId
      */
     public void forcedOffline(long userId) {
+        RequestCollectExternalMessage request = new RequestCollectExternalMessage()
+                // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （ForcedOfflineExternalBizRegion）
+                .setBizCode(ExternalBizCodeCont.forcedOffline)
+                .setUserId(userId);
+
         /*
          * 强制玩家下线
          * 实现类 ForcedOfflineExternalBizRegion
@@ -62,8 +77,7 @@ public class ExternalCommunicationKit {
         BrokerClientHelper
                 // 【游戏逻辑服】与【游戏对外服】通讯上下文
                 .getInvokeExternalModuleContext()
-                // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （ForcedOfflineExternalBizRegion）
-                .invokeExternalModuleCollectMessage(ExternalBizCodeCont.forcedOffline, userId);
+                .invokeExternalModuleCollectMessage(request);
     }
 
     /**
@@ -78,5 +92,51 @@ public class ExternalCommunicationKit {
      */
     public void setAttachment(Attachment attachment, FlowContext flowContext) {
         flowContext.updateAttachment(attachment);
+    }
+
+    /**
+     * 给请求添加一些 user 自身所具备的数据，这些数据来自于用户所在游戏对外服
+     * <pre>
+     *     将用户元信息、所绑定的游戏逻辑服设置到 RequestMessage headMetadata 中。
+     *
+     *     注意事项：只有玩家在线才能从其对应的游戏对外服中获取数据。
+     * </pre>
+     *
+     * @param requestMessage 请求（通常是模拟的用户请求）
+     * @return 用户（玩家）所在游戏对外服中的 HeadMetadata 数据，headMetadataOptional 中还包括了一些其他的信息，开发者如果有需要的可从中获取。
+     */
+    public Optional<HeadMetadata> employHeadMetadata(RequestMessage requestMessage) {
+
+        long userId = Optional.ofNullable(requestMessage)
+                .map(RequestMessage::getHeadMetadata)
+                .map(HeadMetadata::getUserId).orElse(0L);
+
+        if (userId <= 0) {
+            throw new RuntimeException("userId <= 0");
+        }
+
+        RequestCollectExternalMessage request = new RequestCollectExternalMessage()
+                // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （UserHeadMetadataExternalBizRegion）
+                .setBizCode(ExternalBizCodeCont.userHeadMetadata)
+                .setUserId(userId)
+                .setData(requestMessage.getHeadMetadata())
+                .setSourceClientId(requestMessage.getHeadMetadata().getSourceClientId());
+
+        Optional<HeadMetadata> headMetadataOptional = BrokerClientHelper
+                // 【游戏逻辑服】与【游戏对外服】通讯上下文
+                .getInvokeExternalModuleContext()
+                .invokeExternalModuleCollectMessage(request)
+                .optionalAnySuccess()
+                .map(ResponseCollectExternalItemMessage::getData);
+
+        headMetadataOptional.ifPresent(externalHeadMetadata -> {
+            // 将用户元信息、所绑定的游戏逻辑服设置到 RequestMessage headMetadata 中
+            HeadMetadata headMetadata = requestMessage.getHeadMetadata();
+            headMetadata.setBindingLogicServerIds(externalHeadMetadata.getBindingLogicServerIds());
+            headMetadata.setAttachmentData(externalHeadMetadata.getAttachmentData());
+        });
+
+        // headMetadataOptional 中还包括了一些其他的信息，如有需要的可从中获取
+        return headMetadataOptional;
     }
 }

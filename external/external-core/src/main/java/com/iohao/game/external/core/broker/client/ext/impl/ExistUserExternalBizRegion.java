@@ -18,9 +18,7 @@
  */
 package com.iohao.game.external.core.broker.client.ext.impl;
 
-import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgException;
-import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.core.common.client.ExternalBizCodeCont;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegion;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegionContext;
@@ -45,16 +43,8 @@ public final class ExistUserExternalBizRegion implements ExternalBizRegion {
 
     @Override
     public Serializable request(ExternalBizRegionContext regionContext) throws MsgException {
-
-        RequestCollectExternalMessage request = regionContext.getRequestCollectExternalMessage();
-
-        long userId = request.getData();
-        // true 用户存在游戏对外服中
-        var userSessions = regionContext.getUserSessions();
-        boolean existUser = userSessions.existUserSession(userId);
-
-        ActionErrorEnum.dataNotExist.assertTrue(existUser);
-
+        // 检测用户是否存在
+        ExternalBizRegionKit.checkUserExist(regionContext);
         return null;
     }
 }
