@@ -132,6 +132,42 @@ public class PropertyValueObservableTest {
         int age;
     }
 
+    @Test
+    public void remove1() {
+        IntegerProperty property = new IntegerProperty(10);
+
+        property.addListener(new PropertyChangeListener<>() {
+            @Override
+            public void changed(PropertyValueObservable<? extends Number> observable, Number oldValue, Number newValue) {
+                log.info("1 - newValue : {}", newValue);
+
+                if (newValue.intValue() == 9) {
+                    // 移除当前监听器
+                    observable.removeListener(this);
+                }
+            }
+        });
+
+        property.decrement(); // value == 9，并触发监听器
+        property.decrement(); // value == 8，由于监听器已经移除，所以不会触发任何事件。
+        Assert.assertEquals(property.get(), 8);
+    }
+
+    @Test
+    public void remove2() {
+        IntegerProperty property = new IntegerProperty(10);
+        // 监听器移除的示例
+        OnePropertyChangeListener onePropertyChangeListener = new OnePropertyChangeListener();
+        property.addListener(onePropertyChangeListener);
+
+        property.increment(); // value == 11，并触发监听器
+        property.removeListener(onePropertyChangeListener); // 移除监听器
+        property.increment(); // value == 12，，由于监听器已经移除，所以不会触发任何事件。
+
+        Assert.assertEquals(property.get(), 12);
+
+    }
+
     class OnePropertyChangeListener implements PropertyChangeListener<Number> {
         @Override
         public void changed(PropertyValueObservable<? extends Number> observable, Number oldValue, Number newValue) {
