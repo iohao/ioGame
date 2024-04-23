@@ -64,16 +64,16 @@ public class BeeAction {
 
     @ActionMethod(ExampleActionCmd.BeeActionCmd.jsr380)
     public void jsr380(DogValid dogValid) {
-        log.info("dogValid : {}", dogValid);
+        log.info("{}", dogValid);
     }
 
     @ActionMethod(ExampleActionCmd.BeeActionCmd.validated_group_update)
     public void validateUpdate(@ValidatedGroup(value = Update.class) BirdValid birdValid) {
-        log.info("dogValid : {}", birdValid);
+        log.info("{}", birdValid);
     }
 
     @ActionMethod(ExampleActionCmd.BeeActionCmd.validated_group_create)
     public void validateCreate(@ValidatedGroup(value = Create.class) BirdValid birdValid) {
-        log.info("dogValid : {}", birdValid);
+        log.info("{}", birdValid);
     }
 }

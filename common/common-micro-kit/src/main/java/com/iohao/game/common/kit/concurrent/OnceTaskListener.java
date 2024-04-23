@@ -76,8 +76,12 @@ public interface OnceTaskListener extends TimerTask, TaskListener {
     }
 
     private void executeFlow() {
-        if (this.triggerUpdate()) {
-            this.onUpdate();
+        try {
+            if (this.triggerUpdate()) {
+                this.onUpdate();
+            }
+        } catch (Throwable e) {
+            this.onException(e);
         }
     }
 }

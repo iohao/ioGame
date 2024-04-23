@@ -63,4 +63,9 @@ public final class ResponseCollectExternalItemMessage implements Serializable {
         this.responseStatus = msgException.getMsgCode();
         this.errorMsg = msgException.getMessage();
     }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getData() {
+        return (T) data;
+    }
 }

@@ -34,5 +34,4 @@ public class OperationContext {
     AbstractRoom room;
 
     AbstractPlayer player;
-
 }

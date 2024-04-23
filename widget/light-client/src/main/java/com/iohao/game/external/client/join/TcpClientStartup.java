@@ -23,7 +23,6 @@ import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.join.handler.ClientMessageHandler;
 import com.iohao.game.external.client.user.ClientUser;
 import com.iohao.game.external.client.user.ClientUserChannel;
-import com.iohao.game.external.core.netty.handler.codec.TcpExternalCodec;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -87,6 +86,8 @@ class TcpClientStartup implements ClientConnect {
 
             ClientUserChannel userChannel = clientUser.getClientUserChannel();
             userChannel.setClientChannel(channel::writeAndFlush);
+
+            userChannel.setCloseChannel(channel::close);
 
             clientUser.getClientUserInputCommands().start();
 

@@ -291,14 +291,18 @@ public class TaskKit {
     }
 
     private void executeFlowTimerListener(IntervalTaskListener taskListener, Set<IntervalTaskListener> set) {
-        // 移除不活跃的监听
-        if (!taskListener.isActive()) {
-            set.remove(taskListener);
-            return;
-        }
+        try {
+            // 移除不活跃的监听
+            if (!taskListener.isActive()) {
+                set.remove(taskListener);
+                return;
+            }
 
-        if (taskListener.triggerUpdate()) {
-            taskListener.onUpdate();
+            if (taskListener.triggerUpdate()) {
+                taskListener.onUpdate();
+            }
+        } catch (Throwable e) {
+            taskListener.onException(e);
         }
     }
 }

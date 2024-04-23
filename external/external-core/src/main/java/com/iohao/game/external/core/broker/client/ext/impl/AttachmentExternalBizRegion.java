@@ -19,7 +19,6 @@
 package com.iohao.game.external.core.broker.client.ext.impl;
 
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgException;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.core.common.client.Attachment;
@@ -44,20 +43,15 @@ public final class AttachmentExternalBizRegion implements ExternalBizRegion {
 
     @Override
     public Serializable request(ExternalBizRegionContext regionContext) throws MsgException {
+        // 检测用户是否存在
+        ExternalBizRegionKit.checkUserExist(regionContext);
 
         RequestCollectExternalMessage request = regionContext.getRequestCollectExternalMessage();
 
         Attachment attachment = request.getData();
-
         long userId = attachment.getUserId();
-
-        // true 用户存在游戏对外服中
-        var userSessions = regionContext.getUserSessions();
-        boolean existUser = userSessions.existUserSession(userId);
-        ActionErrorEnum.dataNotExist.assertTrue(existUser);
-
         byte[] bytes = DataCodecKit.encode(attachment);
-
+        var userSessions = regionContext.getUserSessions();
         userSessions.ifPresent(userId, userSession -> userSession.option(UserSessionOption.attachment, bytes));
 
         return null;

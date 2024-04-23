@@ -48,6 +48,13 @@ public interface ClientUser extends AttrOptionDynamic {
     void setJwt(String jwt);
 
     /**
+     * 是否活跃
+     *
+     * @return true 表示玩家活跃
+     */
+    boolean isActive();
+
+    /**
      * 登录成功后，调用 InputCommandRegion 回调
      * <pre>
      *     需要开发者主动调用触发，一般在登录模拟请求的回调中主动的调用。

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>ioGame</artifactId>
         <groupId>com.iohao.game</groupId>
-        <version>21.5</version>
+        <version>21.6</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,14 +18,6 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
             <version>${disruptor.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-            <version>5.8.11</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

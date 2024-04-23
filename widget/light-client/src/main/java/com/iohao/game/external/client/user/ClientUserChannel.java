@@ -79,6 +79,7 @@ public class ClientUserChannel {
 
     final DefaultClientUser clientUser;
 
+    public Runnable closeChannel;
     public Consumer<BarMessage> clientChannel;
     /** 目标 ip （服务器 ip） */
     public InetSocketAddress inetSocketAddress;
@@ -155,6 +156,11 @@ public class ClientUserChannel {
     public void addListen(ListenCommand listenCommand) {
         int cmdMerge = listenCommand.getCmdInfo().getCmdMerge();
         this.listenMap.put(cmdMerge, listenCommand);
+    }
+
+    public void closeChannel() {
+        this.clientUser.setActive(false);
+        Optional.ofNullable(closeChannel).ifPresent(Runnable::run);
     }
 
     class DefaultChannelRead implements ClientChannelRead {

@@ -1,13 +1,15 @@
 package com.iohao.game.common.kit.concurrent;
 
 import com.iohao.game.common.kit.RandomKit;
-import io.netty.util.Timeout;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author 渔民小镇
@@ -15,24 +17,32 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class TaskKitTest {
+    @After
+    public void tearDown() throws Exception {
+        TimeUnit.SECONDS.sleep(3);
+    }
 
     @Test
-    public void onceTaskListener() throws InterruptedException {
-        Timeout timeout = TaskKit.newTimeout(task -> {
-            //
-            log.info("1 Seconds");
-        }, 1, TimeUnit.SECONDS);
+    public void execute() {
+        TaskKit.execute(() -> {
+            // 使用 CacheThreadPool 线程池执行任务
+            log.info("CacheThreadPool consumer task");
+        });
 
-        log.info("timeout : {}", timeout);
+        TaskKit.executeVirtual(() -> {
+            // 使用虚拟线程执行任务
+            log.info("Virtual consumer task");
+        });
+    }
 
+    @Test
+    public void runOnce() {
         // 只执行一次，2 秒后执行
         TaskKit.runOnce(() -> log.info("2 Seconds"), 2, TimeUnit.SECONDS);
         // 只执行一次，1 分钟后执行
         TaskKit.runOnce(() -> log.info("1 Minute"), 1, TimeUnit.MINUTES);
-
-        // 只执行一次，500、800 milliseconds 后
-        TaskKit.runOnceMillis(() -> log.info("500 delayMilliseconds"), 500);
-        TaskKit.runOnceMillis(() -> log.info("800 delayMilliseconds"), 800);
+        // 只执行一次，500 milliseconds 后
+        TaskKit.runOnce(() -> log.info("500 delayMilliseconds"), 500, TimeUnit.MILLISECONDS);
 
         // 只执行一次，1500 Milliseconds后执行，当 theTriggerUpdate 为 true 时，才执行 onUpdate
         boolean theTriggerUpdate = RandomKit.randomBoolean();
@@ -48,18 +58,10 @@ public class TaskKitTest {
             }
 
         }, 1500, TimeUnit.MILLISECONDS);
-
-        TimeUnit.SECONDS.sleep(3);
     }
 
     @Test
-    public void intervalTaskListener() throws InterruptedException {
-
-        // 每分钟调用一次
-        TaskKit.runIntervalMinute(() -> log.info("tick 1 Minute"), 1);
-        // 每 2 分钟调用一次
-        TaskKit.runIntervalMinute(() -> log.info("tick 2 Minute"), 2);
-
+    public void runInterval() {
         // 每 2 秒调用一次
         TaskKit.runInterval(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
         // 每 30 分钟调用一次
@@ -123,11 +125,28 @@ public class TaskKitTest {
                 return executorService;
             }
         }, 1, TimeUnit.SECONDS);
-
-        TimeUnit.SECONDS.sleep(20);
     }
 
-//    @Test
+    @Test
+    public void testException() throws InterruptedException {
+        AtomicBoolean hasEx = new AtomicBoolean(false);
+        TaskKit.runOnce(new OnceTaskListener() {
+            @Override
+            public void onUpdate() {
+                throw new RuntimeException("hello exception");
+            }
+
+            @Override
+            public void onException(Throwable e) {
+                hasEx.set(true);
+            }
+        }, 10, TimeUnit.MILLISECONDS);
+
+        TimeUnit.MILLISECONDS.sleep(200);
+        Assert.assertTrue(hasEx.get());
+    }
+
+    //    @Test
 //    public void concurrent() throws InterruptedException {
 //        LongAdder[] arrays = TaskKit.arrays;
 //        log.info("arrays : {}", Arrays.toString(arrays));
@@ -137,29 +156,29 @@ public class TaskKitTest {
 //            extractedThread(5);
 //        }
 //
-//        TaskKit.addIntervalTaskListener(() -> {
+//        TaskKit.runOnce(() -> {
 //            // print
 //            log.info("arrays : {}", Arrays.toString(arrays));
 //        }, 1, TimeUnit.SECONDS);
 //
 //        TimeUnit.SECONDS.sleep(5);
 //    }
-
-    private static void extractedThread(int length) {
-        new Thread(() -> {
-            for (int j = 1; j < length; j++) {
-                var tempValue = j;
-                TaskKit.runInterval(new IntervalTaskListener() {
-                    public String getValue() {
-                        return length + " - " + tempValue;
-                    }
-
-                    @Override
-                    public void onUpdate() {
-
-                    }
-                }, j, TimeUnit.SECONDS);
-            }
-        }).start();
-    }
+//
+//    private static void extractedThread(int length) {
+//        new Thread(() -> {
+//            for (int j = 1; j < length; j++) {
+//                var tempValue = j;
+//                TaskKit.runInterval(new IntervalTaskListener() {
+//                    public String getValue() {
+//                        return length + " - " + tempValue;
+//                    }
+//
+//                    @Override
+//                    public void onUpdate() {
+//
+//                    }
+//                }, j, TimeUnit.SECONDS);
+//            }
+//        }).start();
+//    }
 }

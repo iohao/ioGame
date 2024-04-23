@@ -56,7 +56,7 @@ public final class ForcedOfflineExternalBizRegion implements ExternalBizRegion {
     public Serializable request(ExternalBizRegionContext regionContext) {
         RequestCollectExternalMessage request = regionContext.getRequestCollectExternalMessage();
 
-        long userId = request.getData();
+        long userId = request.getUserId();
 
         // 发送强制下线消息
         var userSessions = regionContext.getUserSessions();

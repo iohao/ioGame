@@ -42,6 +42,18 @@ interface TaskListener {
     void onUpdate();
 
     /**
+     * 异常回调
+     * <pre>
+     *     当 triggerUpdate 或 onUpdate 方法抛出异常时，将会传递到这里
+     * </pre>
+     *
+     * @param e e
+     */
+    default void onException(Throwable e) {
+        System.err.println(e.getMessage());
+    }
+
+    /**
      * 执行 onUpdate 的执行器
      * <pre>
      *     如果返回 null 将在 HashedWheelTimer 中执行。

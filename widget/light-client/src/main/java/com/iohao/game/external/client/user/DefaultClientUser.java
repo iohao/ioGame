@@ -57,6 +57,8 @@ public class DefaultClientUser implements ClientUser {
     String nickname;
     String jwt;
 
+    boolean active = true;
+
     @Override
     public void callbackInputCommandRegion() {
         if (Objects.isNull(this.inputCommandRegions)) {

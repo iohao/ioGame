@@ -18,7 +18,6 @@
  */
 package com.iohao.game.widget.light.domain.event;
 
-import cn.hutool.core.thread.ThreadUtil;
 import com.iohao.game.widget.light.domain.event.student.StudentCountEventHandler;
 import com.iohao.game.widget.light.domain.event.student.StudentEo;
 import lombok.extern.slf4j.Slf4j;
@@ -56,27 +55,6 @@ public class StudentDomainEventTest2 {
         // 启动事件驱动
         domainEventContext = new DomainEventContext(contextParam);
         domainEventContext.startup();
-    }
-
-    @Test
-    public void testEventSendMulti2() throws InterruptedException {
-        StudentEo studentEo = new StudentEo(1);
-
-        ThreadUtil.concurrencyTest(100, () -> {
-            for (int j = 0; j < 20_000; j++) {
-                studentEo.send();
-            }
-        });
-
-        log.info("start");
-        /*
-         * 需要等待一下；
-         * 如果不等待，但在测试用例中又执行 domainEventContext.stop(); 方法
-         * disruptor 将不会接收事件了
-         */
-        log.info("StudentCountEventHandler.longAdder : {}", StudentCountEventHandler.longAdder);
-        TimeUnit.SECONDS.sleep(1);
-        log.info("======== longAdder ========: {}", StudentCountEventHandler.longAdder);
     }
 
     @Test

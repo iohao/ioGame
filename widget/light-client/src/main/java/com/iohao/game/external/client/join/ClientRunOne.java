@@ -22,6 +22,7 @@ import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.PresentKit;
+import com.iohao.game.common.kit.concurrent.IntervalTaskListener;
 import com.iohao.game.common.kit.concurrent.TaskKit;
 import com.iohao.game.external.client.ClientConnectOption;
 import com.iohao.game.external.client.InputCommandRegion;
@@ -112,15 +113,21 @@ public final class ClientRunOne {
      * @return this
      */
     public ClientRunOne idle(int idlePeriod) {
+        TaskKit.runInterval(new IntervalTaskListener() {
+            @Override
+            public void onUpdate() {
+                BarMessage message = ExternalCodecKit.createRequest();
+                HeadMetadata headMetadata = message.getHeadMetadata();
+                headMetadata.setCmdCode(ExternalMessageCmdCode.idle);
 
-        TaskKit.runInterval(() -> {
-            BarMessage message = ExternalCodecKit.createRequest();
-            HeadMetadata headMetadata = message.getHeadMetadata();
-            headMetadata.setCmdCode(ExternalMessageCmdCode.idle);
+                ClientUserChannel clientUserChannel = clientUser.getClientUserChannel();
+                clientUserChannel.writeAndFlush(message);
+            }
 
-            ClientUserChannel clientUserChannel = clientUser.getClientUserChannel();
-            clientUserChannel.writeAndFlush(message);
-
+            @Override
+            public boolean isActive() {
+                return clientUser.isActive();
+            }
         }, idlePeriod, TimeUnit.SECONDS);
 
         return this;
