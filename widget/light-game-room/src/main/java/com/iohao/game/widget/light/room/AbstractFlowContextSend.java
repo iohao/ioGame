@@ -19,8 +19,7 @@
 package com.iohao.game.widget.light.room;
 
 import com.iohao.game.action.skeleton.core.ActionSend;
-import com.iohao.game.action.skeleton.core.commumication.BroadcastContext;
-import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
+import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
@@ -50,15 +49,21 @@ public abstract class AbstractFlowContextSend implements Topic, Eo, ActionSend {
 
     /** 需要推送的用户id列表 */
     final Set<Long> userIds = new NonBlockingHashSet<>();
+    final CommunicationAggregationContext aggregationContext;
 
     /** 是否执行发送领域事件操作: true 执行推送操作 */
     boolean doSend = true;
 
     /** 业务框架 flow 上下文 */
-    protected final FlowContext flowContext;
+    protected FlowContext flowContext;
 
     protected AbstractFlowContextSend(FlowContext flowContext) {
         this.flowContext = flowContext;
+        this.aggregationContext = flowContext.option(FlowAttr.aggregationContext);
+    }
+
+    public AbstractFlowContextSend(CommunicationAggregationContext aggregationContext) {
+        this.aggregationContext = aggregationContext;
     }
 
     /**
@@ -128,11 +133,8 @@ public abstract class AbstractFlowContextSend implements Topic, Eo, ActionSend {
         // 在将数据推送前调用的钩子方法
         this.trick();
 
-        BrokerClientContext brokerClientContext = flowContext.option(FlowAttr.brokerClientContext);
-
         // 推送响应 （广播消息）给指定的用户列表
-        BroadcastContext broadcastContext = brokerClientContext.getBroadcastContext();
-        broadcastContext.broadcast(responseMessage, this.userIds);
+        flowContext.broadcast(responseMessage, this.userIds);
     }
 
     /**

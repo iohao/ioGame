@@ -18,9 +18,6 @@
  */
 package com.iohao.game.widget.light.room;
 
-import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.flow.ActionMethodResultWrap;
-import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,7 +43,10 @@ import java.util.function.Predicate;
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PROTECTED)
-public abstract class AbstractRoom implements Serializable {
+public abstract class AbstractRoom implements Serializable
+        // 房间广播增强
+        , RoomBroadcastEnhance {
+
     @Serial
     private static final long serialVersionUID = -6937915481102847959L;
 
@@ -82,15 +82,6 @@ public abstract class AbstractRoom implements Serializable {
     RoomStatusEnum roomStatusEnum = RoomStatusEnum.wait;
 
     /**
-     * 创建推送对象
-     *
-     * @param flowContext flowContext
-     * @param <T>         t
-     * @return AbstractFlowContextSend
-     */
-    protected abstract <T extends AbstractFlowContextSend> T createSend(FlowContext flowContext);
-
-    /**
      * 玩家列表: 所有玩家信息
      *
      * @param <T> 玩家
@@ -113,6 +104,7 @@ public abstract class AbstractRoom implements Serializable {
                 .toList();
     }
 
+    @Override
     public Collection<Long> listPlayerId() {
         return this.playerMap.keySet();
     }
@@ -142,7 +134,7 @@ public abstract class AbstractRoom implements Serializable {
      *
      * @param player 玩家
      */
-    public void removePlayer(AbstractPlayer player){
+    public void removePlayer(AbstractPlayer player) {
         long userId = player.getId();
         this.playerMap.remove(userId);
         this.playerSeatMap.remove(player.getSeat());
@@ -150,78 +142,5 @@ public abstract class AbstractRoom implements Serializable {
 
     public boolean isStatus(RoomStatusEnum roomStatusEnum) {
         return this.roomStatusEnum == roomStatusEnum;
-    }
-
-    /**
-     * 广播业务数据给房间内的所有玩家
-     *
-     * @param flowContext  flow 上下文
-     * @param methodResult 广播的业务数据
-     */
-    public void broadcast(FlowContext flowContext, Object methodResult) {
-        this.broadcast(flowContext, methodResult, this.listPlayerId());
-    }
-
-    /**
-     * 广播业务数据给用户列表
-     *
-     * @param flowContext  flow 上下文
-     * @param methodResult 广播的业务数据
-     * @param userIdList   用户列表
-     */
-    public void broadcast(FlowContext flowContext, Object methodResult, Collection<Long> userIdList) {
-        this.broadcast(flowContext, methodResult, userIdList, 0);
-    }
-
-    /**
-     * 广播业务数据给房间内的所有玩家， 排除指定用户
-     *
-     * @param flowContext   flow 上下文
-     * @param methodResult  广播的业务数据
-     * @param excludeUserId 排除的用户
-     */
-    public void broadcast(FlowContext flowContext, Object methodResult, long excludeUserId) {
-        this.broadcast(flowContext, methodResult, this.listPlayerId(), excludeUserId);
-    }
-
-    /**
-     * 广播业务数据给用户列表, 并排除一个用户
-     *
-     * @param flowContext   flow 上下文
-     * @param methodResult  广播的业务数据
-     * @param userIdList    用户列表
-     * @param excludeUserId 排除的用户
-     */
-    public void broadcast(FlowContext flowContext, Object methodResult, Collection<Long> userIdList, long excludeUserId) {
-        // 设置业务数据到 flowContext 中
-        flowContext.setMethodResult(methodResult);
-
-        // 把刚才设置的业务数据包装到响应对象中
-        BarSkeleton barSkeleton = flowContext.getBarSkeleton();
-        // 4 ---- wrap result 结果包装器
-        ActionMethodResultWrap actionMethodResultWrap = barSkeleton.getActionMethodResultWrap();
-        // 结果包装器
-        actionMethodResultWrap.wrap(flowContext);
-
-        AbstractFlowContextSend send = this.createSend(flowContext)
-                .addUserId(userIdList, excludeUserId);
-
-        send.send();
-    }
-
-    /**
-     * 广播业务数据给指定的用户
-     *
-     * @param flowContext  flow 上下文
-     * @param methodResult 广播的业务数据
-     * @param userId       指定的用户
-     */
-    public void broadcastUser(FlowContext flowContext, Object methodResult, long userId) {
-        flowContext.setMethodResult(methodResult);
-
-        AbstractFlowContextSend send = this.createSend(flowContext)
-                .addUserId(userId);
-
-        send.send();
     }
 }
