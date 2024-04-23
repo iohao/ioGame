@@ -3,11 +3,13 @@ package com.iohao.game.common.kit.concurrent;
 import com.iohao.game.common.kit.RandomKit;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author 渔民小镇
@@ -125,7 +127,26 @@ public class TaskKitTest {
         }, 1, TimeUnit.SECONDS);
     }
 
-//    @Test
+    @Test
+    public void testException() throws InterruptedException {
+        AtomicBoolean hasEx = new AtomicBoolean(false);
+        TaskKit.runOnce(new OnceTaskListener() {
+            @Override
+            public void onUpdate() {
+                throw new RuntimeException("hello exception");
+            }
+
+            @Override
+            public void onException(Throwable e) {
+                hasEx.set(true);
+            }
+        }, 10, TimeUnit.MILLISECONDS);
+
+        TimeUnit.MILLISECONDS.sleep(200);
+        Assert.assertTrue(hasEx.get());
+    }
+
+    //    @Test
 //    public void concurrent() throws InterruptedException {
 //        LongAdder[] arrays = TaskKit.arrays;
 //        log.info("arrays : {}", Arrays.toString(arrays));
