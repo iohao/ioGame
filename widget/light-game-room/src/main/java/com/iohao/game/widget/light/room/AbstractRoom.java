@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.room;
 
+import com.iohao.game.common.kit.PresentKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,10 +28,8 @@ import org.jctools.maps.NonBlockingHashMap;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -142,5 +141,28 @@ public abstract class AbstractRoom implements Serializable
 
     public boolean isStatus(RoomStatusEnum roomStatusEnum) {
         return this.roomStatusEnum == roomStatusEnum;
+    }
+
+    /**
+     * 如果玩家在房间内，就执行给定的操作，否则不执行任何操作。
+     *
+     * @param userId userId
+     * @param action 给定操作
+     * @param <T>    t
+     */
+    public <T extends AbstractPlayer> void ifPlayerExist(long userId, Consumer<T> action) {
+        T player = this.getPlayerById(userId);
+        Optional.ofNullable(player).ifPresent(action);
+    }
+
+    /**
+     * 如果玩家不在房间内，就执行给定的操作，否则不执行任何操作。
+     *
+     * @param userId   userId
+     * @param runnable 给定操作
+     */
+    public void ifPlayerNotExist(long userId, Runnable runnable) {
+        var player = this.getPlayerById(userId);
+        PresentKit.ifNull(player, runnable);
     }
 }
