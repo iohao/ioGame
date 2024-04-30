@@ -29,6 +29,8 @@ import com.iohao.game.action.skeleton.core.doc.ActionDocs;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import java.lang.reflect.Method;
@@ -46,6 +48,8 @@ import java.util.stream.Stream;
  * @author 渔民小镇
  * @date 2021-12-12
  */
+@Setter
+@Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 final class ActionCommandParser {
     /** 命令域 管理器 */
@@ -53,9 +57,12 @@ final class ActionCommandParser {
     final ActionCommandRegions actionCommandRegions = new ActionCommandRegions();
 
     final BarSkeletonSetting setting;
+    final ParserActionListeners parserActionListeners;
+    BarSkeleton barSkeleton;
 
-    ActionCommandParser(BarSkeletonSetting setting) {
-        this.setting = setting;
+    ActionCommandParser(BarSkeletonBuilder builder) {
+        this.setting = builder.getSetting();
+        this.parserActionListeners = builder.parserActionListeners;
     }
 
     /**
@@ -69,7 +76,6 @@ final class ActionCommandParser {
      * @param controllerList action 类的 class 列表
      */
     ActionCommandParser buildAction(List<Class<?>> controllerList) {
-
         var doc = new ActionCommandDocParser(this, controllerList, setting.parseDoc);
 
         // action 类的 stream
@@ -82,6 +88,7 @@ final class ActionCommandParser {
             int cmd = controllerClazz.getAnnotation(ActionController.class).value();
             // 子路由 map
             var actionCommandRegion = this.actionCommandRegions.getActionCommandRegion(cmd);
+            actionCommandRegion.setActionControllerClazz(controllerClazz);
 
             // true 表示交付给容器来管理 如 spring 等
             boolean deliveryContainer = this.deliveryContainer(controllerClazz);
@@ -133,16 +140,43 @@ final class ActionCommandParser {
                 // 子路由映射
                 actionCommandRegion.add(command);
 
+                // 文档相关
                 ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
                 actionDoc.addActionCommand(command);
             });
-
         });
+
+        // action 构建时的监听
+        executeActionListeners();
 
         // 内部将所有的 action 转换为 action 二维数组
         actionCommandRegions.initActionCommandArray(setting);
 
         return this;
+    }
+
+    private void executeActionListeners() {
+        actionCommandRegions.regionMap.forEach((cmd, actionCommandRegion) -> {
+            Class<?> actionControllerClazz = actionCommandRegion.getActionControllerClazz();
+            // action 构建时的上下文
+            ParserListenerContext context = new ParserListenerContext();
+            context.setBarSkeleton(barSkeleton);
+
+            ParserActionController parserActionController = context.getParserActionController()
+                    .setActionControllerClazz(actionControllerClazz)
+                    .setCmd(cmd);
+
+            // action 构建时的监听 - actionController
+            this.parserActionListeners.onActionController(parserActionController, context);
+
+            actionCommandRegion.getSubActionCommandMap().forEach((subCmd, command) -> {
+                // action 构建时的监听 - actionCommand
+                var actionCommandParser = context.ofParserActionCommand(subCmd);
+                ParserActionCommand parserActionCommand = actionCommandParser.setActionCommand(command);
+                this.parserActionListeners.onActionCommand(parserActionCommand, context);
+            });
+
+        });
     }
 
     Stream<Class<?>> getActionControllerStream(List<Class<?>> controllerList) {

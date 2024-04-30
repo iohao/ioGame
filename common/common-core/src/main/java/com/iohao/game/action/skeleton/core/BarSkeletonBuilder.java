@@ -66,6 +66,8 @@ public final class BarSkeletonBuilder {
     final ActionSendDocs actionSendDocs = new ActionSendDocs();
     /** 错误码相关的文档 */
     final ErrorCodeDocs errorCodeDocs = new ErrorCodeDocs();
+    /** action 构建时的钩子方法 */
+    ParserActionListeners parserActionListeners = new ParserActionListeners();
     /** action工厂 */
     ActionFactoryBean<Object> actionFactoryBean = new DefaultActionFactoryBean<>();
     /** action 执行完后，最后需要做的事。 一般用于将数据发送到 Broker（游戏网关） */
@@ -145,6 +147,8 @@ public final class BarSkeletonBuilder {
 
         this.runners.setBarSkeleton(barSkeleton);
 
+        this.parserActionListeners = null;
+
         return barSkeleton;
     }
 
@@ -204,6 +208,16 @@ public final class BarSkeletonBuilder {
         return this;
     }
 
+    public BarSkeletonBuilder addParserActionListener(ParserActionListener listener) {
+        this.parserActionListeners.addParserActionListener(listener);
+        return this;
+    }
+
+    public BarSkeletonBuilder removeParserActionListener(Class<? extends ParserActionListener> listenerClazz) {
+        this.parserActionListeners.removeParserActionListener(listenerClazz);
+        return this;
+    }
+
     private void extractedInOut(BarSkeleton barSkeleton) {
         var inOutManager = new InOutManager(this.setting, this.inOutList);
         barSkeleton.setInOutManager(inOutManager);
@@ -211,7 +225,8 @@ public final class BarSkeletonBuilder {
 
     private void extractedActionCommand(BarSkeleton barSkeleton) {
         // action 命令对象解析器
-        var actionCommandParser = new ActionCommandParser(setting)
+        var actionCommandParser = new ActionCommandParser(this)
+                .setBarSkeleton(barSkeleton)
                 // 根据 action 类列表，来构建 ActionCommand
                 .buildAction(this.actionControllerClazzList);
 

@@ -296,7 +296,6 @@ public final class ActionCommand {
             this.extension = FlowContext.class.isAssignableFrom(paramClazz);
         }
 
-
         @Override
         public String toString() {
             return this.toString(false);
