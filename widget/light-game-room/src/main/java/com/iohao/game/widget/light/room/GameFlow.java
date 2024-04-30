@@ -58,14 +58,14 @@ public class GameFlow {
     /**
      * 游戏开始
      *
-     * @param abstractRoom room
+     * @param room room
      * @return true 游戏开始
      */
-    public boolean startGame(AbstractRoom abstractRoom) {
-        boolean startBefore = this.roomGameStartCustom.startBefore(abstractRoom);
+    public boolean startGame(Room room) {
+        boolean startBefore = this.roomGameStartCustom.startBefore(room);
 
         if (startBefore) {
-            this.roomGameStartCustom.startAfter(abstractRoom);
+            this.roomGameStartCustom.startAfter(room);
         }
 
         return startBefore;
@@ -77,20 +77,20 @@ public class GameFlow {
      * 根据 创建游戏规则
      *
      * @param createRoomInfo 创建房间信息
-     * @param <T>            AbstractRoom
+     * @param <T>            {@link Room}
      * @return 房间
      */
-    public <T extends AbstractRoom> T createRoom(CreateRoomInfo createRoomInfo) {
+    public <T extends Room> T createRoom(CreateRoomInfo createRoomInfo) {
         return this.roomCreateCustom.createRoom(createRoomInfo);
     }
 
     /**
      * 构建房间内的玩家
      *
-     * @param <T> AbstractPlayer
+     * @param <T> {@link Player}
      * @return 玩家
      */
-    public <T extends AbstractPlayer> T createPlayer() {
+    public <T extends Player> T createPlayer() {
         return this.roomPlayerCreateCustom.createPlayer();
     }
 
@@ -98,12 +98,12 @@ public class GameFlow {
      * 进入房间
      *
      * @param userId        玩家 id
-     * @param abstractRoom  玩家所在房间
+     * @param room          玩家所在房间
      * @param roomEnterInfo 进入房间请求信息
      * @return enter Response
      */
-    public RoomEnterInfo enterRoom(long userId, AbstractRoom abstractRoom, RoomEnterInfo roomEnterInfo) {
-        return this.roomEnterCustom.enterRoom(userId, abstractRoom, roomEnterInfo);
+    public RoomEnterInfo enterRoom(long userId, Room room, RoomEnterInfo roomEnterInfo) {
+        return this.roomEnterCustom.enterRoom(userId, room, roomEnterInfo);
     }
 
     /**

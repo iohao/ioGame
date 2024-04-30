@@ -41,7 +41,7 @@ public class RoomService {
      *     value : room
      * </pre>
      */
-    final Map<Long, AbstractRoom> roomMap = new ConcurrentHashMap<>();
+    final Map<Long, Room> roomMap = new ConcurrentHashMap<>();
 
     /**
      * 玩家对应的房间 map
@@ -53,7 +53,7 @@ public class RoomService {
     final Map<Long, Long> userRoomMap = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")
-    public <T extends AbstractRoom> T getRoomByUserId(long userId) {
+    public <T extends Room> T getRoomByUserId(long userId) {
         // 通过 userId 得到 roomId
         Long roomId = userRoomMap.get(userId);
 
@@ -66,11 +66,11 @@ public class RoomService {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends AbstractRoom> T getRoom(long roomId) {
+    public <T extends Room> T getRoom(long roomId) {
         return (T) this.roomMap.get(roomId);
     }
 
-    public void addRoom(AbstractRoom room) {
+    public void addRoom(Room room) {
         long roomId = room.getRoomId();
         this.roomMap.put(roomId, room);
     }
@@ -80,12 +80,12 @@ public class RoomService {
      *
      * @param room 房间
      */
-    public void removeRoom(AbstractRoom room) {
+    public void removeRoom(Room room) {
         long roomId = room.getRoomId();
         this.roomMap.remove(roomId);
     }
 
-    public void addPlayer(AbstractRoom room, AbstractPlayer player) {
+    public void addPlayer(Room room, Player player) {
         room.addPlayer(player);
         this.userRoomMap.put(player.getId(), room.getRoomId());
     }
@@ -96,13 +96,13 @@ public class RoomService {
      * @param room   房间
      * @param player 玩家
      */
-    public void removePlayer(AbstractRoom room, AbstractPlayer player) {
+    public void removePlayer(Room room, Player player) {
         room.removePlayer(player);
         this.userRoomMap.remove(player.getId());
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends AbstractRoom> Collection<T> listRoom() {
+    public <T extends Room> Collection<T> listRoom() {
         return (Collection<T>) this.roomMap.values();
     }
 }

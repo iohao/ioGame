@@ -18,8 +18,8 @@
  */
 package com.iohao.game.widget.light.room.operation;
 
-import com.iohao.game.widget.light.room.AbstractPlayer;
-import com.iohao.game.widget.light.room.AbstractRoom;
+import com.iohao.game.widget.light.room.Player;
+import com.iohao.game.widget.light.room.Room;
 
 /**
  * 操作上下文
@@ -31,7 +31,7 @@ public class OperationContext {
     /** 操作类型 */
     int operation;
 
-    AbstractRoom room;
+    Room room;
 
-    AbstractPlayer player;
+    Player player;
 }
