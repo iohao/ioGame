@@ -20,7 +20,6 @@ package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -48,11 +47,7 @@ public class WrapperLongTest {
         LongValue longValue = new LongValue();
         longValue.value = 100;
 
-        RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
-        requestMessage.setData(longValue);
-
-        return new FlowContext()
-                .setRequest(requestMessage);
+        return TestDataKit.ofFlowContext(cmdInfo, longValue);
     }
 
     BarSkeleton barSkeleton;

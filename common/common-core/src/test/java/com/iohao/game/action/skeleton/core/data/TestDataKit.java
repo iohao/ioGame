@@ -19,12 +19,13 @@
 package com.iohao.game.action.skeleton.core.data;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
+import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.action.BeeAction;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.internal.DebugInOut;
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.common.kit.ClassScanner;
 import lombok.experimental.UtilityClass;
@@ -37,9 +38,7 @@ public class TestDataKit {
 
     public BarSkeleton newBarSkeleton() {
         BarSkeletonBuilder builder = createBuilder();
-        builder.setActionAfter(flowContext -> {
-
-        });
+        
         return builder.build();
     }
 
@@ -49,11 +48,7 @@ public class TestDataKit {
 
         builder.addInOut(new DebugInOut());
 
-        // 添加(请求响应)处理类. 用户可以定义自己的业务控制器 - 这里推荐实现扫描包的形式添加 tcp 处理类
-//        builder
-//                .addActionController(BeeAction.class)
-//                .addActionController(BirdAction.class)
-//        ;
+        builder.setActionAfter(flowContext -> System.out.println());
 
         Predicate<Class<?>> predicateFilter = (clazz) -> clazz.getAnnotation(ActionController.class) != null;
 
@@ -64,18 +59,15 @@ public class TestDataKit {
 
         classList.forEach(builder::addActionController);
 
-
         return builder;
     }
 
-    public RequestMessage createRequestMessage(CmdInfo cmdInfo) {
-        // 模拟请求
-        HeadMetadata headMetadata = new HeadMetadata();
-        headMetadata.setCmdInfo(cmdInfo);
+    public FlowContext ofFlowContext(CmdInfo cmdInfo, Object data) {
+        RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo, data);
 
-        RequestMessage requestMessage = new RequestMessage();
-        requestMessage.setHeadMetadata(headMetadata);
+        FlowContext flowContext = new FlowContext();
+        flowContext.setRequest(requestMessage);
 
-        return requestMessage;
+        return flowContext;
     }
 }

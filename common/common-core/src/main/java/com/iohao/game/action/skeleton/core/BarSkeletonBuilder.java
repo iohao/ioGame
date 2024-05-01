@@ -246,5 +246,8 @@ public final class BarSkeletonBuilder {
         if (Objects.isNull(this.executorRegion)) {
             this.executorRegion = ExecutorRegionKit.createExecutorRegion();
         }
+
+        // 监听器 - 预先创建协议代理类
+        this.addParserActionListener(JProtobufParserActionListener.me());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -51,11 +51,7 @@ public class WrapperIntTest {
         IntValue intValue = new IntValue();
         intValue.value = 100;
 
-        RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
-        requestMessage.setData(intValue);
-
-        return new FlowContext()
-                .setRequest(requestMessage);
+        return TestDataKit.ofFlowContext(cmdInfo, intValue);
     }
 
     BarSkeleton barSkeleton;

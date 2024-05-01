@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -22,7 +22,8 @@ import com.iohao.game.action.skeleton.core.action.ExampleActionCmd;
 import com.iohao.game.action.skeleton.core.action.pojo.DogValid;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,6 +31,7 @@ import org.junit.Test;
  * @author 渔民小镇
  * @date 2022-07-09
  */
+@Slf4j
 public class JSR380Test {
 
     BarSkeleton barSkeleton;
@@ -48,39 +50,10 @@ public class JSR380Test {
 
         CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.jsr380);
 
-        RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
-        requestMessage.setData(dogValid);
-
-        FlowContext flowContext = new FlowContext();
-        flowContext.setRequest(requestMessage);
+        FlowContext flowContext = TestDataKit.ofFlowContext(cmdInfo, dogValid);
 
         barSkeleton.handle(flowContext);
+
+        Assert.assertTrue(flowContext.getResponse().hasError());
     }
-
-
-//    @Test
-//    public void name() {
-//        DogValid dogValid = new DogValid();
-//        dogValid.name = "abc";
-//        Validator validator = ValidatorKit.getValidator();
-//
-//
-//        BeanDescriptor constraintsForClass = validator.getConstraintsForClass(DogValid.class);
-//        Set<PropertyDescriptor> constrainedProperties = constraintsForClass.getConstrainedProperties();
-//        log.info("c : {}", constraintsForClass);
-//
-//        Set<ConstraintViolation<DogValid>> validate = validator.validate(dogValid);
-//
-//
-//        log.info("{}", validate.size());
-//
-//        for (ConstraintViolation<DogValid> violation : validate) {
-//            log.info("{}", validate);
-//            String message = violation.getMessage();
-//            Path propertyPath = violation.getPropertyPath();
-//
-//            log.info("message {}, path: {}", message, propertyPath.toString());
-//        }
-//
-//    }
 }
