@@ -20,6 +20,7 @@ package com.iohao.game.bolt.broker.core.common;
 
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorAware;
 import com.iohao.game.common.kit.MoreKit;
+import com.iohao.game.common.kit.RuntimeKit;
 import com.iohao.game.common.kit.concurrent.DaemonThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashMap;
@@ -70,7 +71,7 @@ final class DefaultUserProcessorExecutorStrategy implements UserProcessorExecuto
         Executor executor = this.executorMap.get(name);
 
         if (Objects.isNull(executor)) {
-            int corePoolSize = Runtime.getRuntime().availableProcessors();
+            int corePoolSize = RuntimeKit.availableProcessors;
             var tempExecutor = createExecutor(name, corePoolSize, corePoolSize);
             executor = MoreKit.firstNonNull(this.executorMap.putIfAbsent(name, tempExecutor), tempExecutor);
 
