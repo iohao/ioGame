@@ -16,27 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core;
+package com.iohao.game.action.skeleton.core.parser;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
+import com.iohao.game.action.skeleton.core.BarSkeleton;
 
 /**
- * action controller
+ * action 构建时的监听器（钩子）
  *
  * @author 渔民小镇
  * @date 2024-04-30
  */
-@Getter
-@Accessors(chain = true)
-@Setter(AccessLevel.PACKAGE)
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class ParserActionController {
-    /** 主路由 (类上的路由) */
-    int cmd;
-    /** action controllerClazz */
-    Class<?> actionControllerClazz;
+public interface ParserActionListener {
+    /**
+     * subCmd action callback
+     * <pre>
+     *     每个 action 都会调用一次
+     * </pre>
+     *
+     * @param context action 构建时的上下文
+     */
+    void onActionCommand(ParserListenerContext context);
+
+    /**
+     * 在 {@link ParserActionListener#onActionCommand(ParserListenerContext)} 之后执行
+     *
+     * @param barSkeleton 业务框架
+     */
+    default void onAfter(BarSkeleton barSkeleton) {
+    }
 }

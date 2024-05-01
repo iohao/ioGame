@@ -24,10 +24,9 @@ public class ParserActionListenerTest {
     public void setUp() throws InterruptedException {
         BarSkeletonBuilder builder = TestDataKit.createBuilder();
 
-        builder.addParserActionListener(JProtobufParserActionListener.me());
-
         barSkeleton = builder.build();
 
+        // 等待 protobuf proxy class 加载完成。 see JProtobufParserActionListener
         TimeUnit.MILLISECONDS.sleep(1000);
     }
 

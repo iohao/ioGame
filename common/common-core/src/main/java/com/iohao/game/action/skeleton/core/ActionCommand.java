@@ -34,8 +34,10 @@ import lombok.experimental.FieldDefaults;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * ActionCommand 命令对象，也称为 action。
@@ -121,6 +123,10 @@ public final class ActionCommand {
         this.actionCommandDoc = builder.actionCommandDoc;
 
         this.deliveryContainer = builder.deliveryContainer;
+    }
+
+    public Stream<ParamInfo> streamParamInfo() {
+        return this.methodHasParam ? Arrays.stream(this.paramInfos) : Stream.empty();
     }
 
     /**

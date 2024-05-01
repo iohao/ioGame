@@ -16,17 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core;
+package com.iohao.game.action.skeleton.core.parser;
 
-import com.iohao.game.common.kit.MoreKit;
+import com.iohao.game.action.skeleton.core.ActionCommand;
+import com.iohao.game.action.skeleton.core.BarSkeleton;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.jctools.maps.NonBlockingHashMap;
-
-import java.util.Map;
 
 /**
  * action 构建时的上下文
@@ -35,24 +33,16 @@ import java.util.Map;
  * @date 2024-04-30
  */
 @Getter
+@Setter
 @Accessors(chain = true)
-@Setter(AccessLevel.PACKAGE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class ParserListenerContext {
     /** 业务框架 */
     BarSkeleton barSkeleton;
-    /** action controller */
-    ParserActionController parserActionController = new ParserActionController();
-    Map<Integer, ParserActionCommand> parserActionCommandMap = new NonBlockingHashMap<>();
-
-    ParserActionCommand ofParserActionCommand(int subCmd) {
-
-        ParserActionCommand parserActionCommand = this.parserActionCommandMap.get(subCmd);
-
-        if (parserActionCommand == null) {
-            return MoreKit.putIfAbsent(this.parserActionCommandMap, subCmd, new ParserActionCommand());
-        }
-
-        return parserActionCommand;
-    }
+    /** 主路由 (类上的路由) */
+    int cmd;
+    /** action controllerClazz */
+    Class<?> actionControllerClazz;
+    /** action method */
+    ActionCommand actionCommand;
 }

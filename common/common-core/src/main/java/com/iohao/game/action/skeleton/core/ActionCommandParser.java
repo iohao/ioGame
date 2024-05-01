@@ -26,6 +26,9 @@ import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDocs;
+import com.iohao.game.action.skeleton.core.parser.JProtobufParserActionListener;
+import com.iohao.game.action.skeleton.core.parser.ParserActionListener;
+import com.iohao.game.action.skeleton.core.parser.ParserListenerContext;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,6 +40,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 /**
@@ -157,26 +161,23 @@ final class ActionCommandParser {
 
     private void executeActionListeners() {
         actionCommandRegions.regionMap.forEach((cmd, actionCommandRegion) -> {
+
             Class<?> actionControllerClazz = actionCommandRegion.getActionControllerClazz();
-            // action 构建时的上下文
-            ParserListenerContext context = new ParserListenerContext();
-            context.setBarSkeleton(barSkeleton);
-
-            ParserActionController parserActionController = context.getParserActionController()
-                    .setActionControllerClazz(actionControllerClazz)
-                    .setCmd(cmd);
-
-            // action 构建时的监听 - actionController
-            this.parserActionListeners.onActionController(parserActionController, context);
 
             actionCommandRegion.getSubActionCommandMap().forEach((subCmd, command) -> {
-                // action 构建时的监听 - actionCommand
-                var actionCommandParser = context.ofParserActionCommand(subCmd);
-                ParserActionCommand parserActionCommand = actionCommandParser.setActionCommand(command);
-                this.parserActionListeners.onActionCommand(parserActionCommand, context);
-            });
+                // action 构建时的上下文
+                ParserListenerContext context = new ParserListenerContext()
+                        .setBarSkeleton(barSkeleton)
+                        .setActionControllerClazz(actionControllerClazz)
+                        .setCmd(cmd)
+                        .setActionCommand(command);
 
+                // action 构建时的监听 - actionCommand
+                this.parserActionListeners.onActionCommand(context);
+            });
         });
+
+        this.parserActionListeners.onAfter(barSkeleton);
     }
 
     Stream<Class<?>> getActionControllerStream(List<Class<?>> controllerList) {
@@ -291,5 +292,31 @@ final class ActionCommandParser {
         Objects.requireNonNull(actionInstance);
 
         return actionInstance;
+    }
+}
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
+final class ParserActionListeners {
+    final List<ParserActionListener> listeners = new CopyOnWriteArrayList<>();
+
+    void addParserActionListener(ParserActionListener listener) {
+        this.listeners.add(listener);
+    }
+
+    void onActionCommand(ParserListenerContext context) {
+        this.listeners.forEach(listener -> listener.onActionCommand(context));
+    }
+
+    void onAfter(BarSkeleton barSkeleton) {
+        this.listeners.forEach(listener -> listener.onAfter(barSkeleton));
+    }
+
+    public boolean isEmpty() {
+        return this.listeners.isEmpty();
+    }
+
+    public ParserActionListeners() {
+        // 监听器 - 预先创建协议代理类
+        this.addParserActionListener(JProtobufParserActionListener.me());
     }
 }

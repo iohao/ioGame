@@ -16,55 +16,81 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core;
+package com.iohao.game.action.skeleton.core.parser;
 
 import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
+import com.iohao.game.action.skeleton.core.ActionCommand;
+import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import com.iohao.game.action.skeleton.protocol.wrapper.*;
 import com.iohao.game.common.kit.concurrent.TaskKit;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.jctools.maps.NonBlockingHashSet;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author 渔民小镇
  * @date 2024-05-01
  */
-final class JProtobufParserActionListener implements ParserActionListener {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public final class JProtobufParserActionListener implements ParserActionListener {
+    final Set<Class<?>> protoSet = new NonBlockingHashSet<>();
 
     @Override
-    public void onActionCommand(ParserActionCommand parserActionCommand, ParserListenerContext context) {
-        BarSkeleton barSkeleton = context.getBarSkeleton();
+    public void onActionCommand(ParserListenerContext context) {
+        if (isNotProtoCodec()) {
+            return;
+        }
+
+        // 将 action 的方法参数与返回值添加了 ProtobufClass 注解的类信息收集到 protoSet 中
+        ActionCommand actionCommand = context.getActionCommand();
+
+        actionCommand.streamParamInfo()
+                .map(ActionCommand.ParamInfo::getParamClazz)
+                .filter(paramClazz -> Objects.nonNull(paramClazz.getAnnotation(ProtobufClass.class)))
+                .forEach(this.protoSet::add);
+
+        // action 返回值相关
+        ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = actionCommand.getActionMethodReturnInfo();
+        Optional.ofNullable(actionMethodReturnInfo.getActualTypeArgumentClazz())
+                .filter(actualTypeArgumentClazz -> Objects.nonNull(actualTypeArgumentClazz.getAnnotation(ProtobufClass.class)))
+                .ifPresent(this.protoSet::add);
+    }
+
+    @Override
+    public void onAfter(BarSkeleton barSkeleton) {
+        if (isNotProtoCodec()) {
+            return;
+        }
+
         ExecutorRegion executorRegion = barSkeleton.getExecutorRegion();
         AtomicInteger index = new AtomicInteger();
 
-        ActionCommand actionCommand = parserActionCommand.getActionCommand();
-        ActionCommand.ParamInfo[] paramInfos = actionCommand.getParamInfos();
-        Arrays.stream(paramInfos)
-                .map(ActionCommand.ParamInfo::getParamClazz)
-                .filter(paramClazz -> Objects.nonNull(paramClazz.getAnnotation(ProtobufClass.class)))
-                .forEach(paramClazz -> {
-                    // create a protobuf proxy class
-                    executorRegion.getSimpleThreadExecutor(index.getAndIncrement())
-                            .executeTry(() -> ProtobufProxy.create(paramClazz));
-                });
+        this.protoSet.forEach(paramClazz -> {
+            // create a protobuf proxy class
+            executorRegion.getUserVirtualThreadExecutor(index.getAndIncrement())
+                    .executeTry(() -> ProtobufProxy.create(paramClazz));
+        });
+    }
 
-        ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = actionCommand.getActionMethodReturnInfo();
-        Class<?> returnTypeClazz = actionMethodReturnInfo.getReturnTypeClazz();
-        Optional.ofNullable(returnTypeClazz)
-                .filter(paramClazz -> Objects.nonNull(paramClazz.getAnnotation(ProtobufClass.class)))
-                .ifPresent(paramClazz -> {
-                    // create a protobuf proxy class
-                    executorRegion.getSimpleThreadExecutor(index.getAndIncrement())
-                            .executeTry(() -> ProtobufProxy.create(paramClazz));
-                });
+    private boolean isNotProtoCodec() {
+        return !(DataCodecKit.getDataCodec() instanceof ProtoDataCodec);
     }
 
     private JProtobufParserActionListener() {
-        TaskKit.execute(() -> {
+        TaskKit.executeVirtual(() -> {
+            if (isNotProtoCodec()) {
+                return;
+            }
+
             ProtobufProxy.create(ByteValueList.class);
 
             ProtobufProxy.create(IntValue.class);
@@ -81,7 +107,7 @@ final class JProtobufParserActionListener implements ParserActionListener {
         });
     }
 
-    static JProtobufParserActionListener me() {
+    public static JProtobufParserActionListener me() {
         return Holder.ME;
     }
 

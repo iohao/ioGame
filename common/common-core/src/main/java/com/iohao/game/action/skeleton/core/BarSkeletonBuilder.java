@@ -25,6 +25,7 @@ import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.core.flow.*;
 import com.iohao.game.action.skeleton.core.flow.internal.*;
+import com.iohao.game.action.skeleton.core.parser.ParserActionListener;
 import com.iohao.game.action.skeleton.core.runner.Runner;
 import com.iohao.game.action.skeleton.core.runner.Runners;
 import com.iohao.game.common.kit.concurrent.executor.*;
@@ -213,11 +214,6 @@ public final class BarSkeletonBuilder {
         return this;
     }
 
-    public BarSkeletonBuilder removeParserActionListener(Class<? extends ParserActionListener> listenerClazz) {
-        this.parserActionListeners.removeParserActionListener(listenerClazz);
-        return this;
-    }
-
     private void extractedInOut(BarSkeleton barSkeleton) {
         var inOutManager = new InOutManager(this.setting, this.inOutList);
         barSkeleton.setInOutManager(inOutManager);
@@ -246,8 +242,5 @@ public final class BarSkeletonBuilder {
         if (Objects.isNull(this.executorRegion)) {
             this.executorRegion = ExecutorRegionKit.createExecutorRegion();
         }
-
-        // 监听器 - 预先创建协议代理类
-        this.addParserActionListener(JProtobufParserActionListener.me());
     }
 }
