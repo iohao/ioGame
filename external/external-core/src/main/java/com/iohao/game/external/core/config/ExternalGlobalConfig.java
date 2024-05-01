@@ -42,7 +42,8 @@ public class ExternalGlobalConfig {
     public AccessAuthenticationHook accessAuthenticationHook = new DefaultAccessAuthenticationHook();
     /** 游戏对外服路由缓存 */
     public ExternalCmdCache externalCmdCache;
-
+    /** true 表示开启简单日志打印 netty handler. see SimpleLoggerHandler */
+    public boolean enableLoggerHandler = true;
     /**
      * 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验
      * <pre>

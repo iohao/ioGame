@@ -79,6 +79,10 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
 
     @Override
     public void pipelineCustom(PipelineContext context) {
+        // 日志打印（异常时）
+        if (ExternalGlobalConfig.enableLoggerHandler) {
+            context.addLast("SimpleLoggerHandler", SimpleLoggerHandler.me());
+        }
 
         // 路由存在检测
         context.addLast("CmdCheckHandler", CmdCheckHandler.me());
