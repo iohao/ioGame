@@ -26,7 +26,7 @@ import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDocs;
-import com.iohao.game.action.skeleton.core.parser.JProtobufParserActionListener;
+import com.iohao.game.action.skeleton.core.parser.ProtobufParserActionListener;
 import com.iohao.game.action.skeleton.core.parser.ParserActionListener;
 import com.iohao.game.action.skeleton.core.parser.ParserListenerContext;
 import com.iohao.game.common.kit.StrKit;
@@ -317,6 +317,6 @@ final class ParserActionListeners {
 
     public ParserActionListeners() {
         // 监听器 - 预先创建协议代理类
-        this.addParserActionListener(JProtobufParserActionListener.me());
+        this.addParserActionListener(ProtobufParserActionListener.me());
     }
 }

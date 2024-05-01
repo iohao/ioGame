@@ -18,15 +18,13 @@
  */
 package com.iohao.game.action.skeleton.core.parser;
 
-import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import com.iohao.game.action.skeleton.protocol.wrapper.*;
-import com.iohao.game.common.kit.concurrent.TaskKit;
-import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
+import com.iohao.game.common.kit.ProtoKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashSet;
@@ -34,14 +32,13 @@ import org.jctools.maps.NonBlockingHashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author 渔民小镇
  * @date 2024-05-01
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class JProtobufParserActionListener implements ParserActionListener {
+public final class ProtobufParserActionListener implements ParserActionListener {
     final Set<Class<?>> protoSet = new NonBlockingHashSet<>();
 
     @Override
@@ -71,48 +68,40 @@ public final class JProtobufParserActionListener implements ParserActionListener
             return;
         }
 
-        ExecutorRegion executorRegion = barSkeleton.getExecutorRegion();
-        AtomicInteger index = new AtomicInteger();
-
-        this.protoSet.forEach(paramClazz -> {
-            // create a protobuf proxy class
-            executorRegion.getUserVirtualThreadExecutor(index.getAndIncrement())
-                    .executeTry(() -> ProtobufProxy.create(paramClazz));
-        });
+        this.protoSet.forEach(ProtoKit::create);
     }
 
     private boolean isNotProtoCodec() {
         return !(DataCodecKit.getDataCodec() instanceof ProtoDataCodec);
     }
 
-    private JProtobufParserActionListener() {
-        TaskKit.executeVirtual(() -> {
-            if (isNotProtoCodec()) {
-                return;
-            }
+    private ProtobufParserActionListener() {
+        if (isNotProtoCodec()) {
+            return;
+        }
 
-            ProtobufProxy.create(ByteValueList.class);
+        // create a protobuf proxy class
+        ProtoKit.create(ByteValueList.class);
 
-            ProtobufProxy.create(IntValue.class);
-            ProtobufProxy.create(IntValueList.class);
+        ProtoKit.create(IntValue.class);
+        ProtoKit.create(IntValueList.class);
 
-            ProtobufProxy.create(BoolValue.class);
-            ProtobufProxy.create(BoolValueList.class);
+        ProtoKit.create(BoolValue.class);
+        ProtoKit.create(BoolValueList.class);
 
-            ProtobufProxy.create(LongValue.class);
-            ProtobufProxy.create(LongValueList.class);
+        ProtoKit.create(LongValue.class);
+        ProtoKit.create(LongValueList.class);
 
-            ProtobufProxy.create(StringValue.class);
-            ProtobufProxy.create(StringValueList.class);
-        });
+        ProtoKit.create(StringValue.class);
+        ProtoKit.create(StringValueList.class);
     }
 
-    public static JProtobufParserActionListener me() {
+    public static ProtobufParserActionListener me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final JProtobufParserActionListener ME = new JProtobufParserActionListener();
+        static final ProtobufParserActionListener ME = new ProtobufParserActionListener();
     }
 }
