@@ -89,5 +89,6 @@ public interface ExampleActionCmd {
     interface SimpleWrapperActionActionCmd {
         int cmd = 13;
         int testInt = 0;
+        int testObject = 1;
     }
 }

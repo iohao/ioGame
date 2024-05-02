@@ -22,16 +22,9 @@ import com.iohao.game.action.skeleton.core.action.SimpleWrapperActionAction;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
-import com.sun.jdi.IntegerValue;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.function.Predicate;
 
 import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.SimpleWrapperActionActionCmd.*;
 

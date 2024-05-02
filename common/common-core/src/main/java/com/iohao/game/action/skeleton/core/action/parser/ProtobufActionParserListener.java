@@ -45,12 +45,14 @@ public final class ProtobufActionParserListener implements ActionParserListener 
 
     @Override
     public void onActionCommand(ActionParserContext context) {
-        // 将 action 的方法参数与返回值添加了 ProtobufClass 注解的类信息收集到 protoSet 中
-        ActionCommand actionCommand = context.getActionCommand();
-
         // 添加了 ProtobufClass 注解的类
         Predicate<Class<?>> protobufClassPredicate = c -> Objects.nonNull(c.getAnnotation(ProtobufClass.class));
+        collect(context, protobufClassPredicate, this.protoSet);
+    }
 
+    static void collect(ActionParserContext context, Predicate<Class<?>> protobufClassPredicate, Set<Class<?>> protoSet) {
+        // 将 action 的方法参数与返回值添加了 ProtobufClass 注解的类信息收集到 protoSet 中
+        ActionCommand actionCommand = context.getActionCommand();
         // action 参数相关
         actionCommand.streamParamInfo()
                 // 只处理业务参数
@@ -61,16 +63,19 @@ public final class ProtobufActionParserListener implements ActionParserListener 
                 .filter(clazz -> !WrapperKit.isWrapper(clazz))
                 // 添加了 ProtobufClass 注解的类
                 .filter(protobufClassPredicate)
-                .forEach(this.protoSet::add);
+                .forEach(protoSet::add);
 
         // action 返回值相关
-        ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = actionCommand.getActionMethodReturnInfo();
-        Optional.ofNullable(actionMethodReturnInfo.getActualTypeArgumentClazz())
+        Optional
+                .ofNullable(actionCommand.getActionMethodReturnInfo())
+                // void 不处理
+                .filter(actionMethodReturnInfo -> !actionMethodReturnInfo.isVoid())
+                .map(ActionCommand.ActionMethodReturnInfo::getActualTypeArgumentClazz)
                 // 协议碎片类型不做处理
                 .filter(clazz -> !WrapperKit.isWrapper(clazz))
                 // 添加了 ProtobufClass 注解的类
                 .filter(protobufClassPredicate)
-                .ifPresent(this.protoSet::add);
+                .ifPresent(protoSet::add);
     }
 
     @Override

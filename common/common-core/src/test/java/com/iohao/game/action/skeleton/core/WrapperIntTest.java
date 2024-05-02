@@ -27,6 +27,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -56,15 +58,16 @@ public class WrapperIntTest {
 
     BarSkeleton barSkeleton;
 
-    //    @Before
+    @Before
     public void setUp() {
         barSkeleton = TestDataKit.newBarSkeleton();
     }
 
 
-    //    @Test
+    @Test
     public void intValue1() {
         FlowContext flowContext;
+
         flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.intValue2Void);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
@@ -115,7 +118,7 @@ public class WrapperIntTest {
         barSkeleton.handle(flowContext);
     }
 
-    //    @Test
+    @Test
     public void integerValue() {
         FlowContext flowContext;
         flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.integer2Void);

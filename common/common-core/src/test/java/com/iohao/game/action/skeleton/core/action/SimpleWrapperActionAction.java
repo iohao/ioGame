@@ -20,20 +20,22 @@ package com.iohao.game.action.skeleton.core.action;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
-import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 /**
  * @author 渔民小镇
  * @date 2024-05-02
  */
 @Slf4j
-@Component
 @ActionController(ExampleActionCmd.SimpleWrapperActionActionCmd.cmd)
 public class SimpleWrapperActionAction {
     @ActionMethod(ExampleActionCmd.SimpleWrapperActionActionCmd.testInt)
-    public void testInt(int age, FlowContext flowContext) {
+    public void testInt(int age) {
         System.out.println(age);
+    }
+
+    @ActionMethod(ExampleActionCmd.SimpleWrapperActionActionCmd.testObject)
+    public int testObject() {
+        return 0;
     }
 }
