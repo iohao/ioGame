@@ -30,6 +30,7 @@ import org.jctools.maps.NonBlockingHashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * 预先生成 proto 协议代理类
@@ -47,16 +48,28 @@ public final class ProtobufActionParserListener implements ActionParserListener 
         // 将 action 的方法参数与返回值添加了 ProtobufClass 注解的类信息收集到 protoSet 中
         ActionCommand actionCommand = context.getActionCommand();
 
+        // 添加了 ProtobufClass 注解的类
+        Predicate<Class<?>> protobufClassPredicate = c -> Objects.nonNull(c.getAnnotation(ProtobufClass.class));
+
         // action 参数相关
         actionCommand.streamParamInfo()
-                .map(ActionCommand.ParamInfo::getParamClazz)
-                .filter(paramClazz -> Objects.nonNull(paramClazz.getAnnotation(ProtobufClass.class)))
+                // 只处理业务参数
+                .filter(ActionCommand.ParamInfo::isBizData)
+                // 得到参数类型
+                .map(ActionCommand.ParamInfo::getActualTypeArgumentClazz)
+                // 协议碎片类型不做处理
+                .filter(clazz -> !WrapperKit.isWrapper(clazz))
+                // 添加了 ProtobufClass 注解的类
+                .filter(protobufClassPredicate)
                 .forEach(this.protoSet::add);
 
         // action 返回值相关
         ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = actionCommand.getActionMethodReturnInfo();
         Optional.ofNullable(actionMethodReturnInfo.getActualTypeArgumentClazz())
-                .filter(actualTypeArgumentClazz -> Objects.nonNull(actualTypeArgumentClazz.getAnnotation(ProtobufClass.class)))
+                // 协议碎片类型不做处理
+                .filter(clazz -> !WrapperKit.isWrapper(clazz))
+                // 添加了 ProtobufClass 注解的类
+                .filter(protobufClassPredicate)
                 .ifPresent(this.protoSet::add);
     }
 

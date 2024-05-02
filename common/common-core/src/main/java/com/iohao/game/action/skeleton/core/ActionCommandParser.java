@@ -274,15 +274,11 @@ final class ActionCommandParser {
 
     private void executeActionListeners() {
         actionCommandRegions.regionMap.forEach((cmd, actionCommandRegion) -> {
-
-            Class<?> actionControllerClazz = actionCommandRegion.getActionControllerClazz();
-
+            // action command, actionMethod
             actionCommandRegion.getSubActionCommandMap().forEach((subCmd, command) -> {
                 // action 构建时的上下文
                 ActionParserContext context = new ActionParserContext()
                         .setBarSkeleton(barSkeleton)
-                        .setActionControllerClazz(actionControllerClazz)
-                        .setCmd(cmd)
                         .setActionCommand(command);
 
                 // action 构建时的监听 - actionCommand

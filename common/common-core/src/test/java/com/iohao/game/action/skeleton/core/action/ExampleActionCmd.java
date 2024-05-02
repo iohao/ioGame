@@ -85,4 +85,9 @@ public interface ExampleActionCmd {
         int longer2LongValue = 10;
         int longer2LongList = 11;
     }
+
+    interface SimpleWrapperActionActionCmd {
+        int cmd = 13;
+        int testInt = 0;
+    }
 }

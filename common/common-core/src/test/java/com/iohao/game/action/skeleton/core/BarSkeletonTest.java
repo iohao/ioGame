@@ -21,39 +21,30 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.action.ExampleActionCmd;
 import com.iohao.game.action.skeleton.core.action.pojo.BeeApple;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
-import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import org.junit.Before;
 import org.junit.Test;
 
 public class BarSkeletonTest {
+    BarSkeleton barSkeleton;
+
+    @Before
+    public void setUp() {
+        // 构建业务框架
+        barSkeleton = TestDataKit.newBarSkeleton();
+    }
 
     @Test
     public void newBuilder() {
-        // 构建业务框架
-        BarSkeleton barSkeleton = TestDataKit.newBarSkeleton();
 
         // 模拟路由信息
         CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.hello);
-
-        // 模拟请求
-        HeadMetadata headMetadata = new HeadMetadata();
-        headMetadata.setCmdInfo(cmdInfo);
-
-        RequestMessage requestMessage = new RequestMessage();
-        requestMessage.setHeadMetadata(headMetadata);
 
         // 模拟请求数据 （一般由前端传入）
         BeeApple beeApple = new BeeApple();
         beeApple.setContent("hello 塔姆!");
         beeApple.setId(101);
-        // 把模拟请求的数据,放入请求对象中
 
-        byte[] data = DataCodecKit.encode(beeApple);
-        requestMessage.setData(data);
-
-        var flowContext = new FlowContext()
-                .setRequest(requestMessage);
+        var flowContext = TestDataKit.ofFlowContext(cmdInfo, beeApple);
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
@@ -66,29 +57,16 @@ public class BarSkeletonTest {
 
     @Test
     public void testVoid() {
-        // 构建业务框架
-        BarSkeleton barSkeleton = TestDataKit.newBarSkeleton();
 
         // 模拟路由信息
         CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.test_void);
-
-        // 模拟请求
-        HeadMetadata headMetadata = new HeadMetadata();
-        headMetadata.setCmdInfo(cmdInfo);
-
-        RequestMessage requestMessage = new RequestMessage();
-        requestMessage.setHeadMetadata(headMetadata);
 
         // 模拟请求数据 （一般由前端传入）
         BeeApple beeApple = new BeeApple();
         beeApple.setContent("hello 塔姆!");
         beeApple.setId(1010);
-        // 把模拟请求的数据,放入请求对象中
-        byte[] data = DataCodecKit.encode(beeApple);
-        requestMessage.setData(data);
 
-        var flowContext = new FlowContext()
-                .setRequest(requestMessage);
+        var flowContext = TestDataKit.ofFlowContext(cmdInfo, beeApple);
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);

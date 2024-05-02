@@ -19,10 +19,7 @@
 package com.iohao.game.action.skeleton.core.data;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
-import com.iohao.game.action.skeleton.core.BarMessageKit;
-import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
-import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.core.*;
 import com.iohao.game.action.skeleton.core.action.BeeAction;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.internal.DebugInOut;
@@ -31,18 +28,17 @@ import com.iohao.game.common.kit.ClassScanner;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 @UtilityClass
 public class TestDataKit {
 
     public BarSkeleton newBarSkeleton() {
-        BarSkeletonBuilder builder = createBuilder();
-        
-        return builder.build();
+        return createBuilder().build();
     }
 
-    public BarSkeletonBuilder createBuilder() {
+    public BarSkeletonBuilder createBuilder(Predicate<Class<?>> appendPredicateFilter) {
         // 尽量做到所有操作是可插拔的. 详细配置 see BarSkeletonBuilder.build
         BarSkeletonBuilder builder = BarSkeleton.newBuilder();
 
@@ -50,16 +46,44 @@ public class TestDataKit {
 
         builder.setActionAfter(flowContext -> System.out.println());
 
-        Predicate<Class<?>> predicateFilter = (clazz) -> clazz.getAnnotation(ActionController.class) != null;
-
-        String packagePath = BeeAction.class.getPackageName();
-
-        ClassScanner classScanner = new ClassScanner(packagePath, predicateFilter);
-        List<Class<?>> classList = classScanner.listScan();
+        List<Class<?>> classList = getClasses(appendPredicateFilter);
 
         classList.forEach(builder::addActionController);
 
+        BarSkeletonSetting setting = builder.getSetting();
+        setting.setPrintHandler(false);
+        setting.setPrintInout(false);
+        setting.setPrintDataCodec(false);
+        setting.setPrintRunners(false);
+        setting.setPrintHandler(false);
+
         return builder;
+    }
+
+    private List<Class<?>> getClasses(Predicate<Class<?>> appendPredicateFilter) {
+        Predicate<Class<?>> predicateFilter = (clazz) -> {
+            if (clazz.getAnnotation(ActionController.class) == null) {
+                return false;
+            }
+
+            if (Objects.nonNull(appendPredicateFilter)) {
+                if (appendPredicateFilter.test(clazz)) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return true;
+        };
+
+        String packagePath = BeeAction.class.getPackageName();
+        ClassScanner classScanner = new ClassScanner(packagePath, predicateFilter);
+        return classScanner.listScan();
+    }
+
+    public BarSkeletonBuilder createBuilder() {
+        return createBuilder(null);
     }
 
     public FlowContext ofFlowContext(CmdInfo cmdInfo, Object data) {

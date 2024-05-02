@@ -16,30 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.action.parser;
+package com.iohao.game.action.skeleton.core.action;
 
-import com.iohao.game.action.skeleton.core.ActionCommand;
-import com.iohao.game.action.skeleton.core.BarSkeleton;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
+import com.iohao.game.action.skeleton.annotation.ActionController;
+import com.iohao.game.action.skeleton.annotation.ActionMethod;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
- * action 构建时的上下文
- *
  * @author 渔民小镇
- * @date 2024-04-30
- * @since 21.7
+ * @date 2024-05-02
  */
-@Getter
-@Setter
-@Accessors(chain = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public final class ActionParserContext {
-    /** 业务框架 */
-    BarSkeleton barSkeleton;
-    /** action method */
-    ActionCommand actionCommand;
+@Slf4j
+@Component
+@ActionController(ExampleActionCmd.SimpleWrapperActionActionCmd.cmd)
+public class SimpleWrapperActionAction {
+    @ActionMethod(ExampleActionCmd.SimpleWrapperActionActionCmd.testInt)
+    public void testInt(int age, FlowContext flowContext) {
+        System.out.println(age);
+    }
 }

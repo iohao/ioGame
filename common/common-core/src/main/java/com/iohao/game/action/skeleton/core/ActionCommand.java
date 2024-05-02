@@ -297,6 +297,16 @@ public final class ActionCommand {
             this.flowContext = FlowContext.class.isAssignableFrom(actualTypeArgumentClazz);
         }
 
+        /**
+         * 是否业务参数
+         *
+         * @return true 业务参数
+         * @since 21.7
+         */
+        public boolean isBizData() {
+            return !this.flowContext;
+        }
+
         @Override
         public String toString() {
             return this.toString(false);
