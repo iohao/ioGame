@@ -209,8 +209,8 @@ public final class BarSkeletonBuilder {
         return this;
     }
 
-    public BarSkeletonBuilder addParserActionListener(ActionParserListener listener) {
-        this.actionParserListeners.addParserActionListener(listener);
+    public BarSkeletonBuilder addActionParserListener(ActionParserListener listener) {
+        this.actionParserListeners.addActionParserListener(listener);
         return this;
     }
 

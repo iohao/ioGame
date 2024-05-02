@@ -295,7 +295,7 @@ final class ActionCommandParser {
 final class ActionParserListeners {
     final List<ActionParserListener> listeners = new CopyOnWriteArrayList<>();
 
-    void addParserActionListener(ActionParserListener listener) {
+    void addActionParserListener(ActionParserListener listener) {
         this.listeners.add(listener);
     }
 
@@ -314,8 +314,8 @@ final class ActionParserListeners {
     public ActionParserListeners() {
         // 监听器 - 预先创建协议代理类
         if (DataCodecKit.getDataCodec() instanceof ProtoDataCodec) {
-            this.addParserActionListener(ProtobufActionParserListener.me());
-            this.addParserActionListener(ProtobufCheckActionParserListener.me());
+            this.addActionParserListener(ProtobufActionParserListener.me());
+            this.addActionParserListener(ProtobufCheckActionParserListener.me());
         }
     }
 }

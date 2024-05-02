@@ -16,38 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core;
+package com.iohao.game.action.skeleton.core.action;
 
-import com.iohao.game.action.skeleton.core.action.SimpleWrapperActionAction;
-import com.iohao.game.action.skeleton.core.data.TestDataKit;
-import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
+import com.iohao.game.action.skeleton.annotation.ActionController;
+import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
-
-import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.SimpleWrapperActionActionCmd.*;
 
 /**
  * @author 渔民小镇
  * @date 2024-05-02
  */
 @Slf4j
-public class SimpleWrapperActionActionTest {
-
-    BarSkeleton barSkeleton;
-
-    @Before
-    public void setUp() {
-        barSkeleton = TestDataKit.createBuilder(SimpleWrapperActionAction.class::equals).build();
-    }
-
-    @Test
-    public void testInt() {
-        CmdInfo cmdInfo = CmdInfo.of(cmd, testInt);
-
-        FlowContext flowContext = TestDataKit.ofFlowContext(cmdInfo, IntValue.of(100));
-
-        barSkeleton.handle(flowContext);
+@ActionController(ExampleActionCmd.SimpleWrapperActionActionCmd.cmd)
+public class SimpleWrapperAction {
+    @ActionMethod(ExampleActionCmd.SimpleWrapperActionActionCmd.testInt)
+    public void testInt(int age) {
+        System.out.println(age);
     }
 }
