@@ -58,15 +58,15 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
         for (int i = 0; i < len; i++) {
             // 方法参数信息
             ActionCommand.ParamInfo paramInfo = paramInfos[i];
-            Class<?> paramClazz = paramInfo.getActualTypeArgumentClazz();
 
             // flow 上下文
-            if (FlowContext.class.isAssignableFrom(paramClazz)) {
+            if (paramInfo.isFlowContext()) {
                 params[i] = flowContext;
                 continue;
             }
 
             // 得到方法参数解析器，把字节解析成 action 业务参数
+            Class<?> paramClazz = paramInfo.getActualTypeArgumentClazz();
             var methodParser = MethodParsers.getMethodParser(paramClazz);
             var param = methodParser.parseParam(request.getData(), paramInfo);
             params[i] = param;

@@ -259,12 +259,11 @@ final class ActionCommandParser {
              * 1 没开启 JSR380 验证， 不做处理
              * 2 过滤不需要验证的参数
              */
-            if (!this.setting.validator || paramInfo.isExtension()) {
+            if (!this.setting.validator || paramInfo.isFlowContext()) {
                 continue;
             }
 
             paramInfo.validator = ValidatorKit.isValidator(parameter.getType());
-
         }
     }
 

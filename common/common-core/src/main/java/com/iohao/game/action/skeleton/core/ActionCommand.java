@@ -254,16 +254,11 @@ public final class ActionCommand {
          * </pre>
          */
         final Class<?> actualClazz;
-        /**
-         * 是否扩展属性
-         * <pre>
-         *     true 表示是扩展属性
-         * </pre>
-         */
-        final boolean extension;
         final boolean customMethodParser;
         /** JSR380 验证组 */
         final Class<?>[] validatorGroups;
+        /** true 表示参数类型是 {@link FlowContext} */
+        final boolean flowContext;
         /** true : 开启 JSR380 验证规范 */
         boolean validator;
 
@@ -299,7 +294,7 @@ public final class ActionCommand {
             var validatedAnn = this.parameter.getAnnotation(ValidatedGroup.class);
             this.validatorGroups = Objects.isNull(validatedAnn) ? EMPTY_GROUPS : validatedAnn.value();
 
-            this.extension = FlowContext.class.isAssignableFrom(paramClazz);
+            this.flowContext = FlowContext.class.isAssignableFrom(actualTypeArgumentClazz);
         }
 
         @Override
