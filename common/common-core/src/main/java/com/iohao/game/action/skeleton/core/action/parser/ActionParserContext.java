@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.parser;
+package com.iohao.game.action.skeleton.core.action.parser;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
@@ -37,7 +37,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class ParserListenerContext {
+public final class ActionParserContext {
     /** 业务框架 */
     BarSkeleton barSkeleton;
     /** 主路由 (类上的路由) */

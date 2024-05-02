@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2024-05-01
  */
 @Slf4j
-public class ParserActionListenerTest {
+public class ActionParserListenerTest {
     BarSkeleton barSkeleton;
 
     @Before

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.parser;
+package com.iohao.game.action.skeleton.core.action.parser;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 
@@ -27,7 +27,7 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
  * @date 2024-04-30
  * @since 21.7
  */
-public interface ParserActionListener {
+public interface ActionParserListener {
     /**
      * subCmd action callback
      * <pre>
@@ -36,10 +36,10 @@ public interface ParserActionListener {
      *
      * @param context action 构建时的上下文
      */
-    void onActionCommand(ParserListenerContext context);
+    void onActionCommand(ActionParserContext context);
 
     /**
-     * 在 {@link ParserActionListener#onActionCommand(ParserListenerContext)} 之后执行
+     * 在 {@link ActionParserListener#onActionCommand(ActionParserContext)} 之后执行
      *
      * @param barSkeleton 业务框架
      */

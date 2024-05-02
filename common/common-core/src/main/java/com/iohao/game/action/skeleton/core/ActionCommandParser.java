@@ -27,9 +27,9 @@ import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDocs;
-import com.iohao.game.action.skeleton.core.parser.ProtobufParserActionListener;
-import com.iohao.game.action.skeleton.core.parser.ParserActionListener;
-import com.iohao.game.action.skeleton.core.parser.ParserListenerContext;
+import com.iohao.game.action.skeleton.core.action.parser.ProtobufActionParserListener;
+import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
+import com.iohao.game.action.skeleton.core.action.parser.ActionParserContext;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -62,12 +62,12 @@ final class ActionCommandParser {
     final ActionCommandRegions actionCommandRegions = new ActionCommandRegions();
 
     final BarSkeletonSetting setting;
-    final ParserActionListeners parserActionListeners;
+    final ActionParserListeners actionParserListeners;
     BarSkeleton barSkeleton;
 
     ActionCommandParser(BarSkeletonBuilder builder) {
         this.setting = builder.getSetting();
-        this.parserActionListeners = builder.parserActionListeners;
+        this.actionParserListeners = builder.actionParserListeners;
     }
 
     /**
@@ -151,34 +151,12 @@ final class ActionCommandParser {
             });
         });
 
+        // 内部将所有的 action 转换为 action 二维数组
+        actionCommandRegions.initActionCommandArray(setting);
         // action 构建时的监听
         executeActionListeners();
 
-        // 内部将所有的 action 转换为 action 二维数组
-        actionCommandRegions.initActionCommandArray(setting);
-
         return this;
-    }
-
-    private void executeActionListeners() {
-        actionCommandRegions.regionMap.forEach((cmd, actionCommandRegion) -> {
-
-            Class<?> actionControllerClazz = actionCommandRegion.getActionControllerClazz();
-
-            actionCommandRegion.getSubActionCommandMap().forEach((subCmd, command) -> {
-                // action 构建时的上下文
-                ParserListenerContext context = new ParserListenerContext()
-                        .setBarSkeleton(barSkeleton)
-                        .setActionControllerClazz(actionControllerClazz)
-                        .setCmd(cmd)
-                        .setActionCommand(command);
-
-                // action 构建时的监听 - actionCommand
-                this.parserActionListeners.onActionCommand(context);
-            });
-        });
-
-        this.parserActionListeners.onAfter(barSkeleton);
     }
 
     Stream<Class<?>> getActionControllerStream(List<Class<?>> controllerList) {
@@ -293,17 +271,38 @@ final class ActionCommandParser {
 
         return actionInstance;
     }
+
+    private void executeActionListeners() {
+        actionCommandRegions.regionMap.forEach((cmd, actionCommandRegion) -> {
+
+            Class<?> actionControllerClazz = actionCommandRegion.getActionControllerClazz();
+
+            actionCommandRegion.getSubActionCommandMap().forEach((subCmd, command) -> {
+                // action 构建时的上下文
+                ActionParserContext context = new ActionParserContext()
+                        .setBarSkeleton(barSkeleton)
+                        .setActionControllerClazz(actionControllerClazz)
+                        .setCmd(cmd)
+                        .setActionCommand(command);
+
+                // action 构建时的监听 - actionCommand
+                this.actionParserListeners.onActionCommand(context);
+            });
+        });
+
+        this.actionParserListeners.onAfter(barSkeleton);
+    }
 }
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-final class ParserActionListeners {
-    final List<ParserActionListener> listeners = new CopyOnWriteArrayList<>();
+final class ActionParserListeners {
+    final List<ActionParserListener> listeners = new CopyOnWriteArrayList<>();
 
-    void addParserActionListener(ParserActionListener listener) {
+    void addParserActionListener(ActionParserListener listener) {
         this.listeners.add(listener);
     }
 
-    void onActionCommand(ParserListenerContext context) {
+    void onActionCommand(ActionParserContext context) {
         this.listeners.forEach(listener -> listener.onActionCommand(context));
     }
 
@@ -315,10 +314,10 @@ final class ParserActionListeners {
         return this.listeners.isEmpty();
     }
 
-    public ParserActionListeners() {
+    public ActionParserListeners() {
         // 监听器 - 预先创建协议代理类
         if (DataCodecKit.getDataCodec() instanceof ProtoDataCodec) {
-            this.addParserActionListener(ProtobufParserActionListener.me());
+            this.addParserActionListener(ProtobufActionParserListener.me());
         }
     }
 }

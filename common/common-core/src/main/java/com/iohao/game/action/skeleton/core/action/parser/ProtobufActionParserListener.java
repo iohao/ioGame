@@ -16,13 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.parser;
+package com.iohao.game.action.skeleton.core.action.parser;
 
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import com.iohao.game.action.skeleton.protocol.wrapper.*;
 import com.iohao.game.common.kit.ProtoKit;
 import lombok.AccessLevel;
@@ -41,11 +39,11 @@ import java.util.Set;
  * @since 21.7
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class ProtobufParserActionListener implements ParserActionListener {
+public final class ProtobufActionParserListener implements ActionParserListener {
     final Set<Class<?>> protoSet = new NonBlockingHashSet<>();
 
     @Override
-    public void onActionCommand(ParserListenerContext context) {
+    public void onActionCommand(ActionParserContext context) {
         // 将 action 的方法参数与返回值添加了 ProtobufClass 注解的类信息收集到 protoSet 中
         ActionCommand actionCommand = context.getActionCommand();
 
@@ -67,7 +65,7 @@ public final class ProtobufParserActionListener implements ParserActionListener 
         this.protoSet.forEach(ProtoKit::create);
     }
 
-    private ProtobufParserActionListener() {
+    private ProtobufActionParserListener() {
         // create a protobuf proxy class
         ProtoKit.create(ByteValueList.class);
 
@@ -84,12 +82,12 @@ public final class ProtobufParserActionListener implements ParserActionListener 
         ProtoKit.create(StringValueList.class);
     }
 
-    public static ProtobufParserActionListener me() {
+    public static ProtobufActionParserListener me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final ProtobufParserActionListener ME = new ProtobufParserActionListener();
+        static final ProtobufActionParserListener ME = new ProtobufActionParserListener();
     }
 }

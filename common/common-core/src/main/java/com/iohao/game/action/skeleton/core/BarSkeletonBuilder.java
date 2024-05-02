@@ -25,7 +25,7 @@ import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.core.flow.*;
 import com.iohao.game.action.skeleton.core.flow.internal.*;
-import com.iohao.game.action.skeleton.core.parser.ParserActionListener;
+import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
 import com.iohao.game.action.skeleton.core.runner.Runner;
 import com.iohao.game.action.skeleton.core.runner.Runners;
 import com.iohao.game.common.kit.concurrent.executor.*;
@@ -68,7 +68,7 @@ public final class BarSkeletonBuilder {
     /** 错误码相关的文档 */
     final ErrorCodeDocs errorCodeDocs = new ErrorCodeDocs();
     /** action 构建时的钩子方法 */
-    ParserActionListeners parserActionListeners = new ParserActionListeners();
+    ActionParserListeners actionParserListeners = new ActionParserListeners();
     /** action工厂 */
     ActionFactoryBean<Object> actionFactoryBean = new DefaultActionFactoryBean<>();
     /** action 执行完后，最后需要做的事。 一般用于将数据发送到 Broker（游戏网关） */
@@ -148,7 +148,7 @@ public final class BarSkeletonBuilder {
 
         this.runners.setBarSkeleton(barSkeleton);
 
-        this.parserActionListeners = null;
+        this.actionParserListeners = null;
 
         return barSkeleton;
     }
@@ -209,8 +209,8 @@ public final class BarSkeletonBuilder {
         return this;
     }
 
-    public BarSkeletonBuilder addParserActionListener(ParserActionListener listener) {
-        this.parserActionListeners.addParserActionListener(listener);
+    public BarSkeletonBuilder addParserActionListener(ActionParserListener listener) {
+        this.actionParserListeners.addParserActionListener(listener);
         return this;
     }
 
