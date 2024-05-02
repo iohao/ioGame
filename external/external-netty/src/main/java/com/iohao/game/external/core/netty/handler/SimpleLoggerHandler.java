@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author 渔民小镇
  * @date 2024-05-01
+ * @since 21.7
  */
 @Slf4j
 @ChannelHandler.Sharable

@@ -25,6 +25,7 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
  *
  * @author 渔民小镇
  * @date 2024-04-30
+ * @since 21.7
  */
 public interface ParserActionListener {
     /**

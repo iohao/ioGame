@@ -25,6 +25,7 @@ import lombok.experimental.UtilityClass;
  *
  * @author 渔民小镇
  * @date 2024-05-01
+ * @since 21.7
  */
 @UtilityClass
 public class RuntimeKit {

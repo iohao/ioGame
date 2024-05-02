@@ -23,6 +23,7 @@ import com.esotericsoftware.reflectasm.ConstructorAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
+import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDocs;
@@ -317,6 +318,8 @@ final class ParserActionListeners {
 
     public ParserActionListeners() {
         // 监听器 - 预先创建协议代理类
-        this.addParserActionListener(ProtobufParserActionListener.me());
+        if (DataCodecKit.getDataCodec() instanceof ProtoDataCodec) {
+            this.addParserActionListener(ProtobufParserActionListener.me());
+        }
     }
 }

@@ -34,8 +34,11 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
+ * 预先生成 proto 协议代理类
+ *
  * @author 渔民小镇
  * @date 2024-05-01
+ * @since 21.7
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class ProtobufParserActionListener implements ParserActionListener {
@@ -43,13 +46,10 @@ public final class ProtobufParserActionListener implements ParserActionListener 
 
     @Override
     public void onActionCommand(ParserListenerContext context) {
-        if (isNotProtoCodec()) {
-            return;
-        }
-
         // 将 action 的方法参数与返回值添加了 ProtobufClass 注解的类信息收集到 protoSet 中
         ActionCommand actionCommand = context.getActionCommand();
 
+        // action 参数相关
         actionCommand.streamParamInfo()
                 .map(ActionCommand.ParamInfo::getParamClazz)
                 .filter(paramClazz -> Objects.nonNull(paramClazz.getAnnotation(ProtobufClass.class)))
@@ -64,22 +64,10 @@ public final class ProtobufParserActionListener implements ParserActionListener 
 
     @Override
     public void onAfter(BarSkeleton barSkeleton) {
-        if (isNotProtoCodec()) {
-            return;
-        }
-
         this.protoSet.forEach(ProtoKit::create);
     }
 
-    private boolean isNotProtoCodec() {
-        return !(DataCodecKit.getDataCodec() instanceof ProtoDataCodec);
-    }
-
     private ProtobufParserActionListener() {
-        if (isNotProtoCodec()) {
-            return;
-        }
-
         // create a protobuf proxy class
         ProtoKit.create(ByteValueList.class);
 

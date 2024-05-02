@@ -24,6 +24,7 @@ import lombok.experimental.UtilityClass;
 /**
  * @author 渔民小镇
  * @date 2024-04-30
+ * @since 21.7
  */
 @UtilityClass
 public class RoomKit {
