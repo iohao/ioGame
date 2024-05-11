@@ -35,6 +35,7 @@ public interface ExampleActionCmd {
         int jsr380 = 4;
         int validated_group_update = 5;
         int validated_group_create = 6;
+        int hello_dog = 7;
     }
 
 
@@ -83,5 +84,10 @@ public interface ExampleActionCmd {
         int longer2Long = 9;
         int longer2LongValue = 10;
         int longer2LongList = 11;
+    }
+
+    interface SimpleWrapperActionActionCmd {
+        int cmd = 13;
+        int testInt = 0;
     }
 }

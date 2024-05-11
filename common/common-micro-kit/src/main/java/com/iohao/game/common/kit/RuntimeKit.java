@@ -16,26 +16,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.flow;
+package com.iohao.game.common.kit;
 
-import com.iohao.game.widget.light.room.Room;
+import lombok.experimental.UtilityClass;
 
 /**
- * 进入房间 (重连)
+ * Runtime 相关工具
  *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-01
+ * @since 21.7
  */
-public interface RoomEnterCustom {
-
+@UtilityClass
+public class RuntimeKit {
     /**
-     * 进入房间
-     *
-     * @param userId        玩家 id
-     * @param room  玩家所在房间
-     * @param roomEnterInfo 进入房间请求信息
-     * @return enter Response
+     * 默认使用 Runtime.getRuntime().availableProcessors()。
+     * 如果有一些特殊环境需要模拟的，可以设置该变量。
      */
-    RoomEnterInfo enterRoom(long userId, Room room, RoomEnterInfo roomEnterInfo);
-
+    public int availableProcessors = Runtime.getRuntime().availableProcessors();
 }

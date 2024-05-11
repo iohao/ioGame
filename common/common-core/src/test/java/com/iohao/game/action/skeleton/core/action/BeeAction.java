@@ -62,6 +62,12 @@ public class BeeAction {
         that.setContent(beeApple.content + "，I'm thatVoid");
     }
 
+    @ActionMethod(ExampleActionCmd.BeeActionCmd.hello_dog)
+    public DogValid helloDog(DogValid dogValid) {
+        log.info("dogValid : {}", dogValid);
+        return dogValid;
+    }
+
     @ActionMethod(ExampleActionCmd.BeeActionCmd.jsr380)
     public void jsr380(DogValid dogValid) {
         log.info("{}", dogValid);

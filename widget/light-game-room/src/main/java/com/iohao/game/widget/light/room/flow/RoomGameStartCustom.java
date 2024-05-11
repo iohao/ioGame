@@ -18,7 +18,7 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.widget.light.room.AbstractRoom;
+import com.iohao.game.widget.light.room.Room;
 
 /**
  * 游戏开始
@@ -39,10 +39,10 @@ public interface RoomGameStartCustom {
      *     所以最好预留一个这样的验证接口, 交给子类游戏来定义开始游戏的规则
      * </pre>
      *
-     * @param abstractRoom 房间
+     * @param room 房间
      * @return 返回 true, 会执行 {@link RoomGameStartCustom#startAfter}. 并更新用户的状态为战斗状态
      */
-    boolean startBefore(AbstractRoom abstractRoom);
+    boolean startBefore(Room room);
 
     /**
      * 游戏开始前的 after 逻辑. 这里可以游戏正式开始的逻辑
@@ -52,7 +52,7 @@ public interface RoomGameStartCustom {
      *      回合制 进入战斗
      * </pre>
      *
-     * @param abstractRoom 房间
+     * @param room 房间
      */
-    void startAfter(AbstractRoom abstractRoom);
+    void startAfter(Room room);
 }

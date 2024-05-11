@@ -16,26 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.flow;
+package com.iohao.game.action.skeleton.core.action;
 
-import com.iohao.game.widget.light.room.Room;
+import com.iohao.game.action.skeleton.annotation.ActionController;
+import com.iohao.game.action.skeleton.annotation.ActionMethod;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * 进入房间 (重连)
- *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-02
  */
-public interface RoomEnterCustom {
-
-    /**
-     * 进入房间
-     *
-     * @param userId        玩家 id
-     * @param room  玩家所在房间
-     * @param roomEnterInfo 进入房间请求信息
-     * @return enter Response
-     */
-    RoomEnterInfo enterRoom(long userId, Room room, RoomEnterInfo roomEnterInfo);
-
+@Slf4j
+@ActionController(ExampleActionCmd.SimpleWrapperActionActionCmd.cmd)
+public class SimpleWrapperAction {
+    @ActionMethod(ExampleActionCmd.SimpleWrapperActionActionCmd.testInt)
+    public void testInt(int age) {
+        System.out.println(age);
+    }
 }

@@ -65,7 +65,7 @@ class DocInfo {
 
         // 方法参数
         Arrays.stream(subBehavior.getParamInfos())
-                .filter(paramInfo -> !paramInfo.isExtension())
+                .filter(paramInfo -> !paramInfo.isFlowContext())
                 .map(this::paramInfoToString)
                 .forEach(methodParam -> paramMap.put("methodParam", methodParam));
 

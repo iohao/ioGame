@@ -16,26 +16,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.flow;
+package com.iohao.game.widget.light.room.kit;
 
 import com.iohao.game.widget.light.room.Room;
+import lombok.experimental.UtilityClass;
 
 /**
- * 进入房间 (重连)
- *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-04-30
+ * @since 21.7
  */
-public interface RoomEnterCustom {
-
+@UtilityClass
+public class RoomKit {
     /**
-     * 进入房间
+     * 从房间内获取一个空位置
      *
-     * @param userId        玩家 id
-     * @param room  玩家所在房间
-     * @param roomEnterInfo 进入房间请求信息
-     * @return enter Response
+     * @param room 房间
+     * @return 空的位置
      */
-    RoomEnterInfo enterRoom(long userId, Room room, RoomEnterInfo roomEnterInfo);
+    public int getEmptySeatNo(Room room) {
+        // 玩家位置 map
+        var playerSeatMap = room.getPlayerSeatMap();
 
+        for (int i = 0; i < room.getSpaceSize(); i++) {
+            if (!playerSeatMap.containsKey(i)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
 }

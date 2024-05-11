@@ -22,6 +22,7 @@ import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
 import com.iohao.game.common.consts.CommonConst;
 import com.iohao.game.common.consts.IoGameLogName;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,5 +83,12 @@ public class ProtoKit {
         }
 
         return null;
+    }
+
+    public void create(Class<?> clazz) {
+        TaskKit.executeVirtual(() -> {
+            // create a protobuf proxy class
+            ProtobufProxy.create(clazz);
+        });
     }
 }

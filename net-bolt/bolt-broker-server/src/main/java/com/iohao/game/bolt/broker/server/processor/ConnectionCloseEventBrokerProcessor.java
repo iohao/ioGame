@@ -54,22 +54,21 @@ public final class ConnectionCloseEventBrokerProcessor implements ConnectionEven
 
     @Override
     public void onEvent(String remoteAddress, Connection connection) {
-        if (IoGameGlobalConfig.openLog) {
-            log.info("Broker ConnectionEventType:【{}】 remoteAddress:【{}】，Connection:【{}】",
-                    ConnectionEventType.CLOSE, remoteAddress, connection
-            );
-        }
-
         Objects.requireNonNull(connection);
 
         BalancedManager balancedManager = this.brokerServer.getBalancedManager();
         // 当前下线的逻辑服
         BrokerClientProxy brokerClientProxy = balancedManager.remove(remoteAddress);
 
-        extractedPrint(remoteAddress, brokerClientProxy);
-        BrokerPrintKit.print(this.brokerServer);
-
         Optional.ofNullable(brokerClientProxy).ifPresent(proxy -> {
+            if (IoGameGlobalConfig.openLog) {
+                log.info("Broker ConnectionEventType:【{}】，remoteAddress:【{}】，brokerClientProxy:【{}】，Connection:【{}】",
+                        ConnectionEventType.CLOSE, remoteAddress, brokerClientProxy, connection
+                );
+
+                BrokerPrintKit.print(this.brokerServer);
+            }
+
             String id = proxy.getId();
             BrokerClientModuleMessage moduleMessage = this.brokerClientModules.removeById(id);
 
@@ -82,13 +81,5 @@ public final class ConnectionCloseEventBrokerProcessor implements ConnectionEven
 
             LineKit.offline(context);
         });
-    }
-
-    private void extractedPrint(String remoteAddress, BrokerClientProxy brokerClientProxy) {
-        if (IoGameGlobalConfig.openLog) {
-            log.info("Broker ConnectionEventType:【{}】 remoteAddress:【{}】，brokerClientProxy:【{}】",
-                    ConnectionEventType.CLOSE, remoteAddress, brokerClientProxy
-            );
-        }
     }
 }

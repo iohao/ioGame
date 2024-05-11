@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * 抽象房间
@@ -41,8 +42,9 @@ import java.util.function.Predicate;
 @Getter
 @Setter
 @Accessors(chain = true)
+@SuppressWarnings("unchecked")
 @FieldDefaults(level = AccessLevel.PROTECTED)
-public abstract class AbstractRoom implements Serializable
+public class Room implements Serializable
         // 房间广播增强
         , RoomBroadcastEnhance {
 
@@ -56,7 +58,7 @@ public abstract class AbstractRoom implements Serializable
      *     value is player
      * </pre>
      */
-    final Map<Long, AbstractPlayer> playerMap = new NonBlockingHashMap<>();
+    final Map<Long, Player> playerMap = new NonBlockingHashMap<>();
 
     /**
      * 玩家位置
@@ -86,12 +88,15 @@ public abstract class AbstractRoom implements Serializable
      * @param <T> 玩家
      * @return 所有玩家信息 (包括退出房间的玩家信息)
      */
-    @SuppressWarnings("unchecked")
-    public <T extends AbstractPlayer> Collection<T> listPlayer() {
+    public <T extends Player> Collection<T> listPlayer() {
         return (Collection<T>) this.playerMap.values();
     }
 
-    public List<AbstractPlayer> listPlayer(Predicate<AbstractPlayer> predicate) {
+    public Stream<Player> streamPlayer() {
+        return this.playerMap.values().stream();
+    }
+
+    public List<Player> listPlayer(Predicate<Player> predicate) {
         return listPlayer().stream()
                 .filter(predicate)
                 .toList();
@@ -108,8 +113,7 @@ public abstract class AbstractRoom implements Serializable
         return this.playerMap.keySet();
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends AbstractPlayer> T getPlayerById(long userId) {
+    public <T extends Player> T getPlayerById(long userId) {
         return (T) this.playerMap.get(userId);
     }
 
@@ -122,18 +126,18 @@ public abstract class AbstractRoom implements Serializable
      *
      * @param player 玩家
      */
-    public void addPlayer(AbstractPlayer player) {
+    public void addPlayer(Player player) {
         long userId = player.getId();
         this.playerMap.put(userId, player);
         this.playerSeatMap.put(player.getSeat(), userId);
     }
 
     /**
-     * 移出玩家
+     * 移除玩家
      *
      * @param player 玩家
      */
-    public void removePlayer(AbstractPlayer player) {
+    public void removePlayer(Player player) {
         long userId = player.getId();
         this.playerMap.remove(userId);
         this.playerSeatMap.remove(player.getSeat());
@@ -150,7 +154,7 @@ public abstract class AbstractRoom implements Serializable
      * @param action 给定操作
      * @param <T>    t
      */
-    public <T extends AbstractPlayer> void ifPlayerExist(long userId, Consumer<T> action) {
+    public <T extends Player> void ifPlayerExist(long userId, Consumer<T> action) {
         T player = this.getPlayerById(userId);
         Optional.ofNullable(player).ifPresent(action);
     }
@@ -164,5 +168,13 @@ public abstract class AbstractRoom implements Serializable
     public void ifPlayerNotExist(long userId, Runnable runnable) {
         var player = this.getPlayerById(userId);
         PresentKit.ifNull(player, runnable);
+    }
+
+    public int countPlayer() {
+        return this.getPlayerMap().size();
+    }
+
+    public boolean isEmptyPlayer() {
+        return this.playerMap.isEmpty();
     }
 }

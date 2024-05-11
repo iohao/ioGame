@@ -18,7 +18,7 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.widget.light.room.AbstractRoom;
+import com.iohao.game.widget.light.room.Room;
 import com.iohao.game.widget.light.room.CreateRoomInfo;
 
 /**
@@ -37,8 +37,8 @@ public interface RoomCreateCustom {
      * 根据 创建游戏规则
      *
      * @param createRoomInfo 创建房间信息
-     * @param <T>            AbstractRoom
+     * @param <T>            Room
      * @return 房间
      */
-    <T extends AbstractRoom> T createRoom(CreateRoomInfo createRoomInfo);
+    <T extends Room> T createRoom(CreateRoomInfo createRoomInfo);
 }

@@ -18,6 +18,8 @@
  */
 package com.iohao.game.common.kit.concurrent.executor;
 
+import com.iohao.game.common.kit.RuntimeKit;
+
 /**
  * 用户线程执行器管理域
  * <pre>
@@ -58,7 +60,7 @@ final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion {
     }
 
     static int availableProcessors2n() {
-        int n = Runtime.getRuntime().availableProcessors();
+        int n = RuntimeKit.availableProcessors;
         n |= (n >> 1);
         n |= (n >> 2);
         n |= (n >> 4);

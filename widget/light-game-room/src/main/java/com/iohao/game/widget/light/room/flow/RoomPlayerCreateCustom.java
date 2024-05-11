@@ -18,7 +18,7 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.widget.light.room.AbstractPlayer;
+import com.iohao.game.widget.light.room.Player;
 
 /**
  * 创建玩家 - 自定义
@@ -33,8 +33,8 @@ public interface RoomPlayerCreateCustom {
     /**
      * 构建房间内的玩家
      *
-     * @param <T> AbstractPlayer
+     * @param <T> {@link Player}
      * @return 玩家
      */
-    <T extends AbstractPlayer> T createPlayer();
+    <T extends Player> T createPlayer();
 }

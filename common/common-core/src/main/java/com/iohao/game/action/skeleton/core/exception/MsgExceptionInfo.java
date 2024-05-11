@@ -93,6 +93,27 @@ public interface MsgExceptionInfo {
     }
 
     /**
+     * 断言值 value 为 null, 就抛出异常
+     *
+     * @param value 断言值
+     * @throws MsgException e
+     */
+    default void assertNullThrows(Object value) throws MsgException {
+        assertTrueThrows(Objects.isNull(value));
+    }
+
+    /**
+     * 断言值 value 为 null, 就抛出异常
+     *
+     * @param value 断言值
+     * @param msg   自定义消息
+     * @throws MsgException e
+     */
+    default void assertNullThrows(Object value, String msg) throws MsgException {
+        assertTrueThrows(Objects.isNull(value), msg);
+    }
+
+    /**
      * 断言必须是 true, 否则抛出异常
      *
      * @param v1 断言值

@@ -25,6 +25,7 @@ import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.core.flow.*;
 import com.iohao.game.action.skeleton.core.flow.internal.*;
+import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
 import com.iohao.game.action.skeleton.core.runner.Runner;
 import com.iohao.game.action.skeleton.core.runner.Runners;
 import com.iohao.game.common.kit.concurrent.executor.*;
@@ -66,6 +67,8 @@ public final class BarSkeletonBuilder {
     final ActionSendDocs actionSendDocs = new ActionSendDocs();
     /** 错误码相关的文档 */
     final ErrorCodeDocs errorCodeDocs = new ErrorCodeDocs();
+    /** action 构建时的钩子方法 */
+    ActionParserListeners actionParserListeners = new ActionParserListeners();
     /** action工厂 */
     ActionFactoryBean<Object> actionFactoryBean = new DefaultActionFactoryBean<>();
     /** action 执行完后，最后需要做的事。 一般用于将数据发送到 Broker（游戏网关） */
@@ -145,6 +148,8 @@ public final class BarSkeletonBuilder {
 
         this.runners.setBarSkeleton(barSkeleton);
 
+        this.actionParserListeners = null;
+
         return barSkeleton;
     }
 
@@ -204,6 +209,11 @@ public final class BarSkeletonBuilder {
         return this;
     }
 
+    public BarSkeletonBuilder addActionParserListener(ActionParserListener listener) {
+        this.actionParserListeners.addActionParserListener(listener);
+        return this;
+    }
+
     private void extractedInOut(BarSkeleton barSkeleton) {
         var inOutManager = new InOutManager(this.setting, this.inOutList);
         barSkeleton.setInOutManager(inOutManager);
@@ -211,7 +221,8 @@ public final class BarSkeletonBuilder {
 
     private void extractedActionCommand(BarSkeleton barSkeleton) {
         // action 命令对象解析器
-        var actionCommandParser = new ActionCommandParser(setting)
+        var actionCommandParser = new ActionCommandParser(this)
+                .setBarSkeleton(barSkeleton)
                 // 根据 action 类列表，来构建 ActionCommand
                 .buildAction(this.actionControllerClazzList);
 

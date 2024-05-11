@@ -22,7 +22,7 @@ import com.iohao.game.action.skeleton.core.action.ExampleActionCmd;
 import com.iohao.game.action.skeleton.core.action.pojo.BirdValid;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,31 +44,24 @@ public class JSR380ValidatedGroupTest {
     @Test
     public void updateGroupTest() {
         BirdValid birdValid = new BirdValid();
-
         CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.validated_group_update);
 
-        RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
-        requestMessage.setData(birdValid);
-
-        FlowContext flowContext = new FlowContext();
-        flowContext.setRequest(requestMessage);
+        FlowContext flowContext = TestDataKit.ofFlowContext(cmdInfo, birdValid);
 
         barSkeleton.handle(flowContext);
+
+        Assert.assertTrue(flowContext.getResponse().hasError());
     }
 
     @Test
     public void createGroupTest() {
         BirdValid birdValid = new BirdValid();
-
         CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.validated_group_create);
 
-        RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
-        requestMessage.setData(birdValid);
-
-        FlowContext flowContext = new FlowContext();
-        flowContext.setRequest(requestMessage);
+        FlowContext flowContext = TestDataKit.ofFlowContext(cmdInfo, birdValid);
 
         barSkeleton.handle(flowContext);
-    }
 
+        Assert.assertTrue(flowContext.getResponse().hasError());
+    }
 }

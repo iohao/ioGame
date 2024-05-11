@@ -18,13 +18,17 @@
  */
 package com.iohao.game.external.core.netty;
 
+import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.PresentKit;
+import com.iohao.game.common.kit.ProtoKit;
 import com.iohao.game.external.core.ExternalCore;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
 import com.iohao.game.external.core.hook.UserHook;
 import com.iohao.game.external.core.hook.internal.DefaultUserHook;
+import com.iohao.game.external.core.message.ExternalMessage;
 import com.iohao.game.external.core.micro.MicroBootstrap;
 import com.iohao.game.external.core.micro.join.ExternalJoinSelector;
 import com.iohao.game.external.core.micro.join.ExternalJoinSelectors;
@@ -102,6 +106,11 @@ public final class DefaultExternalCore implements ExternalCore {
 
         // 当前游戏对外服所使用的连接方式
         userSessions.option(UserSessionOption.externalJoin, joinEnum);
+
+        // ================== 其他 ==================
+        if (DataCodecKit.getDataCodec() instanceof ProtoDataCodec) {
+            ProtoKit.create(ExternalMessage.class);
+        }
     }
 
     private void aware() {

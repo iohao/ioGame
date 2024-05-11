@@ -5,7 +5,7 @@
     <parent>
         <artifactId>ioGame</artifactId>
         <groupId>com.iohao.game</groupId>
-        <version>21.6</version>
+        <version>21.7</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -55,7 +55,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -71,14 +70,22 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
         <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
-            <version>1.0.2</version>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
+        <!-- EL实现。在 Java SE 环境中，您必须将实现作为依赖项添加到 POM 文件中 -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>${jakarta.el.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 

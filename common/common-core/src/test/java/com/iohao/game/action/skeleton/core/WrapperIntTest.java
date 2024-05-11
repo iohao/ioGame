@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -27,6 +27,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -51,24 +53,21 @@ public class WrapperIntTest {
         IntValue intValue = new IntValue();
         intValue.value = 100;
 
-        RequestMessage requestMessage = TestDataKit.createRequestMessage(cmdInfo);
-        requestMessage.setData(intValue);
-
-        return new FlowContext()
-                .setRequest(requestMessage);
+        return TestDataKit.ofFlowContext(cmdInfo, intValue);
     }
 
     BarSkeleton barSkeleton;
 
-    //    @Before
+    @Before
     public void setUp() {
         barSkeleton = TestDataKit.newBarSkeleton();
     }
 
 
-    //    @Test
+    @Test
     public void intValue1() {
         FlowContext flowContext;
+
         flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.intValue2Void);
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
@@ -119,7 +118,7 @@ public class WrapperIntTest {
         barSkeleton.handle(flowContext);
     }
 
-    //    @Test
+    @Test
     public void integerValue() {
         FlowContext flowContext;
         flowContext = this.createIntValueFlowContext(WrapperIntActionCmd.integer2Void);

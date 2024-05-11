@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -29,10 +29,7 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashMap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 负载管理器
@@ -95,6 +92,10 @@ public class BalancedManager {
 
     public BrokerClientProxy remove(String address) {
         BrokerClientProxy brokerClientProxy = this.refMap.get(address);
+
+        if (Objects.isNull(brokerClientProxy)) {
+            return null;
+        }
 
         BrokerClientType brokerClientType = brokerClientProxy.getBrokerClientType();
         var loadBalanced = this.getRegionLoadBalanced(brokerClientType);

@@ -16,26 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.flow;
+package com.iohao.game.action.skeleton.core.action.parser;
 
-import com.iohao.game.widget.light.room.Room;
+import com.iohao.game.action.skeleton.core.BarSkeleton;
 
 /**
- * 进入房间 (重连)
+ * action 构建时的监听器（钩子）
  *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-04-30
+ * @since 21.7
  */
-public interface RoomEnterCustom {
+public interface ActionParserListener {
+    /**
+     * subCmd action callback
+     * <pre>
+     *     每个 action 都会调用一次
+     * </pre>
+     *
+     * @param context action 构建时的上下文
+     */
+    void onActionCommand(ActionParserContext context);
 
     /**
-     * 进入房间
+     * 在 {@link ActionParserListener#onActionCommand(ActionParserContext)} 之后执行
      *
-     * @param userId        玩家 id
-     * @param room  玩家所在房间
-     * @param roomEnterInfo 进入房间请求信息
-     * @return enter Response
+     * @param barSkeleton 业务框架
      */
-    RoomEnterInfo enterRoom(long userId, Room room, RoomEnterInfo roomEnterInfo);
-
+    default void onAfter(BarSkeleton barSkeleton) {
+    }
 }

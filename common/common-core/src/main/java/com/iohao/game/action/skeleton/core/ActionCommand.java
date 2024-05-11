@@ -34,8 +34,10 @@ import lombok.experimental.FieldDefaults;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * ActionCommand 命令对象，也称为 action。
@@ -121,6 +123,10 @@ public final class ActionCommand {
         this.actionCommandDoc = builder.actionCommandDoc;
 
         this.deliveryContainer = builder.deliveryContainer;
+    }
+
+    public Stream<ParamInfo> streamParamInfo() {
+        return this.methodHasParam ? Arrays.stream(this.paramInfos) : Stream.empty();
     }
 
     /**
@@ -248,16 +254,11 @@ public final class ActionCommand {
          * </pre>
          */
         final Class<?> actualClazz;
-        /**
-         * 是否扩展属性
-         * <pre>
-         *     true 表示是扩展属性
-         * </pre>
-         */
-        final boolean extension;
         final boolean customMethodParser;
         /** JSR380 验证组 */
         final Class<?>[] validatorGroups;
+        /** true 表示参数类型是 {@link FlowContext} */
+        final boolean flowContext;
         /** true : 开启 JSR380 验证规范 */
         boolean validator;
 
@@ -293,9 +294,18 @@ public final class ActionCommand {
             var validatedAnn = this.parameter.getAnnotation(ValidatedGroup.class);
             this.validatorGroups = Objects.isNull(validatedAnn) ? EMPTY_GROUPS : validatedAnn.value();
 
-            this.extension = FlowContext.class.isAssignableFrom(paramClazz);
+            this.flowContext = FlowContext.class.isAssignableFrom(actualTypeArgumentClazz);
         }
 
+        /**
+         * 是否业务参数
+         *
+         * @return true 业务参数
+         * @since 21.7
+         */
+        public boolean isBizData() {
+            return !this.flowContext;
+        }
 
         @Override
         public String toString() {

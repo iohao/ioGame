@@ -20,9 +20,11 @@ package com.iohao.game.action.skeleton.protocol.wrapper;
 
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.common.kit.CollKit;
+import com.sun.jdi.BooleanValue;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 装箱、拆箱包装工具
@@ -72,5 +74,34 @@ public class WrapperKit {
         }
 
         return ByteValueList.of(values.stream().map(DataCodecKit::encode).toList());
+    }
+
+    /** 框架支持的协议碎片类型 */
+    final Set<Class<?>> wrapperTypeSet = Set.of(
+            int.class,
+            Integer.class,
+            IntValue.class,
+
+            long.class,
+            Long.class,
+            LongValue.class,
+
+            boolean.class,
+            Boolean.class,
+            BoolValue.class,
+
+            String.class,
+            StringValue.class
+    );
+
+    /**
+     * 框架支持的协议碎片类型
+     *
+     * @param clazz class
+     * @return true 是框架支持的协议碎片类型
+     * @since 21.7
+     */
+    public boolean isWrapper(Class<?> clazz) {
+        return wrapperTypeSet.contains(clazz);
     }
 }

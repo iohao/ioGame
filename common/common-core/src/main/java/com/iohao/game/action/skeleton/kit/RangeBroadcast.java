@@ -54,14 +54,26 @@ import java.util.Set;
  *                 .addUserId(List.of(3L, 4L, 5L))
  *                 // 排除一些用户，被排除的用户将不会接收到广播
  *                 .removeUserId(1)
- *                 // 执行广播
+ *                 .removeUserId(4)
+ *                 // 执行广播，只有 2、3、5 可以接收到广播
  *                 .execute();
  *
  *         // example - 2
  *         new RangeBroadcast(flowContext)
- *                 // 需要广播的数据
- *                 .setResponseMessage(cmdInfo, playerReady)
- *                 // // 添加需要接收广播的用户
+ *                 // 需要广播的数据（路由、业务数据）
+ *                 .setResponseMessage(cmdInfo, StringValue.of("hello"))
+ *                 // 添加需要接收广播的用户
+ *                 .addUserId(1)
+ *                 // 执行广播
+ *                 .execute();
+ *
+ *         // example - 3
+ *         BrokerClientContext brokerClient = ...;
+ *         var aggregationContext = brokerClient.getCommunicationAggregationContext();
+ *         new RangeBroadcast(aggregationContext)
+ *                  // 需要广播的数据（路由、业务数据）
+ *                 .setResponseMessage(cmdInfo, StringValue.of("hello"))
+ *                 // 添加需要接收广播的用户
  *                 .addUserId(1)
  *                 // 执行广播
  *                 .execute();
@@ -81,6 +93,8 @@ public class RangeBroadcast {
     ResponseMessage responseMessage;
     /** 是否执行发送领域事件操作: true 执行推送操作 */
     boolean doSend = true;
+    /** 检查 userIds ；当值为 true 时，userIds 必须有元素 */
+    boolean checkEmptyUser = true;
 
     public RangeBroadcast(CommunicationAggregationContext aggregationContext) {
         Objects.requireNonNull(aggregationContext);
@@ -92,7 +106,7 @@ public class RangeBroadcast {
     }
 
     /**
-     * 响应消息到远程, 此方法是同步推送
+     * 响应消息到远程端（用户、玩家）
      * <pre>
      *     模板方法模式：
      *         在一个方法中定义一个算法的骨架，而将一些步骤延迟到子类中。
@@ -125,12 +139,8 @@ public class RangeBroadcast {
 
         Objects.requireNonNull(this.responseMessage);
 
-        if (CollKit.isEmpty(this.userIds)) {
-            throw new RuntimeException("没有添加消息推送人 " + this.getClass());
-        }
-
-        // 推送响应 （广播消息）给指定的用户列表
-        this.aggregationContext.broadcast(this.responseMessage, this.userIds);
+        // 开始广播
+        this.broadcast();
     }
 
     /**
@@ -153,6 +163,21 @@ public class RangeBroadcast {
      * </pre>
      */
     protected void trick() {
+    }
+
+    /**
+     * 广播数据
+     */
+    protected void broadcast() {
+        boolean emptyUser = CollKit.isEmpty(this.userIds);
+        if (checkEmptyUser && emptyUser) {
+            throw new RuntimeException("没有添加消息推送人 " + this.getClass());
+        }
+
+        // 推送响应（广播消息）给指定的用户列表
+        if (!emptyUser) {
+            this.aggregationContext.broadcast(this.responseMessage, this.userIds);
+        }
     }
 
     public RangeBroadcast setResponseMessage(ResponseMessage responseMessage) {
@@ -217,5 +242,14 @@ public class RangeBroadcast {
      */
     protected void disableSend() {
         this.doSend = false;
+    }
+
+    public RangeBroadcast disableEmptyUserCheck() {
+        this.checkEmptyUser = false;
+        return this;
+    }
+
+    protected CommunicationAggregationContext getAggregationContext() {
+        return this.aggregationContext;
     }
 }

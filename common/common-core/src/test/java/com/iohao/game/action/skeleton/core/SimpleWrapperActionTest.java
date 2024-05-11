@@ -18,42 +18,36 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.action.skeleton.core.action.ExampleActionCmd;
-import com.iohao.game.action.skeleton.core.action.pojo.DogValid;
+import com.iohao.game.action.skeleton.core.action.SimpleWrapperAction;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.SimpleWrapperActionActionCmd.*;
+
 /**
  * @author 渔民小镇
- * @date 2022-07-09
+ * @date 2024-05-02
  */
 @Slf4j
-public class JSR380Test {
+public class SimpleWrapperActionTest {
 
     BarSkeleton barSkeleton;
 
     @Before
     public void setUp() {
-        BarSkeletonBuilder builder = TestDataKit.createBuilder();
-        builder.getSetting().setValidator(true);
-
-        barSkeleton = builder.build();
+        barSkeleton = TestDataKit.createBuilder(SimpleWrapperAction.class::equals).build();
     }
 
     @Test
-    public void jsr380() {
-        DogValid dogValid = new DogValid();
+    public void testInt() {
+        CmdInfo cmdInfo = CmdInfo.of(cmd, testInt);
 
-        CmdInfo cmdInfo = CmdInfo.of(ExampleActionCmd.BeeActionCmd.cmd, ExampleActionCmd.BeeActionCmd.jsr380);
-
-        FlowContext flowContext = TestDataKit.ofFlowContext(cmdInfo, dogValid);
+        FlowContext flowContext = TestDataKit.ofFlowContext(cmdInfo, IntValue.of(100));
 
         barSkeleton.handle(flowContext);
-
-        Assert.assertTrue(flowContext.getResponse().hasError());
     }
 }
