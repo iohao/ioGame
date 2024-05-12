@@ -19,46 +19,35 @@
 package com.iohao.game.widget.light.room;
 
 import com.iohao.game.common.kit.PresentKit;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
-import org.jctools.maps.NonBlockingHashMap;
+import com.iohao.game.widget.light.room.flow.RoomCreateContext;
+import com.iohao.game.widget.light.room.kit.RoomKit;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * 抽象房间
+ * 房间
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 21.8
  */
-@Getter
-@Setter
-@Accessors(chain = true)
 @SuppressWarnings("unchecked")
-@FieldDefaults(level = AccessLevel.PROTECTED)
-public class Room implements Serializable
-        // 房间广播增强
-        , RoomBroadcastEnhance {
-
-    @Serial
-    private static final long serialVersionUID = -6937915481102847959L;
-
+public interface Room extends Serializable, RoomBroadcastEnhance {
     /**
      * 玩家
      * <pre>
      *     key is userId
      *     value is player
      * </pre>
+     *
+     * @return 玩家
      */
-    final Map<Long, Player> playerMap = new NonBlockingHashMap<>();
+    Map<Long, Player> getPlayerMap();
 
     /**
      * 玩家位置
@@ -66,21 +55,69 @@ public class Room implements Serializable
      *     key is seat
      *     value is userId
      * </pre>
+     *
+     * @return 玩家位置
      */
-    final Map<Integer, Long> playerSeatMap = new TreeMap<>();
+    Map<Integer, Long> getPlayerSeatMap();
 
-    /** 房间唯一 id */
-    long roomId;
-    /** 房间号 */
-    int roomNo;
+    /**
+     * @return 房间唯一 id
+     */
+    long getRoomId();
 
-    /** 创建房间信息 */
-    CreateRoomInfo createRoomInfo;
-    /** 房间空间大小: 4 就是4个人上限 (根据规则设置) */
-    int spaceSize;
+    /**
+     * @param roomId 房间唯一 id
+     */
+    void setRoomId(long roomId);
 
-    /** 房间状态 */
-    RoomStatusEnum roomStatusEnum = RoomStatusEnum.wait;
+    /**
+     * @return 房间号
+     */
+    int getRoomNo();
+
+    /**
+     * @param roomNo 房间号
+     */
+    void setRoomNo(int roomNo);
+
+    /**
+     * @return 房间空间大小。如 4 就是 4 个人上限 (可以根据规则设置)
+     */
+    int getSpaceSize();
+
+    /**
+     * @param spaceSize 房间空间大小。如 4 就是 4 个人上限 (可以根据规则设置)
+     */
+    void setSpaceSize(int spaceSize);
+
+    /**
+     * @return 房间状态
+     */
+    RoomStatusEnum getRoomStatusEnum();
+
+    /**
+     * @param roomStatusEnum 房间状态
+     */
+    void setRoomStatusEnum(RoomStatusEnum roomStatusEnum);
+
+    /**
+     * @return 创建房间信息（玩法规则）
+     */
+    RoomCreateContext getRoomCreateContext();
+
+    /**
+     * 房间创建者的 userId
+     *
+     * @return userId
+     */
+    default long getCreatorUserId() {
+        return this.getRoomCreateContext().getCreatorUserId();
+    }
+
+    /**
+     * @param roomCreateContext 创建房间信息（玩法规则）
+     */
+    void setRoomCreateContext(RoomCreateContext roomCreateContext);
 
     /**
      * 玩家列表: 所有玩家信息
@@ -88,37 +125,36 @@ public class Room implements Serializable
      * @param <T> 玩家
      * @return 所有玩家信息 (包括退出房间的玩家信息)
      */
-    public <T extends Player> Collection<T> listPlayer() {
-        return (Collection<T>) this.playerMap.values();
+    default <T extends Player> Collection<T> listPlayer() {
+        return (Collection<T>) this.getPlayerMap().values();
     }
 
-    public Stream<Player> streamPlayer() {
-        return this.playerMap.values().stream();
+    default Stream<Player> streamPlayer() {
+        return this.listPlayer().stream();
     }
 
-    public List<Player> listPlayer(Predicate<Player> predicate) {
+    default List<Player> listPlayer(Predicate<Player> predicate) {
         return listPlayer().stream()
                 .filter(predicate)
                 .toList();
     }
 
-    public Collection<Long> listPlayerId(long excludePlayerId) {
+    default Collection<Long> listPlayerId(long excludePlayerId) {
         return listPlayerId().stream()
                 .filter(playerId -> playerId != excludePlayerId)
                 .toList();
     }
 
-    @Override
-    public Collection<Long> listPlayerId() {
-        return this.playerMap.keySet();
+    default Collection<Long> listPlayerId() {
+        return this.getPlayerMap().keySet();
     }
 
-    public <T extends Player> T getPlayerById(long userId) {
-        return (T) this.playerMap.get(userId);
+    default <T extends Player> T getPlayerById(long userId) {
+        return (T) this.getPlayerMap().get(userId);
     }
 
-    public boolean existUser(long userId) {
-        return this.playerMap.get(userId) != null;
+    default boolean existUser(long userId) {
+        return this.getPlayerMap().get(userId) != null;
     }
 
     /**
@@ -126,10 +162,11 @@ public class Room implements Serializable
      *
      * @param player 玩家
      */
-    public void addPlayer(Player player) {
-        long userId = player.getId();
-        this.playerMap.put(userId, player);
-        this.playerSeatMap.put(player.getSeat(), userId);
+    default void addPlayer(Player player) {
+        player.setRoomId(this.getRoomId());
+        long userId = player.getUserId();
+        this.getPlayerMap().put(userId, player);
+        this.getPlayerSeatMap().put(player.getSeat(), userId);
     }
 
     /**
@@ -137,14 +174,20 @@ public class Room implements Serializable
      *
      * @param player 玩家
      */
-    public void removePlayer(Player player) {
-        long userId = player.getId();
-        this.playerMap.remove(userId);
-        this.playerSeatMap.remove(player.getSeat());
+    default void removePlayer(Player player) {
+        long userId = player.getUserId();
+        this.getPlayerMap().remove(userId);
+        this.getPlayerSeatMap().remove(player.getSeat());
     }
 
-    public boolean isStatus(RoomStatusEnum roomStatusEnum) {
-        return this.roomStatusEnum == roomStatusEnum;
+    /**
+     * 当前房间是否是所指定的房间状态
+     *
+     * @param roomStatusEnum 房间状态
+     * @return true 是所指定的房间状态
+     */
+    default boolean isStatus(RoomStatusEnum roomStatusEnum) {
+        return this.getRoomStatusEnum() == roomStatusEnum;
     }
 
     /**
@@ -154,7 +197,7 @@ public class Room implements Serializable
      * @param action 给定操作
      * @param <T>    t
      */
-    public <T extends Player> void ifPlayerExist(long userId, Consumer<T> action) {
+    default <T extends Player> void ifPlayerExist(long userId, Consumer<T> action) {
         T player = this.getPlayerById(userId);
         Optional.ofNullable(player).ifPresent(action);
     }
@@ -165,16 +208,40 @@ public class Room implements Serializable
      * @param userId   userId
      * @param runnable 给定操作
      */
-    public void ifPlayerNotExist(long userId, Runnable runnable) {
+    default void ifPlayerNotExist(long userId, Runnable runnable) {
         var player = this.getPlayerById(userId);
         PresentKit.ifNull(player, runnable);
     }
 
-    public int countPlayer() {
+    default int countPlayer() {
         return this.getPlayerMap().size();
     }
 
-    public boolean isEmptyPlayer() {
-        return this.playerMap.isEmpty();
+    default boolean isEmptyPlayer() {
+        return this.getPlayerMap().isEmpty();
+    }
+
+    /**
+     * 得到一个空位置
+     *
+     * @return >=0 表示有位置
+     */
+    default int getEmptySeatNo() {
+        return RoomKit.getEmptySeatNo(this);
+    }
+
+    /**
+     * 玩家是否都准备了
+     *
+     * @return true 所有玩家都准备了
+     */
+    default boolean isReadyPlayers() {
+        // 是否都准备了。玩家中，如果有任意一个没点准备的，notReady 为 true
+        boolean notReady = this.streamPlayer().anyMatch(player -> !player.isReady());
+        return !notReady;
+    }
+
+    default void forEach(BiConsumer<Long, Player> action) {
+        this.getPlayerMap().forEach(action);
     }
 }

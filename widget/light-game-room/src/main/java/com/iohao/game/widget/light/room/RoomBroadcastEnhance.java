@@ -30,6 +30,7 @@ import java.util.Collection;
  *
  * @author 渔民小镇
  * @date 2024-04-23
+ * @since 21.6
  */
 interface RoomBroadcastEnhance {
     /**
@@ -81,5 +82,43 @@ interface RoomBroadcastEnhance {
      */
     default RangeBroadcast ofEmptyRangeBroadcast(CommunicationAggregationContext aggregationContext) {
         return new RangeBroadcast(aggregationContext);
+    }
+
+    /**
+     * @param aggregationContext 设置通讯上下文
+     */
+    void setAggregationContext(CommunicationAggregationContext aggregationContext);
+
+    /**
+     * @return 通讯上下文
+     */
+    CommunicationAggregationContext getAggregationContext();
+
+    /**
+     * 设置通讯上下文
+     *
+     * @param flowContext flowContext
+     */
+    default void setAggregationContext(FlowContext flowContext) {
+        CommunicationAggregationContext aggregationContext = flowContext.option(FlowAttr.aggregationContext);
+        this.setAggregationContext(aggregationContext);
+    }
+
+    /**
+     * 创建一个 RangeBroadcast，默认会添加上当前房间内的所有玩家
+     *
+     * @return RangeBroadcast 范围内的广播
+     */
+    default RangeBroadcast ofRangeBroadcast() {
+        return this.ofRangeBroadcast(this.getAggregationContext());
+    }
+
+    /**
+     * 创建一个 RangeBroadcast
+     *
+     * @return RangeBroadcast 范围内的广播
+     */
+    default RangeBroadcast ofEmptyRangeBroadcast() {
+        return this.ofEmptyRangeBroadcast(this.getAggregationContext());
     }
 }

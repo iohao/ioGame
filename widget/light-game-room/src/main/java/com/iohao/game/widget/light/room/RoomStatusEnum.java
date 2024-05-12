@@ -23,10 +23,13 @@ package com.iohao.game.widget.light.room;
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 17
  */
 public enum RoomStatusEnum {
     /** 等待 */
     wait,
     /** 开始 */
-    start;
+    start,
+    /** 其他（如结算之类的） */
+    none;
 }

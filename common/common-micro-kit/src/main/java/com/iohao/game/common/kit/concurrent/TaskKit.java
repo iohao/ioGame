@@ -305,4 +305,10 @@ public class TaskKit {
             taskListener.onException(e);
         }
     }
+
+    public void stop() {
+        wheelTimer.stop();
+        cacheExecutor.shutdown();
+        virtualExecutor.shutdown();
+    }
 }

@@ -18,25 +18,26 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.widget.light.room.RuleInfo;
-import com.iohao.game.action.skeleton.core.exception.MsgException;
-
 /**
- * 游戏规则信息解析
+ * 游戏流程
  * <pre>
- *     具体的玩法规则协议, 在 json 中完成
+ *     房间创建
+ *     创建玩家
+ *     进入房间
+ *     游戏开始
  * </pre>
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 21.8
  */
-public interface RoomRuleInfoCustom {
-    /**
-     * 获取子游戏规则信息
-     *
-     * @param ruleInfoJson 游戏规则 - json
-     * @return 规则信息
-     * @throws MsgException e
-     */
-    RuleInfo getRuleInfo(String ruleInfoJson) throws MsgException;
+public interface RoomGameFlowService extends
+        // 房间创建
+        RoomCreateCustom,
+        // 创建玩家
+        RoomPlayerCreateCustom,
+        // 进入房间
+        RoomEnterCustom,
+        // 游戏开始
+        RoomGameStartCustom {
 }

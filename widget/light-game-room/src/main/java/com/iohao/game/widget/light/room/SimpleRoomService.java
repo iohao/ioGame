@@ -16,26 +16,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.flow;
+package com.iohao.game.widget.light.room;
 
-import com.iohao.game.widget.light.room.Room;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 房间创建 - 自定义
- * <pre>
- *     延迟到子游戏中实现, 以便适应不同的子游戏规则
- * </pre>
- *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-12
  * @since 21.8
  */
-public interface RoomCreateCustom {
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public final class SimpleRoomService implements RoomService {
     /**
-     * 创建房间, 子类只需要关心房间配置和规则信息
-     *
-     * @param createContext 创建房间信息（房间配置和规则信息）
-     * @return 房间
+     * 房间 map
+     * <pre>
+     *     key : roomId
+     *     value : room
+     * </pre>
      */
-    Room createRoom(RoomCreateContext createContext);
+    final Map<Long, Room> roomMap = new ConcurrentHashMap<>();
+
+    /**
+     * 玩家对应的房间 map
+     * <pre>
+     *     key : userId
+     *     value : roomId
+     * </pre>
+     */
+    final Map<Long, Long> userRoomMap = new ConcurrentHashMap<>();
+
+    SimpleRoomService() {
+    }
 }

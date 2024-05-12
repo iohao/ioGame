@@ -28,13 +28,14 @@ import com.iohao.game.widget.light.room.Player;
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 21.8
  */
 public interface RoomPlayerCreateCustom {
     /**
      * 构建房间内的玩家
      *
-     * @param <T> {@link Player}
+     * @param gameFlowContext 房间内创建玩家的上下文
      * @return 玩家
      */
-    <T extends Player> T createPlayer();
+    Player createPlayer(GameFlowContext gameFlowContext);
 }

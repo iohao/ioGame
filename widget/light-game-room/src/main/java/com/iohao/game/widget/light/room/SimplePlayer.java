@@ -16,26 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.flow;
+package com.iohao.game.widget.light.room;
 
-import com.iohao.game.widget.light.room.Room;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+import java.io.Serial;
 
 /**
- * 房间创建 - 自定义
- * <pre>
- *     延迟到子游戏中实现, 以便适应不同的子游戏规则
- * </pre>
- *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-12
  * @since 21.8
  */
-public interface RoomCreateCustom {
-    /**
-     * 创建房间, 子类只需要关心房间配置和规则信息
-     *
-     * @param createContext 创建房间信息（房间配置和规则信息）
-     * @return 房间
-     */
-    Room createRoom(RoomCreateContext createContext);
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PROTECTED)
+public class SimplePlayer implements Player {
+    @Serial
+    private static final long serialVersionUID = -26338708253909097L;
+    /** userId 玩家 id */
+    long userId;
+    /** 房间 id */
+    long roomId;
+    /** 用户所在位置 */
+    int seat;
+    /** true - 已准备 */
+    boolean ready;
+    /** true robot */
+    boolean robot;
+    /** true 模仿 robot 机制, 但并不是真正的 robot; 类似于 robot 托管 */
+    boolean maybeRobot;
 }

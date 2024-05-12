@@ -16,26 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.flow;
-
-import com.iohao.game.widget.light.room.Room;
+package com.iohao.game.widget.light.room.operation;
 
 /**
- * 房间创建 - 自定义
- * <pre>
- *     延迟到子游戏中实现, 以便适应不同的子游戏规则
- * </pre>
- *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-12
  * @since 21.8
  */
-public interface RoomCreateCustom {
+public interface OperationFactoryProvider {
     /**
-     * 创建房间, 子类只需要关心房间配置和规则信息
-     *
-     * @param createContext 创建房间信息（房间配置和规则信息）
-     * @return 房间
+     * @return 玩法操作工厂
      */
-    Room createRoom(RoomCreateContext createContext);
+    OperationFactory getOperationFactory();
 }

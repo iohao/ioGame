@@ -19,9 +19,9 @@
 package com.iohao.game.action.skeleton.core.exception;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.io.Serial;
+import java.util.Objects;
 
 /**
  * 业务框架 异常消息
@@ -33,14 +33,14 @@ import java.io.Serial;
  * @author 渔民小镇
  * @date 2021-12-20
  */
-@Getter
-@Setter
 public class MsgException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = -4977523514509693190L;
 
     /** 异常消息码 */
+    @Getter
     final int msgCode;
+    MsgExceptionInfo msgExceptionInfo;
 
     public MsgException(int msgCode, String message) {
         super(message);
@@ -49,5 +49,25 @@ public class MsgException extends RuntimeException {
 
     public MsgException(MsgExceptionInfo msgExceptionInfo) {
         this(msgExceptionInfo.getCode(), msgExceptionInfo.getMsg());
+        this.msgExceptionInfo = msgExceptionInfo;
+    }
+
+    public MsgExceptionInfo getMsgExceptionInfo() {
+        return Objects.isNull(this.msgExceptionInfo)
+                ? this.msgExceptionInfo = new InternalExceptionInfo(msgCode, getMessage())
+                : this.msgExceptionInfo;
+    }
+
+    private record InternalExceptionInfo(int code, String msg) implements MsgExceptionInfo {
+        @Override
+        public String getMsg() {
+            return msg;
+        }
+
+        @Override
+        public int getCode() {
+            return code;
+        }
     }
 }
+

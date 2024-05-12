@@ -1,6 +1,8 @@
 package com.iohao.game.common.kit.concurrent;
 
 import com.iohao.game.common.kit.RandomKit;
+import io.netty.util.Timeout;
+import io.netty.util.TimerTask;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Assert;
@@ -37,6 +39,7 @@ public class TaskKitTest {
 
     @Test
     public void runOnce() {
+
         // 只执行一次，2 秒后执行
         TaskKit.runOnce(() -> log.info("2 Seconds"), 2, TimeUnit.SECONDS);
         // 只执行一次，1 分钟后执行
@@ -66,6 +69,7 @@ public class TaskKitTest {
         TaskKit.runInterval(() -> log.info("tick 2 Seconds"), 2, TimeUnit.SECONDS);
         // 每 30 分钟调用一次
         TaskKit.runInterval(() -> log.info("tick 30 Minute"), 30, TimeUnit.MINUTES);
+
 
         //【示例 - 移除任务】每秒调用一次，当 hp 为 0 时就移除当前 Listener
         TaskKit.runInterval(new IntervalTaskListener() {
@@ -144,6 +148,34 @@ public class TaskKitTest {
 
         TimeUnit.MILLISECONDS.sleep(200);
         Assert.assertTrue(hasEx.get());
+    }
+
+    @Test
+    public void example() {
+
+        TaskKit.runOnceSecond(() -> {
+        });
+
+        TaskKit.newTimeout(new TimerTask() {
+            @Override
+            public void run(Timeout timeout) throws Exception {
+
+            }
+        }, 1, TimeUnit.SECONDS);
+
+        TaskKit.execute(() -> {
+        });
+
+        TaskKit.runInterval(() -> {
+
+        }, 1, TimeUnit.SECONDS);
+
+        TaskKit.runIntervalMinute(new IntervalTaskListener() {
+            @Override
+            public void onUpdate() {
+
+            }
+        }, 1);
     }
 
     //    @Test

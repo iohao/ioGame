@@ -18,6 +18,7 @@
  */
 package com.iohao.game.external.core.message;
 
+import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.protocol.BarMessage;
@@ -64,6 +65,12 @@ public class ExternalCodecKit {
 
     public RequestMessage createRequest() {
         return externalCodec.createRequest();
+    }
+
+    public RequestMessage createRequest(CmdInfo cmdInfo) {
+        RequestMessage request = createRequest();
+        request.getHeadMetadata().setCmdInfo(cmdInfo);
+        return request;
     }
 
     public ResponseMessage createResponse() {

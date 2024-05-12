@@ -16,26 +16,40 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room;
+package com.iohao.game.widget.light.room.flow;
 
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.common.kit.attr.AttrOptions;
+import com.iohao.game.widget.light.room.Room;
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.util.Objects;
 
 /**
- * 玩法规则信息
- *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-12
+ * @since 21.8
  */
-@Data
-@Accessors(chain = true)
+@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CommonRuleInfo implements RuleInfo, Serializable {
-    @Serial
-    private static final long serialVersionUID = -5169477928235457487L;
+final class SimpleGameFlowContext implements GameFlowContext {
+    final Room room;
+    final FlowContext flowContext;
+
+    AttrOptions options;
+
+    public AttrOptions getOptions() {
+        if (Objects.isNull(options)) {
+            this.options = new AttrOptions();
+        }
+
+        return options;
+    }
+
+    SimpleGameFlowContext(Room room, FlowContext flowContext) {
+        this.room = room;
+        this.flowContext = flowContext;
+    }
 }

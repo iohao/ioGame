@@ -32,7 +32,7 @@ public class RoomKit {
      * 从房间内获取一个空位置
      *
      * @param room 房间
-     * @return 空的位置
+     * @return 空的位置。当值为 -1 时，表示没有空的位置（房间满人了）。
      */
     public int getEmptySeatNo(Room room) {
         // 玩家位置 map

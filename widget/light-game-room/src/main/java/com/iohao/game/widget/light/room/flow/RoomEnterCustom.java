@@ -18,24 +18,18 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.widget.light.room.Room;
-
 /**
  * 进入房间 (重连)
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 21.8
  */
 public interface RoomEnterCustom {
-
     /**
      * 进入房间
      *
-     * @param userId        玩家 id
-     * @param room  玩家所在房间
-     * @param roomEnterInfo 进入房间请求信息
-     * @return enter Response
+     * @param gameFlowContext 进入房间上下文
      */
-    RoomEnterInfo enterRoom(long userId, Room room, RoomEnterInfo roomEnterInfo);
-
+    void enterRoom(GameFlowContext gameFlowContext);
 }

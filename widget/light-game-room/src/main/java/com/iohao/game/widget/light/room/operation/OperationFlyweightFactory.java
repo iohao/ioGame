@@ -18,24 +18,22 @@
  */
 package com.iohao.game.widget.light.room.operation;
 
-import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
-import com.iohao.game.action.skeleton.core.exception.MsgException;
-import lombok.Getter;
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 玩法操作的处理对象, 享元工厂
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 17
  */
-@Slf4j
-@UtilityClass
-public class OperationFlyweightFactory {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+final class OperationFlyweightFactory implements OperationFactory {
     /**
      * 操作处理
      * <pre>
@@ -43,25 +41,37 @@ public class OperationFlyweightFactory {
      *     value : 操作码对应的业务逻辑处理类
      * </pre>
      */
-    @Getter
-    private final Map<Integer, OperationHandler> map = new NonBlockingHashMap<>();
-
+    final Map<Integer, OperationHandler> operationMap = new NonBlockingHashMap<>();
     /**
-     * 获取操作
-     *
-     * @param operation 操作码
-     * @return 操作码对应的业务逻辑处理类
-     * @throws MsgException e
+     * 玩家可操作的操作处理
+     * <pre>
+     *     key : 操作码
+     *     value : 操作码对应的业务逻辑处理类
+     * </pre>
      */
-    OperationHandler getOperationHandler(int operation) throws MsgException {
-        OperationHandler operationHandler = map.get(operation);
+    final Map<Integer, OperationHandler> userOperationMap = new NonBlockingHashMap<>();
 
-        ActionErrorEnum.classNotExist.assertNonNull(operationHandler);
+    public OperationHandler getUserOperationHandler(int operation) {
+        return this.userOperationMap.get(operation);
+    }
 
-        return operationHandler;
+    public OperationHandler getOperationHandler(int operation) {
+        return this.operationMap.get(operation);
     }
 
     public void mapping(int operation, OperationHandler operationHandler) {
-        map.put(operation, operationHandler);
+        this.operationMap.put(operation, operationHandler);
+    }
+
+    public void mappingUser(int operation, OperationHandler operationHandler) {
+        this.operationMap.put(operation, operationHandler);
+        this.userOperationMap.put(operation, operationHandler);
+    }
+
+    public Optional<OperationHandler> optionalOperationHandler(int operation) {
+        return Optional.ofNullable(this.operationMap.get(operation));
+    }
+
+    OperationFlyweightFactory() {
     }
 }

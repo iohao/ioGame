@@ -18,30 +18,45 @@
  */
 package com.iohao.game.widget.light.room;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 房间的管理
+ * <pre>
+ *     房间的添加
+ *     房间的删除
+ *     房间与玩家之间的关联
+ *     房间查找
+ *         通过 roomId 查找
+ *         通过 userId 查找
+ * </pre>
+ * 子类扩展实现
+ * <pre>
+ *     如果你使用了lombok, 推荐这种方式. 只需要在对象中新增此行代码
+ *     {@code
+ *     // 房间 map
+ *     final Map<Long, Room> roomMap = new ConcurrentHashMap<>();
+ *     // 玩家对应的房间 map
+ *     final Map<Long, Long> userRoomMap = new ConcurrentHashMap<>();
+ *     }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 21.8
  */
-@Slf4j
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoomService {
+@SuppressWarnings("unchecked")
+public interface RoomService {
     /**
      * 房间 map
      * <pre>
      *     key : roomId
      *     value : room
      * </pre>
+     *
+     * @return 房间 map
      */
-    final Map<Long, Room> roomMap = new ConcurrentHashMap<>();
+    Map<Long, Room> getRoomMap();
 
     /**
      * 玩家对应的房间 map
@@ -49,13 +64,14 @@ public class RoomService {
      *     key : userId
      *     value : roomId
      * </pre>
+     *
+     * @return 玩家对应的房间 map
      */
-    final Map<Long, Long> userRoomMap = new ConcurrentHashMap<>();
+    Map<Long, Long> getUserRoomMap();
 
-    @SuppressWarnings("unchecked")
-    public <T extends Room> T getRoomByUserId(long userId) {
+    default <T extends Room> T getRoomByUserId(long userId) {
         // 通过 userId 得到 roomId
-        Long roomId = userRoomMap.get(userId);
+        Long roomId = this.getUserRoomMap().get(userId);
 
         if (Objects.isNull(roomId)) {
             return null;
@@ -65,14 +81,17 @@ public class RoomService {
         return getRoom(roomId);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends Room> T getRoom(long roomId) {
-        return (T) this.roomMap.get(roomId);
+    default <T extends Room> T getRoom(long roomId) {
+        return (T) this.getRoomMap().get(roomId);
     }
 
-    public void addRoom(Room room) {
+    default Optional<Room> optionalRoomByUserId(long userId) {
+        return Optional.ofNullable(this.getRoomByUserId(userId));
+    }
+
+    default void addRoom(Room room) {
         long roomId = room.getRoomId();
-        this.roomMap.put(roomId, room);
+        this.getRoomMap().put(roomId, room);
     }
 
     /**
@@ -80,14 +99,15 @@ public class RoomService {
      *
      * @param room 房间
      */
-    public void removeRoom(Room room) {
+    default void removeRoom(Room room) {
         long roomId = room.getRoomId();
-        this.roomMap.remove(roomId);
+        this.getRoomMap().remove(roomId);
+        room.listPlayerId().forEach(userId -> this.getUserRoomMap().remove(userId));
     }
 
-    public void addPlayer(Room room, Player player) {
+    default void addPlayer(Room room, Player player) {
         room.addPlayer(player);
-        this.userRoomMap.put(player.getId(), room.getRoomId());
+        this.getUserRoomMap().put(player.getUserId(), room.getRoomId());
     }
 
     /**
@@ -96,13 +116,16 @@ public class RoomService {
      * @param room   房间
      * @param player 玩家
      */
-    public void removePlayer(Room room, Player player) {
+    default void removePlayer(Room room, Player player) {
         room.removePlayer(player);
-        this.userRoomMap.remove(player.getId());
+        this.getUserRoomMap().remove(player.getUserId());
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends Room> Collection<T> listRoom() {
-        return (Collection<T>) this.roomMap.values();
+    default <T extends Room> Collection<T> listRoom() {
+        return (Collection<T>) this.getRoomMap().values();
+    }
+
+    static RoomService of() {
+        return new SimpleRoomService();
     }
 }

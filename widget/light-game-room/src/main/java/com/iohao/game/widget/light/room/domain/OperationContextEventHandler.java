@@ -16,26 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.flow;
+package com.iohao.game.widget.light.room.domain;
 
-import com.iohao.game.widget.light.room.Room;
+import com.iohao.game.action.skeleton.core.exception.MsgExceptionKit;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.widget.light.domain.event.message.DomainEventHandler;
+import com.iohao.game.widget.light.room.operation.OperationContext;
 
 /**
- * 房间创建 - 自定义
- * <pre>
- *     延迟到子游戏中实现, 以便适应不同的子游戏规则
- * </pre>
- *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-12
  * @since 21.8
  */
-public interface RoomCreateCustom {
-    /**
-     * 创建房间, 子类只需要关心房间配置和规则信息
-     *
-     * @param createContext 创建房间信息（房间配置和规则信息）
-     * @return 房间
-     */
-    Room createRoom(RoomCreateContext createContext);
+public class OperationContextEventHandler implements DomainEventHandler<OperationContext> {
+    @Override
+    public void onEvent(OperationContext operationContext, boolean endOfBatch) {
+        try {
+            // 玩法操作业务类，将验证与操作分离
+            operationContext.execute();
+        } catch (Throwable e) {
+            FlowContext flowContext = operationContext.getFlowContext();
+            MsgExceptionKit.onException(e, flowContext);
+        }
+    }
 }

@@ -16,24 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room;
+package com.iohao.game.widget.light.room.domain;
 
-import lombok.Data;
+import com.iohao.game.action.skeleton.core.exception.MsgExceptionKit;
+import com.iohao.game.widget.light.domain.event.message.DomainEventHandler;
+import com.iohao.game.widget.light.room.flow.RoomGameFlowService;
 
 /**
- * 创建房间信息
- *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-12
+ * @see RoomGameFlowService
+ * @since 21.8
  */
-@Data
-public class CreateRoomInfo {
-    /** 玩法规则信息 - (创建房间时添加) */
-    RuleInfo ruleInfo;
-    /** 游戏 id */
-    long gameId;
-    /** 房间可供几个人玩 */
-    int spaceSize;
-    /** 创建的玩家 id */
-    long createUserId;
+public class GameFlowEventHandler implements DomainEventHandler<GameFlowEo> {
+    @Override
+    public void onEvent(GameFlowEo event, boolean endOfBatch) {
+        try {
+            event.execute();
+        } catch (Throwable e) {
+            MsgExceptionKit.onException(e, event.flowContext());
+        }
+    }
 }

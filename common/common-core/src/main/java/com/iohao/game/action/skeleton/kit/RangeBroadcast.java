@@ -190,6 +190,11 @@ public class RangeBroadcast {
         return this.setResponseMessage(responseMessage);
     }
 
+    public RangeBroadcast setResponseMessage(CmdInfo cmdInfo) {
+        var responseMessage = BarMessageKit.createResponseMessage(cmdInfo);
+        return this.setResponseMessage(responseMessage);
+    }
+
     /**
      * 接收广播的用户
      *

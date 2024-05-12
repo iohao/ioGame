@@ -18,41 +18,42 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.widget.light.room.Room;
-
 /**
  * 游戏开始
- * 玩家全都准备后会触发
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 21.8
  */
 public interface RoomGameStartCustom {
     /**
      * 游戏开始前的逻辑校验
      *
      * <pre>
-     *     方法解说:
-     *     比如做一个游戏, 8人场, 由于人数需要很多.
-     *     假设规则定义为满足4人准备, 就可以开始游戏.
-     *     那么这个开始前就可以派上用场了, 毕竟你永远不知道子游戏的规则是什么.
-     *     所以最好预留一个这样的验证接口, 交给子类游戏来定义开始游戏的规则
+     *     比如做一个游戏，房间空间大小为 10 人。
+     *     表示房间最大可容纳 10 人，而开始游戏并不一定需要满足 10 人。
+     *     现在，假设规则定义为满足 4 人准备，就可以开始游戏，那么这个开始前就可以派上用场了。
+     *
+     *     方法主要作用是交给子类游戏来定义开始游戏的规则，及一些其他规则验证。
      * </pre>
      *
-     * @param room 房间
-     * @return 返回 true, 会执行 {@link RoomGameStartCustom#startAfter}. 并更新用户的状态为战斗状态
+     * @param gameFlowContext 开始游戏上下文
      */
-    boolean startBefore(Room room);
+    void startGameVerify(GameFlowContext gameFlowContext);
 
     /**
-     * 游戏开始前的 after 逻辑. 这里可以游戏正式开始的逻辑
+     * 游戏开始
      * <pre>
-     *     比如
-     *      斗地主、桌游、麻将 等可以发牌
-     *      回合制 进入战斗
+     *     比如，斗地主、桌游、麻将 等可以发牌；
+     *     回合制游戏进入战斗；
      * </pre>
      *
-     * @param room 房间
+     * @param gameFlowContext 开始游戏上下文
      */
-    void startAfter(Room room);
+    void startGame(GameFlowContext gameFlowContext);
+
+    default void executeStartGame(GameFlowContext gameFlowContext) {
+        this.startGameVerify(gameFlowContext);
+        this.startGame(gameFlowContext);
+    }
 }

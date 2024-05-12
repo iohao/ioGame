@@ -73,7 +73,14 @@ public class ClientUsers {
     private void extractedExecute() {
         TaskKit.execute(() -> {
             if (clientUsers.size() > 1) {
-                log.info("{} 个玩家全部登录完成，开始执行任务[{}]", clientUsers.size(), runnableQueue.size());
+                int sleep = 5;
+                log.info("[{}]个玩家全部登录完成，[{}]秒后开始执行任务[{}]", clientUsers.size(), sleep, runnableQueue.size());
+
+                try {
+                    TimeUnit.SECONDS.sleep(sleep);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             while (true) {

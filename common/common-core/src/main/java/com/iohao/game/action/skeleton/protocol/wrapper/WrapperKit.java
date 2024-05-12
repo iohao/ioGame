@@ -23,6 +23,7 @@ import com.iohao.game.common.kit.CollKit;
 import com.sun.jdi.BooleanValue;
 import lombok.experimental.UtilityClass;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -68,6 +69,15 @@ public class WrapperKit {
     }
 
     public <T> ByteValueList ofListByteValue(List<T> values) {
+
+        if (CollKit.isEmpty(values)) {
+            return new ByteValueList();
+        }
+
+        return ByteValueList.of(values.stream().map(DataCodecKit::encode).toList());
+    }
+
+    public <T> ByteValueList ofListByteValue(Collection<T> values) {
 
         if (CollKit.isEmpty(values)) {
             return new ByteValueList();

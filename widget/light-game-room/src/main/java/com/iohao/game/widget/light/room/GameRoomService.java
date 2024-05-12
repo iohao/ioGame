@@ -18,11 +18,25 @@
  */
 package com.iohao.game.widget.light.room;
 
+import com.iohao.game.widget.light.room.flow.RoomGameFlowService;
+import com.iohao.game.widget.light.room.operation.OperationFactoryProvider;
+
 /**
- * 游戏玩法规则信息
+ * 游戏房间聚合接口
+ * <pre>
+ *     包括内容如下：
+ *     1. 房间相关的
+ *     2. 开始游戏流程相关的
+ *     3. 玩法操作相关的
+ * </pre>
  *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-12
+ * @see RoomService 房间相关
+ * @see RoomGameFlowService 开始游戏流程相关
+ * @see OperationFactoryProvider 玩法操作
+ * @since 21.8
  */
-public interface RuleInfo {
+public interface GameRoomService
+        extends RoomService, RoomGameFlowService, OperationFactoryProvider {
 }

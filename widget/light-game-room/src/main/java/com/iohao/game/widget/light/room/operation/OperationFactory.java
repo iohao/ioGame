@@ -16,21 +16,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.flow;
+package com.iohao.game.widget.light.room.operation;
 
-import lombok.Data;
-
-import java.io.Serial;
-import java.io.Serializable;
+import java.util.Optional;
 
 /**
- * 进入房间请求信息
+ * 玩法操作工厂
  *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-12
+ * @since 21.8
  */
-@Data
-public class RoomEnterInfo implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -7622385452364486394L;
+public interface OperationFactory {
+    /**
+     * 获取操作
+     *
+     * @param operation 操作码
+     * @return 操作码对应的业务逻辑处理类
+     */
+    OperationHandler getOperationHandler(int operation);
+
+    OperationHandler getUserOperationHandler(int operation);
+
+    void mapping(int operation, OperationHandler operationHandler);
+
+    void mappingUser(int operation, OperationHandler operationHandler);
+
+    Optional<OperationHandler> optionalOperationHandler(int operation);
+
+    static OperationFactory of() {
+        return new OperationFlyweightFactory();
+    }
 }

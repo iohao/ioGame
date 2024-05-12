@@ -16,42 +16,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.common.kit;
+package com.iohao.game.action.skeleton.core.exception;
 
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 /**
  * @author 渔民小镇
- * @date 2023-06-01
+ * @date 2024-05-12
+ * @since 21.8
  */
+@Slf4j
 @UtilityClass
-public class PresentKit {
+public class MsgExceptionKit {
+    public void onException(Throwable e, FlowContext flowContext) {
+        Objects.requireNonNull(flowContext);
 
-    /**
-     * 如果属性为 null，则执行给定操作，否则不执行任何操作。
-     *
-     * @param obj      属性
-     * @param runnable 给定操作
-     */
-    public void ifNull(Object obj, Runnable runnable) {
-        if (Objects.isNull(obj)) {
-            runnable.run();
-        }
-    }
+        ResponseMessage response = flowContext.getResponse();
 
-    /**
-     * 如果属性不为 null，则执行给定操作，否则不执行任何操作。
-     *
-     * @param obj    属性
-     * @param action 给定操作
-     * @since 21.8
-     */
-    public <T> void ifPresent(T obj, Consumer<T> action) {
-        if (Objects.nonNull(obj)) {
-            action.accept(obj);
+        if (e instanceof MsgException msgException) {
+            response.setError(msgException.getMsgExceptionInfo());
+        } else {
+            // 系统其它错误，一般不是用户自定义的异常，很可能是用户引入的第三方包抛出的异常
+            response.setError(ActionErrorEnum.systemOtherErrCode);
+            log.error(e.getMessage(), e);
         }
+
+        response.setData(null);
+        flowContext.broadcastMe(response);
     }
 }

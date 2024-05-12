@@ -65,7 +65,7 @@ public class DomainEventContextParam {
     int ringBufferSize = 1024;
 
     /** 异常处理 */
-    ExceptionHandler exceptionHandler = new DefaultDomainEventExceptionHandler();
+    ExceptionHandler<Object> exceptionHandler = new DefaultDomainEventExceptionHandler();
 
     /** true 初始化完成 */
     private final AtomicBoolean init = new AtomicBoolean(false);

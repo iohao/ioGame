@@ -40,8 +40,6 @@ public class NettySimpleHelper {
      *          对外服 websocket 方式连接
      *          网关服 默认端口 10200
      *          逻辑服
-     *
-     *      包括游戏业务文档的生成
      * </pre>
      *
      * @param externalPort 游戏对外服端口
