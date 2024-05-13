@@ -46,6 +46,7 @@
         <module>widget/light-redis-lock-spring-boot-starter</module>
         <!-- 小部件 ： 压测&模拟客户端请求 -->
         <module>widget/light-client</module>
+        <module>widget/light-log</module>
         <module>widget/other-tool</module>
 
         <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
