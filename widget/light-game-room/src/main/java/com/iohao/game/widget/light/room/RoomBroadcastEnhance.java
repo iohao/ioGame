@@ -19,8 +19,6 @@
 package com.iohao.game.widget.light.room;
 
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
-import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.kit.RangeBroadcast;
 
 import java.util.Collection;
@@ -30,7 +28,7 @@ import java.util.Collection;
  *
  * @author 渔民小镇
  * @date 2024-04-23
- * @since 21.6
+ * @since 21.8
  */
 interface RoomBroadcastEnhance {
     /**
@@ -41,15 +39,25 @@ interface RoomBroadcastEnhance {
     Collection<Long> listPlayerId();
 
     /**
-     * 通过 FlowContext 创建一个 RangeBroadcast，默认会添加上当前房间内的所有玩家
+     * 设置通讯上下文
+     * <pre>{@code
+     * // 方式一：通过 flowContext 得到通讯上下文
+     * CommunicationAggregationContext aggregationContext = flowContext.option(FlowAttr.aggregationContext);
+     * // 方式二：通过 BrokerClient 得到通讯上下文
+     * CommunicationAggregationContext aggregationContext = BrokerClientHelper.getBrokerClient().getCommunicationAggregationContext();
+     * }
+     * </pre>
      *
-     * @param flowContext flowContext
-     * @return RangeBroadcast 范围内的广播
+     * @param aggregationContext 通讯上下文
      */
-    default RangeBroadcast ofRangeBroadcast(FlowContext flowContext) {
-        CommunicationAggregationContext aggregationContext = flowContext.option(FlowAttr.aggregationContext);
-        return this.ofRangeBroadcast(aggregationContext);
-    }
+    void setAggregationContext(CommunicationAggregationContext aggregationContext);
+
+    /**
+     * get 通讯上下文
+     *
+     * @return 通讯上下文
+     */
+    CommunicationAggregationContext getAggregationContext();
 
     /**
      * 通过 CommunicationAggregationContext 创建一个 RangeBroadcast，默认会添加上当前房间内的所有玩家
@@ -64,17 +72,6 @@ interface RoomBroadcastEnhance {
     }
 
     /**
-     * 通过 FlowContext 创建一个 RangeBroadcast
-     *
-     * @param flowContext flowContext
-     * @return RangeBroadcast 范围内的广播
-     */
-    default RangeBroadcast ofEmptyRangeBroadcast(FlowContext flowContext) {
-        CommunicationAggregationContext aggregationContext = flowContext.option(FlowAttr.aggregationContext);
-        return this.ofEmptyRangeBroadcast(aggregationContext);
-    }
-
-    /**
      * 通过 CommunicationAggregationContext 创建一个 RangeBroadcast
      *
      * @param aggregationContext aggregationContext
@@ -82,26 +79,6 @@ interface RoomBroadcastEnhance {
      */
     default RangeBroadcast ofEmptyRangeBroadcast(CommunicationAggregationContext aggregationContext) {
         return new RangeBroadcast(aggregationContext);
-    }
-
-    /**
-     * @param aggregationContext 设置通讯上下文
-     */
-    void setAggregationContext(CommunicationAggregationContext aggregationContext);
-
-    /**
-     * @return 通讯上下文
-     */
-    CommunicationAggregationContext getAggregationContext();
-
-    /**
-     * 设置通讯上下文
-     *
-     * @param flowContext flowContext
-     */
-    default void setAggregationContext(FlowContext flowContext) {
-        CommunicationAggregationContext aggregationContext = flowContext.option(FlowAttr.aggregationContext);
-        this.setAggregationContext(aggregationContext);
     }
 
     /**

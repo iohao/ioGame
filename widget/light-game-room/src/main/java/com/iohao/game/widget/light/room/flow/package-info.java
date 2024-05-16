@@ -17,17 +17,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 创建房间时, 子游戏可以自定义流程创建逻辑 包括:
+ * 桌游类、房间类游戏的扩展模块 - 子游戏自定义游戏流程相关的扩展。如，创建房间、创建玩家、进入房间；解散房间、退出房间、玩家准备、开始游戏。
  * <pre>
- *     创建房间
- *     创建玩家
- *     进入房间
- *     游戏开始
- *
- *     只提供抽象骨架, 具体的逻辑实现由子游戏自定义
+ *     只提供抽象流程, 具体的逻辑实现由子游戏自定义
  * </pre>
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 21.8
  */
 package com.iohao.game.widget.light.room.flow;

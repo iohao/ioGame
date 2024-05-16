@@ -19,7 +19,7 @@
 package com.iohao.game.widget.light.room.operation;
 
 /**
- * 玩法操作业务类, 将验证与操作分离
+ * 玩法操作业务接口，将验证与操作分离。
  * <pre>
  *     坦克:
  *         射子弹、发射导弹 等操作
@@ -48,12 +48,12 @@ public interface OperationHandler {
      *
      * @param context 操作上下文
      */
-    void verify(OperationContext context);
+    void verify(PlayerOperationContext context);
 
     /**
      * 验证通过后, 执行处理
      *
      * @param context 操作上下文
      */
-    void process(OperationContext context);
+    void process(PlayerOperationContext context);
 }

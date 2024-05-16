@@ -3,6 +3,512 @@ https://www.yuque.com/iohao/game/ab15oe
 
 
 
+#### 2024-05-11 - v21.7
+
+https://github.com/iohao/ioGame/releases/tag/21.7
+
+
+
+**版本更新汇总**
+
+1. [core]  [#112](https://github.com/iohao/ioGame/issues/112) protobuf 协议类添加检测，通过 action 构建时的监听器实现
+2. [core]  [#272](https://github.com/iohao/ioGame/issues/272) 业务框架 - 提供 action 构建时的监听回调
+3. [core]  [#274](https://github.com/iohao/ioGame/issues/274) 优化、提速 - 预生成 jprotobuf 协议类的代理，通过 action 构建时的监听器实现
+4. [broker] fix [#277](https://github.com/iohao/ioGame/issues/277) 、[#280](https://github.com/iohao/ioGame/issues/280) 偶现 BrokerClientType 为空
+5. [external]  [#271](https://github.com/iohao/ioGame/issues/271) 游戏对外服 - 内置与可选 handler - log 相关的打印（触发异常、断开连接时）
+6. [room] 简化命名:  AbstractPlayer --> Player、AbstractRoom --> Room
+7. 其他优化：预先生成游戏对外服统一协议的代理类及内置的[协议碎片 (yuque.com)](https://www.yuque.com/iohao/game/ieimzn)相关代理类，优化 action 参数解析
+
+
+
+**[external]**
+
+[#271](https://github.com/iohao/ioGame/issues/271) 游戏对外服 - 内置与可选 handler - log 相关的打印（触发异常、断开连接时）
+
+其他参考 [内置与可选的 Handler (yuque.com)](https://www.yuque.com/iohao/game/gqvf6cooowpo0ukp)
+
+
+
+**[core]**
+
+[#272](https://github.com/iohao/ioGame/issues/272) 业务框架 - 提供 action 构建时的监听回调
+
+开发者可以利用 ActionParserListener 接口来观察 action 构建过程，或者做一些额外的扩展。
+
+
+
+扩展示例参考
+
+```java
+// 简单打印
+public final class YourActionParserListener implements ActionParserListener {
+    @Override
+    public void onActionCommand(ActionParserContext context) {
+        ActionCommand actionCommand = context.getActionCommand();
+        log.info(actionCommand);
+    }
+}
+
+void test() {
+    BarSkeletonBuilder builder = ...;
+    builder.addActionParserListener(new YourActionParserListener());
+}
+```
+
+
+
+[#112](https://github.com/iohao/ioGame/issues/112) protobuf 协议类添加检测，通过 action 构建时的监听器实现
+
+如果当前使用的编解码器为 ProtoDataCodec 时，当 action 的参数或返回值的类没有添加 ProtobufClass 注解时（通常是忘记添加），给予一些警告提示。
+
+```java
+// 该协议类没有添加 ProtobufClass 注解
+class Bird {
+    public String name;
+}
+
+@ActionController(1)
+public class MyAction {
+    @ActionMethod(1)
+    public Bird testObject() {
+        return new Bird();
+    }
+}
+======== 注意，协议类没有添加 ProtobufClass 注解 ========
+class com.iohao.game.action.skeleton.core.action.Bird
+```
+
+
+
+[#274](https://github.com/iohao/ioGame/issues/274) 优化、提速 - 预生成 jprotobuf 协议类的代理，通过 action 构建时的监听器实现
+
+如果当前使用的编解码器为 ProtoDataCodec 时，会在启动时就预先生成好 jprotobuf 协议类对应的代理类（用于 .proto 相关的 编码、解码），而不必等到用时在创建该代理类。从而达到整体优化提速的效果。
+
+ 
+
+在此之前，在没做其他设置的情况下，首次访问 action 时，如果参数使用的 jprotobuf 协议类，那么在解码该参数时，会通过 `ProtobufProxy.create` 来创建对应的代理类（类似 .proto 相关的 编码、解码）。之后再访问时，才会从缓存中取到对应的代理类。
+
+ 
+
+该优化默认开启，开发者可以不需要使用与配置跟 jprotobuf-precompile-plugin 插件相关的了。
+
+
+
+已经预先生成的代理类有
+
+- 游戏对外服[统一协议 ExternalMessage (yuque.com)](https://www.yuque.com/iohao/game/xeokui)
+- 所有开发者定义的 action 的方法参数及返回值
+- [解决协议碎片 (yuque.com)](https://www.yuque.com/iohao/game/ieimzn)相关，如 int、int list、String、String list、long、long list、ByteValueList ...等
+
+
+
+**[room]**
+简化命名:  AbstractPlayer --> Player、AbstractRoom --> Room
+
+
+
+**其他优化**
+
+优化 action 参数解析
+
+
+
+#### 2024-04-23 - v21.6
+
+https://github.com/iohao/ioGame/releases/tag/21.6
+
+
+
+**版本更新汇总**
+
+1. [#264](https://github.com/iohao/ioGame/issues/264) 新增属性值变更监听特性
+2. 模拟客户端新增与服务器断开连接的方法。模拟客户端新增是否活跃的状态属性。
+3. [#265](https://github.com/iohao/ioGame/issues/265) 从游戏对外服中获取玩家相关数据 - 模拟玩家请求。
+4. 任务相关：TaskListener 接口增加异常回调方法，用于接收异常信息；当 triggerUpdate 或 onUpdate 方法抛出异常时，将会传递到该回调方法中。
+5. [#266](https://github.com/iohao/ioGame/issues/266) 新增 RangeBroadcast 范围内的广播功能，这个范围指的是，可指定某些用户进行广播。
+6. AbstractRoom 增加 ifPlayerExist、ifPlayerNotExist 方法。
+
+------
+
+**属性监听特性**
+
+[#264](https://github.com/iohao/ioGame/issues/264) 新增属性值变更监听特性
+
+文档 : [属性监听 (yuque.com)](https://www.yuque.com/iohao/game/uqn84q41f58xe5f0)
+
+属性可添加监听器，当某些属性值的发生变化时，触发监听器。
+
+
+
+**使用场景举例**
+
+比如玩家的血量低于一定值时，需要触发无敌状态；此时，我们就可以监听玩家的血量，并在该属性上添加一个对应的监听器来观察血量的变化，当达到预期值时就触发对应的业务。
+
+ 
+
+类似的使用场景还有很多，这里就不过多的举例了。属性监听的特点在于属性变化后会触发监听器。
+
+
+
+**属性监听特点**
+
+- 可为属性添加监听器，用于观察属性值的变化。
+- 属性可以添加多个监听器。
+- 属性的监听器可以移除。
+
+
+
+**框架已经内置了几个属性实现类，分别是：**
+
+- IntegerProperty
+- LongProperty
+- StringProperty
+- BooleanProperty
+- ObjectProperty
+
+------
+
+for example - 添加监听器
+
+BooleanProperty
+
+当 BooleanProperty 对象的值发生改变时，触发监听器。
+
+```java
+var property = new BooleanProperty();
+// 添加一个监听器。
+property.addListener((observable, oldValue, newValue) -> {
+   log.info("oldValue:{}, newValue:{}", oldValue, newValue);
+});
+
+property.get(); // value is false
+property.set(true); // 值变更时，将会触发监听器
+property.get(); // value is true
+```
+
+
+
+IntegerProperty
+
+当 IntegerProperty 对象的值发生改变时，触发监听器。
+
+```java
+var property = new IntegerProperty();
+// add listener monitor property object
+property.addListener((observable, oldValue, newValue) -> {
+   log.info("oldValue:{}, newValue:{}", oldValue, newValue);
+});
+
+property.get(); // value is 0
+property.set(22); // When the value changes,listeners are triggered
+property.get(); // value is 22
+
+property.increment(); // value is 23. will trigger listeners
+```
+
+------
+
+for example - 移除监听器
+
+下面这个示例，我们将 property 初始值设置为 10，随后添加了一个监听器；当监听器观察到新值为 9 时，就从 observable 中移除自己（这个自己指的是监听器本身），而 observable 则是 IntegerProperty。
+
+```java
+@Test
+public void remove1() {
+    IntegerProperty property = new IntegerProperty(10);
+    // 添加一个监听器
+    property.addListener(new PropertyChangeListener<>() {
+        @Override
+        public void changed(PropertyValueObservable<? extends Number> observable, Number oldValue, Number newValue) {
+            log.info("1 - newValue : {}", newValue);
+
+            if (newValue.intValue() == 9) {
+                // 移除当前监听器
+                observable.removeListener(this);
+            }
+        }
+    });
+
+    property.decrement(); // value 是 9，并触发监听器
+    property.decrement(); // value 是 8，由于监听器已经移除，所以不会触发任何事件。
+}
+```
+
+
+
+下面的示例中，我们定义了一个监听器类 OnePropertyChangeListener 并实现了 PropertyChangeListener 监听器接口。示例中，我们通过 OnePropertyChangeListener 对象的引用来移除监听器。
+
+```java
+@Test
+public void remove2() {
+    // 监听器
+    OnePropertyChangeListener onePropertyChangeListener = new OnePropertyChangeListener();
+    
+    // 属性
+    IntegerProperty property = new IntegerProperty();
+    // 添加监听器
+    property.addListener(onePropertyChangeListener);
+
+    property.increment(); // value == 1，并触发监听器
+    property.removeListener(onePropertyChangeListener); // 移除监听器
+    property.increment(); // value == 2，由于监听器已经移除，所以不会触发任何事件。
+}
+
+// 自定义的监听器
+class OnePropertyChangeListener implements PropertyChangeListener<Number> {
+    @Override
+    public void changed(PropertyValueObservable<? extends Number> observable, Number oldValue, Number newValue) {
+        log.info("oldValue:{}, newValue:{}, observable:{}", oldValue, newValue, observable);
+    }
+}
+```
+
+------
+
+**属性监听 - 小结**
+
+属性监听在使用上是简单的，如果你的业务中**有关于属性变化后需要触发某些事件的**，可以考虑引用该特性。框架为 int、long、boolean、Object、String 等基础类型提供了对应的属性监听。
+
+
+
+属性监听特性支持添加多个监听器，支持移除监听器。
+
+------
+
+
+
+**模拟客户端相关**
+
+- 模拟客户端新增与服务器断开连接的方法。
+- 模拟客户端新增是否活跃的状态属性。
+
+```java
+ClientUser clientUser = ...;
+// 是否活跃，true 表示玩家活跃
+clientUser.isActive();
+// 关闭模拟客户端连接
+clientUser.getClientUserChannel().closeChannel();
+```
+
+------
+
+
+
+**获取游戏对外服的数据与扩展相关**
+
+文档 [获取游戏对外服的数据与扩展 (yuque.com)](https://www.yuque.com/iohao/game/ivxsw5)
+
+RequestCollectExternalMessage 增加 userId 字段。
+
+
+
+[#265](https://github.com/iohao/ioGame/issues/265) 模拟玩家请求时 - 从游戏对外服中获取在线玩家相关数据
+
+新增  UserHeadMetadataExternalBizRegion，从用户（玩家）所在游戏对外服中获取用户自身的数据，如用户所绑定的游戏逻辑服、元信息 ...等
+
+```java
+@Slf4j
+@RestController
+@RequestMapping("other")
+public class OtherController {
+    static final AtomicLong msgId = GameManagerController.msgId;
+    /** 为了方便测试，这里指定一个 userId 来模拟玩家 */
+    static final long userId = GameManagerController.userId;
+
+    @GetMapping("/notice")
+    public String notice() {
+        log.info("other notice");
+        // 使用协议碎片特性 https://www.yuque.com/iohao/game/ieimzn
+        StringValue data = StringValue.of("other GM web msg " + msgId.incrementAndGet());
+        // 模拟请求 : 路由 - 业务数据
+        RequestMessage requestMessage = BarMessageKit.createRequestMessage(ExchangeCmd.of(ExchangeCmd.notice), data);
+
+        // 设置需要模拟的玩家
+        HeadMetadata headMetadata = requestMessage.getHeadMetadata();
+        headMetadata.setUserId(userId);
+
+        // 从游戏对外服中获取一些用户（玩家的）自身的数据，如元信息、所绑定的游戏逻辑服 ...等
+        Optional<HeadMetadata> headMetadataOptional = ExternalCommunicationKit.employHeadMetadata(requestMessage);
+
+        if (headMetadataOptional.isPresent()) {
+            // 发起模拟请求
+            extractedRequestLogic(requestMessage);
+
+            // 打印从游戏对外服获取的元信息
+            byte[] attachmentData = headMetadata.getAttachmentData();
+            ExchangeAttachment attachment = DataCodecKit.decode(attachmentData, ExchangeAttachment.class);
+            return "other notice 玩家的元信息: %s - %s".formatted(attachment, msgId.get());
+        } else {
+            return "other notice 玩家 %s 不在线，无法获取玩家的元信息 - %s".formatted(userId, msgId.get());
+        }
+    }
+
+    private void extractedRequestLogic(RequestMessage requestMessage) {
+        // 向逻辑服发送请求，该模拟请求具备了玩家的元信息。
+        BrokerClient brokerClient = MyKit.brokerClient;
+        InvokeModuleContext invokeModuleContext = brokerClient.getInvokeModuleContext();
+        invokeModuleContext.invokeModuleVoidMessage(requestMessage);
+    }
+}
+```
+
+------
+
+
+
+**任务工具相关**
+
+TaskListener 接口增加异常回调方法 `void onException(Throwable e)`，用于接收异常信息；当 triggerUpdate 或 onUpdate 方法抛出异常时，将会传递到该回调方法中。
+
+```java
+@Test
+public void testException() throws InterruptedException {
+    AtomicBoolean hasEx = new AtomicBoolean(false);
+    TaskKit.runOnce(new OnceTaskListener() {
+        @Override
+        public void onUpdate() {
+            // 模拟一个业务异常
+            throw new RuntimeException("hello exception");
+        }
+
+        @Override
+        public void onException(Throwable e) {
+            hasEx.set(true);
+            // 触发异常后，将来到这里
+            log.error(e.getMessage(), e);
+        }
+    }, 10, TimeUnit.MILLISECONDS);
+
+    TimeUnit.MILLISECONDS.sleep(200);
+    Assert.assertTrue(hasEx.get()); // true
+}
+```
+
+------
+
+
+
+**业务框架相关 - [common-core]**
+
+[#266](https://github.com/iohao/ioGame/issues/266) 新增 RangeBroadcast 范围内的广播功能，这个范围指的是，可指定某些用户进行广播。
+
+
+
+在执行广播前，开发者可以自定义业务逻辑，如
+
+- 添加一些需要广播的用户
+- 删除一些不需要接收广播的用户
+- 可通过重写 logic、trick 方法来做一些额外扩展
+
+```java
+// example - 1
+new RangeBroadcast(flowContext)
+        // 需要广播的数据
+        .setResponseMessage(responseMessage)
+        // 添加需要接收广播的用户
+        .addUserId(1)
+        .addUserId(2)
+        .addUserId(List.of(3L, 4L, 5L))
+        // 排除一些用户，被排除的用户将不会接收到广播
+        .removeUserId(1)
+        // 执行广播
+        .execute();
+
+// example - 2
+new RangeBroadcast(flowContext)
+        // 需要广播的数据
+        .setResponseMessage(cmdInfo, playerReady)
+        // 添加需要接收广播的用户
+        .addUserId(1)
+        // 执行广播
+        .execute();
+```
+
+------
+
+**[light-game-room] 房间模块**
+
+- 移除 AbstractRoom broadcast 系列方法，开发者可使用 RoomBroadcastFlowContext 接口实现旧的兼容。
+- 移除 AbstractRoom createSend 方法，开发者可使用 ofRangeBroadcast 系列来代替。AbstractRoom 新增 RoomBroadcastEnhance，实现房间内的广播增强，该系列在语义上更清晰。
+
+
+
+```java
+final RoomService roomService = ...;
+
+@ActionMethod(RoomCmd.ready)
+public void ready(boolean ready, FlowContext flowContext) {
+    long userId = flowContext.getUserId();
+    // 得到玩家所在的房间
+    AbstractRoom room = this.roomService.getRoomByUserId(userId);
+    
+    // 准备
+    PlayerReady playerReady = new PlayerReady();
+    playerReady.userId = userId;
+    playerReady.ready = ready;
+  
+    // 通知房间内的所有玩家，有玩家准备或取消准备了
+    room.ofRangeBroadcast(flowContext)
+            // 响应数据（路由、业务数据）
+            .setResponseMessage(flowContext.getCmdInfo(), playerReady)
+            .execute();
+}
+
+// 准备或取消准备
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+public class PlayerReady {
+    /** 当前操作的玩家 userId */
+    long userId;
+    /** true 表示准备 */
+    boolean ready;
+}
+```
+
+------
+
+
+
+**AbstractRoom 增加 ifPlayerExist、ifPlayerNotExist 方法。**
+
+**ifPlayerExist 方法**
+
+如果玩家在房间内，就执行给定的操作，否则不执行任何操作。
+
+```java
+RoomService roomService = ...;
+AbstractRoom room = ...;
+// 如果玩家不在房间内，就创建一个玩家，并让玩家加入房间
+room.ifPlayerNotExist(userId, () -> {
+    // 玩家加入房间
+    FightPlayerEntity newPlayer = new FightPlayerEntity();
+    newPlayer.setId(userId);
+    
+    this.roomService.addPlayer(room, newPlayer);
+});
+```
+
+
+
+**ifPlayerNotExist 方法**
+
+如果玩家不在房间内，就执行给定的操作，否则不执行任何操作。
+
+```java
+AbstractRoom room = ...;
+// 有新玩家加入房间，通知其他玩家
+room.ifPlayerExist(userId, (FightPlayerEntity playerEntity) -> {
+    FightPlayer fightPlayer = FightMapstruct.ME.convert(playerEntity);
+    room.ofRangeBroadcast(flowContext)
+            .setResponseMessage(RoomCmd.of(RoomCmd.playerEnterRoomBroadcast), fightPlayer)
+            // 排除不需要通知的玩家（当前 userId 是自己）
+            .removeUserId(userId)
+            .execute();
+});
+```
+
+
+
 #### 2024-04-16 - v21.5
 
 https://github.com/iohao/ioGame/releases/tag/21.5

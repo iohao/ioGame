@@ -19,13 +19,14 @@
 package com.iohao.game.widget.light.room.flow;
 
 /**
- * 游戏开始
+ * 游戏流程 - 开始游戏相关。验证及验证通过之后的执行
  *
  * @author 渔民小镇
  * @date 2022-03-31
  * @since 21.8
  */
-public interface RoomGameStartCustom {
+public interface GameStartService {
+
     /**
      * 游戏开始前的逻辑校验
      *
@@ -42,7 +43,7 @@ public interface RoomGameStartCustom {
     void startGameVerify(GameFlowContext gameFlowContext);
 
     /**
-     * 游戏开始
+     * 游戏开始，会在 {@link GameStartService#startGameVerify(GameFlowContext)} 校验成功后执行。
      * <pre>
      *     比如，斗地主、桌游、麻将 等可以发牌；
      *     回合制游戏进入战斗；
@@ -50,10 +51,16 @@ public interface RoomGameStartCustom {
      *
      * @param gameFlowContext 开始游戏上下文
      */
-    void startGame(GameFlowContext gameFlowContext);
+    void startGameVerifyAfter(GameFlowContext gameFlowContext);
 
-    default void executeStartGame(GameFlowContext gameFlowContext) {
+    /**
+     * 执行游戏开始，内部会调用 {@link GameStartService#startGameVerify(GameFlowContext)}
+     * 和 {@link GameStartService#startGameVerifyAfter(GameFlowContext)} 方法。
+     *
+     * @param gameFlowContext gameFlowContext
+     */
+    default void startGame(GameFlowContext gameFlowContext) {
         this.startGameVerify(gameFlowContext);
-        this.startGame(gameFlowContext);
+        this.startGameVerifyAfter(gameFlowContext);
     }
 }

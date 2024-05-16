@@ -18,24 +18,24 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.widget.light.room.Room;
-
 /**
- * 房间创建 - 自定义
+ * 游戏流程 - 相关扩展接口的聚合。如，创建房间、创建玩家、进入房间；解散房间、退出房间、玩家准备、开始游戏。
  * <pre>
- *     延迟到子游戏中实现, 以便适应不同的子游戏规则
+ *     创建房间
+ *     创建玩家
+ *     进入房间
+ *
+ *     解散房间
+ *     退出房间
+ *     玩家准备
+ *
+ *     游戏开始
  * </pre>
  *
  * @author 渔民小镇
  * @date 2022-03-31
  * @since 21.8
  */
-public interface RoomCreateCustom {
-    /**
-     * 创建房间, 子类只需要关心房间配置和规则信息
-     *
-     * @param createContext 创建房间信息（房间配置和规则信息）
-     * @return 房间
-     */
-    Room createRoom(RoomCreateContext createContext);
+public interface GameFlowService extends GameFixedService, GameStartService {
+
 }

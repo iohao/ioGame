@@ -26,7 +26,7 @@ import com.iohao.game.common.kit.attr.AttrOptions;
 import java.util.Objects;
 
 /**
- * 创建房间信息（及玩法规则）
+ * 上下文 - 创建房间信息（及玩法规则）
  *
  * @author 渔民小镇
  * @date 2022-03-31
@@ -34,6 +34,8 @@ import java.util.Objects;
  */
 public interface RoomCreateContext {
     /**
+     * get 游戏 id
+     *
      * @return 游戏 id
      */
     long getGameId();
@@ -46,21 +48,29 @@ public interface RoomCreateContext {
     RoomCreateContext setGameId(long gameId);
 
     /**
+     * get 房间创建者
+     *
      * @return 房间创建者
      */
     long getCreatorUserId();
 
     /**
+     * get 房间空间大小
+     *
      * @return 房间空间大小
      */
     int getSpaceSize();
 
     /**
+     * get 开始游戏需要的最小人数
+     *
      * @return 开始游戏需要的最小人数
      */
     int getStartGameMinSpaceSize();
 
     /**
+     * get 框架网络通讯聚合接口
+     *
      * @return 框架网络通讯聚合接口
      */
     CommunicationAggregationContext getAggregationContext();
@@ -97,23 +107,7 @@ public interface RoomCreateContext {
     AttrOptions getOptions();
 
     /**
-     * 设置一个具有特定值的新选项。
-     * <p>
-     * 使用 null 值删除前一个设置的 {@link AttrOption}。
-     *
-     * @param option 选项值
-     * @param value  选项值, null 用于删除前一个 {@link AttrOption}.
-     * @return this
-     */
-    default <T> RoomCreateContext option(AttrOption<T> option, T value) {
-        this.getOptions().option(option, value);
-        return this;
-    }
-
-    /**
-     * 获取选项值。
-     * <p>
-     * 如果选项不存在，返回默认值。
+     * get 动态属性，获取选项值，如果选项不存在，返回默认值。
      *
      * @param option 选项值
      * @return 如果 option 不存在，则使用默认的 option 值。
@@ -125,6 +119,18 @@ public interface RoomCreateContext {
         }
 
         return value;
+    }
+
+    /**
+     * 设置动态属性。设置一个具有特定值的新选项，使用 null 值删除前一个设置的 {@link AttrOption}。
+     *
+     * @param option 选项值
+     * @param value  选项值, null 用于删除前一个 {@link AttrOption}.
+     * @return this
+     */
+    default <T> RoomCreateContext option(AttrOption<T> option, T value) {
+        this.getOptions().option(option, value);
+        return this;
     }
 
     /**

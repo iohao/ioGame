@@ -29,22 +29,51 @@ import java.util.Optional;
  */
 public interface OperationFactory {
     /**
-     * 获取操作
+     * 获取 OperationHandler（玩法操作业务类）
      *
      * @param operation 操作码
      * @return 操作码对应的业务逻辑处理类
      */
     OperationHandler getOperationHandler(int operation);
 
+    /**
+     * 获取玩家可操作的 OperationHandler（玩法操作业务类）
+     *
+     * @param operation 操作码
+     * @return 玩法操作业务类
+     */
     OperationHandler getUserOperationHandler(int operation);
 
+    /**
+     * 将操作码与 OperationHandler（玩法操作业务类）关联
+     *
+     * @param operation        操作码
+     * @param operationHandler 玩法操作业务类
+     */
     void mapping(int operation, OperationHandler operationHandler);
 
+    /**
+     * 玩家可操作的 OperationHandler。将操作码与 OperationHandler（玩法操作业务类）关联
+     *
+     * @param operation        操作码
+     * @param operationHandler 玩法操作业务类
+     */
     void mappingUser(int operation, OperationHandler operationHandler);
 
+    /**
+     * 通过操作码得到 OperationHandler Optional
+     *
+     * @param operation 操作码
+     * @return Optional OperationHandler
+     */
     Optional<OperationHandler> optionalOperationHandler(int operation);
 
+    /**
+     * 创建 OperationFactory 对象（框架提供的内置实现）
+     *
+     * @return OperationFactory 对象
+     */
     static OperationFactory of() {
-        return new OperationFlyweightFactory();
+        return new SimpleOperationFactory();
     }
 }

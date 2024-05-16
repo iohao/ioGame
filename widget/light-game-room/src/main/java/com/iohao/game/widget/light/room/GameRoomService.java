@@ -18,11 +18,11 @@
  */
 package com.iohao.game.widget.light.room;
 
-import com.iohao.game.widget.light.room.flow.RoomGameFlowService;
-import com.iohao.game.widget.light.room.operation.OperationFactoryProvider;
+import com.iohao.game.widget.light.room.flow.GameFlowService;
+import com.iohao.game.widget.light.room.operation.OperationService;
 
 /**
- * 游戏房间聚合接口
+ * 游戏房间相关的聚合扩展接口。房间相关的、游戏流程相关的、玩法操作相关的。
  * <pre>
  *     包括内容如下：
  *     1. 房间相关的
@@ -33,10 +33,10 @@ import com.iohao.game.widget.light.room.operation.OperationFactoryProvider;
  * @author 渔民小镇
  * @date 2024-05-12
  * @see RoomService 房间相关
- * @see RoomGameFlowService 开始游戏流程相关
- * @see OperationFactoryProvider 玩法操作
+ * @see GameFlowService 开始游戏流程相关
+ * @see OperationService 玩法操作
  * @since 21.8
  */
 public interface GameRoomService
-        extends RoomService, RoomGameFlowService, OperationFactoryProvider {
+        extends RoomService, GameFlowService, OperationService {
 }

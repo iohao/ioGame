@@ -16,34 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.kit;
-
-import com.iohao.game.widget.light.room.Room;
-import lombok.experimental.UtilityClass;
-
 /**
+ * 桌游类、房间类游戏的扩展模块 - 已抽象出相对固定的流程及扩展接口。
+ *
  * @author 渔民小镇
- * @date 2024-04-30
- * @since 21.7
+ * @date 2024-05-14
+ * @since 21.8
  */
-@UtilityClass
-public class RoomKit {
-    /**
-     * 从房间内获取一个空位置
-     *
-     * @param room 房间
-     * @return 空的位置。当值为 -1 时，表示没有空的位置（房间满人了）。
-     */
-    public int getEmptySeatNo(Room room) {
-        // 玩家位置 map
-        var playerSeatMap = room.getPlayerSeatMap();
-
-        for (int i = 0; i < room.getSpaceSize(); i++) {
-            if (!playerSeatMap.containsKey(i)) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-}
+package com.iohao.game.widget.light.room;

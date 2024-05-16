@@ -21,7 +21,7 @@ package com.iohao.game.widget.light.room;
 import java.io.Serializable;
 
 /**
- * 玩家
+ * 玩家接口
  *
  * @author 渔民小镇
  * @date 2022-03-31
@@ -29,41 +29,57 @@ import java.io.Serializable;
  */
 public interface Player extends Serializable {
     /**
+     * get userId
+     *
      * @return userId 玩家 id
      */
     long getUserId();
 
     /**
+     * set userId
+     *
      * @param userId userId 玩家 id
      */
     void setUserId(long userId);
 
     /**
+     * get RoomId
+     *
      * @return 房间 id
      */
     long getRoomId();
 
     /**
+     * set RoomId
+     *
      * @param roomId 房间 id
      */
     void setRoomId(long roomId);
 
     /**
+     * get 用户所在位置
+     *
      * @return 用户所在位置
      */
     int getSeat();
 
     /**
+     * set 用户所在位置
+     *
      * @param seat 用户所在位置
      */
     void setSeat(int seat);
 
     /**
+     * 是否已经准备
+     *
      * @return true - 已准备
      */
     boolean isReady();
 
     /**
+     * set 准备状态
+     *
      * @param ready true - 已准备
      */
     void setReady(boolean ready);

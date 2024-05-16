@@ -26,14 +26,14 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * 玩法操作的处理对象, 享元工厂
+ * 玩法操作工厂（享元）实现类（内置实现）
  *
  * @author 渔民小镇
  * @date 2022-03-31
- * @since 17
+ * @since 21.8
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-final class OperationFlyweightFactory implements OperationFactory {
+final class SimpleOperationFactory implements OperationFactory {
     /**
      * 操作处理
      * <pre>
@@ -72,6 +72,6 @@ final class OperationFlyweightFactory implements OperationFactory {
         return Optional.ofNullable(this.operationMap.get(operation));
     }
 
-    OperationFlyweightFactory() {
+    SimpleOperationFactory() {
     }
 }

@@ -22,13 +22,29 @@ import com.iohao.game.action.skeleton.core.exception.MsgExceptionKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.widget.light.domain.event.message.DomainEventHandler;
 import com.iohao.game.widget.light.room.operation.OperationContext;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 玩法操作上下文领域事件，用于规避并发
+ * <pre>{@code
+ * // 创建玩法操作上下文
+ * OperationContext operationContext = OperationContext.of(room, operationHandler)
+ *     // 当前操作的玩家
+ *     .setFlowContext(flowContext)
+ *     // 开发者根据游戏业务定制的操作数据
+ *     .setCommand(command);
+ *
+ * // 领域事件相关，https://www.yuque.com/iohao/game/gmfy1k
+ * DomainEventPublish.send(operationContext);
+ * }
+ * </pre>
+ *
  * @author 渔民小镇
  * @date 2024-05-12
  * @since 21.8
  */
-public class OperationContextEventHandler implements DomainEventHandler<OperationContext> {
+@Slf4j
+public final class OperationContextEventHandler implements DomainEventHandler<OperationContext> {
     @Override
     public void onEvent(OperationContext operationContext, boolean endOfBatch) {
         try {
@@ -36,6 +52,12 @@ public class OperationContextEventHandler implements DomainEventHandler<Operatio
             operationContext.execute();
         } catch (Throwable e) {
             FlowContext flowContext = operationContext.getFlowContext();
+            if (flowContext == null) {
+                log.error(e.getMessage(), e);
+                return;
+            }
+
+            // 将异常发送给当前用户
             MsgExceptionKit.onException(e, flowContext);
         }
     }

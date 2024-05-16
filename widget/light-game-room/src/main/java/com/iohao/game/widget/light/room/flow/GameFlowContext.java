@@ -21,13 +21,17 @@ package com.iohao.game.widget.light.room.flow;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.attr.AttrOption;
 import com.iohao.game.common.kit.attr.AttrOptions;
+import com.iohao.game.widget.light.room.Player;
 import com.iohao.game.widget.light.room.Room;
 
 import java.util.Objects;
 
 /**
+ * 上下文 - 游戏流程上下文。
+ *
  * @author 渔民小镇
  * @date 2024-05-12
+ * @see GameFlowService
  * @since 21.8
  */
 public interface GameFlowContext {
@@ -52,14 +56,28 @@ public interface GameFlowContext {
      */
     FlowContext getFlowContext();
 
+    /**
+     * 得到当前操作的玩家
+     *
+     * @return 当前玩家
+     */
+    default Player getPlayer() {
+        long userId = getUserId();
+        Room room = getRoom();
+        return room.getPlayerById(userId);
+    }
+
+    /**
+     * get userId
+     *
+     * @return userId
+     */
     default long getUserId() {
         return this.getFlowContext().getUserId();
     }
 
     /**
-     * 获取选项值。
-     * <p>
-     * 如果选项不存在，返回默认值。
+     * get 动态属性，获取选项值，如果选项不存在，返回默认值。
      *
      * @param option 选项值
      * @return 如果 option 不存在，则使用默认的 option 值。
@@ -74,9 +92,7 @@ public interface GameFlowContext {
     }
 
     /**
-     * 设置一个具有特定值的新选项。
-     * <p>
-     * 使用 null 值删除前一个设置的 {@link AttrOption}。
+     * 设置动态属性。设置一个具有特定值的新选项，使用 null 值删除前一个设置的 {@link AttrOption}。
      *
      * @param option 选项值
      * @param value  选项值, null 用于删除前一个 {@link AttrOption}.
@@ -87,6 +103,13 @@ public interface GameFlowContext {
         return this;
     }
 
+    /**
+     * 创建 GameFlowContext（框架内置的默认实现）
+     *
+     * @param room        房间
+     * @param flowContext flowContext
+     * @return GameFlowContext
+     */
     static GameFlowContext of(Room room, FlowContext flowContext) {
         return new SimpleGameFlowContext(room, flowContext);
     }

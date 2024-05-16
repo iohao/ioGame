@@ -31,6 +31,8 @@ import lombok.experimental.FieldDefaults;
 import java.util.Objects;
 
 /**
+ * 上下文 - 创建房间信息及玩法规则（内置实现）
+ *
  * @author 渔民小镇
  * @date 2024-05-12
  * @since 21.8

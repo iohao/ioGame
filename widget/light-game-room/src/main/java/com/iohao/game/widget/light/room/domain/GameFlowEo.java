@@ -22,9 +22,28 @@ import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.widget.light.domain.event.message.Eo;
 
 /**
- * 流程 EO
- * <pre>
+ * GameFlowEo，可规避 GameFlowService 中的并发问题
+ * <pre>{@code
+ * // 发送领域事件
+ * GameFlowContext context = GameFlowContext.of(room, flowContext);
+ * new GameFlowEo(flowContext, () -> {
+ *     // 进入房间
+ *     this.roomService.enterRoom(context);
+ * }).send();
  *
+ * GameFlowContext gameFlowContext = GameFlowContext.of(room, flowContext);
+ * new GameFlowEo(flowContext, () -> {
+ *     // 退出房间
+ *     this.roomService.quitRoom(gameFlowContext);
+ * }).send();
+ *
+ * GameFlowContext context = GameFlowContext.of(room, flowContext);
+ * new GameFlowEo(flowContext, () -> {
+ *     // 开始游戏
+ *     this.roomService.startGame(context);
+ * }).send();
+ *
+ * }
  * </pre>
  *
  * @author 渔民小镇

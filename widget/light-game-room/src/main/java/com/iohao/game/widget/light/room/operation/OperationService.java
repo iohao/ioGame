@@ -19,13 +19,36 @@
 package com.iohao.game.widget.light.room.operation;
 
 /**
+ * 玩法操作相关服务。获取 user 的玩法操作、所有玩法操作、玩法操作工厂。
+ *
  * @author 渔民小镇
  * @date 2024-05-12
  * @since 21.8
  */
-public interface OperationFactoryProvider {
+public interface OperationService {
     /**
      * @return 玩法操作工厂
      */
     OperationFactory getOperationFactory();
+
+    /**
+     * 获取 OperationHandler（玩法操作业务类）
+     *
+     * @param operation 操作码
+     * @return 操作码对应的业务逻辑处理类
+     */
+    default OperationHandler getOperationHandler(int operation) {
+        return this.getOperationFactory().getOperationHandler(operation);
+    }
+
+    /**
+     * 获取玩家可操作的 OperationHandler（玩法操作业务类）
+     *
+     * @param operation 操作码
+     * @return 玩法操作业务类
+     */
+    default OperationHandler getUserOperationHandler(int operation) {
+        return this.getOperationFactory().getUserOperationHandler(operation);
+    }
+
 }

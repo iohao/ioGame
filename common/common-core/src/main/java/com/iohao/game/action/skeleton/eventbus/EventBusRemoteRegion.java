@@ -58,8 +58,6 @@ class EventBusRemoteRegion {
         Collection<String> topics = eventBrokerClientMessage.getTopics();
         topics.forEach(topic -> remoteTopicMultiMap.put(topic, eventBrokerClientMessage));
         eventBrokerClientMessageMap.put(eventBrokerClientMessage.brokerClientId, eventBrokerClientMessage);
-
-
     }
 
     public void unloadRemoteTopic(EventBrokerClientMessage eventBrokerClientMessage) {

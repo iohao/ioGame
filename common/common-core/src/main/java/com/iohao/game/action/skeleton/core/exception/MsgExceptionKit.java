@@ -33,6 +33,12 @@ import java.util.Objects;
 @Slf4j
 @UtilityClass
 public class MsgExceptionKit {
+    /**
+     * 将异常发送给当前用户
+     *
+     * @param e           异常
+     * @param flowContext 当前用户的 flowContext
+     */
     public void onException(Throwable e, FlowContext flowContext) {
         Objects.requireNonNull(flowContext);
 

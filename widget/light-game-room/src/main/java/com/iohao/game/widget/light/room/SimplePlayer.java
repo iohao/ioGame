@@ -26,6 +26,8 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serial;
 
 /**
+ * 玩家（内置实现）
+ *
  * @author 渔民小镇
  * @date 2024-05-12
  * @since 21.8
@@ -46,6 +48,6 @@ public class SimplePlayer implements Player {
     boolean ready;
     /** true robot */
     boolean robot;
-    /** true 模仿 robot 机制, 但并不是真正的 robot; 类似于 robot 托管 */
+    /** true 模仿 robot 机制，但并不是真正的 robot，类似于 robot 托管 */
     boolean maybeRobot;
 }

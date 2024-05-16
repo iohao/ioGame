@@ -21,18 +21,20 @@ package com.iohao.game.widget.light.room;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 房间管理相关的扩展（内置实现）
+ *
  * @author 渔民小镇
  * @date 2024-05-12
  * @since 21.8
  */
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class SimpleRoomService implements RoomService {
+final class SimpleRoomService implements RoomService {
     /**
      * 房间 map
      * <pre>
@@ -40,7 +42,7 @@ public final class SimpleRoomService implements RoomService {
      *     value : room
      * </pre>
      */
-    final Map<Long, Room> roomMap = new ConcurrentHashMap<>();
+    final Map<Long, Room> roomMap = new NonBlockingHashMap<>();
 
     /**
      * 玩家对应的房间 map
@@ -49,7 +51,7 @@ public final class SimpleRoomService implements RoomService {
      *     value : roomId
      * </pre>
      */
-    final Map<Long, Long> userRoomMap = new ConcurrentHashMap<>();
+    final Map<Long, Long> userRoomMap = new NonBlockingHashMap<>();
 
     SimpleRoomService() {
     }

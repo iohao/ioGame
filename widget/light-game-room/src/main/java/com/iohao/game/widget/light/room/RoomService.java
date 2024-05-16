@@ -21,7 +21,7 @@ package com.iohao.game.widget.light.room;
 import java.util.*;
 
 /**
- * 房间的管理
+ * 房间管理相关的扩展接口
  * <pre>
  *     房间的添加
  *     房间的删除
@@ -39,6 +39,11 @@ import java.util.*;
  *     // 玩家对应的房间 map
  *     final Map<Long, Long> userRoomMap = new ConcurrentHashMap<>();
  *     }
+ * </pre>
+ * 内置的默认实现
+ * <pre>{@code
+ *     RoomService roomService = RoomService.of();
+ * }
  * </pre>
  *
  * @author 渔民小镇
@@ -69,6 +74,13 @@ public interface RoomService {
      */
     Map<Long, Long> getUserRoomMap();
 
+    /**
+     * 通过 userId 查找房间
+     *
+     * @param userId userId
+     * @param <T>    Room
+     * @return 房间
+     */
     default <T extends Room> T getRoomByUserId(long userId) {
         // 通过 userId 得到 roomId
         Long roomId = this.getUserRoomMap().get(userId);
@@ -81,14 +93,32 @@ public interface RoomService {
         return getRoom(roomId);
     }
 
+    /**
+     * 通过 roomId 查找房间
+     *
+     * @param roomId roomId
+     * @param <T>    Room
+     * @return 房间
+     */
     default <T extends Room> T getRoom(long roomId) {
         return (T) this.getRoomMap().get(roomId);
     }
 
+    /**
+     * 通过 userId 查找房间 Optional
+     *
+     * @param userId userId
+     * @return Optional Room
+     */
     default Optional<Room> optionalRoomByUserId(long userId) {
         return Optional.ofNullable(this.getRoomByUserId(userId));
     }
 
+    /**
+     * 添加房间
+     *
+     * @param room 房间
+     */
     default void addRoom(Room room) {
         long roomId = room.getRoomId();
         this.getRoomMap().put(roomId, room);
@@ -105,13 +135,19 @@ public interface RoomService {
         room.listPlayerId().forEach(userId -> this.getUserRoomMap().remove(userId));
     }
 
+    /**
+     * 添加玩家到房间里，并让 userId 与 roomId 关联
+     *
+     * @param room   间里
+     * @param player 玩家
+     */
     default void addPlayer(Room room, Player player) {
         room.addPlayer(player);
         this.getUserRoomMap().put(player.getUserId(), room.getRoomId());
     }
 
     /**
-     * 移出房间内的玩家 删除用户与房间的对应关系
+     * 将玩家从房间内内移除 并删除 userId 与 roomId 的关联
      *
      * @param room   房间
      * @param player 玩家
@@ -121,10 +157,21 @@ public interface RoomService {
         this.getUserRoomMap().remove(player.getUserId());
     }
 
+    /**
+     * 得到房间列表
+     *
+     * @param <T> Room
+     * @return 房间
+     */
     default <T extends Room> Collection<T> listRoom() {
         return (Collection<T>) this.getRoomMap().values();
     }
 
+    /**
+     * 创建一个 RoomService 对象实例（框架内置的默认实现）
+     *
+     * @return RoomService
+     */
     static RoomService of() {
         return new SimpleRoomService();
     }

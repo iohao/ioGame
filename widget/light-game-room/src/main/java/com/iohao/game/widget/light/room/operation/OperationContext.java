@@ -19,68 +19,66 @@
 package com.iohao.game.widget.light.room.operation;
 
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.widget.light.room.Player;
 import com.iohao.game.widget.light.room.Room;
-import lombok.AccessLevel;
+import com.iohao.game.widget.light.room.domain.OperationContextEventHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
 
 /**
- * 操作上下文
+ * 玩家玩法操作上下文
+ * <pre>{@code
+ * // 创建玩法操作上下文
+ * OperationContext operationContext = OperationContext.of(room, operationHandler)
+ *     // 当前操作的玩家
+ *     .setFlowContext(flowContext)
+ *     // 开发者根据游戏业务定制的操作数据
+ *     .setCommand(command);
+ * // 执行玩法操作
+ * operationContext.execute();
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2022-03-31
- * @since 17
+ * @see OperationContextEventHandler
+ * @since 21.8
  */
 @Getter
 @Setter
 @Accessors(chain = true)
-@SuppressWarnings("unchecked")
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public final class OperationContext {
+public class OperationContext implements PlayerOperationContext {
     /** room */
-    Room room;
-    /** 当前操作的玩家 */
-    Player player;
+    final Room room;
+    /** 玩法操作业务类 */
+    final OperationHandler operationHandler;
     /** 具体玩法需要操作的数据，通常由开发者根据游戏业务来定制 */
     Object command;
-
+    /** 当前操作玩家的 FlowContext */
     FlowContext flowContext;
-    /** 玩法操作业务类 */
-    OperationHandler operationHandler;
 
-    public long getUserId() {
-        return player.getUserId();
+    OperationContext(Room room, OperationHandler operationHandler) {
+        this.room = room;
+        this.operationHandler = operationHandler;
     }
 
-    public long getRoomId() {
-        return room.getRoomId();
-    }
-
-    public <T extends Room> T getRoom() {
-        return (T) this.room;
-    }
-
-    public <T extends Player> T getPlayer() {
-        return (T) this.player;
-    }
-
-    public <T> T getCommand() {
-        return (T) this.command;
-    }
-
+    /**
+     * 执行玩家的玩法操作，包括验证与处理。
+     */
     public void execute() {
         // 玩法操作业务类，将验证与操作分离
         this.operationHandler.verify(this);
         this.operationHandler.process(this);
     }
 
-    private OperationContext() {
-    }
-
-    public static OperationContext of() {
-        return new OperationContext();
+    /**
+     * 创建 OperationContext 对象
+     *
+     * @param room             房间
+     * @param operationHandler 玩法操作上下文
+     * @return OperationContext
+     */
+    public static OperationContext of(Room room, OperationHandler operationHandler) {
+        return new OperationContext(room, operationHandler);
     }
 }

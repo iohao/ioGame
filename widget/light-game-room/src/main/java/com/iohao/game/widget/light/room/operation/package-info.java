@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 房间内的玩法操作业务
+ * 桌游类、房间类游戏的扩展模块 - 房间内的玩法操作扩展。
  * <p>
  * 玩法操作业务 - 设计模式: 策略模式 + 享元模式
  * <pre>
@@ -28,8 +28,23 @@
  *
  *         将许多"虚拟"对象的状态集中管理, 减少运行时对象实例个数，节省内存
  * </pre>
+ * 使用示例 - 配置玩法操作
+ * <pre>{@code
+ * // 创建 OperationFactory 对象（框架提供的内置实现）
+ * OperationFactory factory = OperationFactory.of();
+ *
+ * // 配置玩法操作
+ * factory.mappingUser(1, new ShootOperationHandler());
+ *
+ * // 如果有还有更多的操作，可以继续配置。
+ * // 这里使用伪代码来举一个麻将的例子，配置吃、碰、杠的玩法操作
+ * factory.mappingUser(10, new ChiOperationHandler());
+ * factory.mappingUser(11, new PengOperationHandler());
+ * factory.mappingUser(12, new GangOperationHandler());
+ * }</pre>
  *
  * @author 渔民小镇
  * @date 2022-03-31
+ * @since 21.8
  */
 package com.iohao.game.widget.light.room.operation;

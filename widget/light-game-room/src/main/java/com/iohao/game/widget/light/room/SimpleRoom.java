@@ -19,7 +19,6 @@
 package com.iohao.game.widget.light.room;
 
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
-import com.iohao.game.action.skeleton.kit.RangeBroadcast;
 import com.iohao.game.widget.light.room.flow.RoomCreateContext;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,7 +31,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * 简单的房间
+ * 房间（内置实现）
  *
  * @author 渔民小镇
  * @date 2022-03-31
@@ -62,8 +61,6 @@ public class SimpleRoom implements Room {
     final Map<Integer, Long> playerSeatMap = new TreeMap<>();
     /** 房间唯一 id */
     long roomId;
-    /** 房间号 */
-    int roomNo;
     /** 创建房间信息 */
     RoomCreateContext roomCreateContext;
     /** 房间空间大小: 4 就是4个人上限 (根据规则设置) */

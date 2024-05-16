@@ -20,17 +20,15 @@ package com.iohao.game.widget.light.room;
 
 import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.widget.light.room.flow.RoomCreateContext;
-import com.iohao.game.widget.light.room.kit.RoomKit;
 
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * 房间
+ * 房间接口
  *
  * @author 渔民小镇
  * @date 2022-03-31
@@ -41,8 +39,8 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     /**
      * 玩家
      * <pre>
-     *     key is userId
-     *     value is player
+     *     key : userId
+     *     value : player
      * </pre>
      *
      * @return 玩家
@@ -52,8 +50,8 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     /**
      * 玩家位置
      * <pre>
-     *     key is seat
-     *     value is userId
+     *     key : seat
+     *     value : userId
      * </pre>
      *
      * @return 玩家位置
@@ -61,49 +59,60 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     Map<Integer, Long> getPlayerSeatMap();
 
     /**
+     * get roomId
+     *
      * @return 房间唯一 id
      */
     long getRoomId();
 
     /**
+     * set roomId
+     *
      * @param roomId 房间唯一 id
      */
     void setRoomId(long roomId);
 
     /**
-     * @return 房间号
-     */
-    int getRoomNo();
-
-    /**
-     * @param roomNo 房间号
-     */
-    void setRoomNo(int roomNo);
-
-    /**
+     * get 房间空间大小
+     *
      * @return 房间空间大小。如 4 就是 4 个人上限 (可以根据规则设置)
      */
     int getSpaceSize();
 
     /**
+     * set 房间空间大小
+     *
      * @param spaceSize 房间空间大小。如 4 就是 4 个人上限 (可以根据规则设置)
      */
     void setSpaceSize(int spaceSize);
 
     /**
+     * get 房间状态
+     *
      * @return 房间状态
      */
     RoomStatusEnum getRoomStatusEnum();
 
     /**
+     * set 房间状态
+     *
      * @param roomStatusEnum 房间状态
      */
     void setRoomStatusEnum(RoomStatusEnum roomStatusEnum);
 
     /**
-     * @return 创建房间信息（玩法规则）
+     * get 创建房间信息（及玩法规则）
+     *
+     * @return 创建房间信息（及玩法规则）
      */
     RoomCreateContext getRoomCreateContext();
+
+    /**
+     * 设置创建房间信息（及玩法规则）
+     *
+     * @param roomCreateContext 创建房间信息（及玩法规则）
+     */
+    void setRoomCreateContext(RoomCreateContext roomCreateContext);
 
     /**
      * 房间创建者的 userId
@@ -115,44 +124,60 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     }
 
     /**
-     * @param roomCreateContext 创建房间信息（玩法规则）
+     * 当前 userId 是否是房间创建者
+     *
+     * @param userId userId
+     * @return true 是房间创建者
      */
-    void setRoomCreateContext(RoomCreateContext roomCreateContext);
+    default boolean isCreatorUserId(long userId) {
+        return this.getCreatorUserId() == userId;
+    }
 
     /**
-     * 玩家列表: 所有玩家信息
+     * 玩家列表: 所有玩家
      *
      * @param <T> 玩家
-     * @return 所有玩家信息 (包括退出房间的玩家信息)
+     * @return 所有玩家
      */
     default <T extends Player> Collection<T> listPlayer() {
         return (Collection<T>) this.getPlayerMap().values();
     }
 
+    /**
+     * steam players
+     *
+     * @return player Stream
+     */
     default Stream<Player> streamPlayer() {
         return this.listPlayer().stream();
     }
 
-    default List<Player> listPlayer(Predicate<Player> predicate) {
-        return listPlayer().stream()
-                .filter(predicate)
-                .toList();
-    }
-
-    default Collection<Long> listPlayerId(long excludePlayerId) {
-        return listPlayerId().stream()
-                .filter(playerId -> playerId != excludePlayerId)
-                .toList();
-    }
-
+    /**
+     * userId Collection
+     *
+     * @return userId
+     */
     default Collection<Long> listPlayerId() {
         return this.getPlayerMap().keySet();
     }
 
+    /**
+     * 通过 userId 查找玩家
+     *
+     * @param userId userId
+     * @param <T>    Player
+     * @return 玩家
+     */
     default <T extends Player> T getPlayerById(long userId) {
         return (T) this.getPlayerMap().get(userId);
     }
 
+    /**
+     * 玩家是否存在房间内
+     *
+     * @param userId userId
+     * @return true 存在
+     */
     default boolean existUser(long userId) {
         return this.getPlayerMap().get(userId) != null;
     }
@@ -213,10 +238,20 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
         PresentKit.ifNull(player, runnable);
     }
 
+    /**
+     * 统计房间内的玩家数量
+     *
+     * @return 玩家数量
+     */
     default int countPlayer() {
         return this.getPlayerMap().size();
     }
 
+    /**
+     * 房间内的是否没有玩家
+     *
+     * @return true 房间内没有玩家了
+     */
     default boolean isEmptyPlayer() {
         return this.getPlayerMap().isEmpty();
     }
@@ -241,6 +276,14 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
         return !notReady;
     }
 
+    /**
+     * forEach players
+     * <pre>
+     *     the first argument is the userId
+     * </pre>
+     *
+     * @param action action
+     */
     default void forEach(BiConsumer<Long, Player> action) {
         this.getPlayerMap().forEach(action);
     }

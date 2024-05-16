@@ -20,15 +20,18 @@ package com.iohao.game.widget.light.room.domain;
 
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionKit;
 import com.iohao.game.widget.light.domain.event.message.DomainEventHandler;
-import com.iohao.game.widget.light.room.flow.RoomGameFlowService;
+import com.iohao.game.widget.light.room.flow.GameFlowService;
 
 /**
+ * EventHandler，消费 GameFlowEo
+ *
  * @author 渔民小镇
  * @date 2024-05-12
- * @see RoomGameFlowService
+ * @see GameFlowService
+ * @see GameFlowEo
  * @since 21.8
  */
-public class GameFlowEventHandler implements DomainEventHandler<GameFlowEo> {
+public final class GameFlowEventHandler implements DomainEventHandler<GameFlowEo> {
     @Override
     public void onEvent(GameFlowEo event, boolean endOfBatch) {
         try {
