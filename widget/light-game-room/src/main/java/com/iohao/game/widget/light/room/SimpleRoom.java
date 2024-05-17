@@ -39,7 +39,7 @@ import java.util.TreeMap;
  */
 @Getter
 @Setter
-@FieldDefaults(level = AccessLevel.PROTECTED)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimpleRoom implements Room {
     @Serial
     private static final long serialVersionUID = -6937915481102847959L;

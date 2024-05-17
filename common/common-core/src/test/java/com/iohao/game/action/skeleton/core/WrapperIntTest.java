@@ -43,12 +43,12 @@ import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.Wrappe
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class WrapperIntTest {
 
-    private CmdInfo getCmdInfo(int subCmd) {
+    private CmdInfo of(int subCmd) {
         return CmdInfo.of(WrapperIntActionCmd.cmd, subCmd);
     }
 
     private FlowContext createIntValueFlowContext(int subCmd) {
-        CmdInfo cmdInfo = this.getCmdInfo(subCmd);
+        CmdInfo cmdInfo = this.of(subCmd);
 
         IntValue intValue = new IntValue();
         intValue.value = 100;

@@ -105,12 +105,24 @@ public interface RoomService {
     }
 
     /**
+     * 通过 roomId 查找房间 Optional
+     *
+     * @param roomId roomId
+     * @param <T>    Room
+     * @return Optional Room
+     */
+    default <T extends Room> Optional<T> optionalRoom(long roomId) {
+        return Optional.ofNullable(this.getRoom(roomId));
+    }
+
+    /**
      * 通过 userId 查找房间 Optional
      *
      * @param userId userId
+     * @param <T>    Room
      * @return Optional Room
      */
-    default Optional<Room> optionalRoomByUserId(long userId) {
+    default <T extends Room> Optional<T> optionalRoomByUserId(long userId) {
         return Optional.ofNullable(this.getRoomByUserId(userId));
     }
 

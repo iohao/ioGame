@@ -39,12 +39,12 @@ import static com.iohao.game.action.skeleton.core.action.ExampleActionCmd.Wrappe
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class WrapperLongTest {
 
-    private CmdInfo getCmdInfo(int subCmd) {
+    private CmdInfo of(int subCmd) {
         return CmdInfo.of(WrapperLongActionCmd.cmd, subCmd);
     }
 
     private FlowContext createLongValueFlowContext(int subCmd) {
-        CmdInfo cmdInfo = this.getCmdInfo(subCmd);
+        CmdInfo cmdInfo = this.of(subCmd);
 
         LongValue longValue = new LongValue();
         longValue.value = 100;

@@ -178,9 +178,8 @@ public class BarSkeletonDoc {
             var stringObjectMap = new HashMap<>();
             stringObjectMap.put("cmd", actionSendDoc.getCmd());
             stringObjectMap.put("subCmd", actionSendDoc.getSubCmd());
-            stringObjectMap.put("dataClass", actionSendDoc.getDataClass().getName());
+            stringObjectMap.put("dataClass", actionSendDoc.getDataClassName());
             stringObjectMap.put("description", actionSendDoc.getDescription());
-
 
             String format = StrKit.format(template, stringObjectMap);
 
@@ -188,7 +187,6 @@ public class BarSkeletonDoc {
             docContentList.add(separator);
         }
     }
-
 
     private ActionSendDocsRegion createActionSendDocsRegion() {
         ActionSendDocsRegion actionSendDocsRegion = new ActionSendDocsRegion();

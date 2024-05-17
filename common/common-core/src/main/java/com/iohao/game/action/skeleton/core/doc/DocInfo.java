@@ -147,8 +147,9 @@ class DocInfo {
 
             // 广播推送
             if (Objects.nonNull(actionSendDoc)) {
-                Class<?> dataClass = actionSendDoc.getDataClass();
-                format = StrKit.format("    广播推送: {}", dataClass.getName());
+                String dataClassName = actionSendDoc.getDataClassName();
+                String description = actionSendDoc.getDescription();
+                format = StrKit.format("    广播推送: {} {}", dataClassName, description);
                 lineList.add(format);
             }
 

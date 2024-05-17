@@ -77,6 +77,15 @@ public interface GameFlowContext {
     }
 
     /**
+     * get roomId
+     *
+     * @return roomId
+     */
+    default long getRoomId() {
+        return getRoom().getRoomId();
+    }
+
+    /**
      * get 动态属性，获取选项值，如果选项不存在，返回默认值。
      *
      * @param option 选项值

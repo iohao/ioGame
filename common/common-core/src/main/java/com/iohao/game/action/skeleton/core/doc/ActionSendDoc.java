@@ -24,6 +24,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Optional;
+
 /**
  * @author 渔民小镇
  * @date 2022-02-01
@@ -51,10 +53,20 @@ public class ActionSendDoc {
         this(cmdInfo.getCmd(), cmdInfo.getSubCmd(), dataClass, description);
     }
 
+    public ActionSendDoc(CmdInfo cmdInfo, String description) {
+        this(cmdInfo.getCmd(), cmdInfo.getSubCmd(), null, description);
+    }
+
     public ActionSendDoc(int cmd, int subCmd, Class<?> dataClass, String description) {
         this.cmd = cmd;
         this.subCmd = subCmd;
         this.dataClass = dataClass;
         this.description = description;
+    }
+
+    public String getDataClassName() {
+        return Optional.ofNullable(this.dataClass)
+                .map(Class::getName)
+                .orElse("none");
     }
 }
