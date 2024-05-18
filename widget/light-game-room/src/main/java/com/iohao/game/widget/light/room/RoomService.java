@@ -170,6 +170,16 @@ public interface RoomService {
     }
 
     /**
+     * 将玩家从房间内内移除 并删除 userId 与 roomId 的关联
+     *
+     * @param room   房间
+     * @param userId userId
+     */
+    default void removePlayer(Room room, long userId) {
+        room.ifPlayerExist(userId, player -> this.removePlayer(room, player));
+    }
+
+    /**
      * 得到房间列表
      *
      * @param <T> Room
