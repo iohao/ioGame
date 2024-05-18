@@ -55,7 +55,7 @@ public interface ClientUser extends AttrOptionDynamic {
     boolean isActive();
 
     /**
-     * 登录成功后，调用 InputCommandRegion 回调
+     * 登录成功后，将会调用 {@link  InputCommandRegion#loginSuccessCallback()} 方法
      * <pre>
      *     需要开发者主动调用触发，一般在登录模拟请求的回调中主动的调用。
      * </pre>

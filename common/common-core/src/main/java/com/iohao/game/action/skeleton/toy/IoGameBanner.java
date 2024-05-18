@@ -131,14 +131,17 @@ public final class IoGameBanner {
     }
 
     private void extractedBreakingNews() {
-        String next = BreakingNews.randomNews();
-        String builder = "| News     | %s%n";
-        System.out.printf(builder, next);
+        // 每次展示 N 条小报
+        var newsList = BreakingNews.randomNewsList(2);
+        for (BreakingNews.News news : newsList) {
+            System.out.printf("| News     | %s%n", news);
+        }
+
         System.out.println("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedAdv() {
-        String s = BreakingNews.randomAdvText();
+        String s = BreakingNews.randomAdv().toString();
         String builder = "| adv      | %s - %s%n";
         System.out.printf(builder, "启动项广告位招租", s);
         System.out.println("+----------+--------------------------------------------------------------------------------------");
@@ -180,7 +183,6 @@ public final class IoGameBanner {
             return "-1";
         }
     }
-
 
     private IoGameBanner() {
     }

@@ -16,44 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room.operation;
+package com.iohao.game.action.skeleton.core.doc;
+
+import com.iohao.game.action.skeleton.core.CmdInfo;
 
 /**
- * 玩法操作业务接口，将验证与操作分离。
- * <pre>
- *     坦克:
- *         射子弹、发射导弹 等操作
- *
- *     麻将：
- *         出牌、碰牌、胡牌等操作
- *
- *     斗地主：
- *         出牌等操作
- *
- *     回合制的：
- *         攻击等
- *
- *     桌游：
- *         发牌等
- *         出牌等
- * </pre>
- *
  * @author 渔民小镇
- * @date 2022-03-31
+ * @date 2024-05-18
  * @since 21.8
  */
-public interface OperationHandler {
-    /**
-     * 检测验证, 验证用户操作步骤是否合法
-     *
-     * @param context 操作上下文
-     */
-    void verify(PlayerOperationContext context);
-
-    /**
-     * 验证通过后, 执行处理
-     *
-     * @param context 操作上下文
-     */
-    void process(PlayerOperationContext context);
+public interface BroadcastDoc {
+    static BroadcastDocBuilder newBuilder(CmdInfo cmdInfo) {
+        return new BroadcastDocBuilder(cmdInfo);
+    }
 }

@@ -109,7 +109,7 @@ class DocInfo {
             return "";
         }
 
-        String separator = System.getProperty("line.separator");
+        String separator = System.lineSeparator();
 
         List<String> lineList = new ArrayList<>();
 

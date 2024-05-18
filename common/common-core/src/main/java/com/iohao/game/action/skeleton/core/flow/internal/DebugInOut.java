@@ -48,7 +48,7 @@ import java.util.function.BiConsumer;
  *
  * 日志输出预览
  *
- * ┏━━━━━ Debug. [(ActivityAction.java:1).hello] ━━━━━ [cmd:1-0 65536] ━━━━━ [逻辑服 [xxx逻辑服] - id:[76526c134cc88232379167be83e4ddfc]]
+ * ┏━━━━━ Debug. [(ActivityAction.java:1).hello] ━━━━━ [cmd:1-0 65536] ━━━━━ [xxx逻辑服] ━━━━━ [id:76526c134cc88232379167be83e4ddfc]
  * ┣ userId: 1
  * ┣ 参数: active : Active(id=101, name=塔姆)
  * ┣ 响应: 塔姆, I'm here
@@ -207,7 +207,7 @@ public final class DebugInOut implements ActionMethodInOut {
         }
 
         String template = """
-                ┏━━错误━━━ Debug. [({className}.java:{lineNumber}).{actionMethodName}] ━━━ {cmdInfo} ━━━ [逻辑服 [{logicServerTag}] - id:[{logicServerId}]]
+                ┏━━错误━━━ Debug. [({className}.java:{lineNumber}).{actionMethodName}] ━━━ {cmdInfo} ━━━ [{logicServerTag}] ━━━ [id:{logicServerId}]
                 ┣ userId: {userId}
                 ┣ 参数: {paramName} : {paramData}
                 ┣ 错误码: {errorCode}
@@ -230,7 +230,7 @@ public final class DebugInOut implements ActionMethodInOut {
         }
 
         String template = """
-                ┏━━━━━ Debug. [({className}.java:{lineNumber}).{actionMethodName}] ━━━━━ {cmdInfo} ━━━━━ [逻辑服 [{logicServerTag}] - id:[{logicServerId}]]
+                ┏━━━━━ Debug. [({className}.java:{lineNumber}).{actionMethodName}] ━━━━━ {cmdInfo} ━━━━━ [{logicServerTag}] ━━━━━ [id:{logicServerId}]
                 ┣ userId: {userId}
                 ┣ 参数: {paramName} : {paramData}
                 ┣ 响应: {returnData}

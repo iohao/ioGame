@@ -36,7 +36,6 @@ public final class SimpleLoggerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.info("channelInactive channel.remoteAddress() : {}", ctx.channel().remoteAddress());
         super.channelInactive(ctx);
     }
 

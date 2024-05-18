@@ -18,10 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.action.skeleton.core.doc.ActionSendDoc;
-import com.iohao.game.action.skeleton.core.doc.ActionSendDocs;
-import com.iohao.game.action.skeleton.core.doc.BarSkeletonDoc;
-import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
+import com.iohao.game.action.skeleton.core.doc.*;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.core.flow.*;
 import com.iohao.game.action.skeleton.core.flow.internal.*;
@@ -174,6 +171,10 @@ public final class BarSkeletonBuilder {
     public BarSkeletonBuilder addActionSendDoc(ActionSendDoc actionSendDoc) {
         this.actionSendDocs.add(actionSendDoc);
         return this;
+    }
+
+    public BarSkeletonBuilder addBroadcastDoc(BroadcastDocBuilder broadcastDocBuilder) {
+        return this.addActionSendDoc(broadcastDocBuilder.build());
     }
 
     public BarSkeletonBuilder addHandler(Handler handler) {

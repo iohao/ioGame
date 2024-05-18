@@ -85,6 +85,4 @@ final class ToyTable {
 
         return region;
     }
-
-
 }

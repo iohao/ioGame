@@ -249,6 +249,11 @@ public class RangeBroadcast {
         this.doSend = false;
     }
 
+    /**
+     * 不检测空用户，如果没有任何用户，将不会触发广播（推送）
+     *
+     * @return me
+     */
     public RangeBroadcast disableEmptyUserCheck() {
         this.checkEmptyUser = false;
         return this;

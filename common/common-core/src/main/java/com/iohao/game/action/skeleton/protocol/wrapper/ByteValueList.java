@@ -21,8 +21,11 @@ package com.iohao.game.action.skeleton.protocol.wrapper;
 import com.baidu.bjf.remoting.protobuf.FieldType;
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
+import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.common.kit.CollKit;
 import lombok.ToString;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,8 +42,20 @@ public final class ByteValueList {
     public List<byte[]> values;
 
     public static ByteValueList of(List<byte[]> values) {
+        if (CollKit.isEmpty(values)) {
+            return new ByteValueList();
+        }
+
         var theValue = new ByteValueList();
         theValue.values = values;
         return theValue;
+    }
+
+    public static <T> ByteValueList ofList(Collection<T> values) {
+        if (CollKit.isEmpty(values)) {
+            return new ByteValueList();
+        }
+
+        return of(values.stream().map(DataCodecKit::encode).toList());
     }
 }

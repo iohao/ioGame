@@ -3,6 +3,8 @@ package com.iohao.game.action.skeleton.toy;
 import com.iohao.game.action.skeleton.IoGameVersion;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author 渔民小镇
  * @date 2023-01-30
@@ -23,5 +25,14 @@ public class ToyTableTest {
         memoryRegion.putLine("totalMemory", "xxx.xMB");
 
         table.render();
+    }
+
+    @Test
+    public void render() throws InterruptedException {
+        IoGameBanner.render();
+        IoGameBanner.me().countDown();
+
+//        TimeUnit.SECONDS.sleep(1);
+        TimeUnit.MILLISECONDS.sleep(300);
     }
 }

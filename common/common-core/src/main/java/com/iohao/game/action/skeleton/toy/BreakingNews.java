@@ -22,6 +22,7 @@ import com.iohao.game.common.kit.RandomKit;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,28 +37,27 @@ import java.util.List;
 @UtilityClass
 class BreakingNews {
 
-    public String randomNews() {
-        News news = random();
-        return String.format("%s - %s", news.title, news.url);
+    List<News> randomNewsList(int num) {
+        List<News> news = listNews();
+        Collections.shuffle(news);
+
+        return news.stream().limit(num).toList();
     }
 
-    public String randomAdvText() {
-        News news = randomAdv();
-        return String.format("%s - %s", news.title, news.url);
-    }
-
-    private News randomAdv() {
+    News randomAdv() {
         List<News> list = new ArrayList<>();
         list.add(new News("回合制网络游戏 MMO", "https://www.yuque.com/iohao/game/sw08q89x3x7kiuhx"));
         return RandomKit.randomEle(list);
     }
 
-    private News random() {
+    private List<News> listNews() {
         List<News> list = new ArrayList<>();
 
         list.add(new News("支持者名单", "https://www.yuque.com/iohao/game/backers"));
         list.add(new News("28行代码，做个网页聊天室", "https://www.yuque.com/iohao/game/we9eppym4yno9hq2"));
         list.add(new News("web 转游戏 - 示例理解篇", "https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z"));
+        list.add(new News("学习指南", "https://www.yuque.com/iohao/game/oybe5gmz5uk4ldzb"));
+        list.add(new News("ioGame 文档阅读指南", "https://www.yuque.com/iohao/game/giqg6r"));
 
         // 开发常见问题与小技巧
         list.add(new News("全链路调用日志跟踪", "https://www.yuque.com/iohao/game/zurusq"));
@@ -87,7 +87,6 @@ class BreakingNews {
 
         // 游戏逻辑服
         list.add(new News("游戏逻辑服 - 动态绑定游戏逻辑服", "https://www.yuque.com/iohao/game/idl1wm"));
-        list.add(new News("游戏逻辑服 - 解决协议碎片", "https://www.yuque.com/iohao/game/ieimzn"));
         list.add(new News("游戏逻辑服 - 元信息、附加信息", "https://www.yuque.com/iohao/game/sw1y8u"));
 
         // 游戏对外服
@@ -99,6 +98,7 @@ class BreakingNews {
         list.add(new News("游戏对外服 - 路由访问权限控制", "https://www.yuque.com/iohao/game/nap5y8p5fevhv99y"));
         list.add(new News("游戏对外服 - 游戏对外服缓存", "https://www.yuque.com/iohao/game/khg23pvbh59a7spm"));
         list.add(new News("游戏对外服 - ws token 鉴权、校验", "https://www.yuque.com/iohao/game/tb1126szmgfu6u55"));
+        list.add(new News("游戏对外服 - 内置与可选的 Handler", "https://www.yuque.com/iohao/game/gqvf6cooowpo0ukp"));
 
         // 通讯方式
         list.add(new News("通讯方式 - 脉冲通讯方式", "https://www.yuque.com/iohao/game/zgaldoxz6zgg0tgn"));
@@ -107,10 +107,16 @@ class BreakingNews {
         list.add(new News("通讯方式 - 获取游戏对外服的数据与扩展", "https://www.yuque.com/iohao/game/ivxsw5"));
         list.add(new News("通讯方式 - 分布式事件总线", "https://www.yuque.com/iohao/game/gmxz33"));
 
+        // 内置工具
+        list.add(new News("内置 Kit - TaskKit 是一个任务、时间、延时监听、超时监听...等相结合的一个工具模块", "https://www.yuque.com/iohao/game/gzsl8pg0si1l4bu3"));
+        list.add(new News("内置 Kit - 属性监听", "https://www.yuque.com/iohao/game/uqn84q41f58xe5f0"));
+        list.add(new News("内置 Kit - 动态属性", "https://www.yuque.com/iohao/game/vfnqpum6hrt23mnf"));
+
         // 小部件
         list.add(new News("小部件 - 领域事件可解决多人同一业务的并发问题", "https://www.yuque.com/iohao/game/gmfy1k"));
         list.add(new News("小部件 - 任务延时器", "https://www.yuque.com/iohao/game/niflk0"));
         list.add(new News("小部件 - 压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
+        list.add(new News("小部件 - room 桌游、房间类的扩展模块", "https://www.yuque.com/iohao/game/vtzbih"));
 
         // 插件相关
         list.add(new News("业务框架 - 插件介绍", "https://www.yuque.com/iohao/game/bsgvzglvlr5tenao"));
@@ -125,11 +131,15 @@ class BreakingNews {
         list.add(new News("业务框架 - FlowContext", "https://www.yuque.com/iohao/game/zz8xiz"));
         list.add(new News("业务框架 - 断言 + 异常机制 = 清晰简洁的代码", "https://www.yuque.com/iohao/game/avlo99"));
         list.add(new News("业务框架 - 开启 JSR380 验证规范", "https://www.yuque.com/iohao/game/ghng6g"));
+        list.add(new News("业务框架 - 解决协议碎片", "https://www.yuque.com/iohao/game/ieimzn"));
 
-        return RandomKit.randomEle(list);
+        return list;
     }
 
     record News(String title, String url) {
-
+        @Override
+        public String toString() {
+            return String.format("%s - %s", title, url);
+        }
     }
 }

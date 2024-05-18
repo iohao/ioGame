@@ -18,14 +18,9 @@
  */
 package com.iohao.game.action.skeleton.protocol.wrapper;
 
-import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.common.kit.CollKit;
-import com.sun.jdi.BooleanValue;
 import lombok.experimental.UtilityClass;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 装箱、拆箱包装工具
@@ -69,21 +64,15 @@ public class WrapperKit {
     }
 
     public <T> ByteValueList ofListByteValue(List<T> values) {
+        return ofList(values);
+    }
 
-        if (CollKit.isEmpty(values)) {
-            return new ByteValueList();
-        }
-
-        return ByteValueList.of(values.stream().map(DataCodecKit::encode).toList());
+    public <T> ByteValueList ofList(List<T> values) {
+        return ByteValueList.ofList(values);
     }
 
     public <T> ByteValueList ofListByteValue(Collection<T> values) {
-
-        if (CollKit.isEmpty(values)) {
-            return new ByteValueList();
-        }
-
-        return ByteValueList.of(values.stream().map(DataCodecKit::encode).toList());
+        return ByteValueList.ofList(values);
     }
 
     /** 框架支持的协议碎片类型 */
@@ -113,5 +102,28 @@ public class WrapperKit {
      */
     public boolean isWrapper(Class<?> clazz) {
         return wrapperTypeSet.contains(clazz);
+    }
+
+    final Map<Class<?>, Class<?>> refTypeMap = new HashMap<>();
+
+    static {
+        refTypeMap.put(int.class, IntValue.class);
+        refTypeMap.put(Integer.class, IntValue.class);
+        refTypeMap.put(IntValue.class, IntValue.class);
+
+        refTypeMap.put(long.class, LongValue.class);
+        refTypeMap.put(Long.class, LongValue.class);
+        refTypeMap.put(LongValue.class, LongValue.class);
+
+        refTypeMap.put(boolean.class, BoolValue.class);
+        refTypeMap.put(Boolean.class, BoolValue.class);
+        refTypeMap.put(BoolValue.class, BoolValue.class);
+
+        refTypeMap.put(String.class, StringValue.class);
+        refTypeMap.put(StringValue.class, StringValue.class);
+    }
+
+    public Optional<Class<?>> optionalRefType(Class<?> clazz) {
+        return Optional.ofNullable(refTypeMap.get(clazz));
     }
 }

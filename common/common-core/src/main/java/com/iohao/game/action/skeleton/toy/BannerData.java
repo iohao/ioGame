@@ -94,6 +94,5 @@ final class BannerData {
         bannerList.add(banner);
 
         return bannerList;
-
     }
 }

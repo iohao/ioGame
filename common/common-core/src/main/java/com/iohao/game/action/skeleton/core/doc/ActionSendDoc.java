@@ -33,17 +33,19 @@ import java.util.Optional;
 @Data
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ActionSendDoc {
+public final class ActionSendDoc {
     /** 主路由 */
     final int cmd;
     /** 子路由 */
     final int subCmd;
     /** 业务类型 */
-    final Class<?> dataClass;
+    Class<?> dataClass;
     /** 推送描述 */
-    final String description;
+    String description;
     /** true 已经被读取过一次或以上 */
     boolean read;
+
+    String dataClassName;
 
     public ActionSendDoc(DocActionSend docActionSend) {
         this(docActionSend.cmd(), docActionSend.subCmd(), docActionSend.dataClass(), docActionSend.description());
@@ -53,10 +55,6 @@ public class ActionSendDoc {
         this(cmdInfo.getCmd(), cmdInfo.getSubCmd(), dataClass, description);
     }
 
-    public ActionSendDoc(CmdInfo cmdInfo, String description) {
-        this(cmdInfo.getCmd(), cmdInfo.getSubCmd(), null, description);
-    }
-
     public ActionSendDoc(int cmd, int subCmd, Class<?> dataClass, String description) {
         this.cmd = cmd;
         this.subCmd = subCmd;
@@ -64,9 +62,8 @@ public class ActionSendDoc {
         this.description = description;
     }
 
-    public String getDataClassName() {
-        return Optional.ofNullable(this.dataClass)
-                .map(Class::getName)
-                .orElse("none");
+    public ActionSendDoc(CmdInfo cmdInfo) {
+        this.cmd = cmdInfo.getCmd();
+        this.subCmd = cmdInfo.getSubCmd();
     }
 }
