@@ -282,7 +282,6 @@ public class TaskKit {
                     } else {
                         executeFlowTimerListener(intervalTaskListener, set);
                     }
-
                 });
 
                 TaskKit.newTimeout(this, tick, timeUnit);

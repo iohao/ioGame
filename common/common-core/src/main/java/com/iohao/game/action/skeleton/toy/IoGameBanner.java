@@ -98,6 +98,8 @@ public final class IoGameBanner {
 
             extractedPrint(table);
 
+            extractedIoGameJavadocApi();
+
             extractedAdv();
             // breaking news
             extractedBreakingNews();
@@ -144,6 +146,13 @@ public final class IoGameBanner {
         String s = BreakingNews.randomAdv().toString();
         String builder = "| adv      | %s - %s%n";
         System.out.printf(builder, "启动项广告位招租", s);
+        System.out.println("+----------+--------------------------------------------------------------------------------------");
+    }
+
+    private void extractedIoGameJavadocApi() {
+        String s = BreakingNews.ioGameJavadocApi().toString();
+        String builder = "| javadoc  | %s%n";
+        System.out.printf(builder,  s);
         System.out.println("+----------+--------------------------------------------------------------------------------------");
     }
 

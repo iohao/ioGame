@@ -6,7 +6,7 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>ioGame</artifactId>
-    <version>21.7</version>
+    <version>21.8</version>
     <name>ioGame</name>
     <description>
         生产资料公有制。
@@ -46,11 +46,11 @@
         <module>widget/light-redis-lock-spring-boot-starter</module>
         <!-- 小部件 ： 压测&模拟客户端请求 -->
         <module>widget/light-client</module>
-        <module>widget/other-tool</module>
-
-        <!-- 游戏部件 : 进一步减少开发实践过程中的工作量 -->
+        <!-- 小部件 : 桌游类、房间类游戏的扩展模块，进一步减少开发实践过程中的工作量 -->
         <module>widget/light-game-room</module>
+
         <module>common/common-micro-kit</module>
+        <module>widget/other-tool</module>
     </modules>
 
     <!--统一管理版本 的一个父 pom-->
@@ -73,8 +73,6 @@
         <!-- JCTools 是一款对jdk并发数据结构进行增强的并发工具 see http://jctools.github.io/JCTools/ https://mvnrepository.com/artifact/org.jctools/jctools-core -->
         <jctools-core.version>4.0.2</jctools-core.version>
 
-        <!-- lombok 消除冗长的 Java 代码 https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-        <lombok.version>1.18.30</lombok.version>
 
         <!-- redis internal : https://mvnrepository.com/artifact/org.redisson/redisson -->
         <redisson.version>3.17.7</redisson.version>
@@ -107,13 +105,15 @@
         <spring.version>6.1.2</spring.version>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
         <springboot.version>3.2.1</springboot.version>
-        <!--  junit https://mvnrepository.com/artifact/junit/junit  -->
-        <junit.version>4.13.2</junit.version>
 
         <!-- slf4j https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <slf4j-api.version>2.0.11</slf4j-api.version>
         <!-- slf4j https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <logback.version>1.4.14</logback.version>
+        <!-- lombok 消除冗长的 Java 代码 https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <lombok.version>1.18.30</lombok.version>
+        <!--  junit https://mvnrepository.com/artifact/junit/junit  -->
+        <junit.version>4.13.2</junit.version>
 
         <!--
         jprotobuf是针对Java程序开发一套简易类库，目的是简化java语言对protobuf类库的使用

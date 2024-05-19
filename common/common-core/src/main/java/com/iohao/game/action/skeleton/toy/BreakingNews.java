@@ -50,6 +50,10 @@ class BreakingNews {
         return RandomKit.randomEle(list);
     }
 
+    News ioGameJavadocApi() {
+        return new News("ioGame javadoc api", "https://www.yuque.com/iohao/game/nlbkmzn76mxnmhv6");
+    }
+
     private List<News> listNews() {
         List<News> list = new ArrayList<>();
 
