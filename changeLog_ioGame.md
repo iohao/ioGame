@@ -1,5 +1,255 @@
 更新日志在线文档
-https://www.yuque.com/iohao/game/ab15oe
+- [ioGame网络游戏服务器框架 (yuque.com)](https://www.yuque.com/iohao/game)
+- [框架版本更新日志 (yuque.com)](https://www.yuque.com/iohao/game/ab15oe)
+- [ioGame javadoc api](https://www.yuque.com/iohao/game/nlbkmzn76mxnmhv6)
+
+
+
+#### 2024-05-19 - v21.8
+
+https://github.com/iohao/ioGame/releases/tag/21.8
+
+
+---
+
+**版本更新汇总**
+
+- [light-game-room]  [#278](https://github.com/iohao/ioGame/issues/278) 桌游类、房间类游戏的扩展模块，简化与规范化房间管理相关的、开始游戏流程相关的、玩法操作相关的相关扩展
+- [core]  [#290](https://github.com/iohao/ioGame/issues/290) 新增广播文档构建器，简化生成广播对接文档
+- [示例集合整理] 将 SimpleExample（文档中所有功能点的示例）、SpringBootExample（[综合示例](https://www.yuque.com/iohao/game/ruaqza)）、ioGameWeb2Game（[web 转游戏 - 示例理解篇](https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z)）、fxglSimpleGame（[移动同步](https://www.yuque.com/iohao/game/bolt) FXGL + netty）合并成一个示例项目。
+
+---
+
+
+
+**[core]**  
+
+[#290](https://github.com/iohao/ioGame/issues/290) 新增广播文档构建器，简化生成广播对接文档
+
+下面是使用示例
+
+```java
+public class MyLogicServer extends AbstractBrokerClientStartup {
+    @Override
+    public BarSkeleton createBarSkeleton() {
+        // 业务框架构建器
+        BarSkeletonBuilder builder = ...
+        
+        // 错误码、广播、推送对接文档生成
+        extractedDco(builder);
+
+        return builder.build();
+    }
+    
+    private void extractedDco(BarSkeletonBuilder builder) {
+        // 错误码
+        Arrays.stream(GameCode.values()).forEach(builder::addMsgExceptionInfo);
+
+        // UserCmd
+        builder.addBroadcastDoc(BroadcastDoc.newBuilder(UserCmd.of(UserCmd.enterSquare))
+                .setDataClass(SquarePlayer.class)
+                .setDescription("新玩家加入房间，给房间内的其他玩家广播")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(UserCmd.of(UserCmd.move))
+                .setDataClass(SquarePlayerMove.class)
+                .setDescription("其他玩家的移动")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(UserCmd.of(UserCmd.offline))
+                .setDataClass(LongValue.class)
+                .setDescription("有玩家下线了。userId")
+        );
+
+        // room
+        builder.addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.roomUpdateBroadcast))
+                .setDataClass(FightRoomNotice.class)
+                .setDescription("房间更新通知")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.playerEnterRoomBroadcast))
+                .setDataClass(FightPlayer.class)
+                .setDescription("有新玩家加入房间")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.enterRoom))
+                .setDataClass(FightEnterRoom.class)
+                .setDescription("玩家自己进入房间")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.dissolveRoomBroadcast))
+                .setDescription("解散房间")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.quitRoom))
+                .setDataClass(LongValue.class)
+                .setDescription("有玩家退出房间了。userId")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.ready))
+                .setDataClass(PlayerReady.class)
+                .setDescription("有玩家准备或取消准备了")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.nextRoundBroadcast))
+                .setDataClass(IntValue.class)
+                .setDescription("对局开始，通知玩家开始选择。round 当前对局数")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.operationBroadcast))
+                .setDataClass(LongValue.class)
+                .setDescription("通知其他玩家，有玩家做了选择。userId")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.littleSettleBroadcast))
+                .setDataClassList(FightRoundPlayerScore.class)
+                .setDescription("广播玩家对局分数")
+        ).addBroadcastDoc(BroadcastDoc.newBuilder(RoomCmd.of(RoomCmd.gameOverBroadcast))
+                .setDescription("游戏结束")
+        );
+    }
+}
+```
+
+
+
+其他扩展阅读
+- [游戏对接文档生成 (yuque.com)](https://www.yuque.com/iohao/game/irth38)
+- 示例中关于错误码可阅读 [断言 + 异常机制 = 清晰简洁的代码 (yuque.com)](https://www.yuque.com/iohao/game/avlo99)
+- [解决协议碎片 (yuque.com)](https://www.yuque.com/iohao/game/ieimzn)
+
+下面是生成后的对接文档预览
+
+```text
+==================== 游戏文档格式说明 ====================
+https://www.yuque.com/iohao/game/irth38#cJLdC
+
+==================== FightHallAction 大厅（类似地图） ====================
+路由: 1 - 1  --- 【登录】 --- 【FightHallAction:67】【loginVerify】
+    方法参数: LoginVerify loginVerify 登录验证
+    方法返回值: UserInfo 玩家信息
+ 
+路由: 1 - 2  --- 【进入大厅】 --- 【FightHallAction:95】【enterSquare】
+    方法参数: EnterSquare enterSquare 进入大厅
+    方法返回值: ByteValueList<SquarePlayer> 所有玩家
+    广播推送: SquarePlayer 新玩家加入房间，给房间内的其他玩家广播
+ 
+路由: 1 - 4  --- 【玩家移动】 --- 【FightHallAction:131】【move】
+    方法参数: SquarePlayerMove squarePlayerMove 玩家移动
+    方法返回值: void 
+    广播推送: SquarePlayerMove 其他玩家的移动
+ 
+路由: 1 - 5  --- 【玩家下线】 --- 【FightHallAction:155】【offline】
+    方法返回值: void 
+    广播推送: LongValue 有玩家下线了。userId
+ 
+
+==================== FightRoomAction  ====================
+路由: 2 - 1  --- 【玩家创建新房间】 --- 【FightRoomAction:63】【createRoom】
+    方法返回值: void 
+ 
+路由: 2 - 2  --- 【玩家进入房间】 --- 【FightRoomAction:96】【enterRoom】
+    方法参数: LongValue roomId      房间号
+    方法返回值: void 房间信息
+    广播推送: FightEnterRoom 玩家自己进入房间
+ 
+路由: 2 - 3  --- 【玩家退出房间】 --- 【FightRoomAction:120】【quitRoom】
+    方法返回值: void 
+    广播推送: LongValue 有玩家退出房间了。userId
+ 
+路由: 2 - 4  --- 【玩家准备】 --- 【FightRoomAction:146】【ready】
+    方法参数: BoolValue ready       true 表示准备，false 则是取消准备
+    方法返回值: void 
+    广播推送: PlayerReady 有玩家准备或取消准备了
+ 
+路由: 2 - 5  --- 【房间列表】 --- 【FightRoomAction:222】【listRoom】
+    方法返回值: ByteValueList<FightRoomNotice> 房间列表
+ 
+路由: 2 - 6  --- 【玩家在游戏中的操作】 --- 【FightRoomAction:191】【operation】
+    方法参数: FightOperationCommand command     玩家操作数据
+    方法返回值: void 
+ 
+路由: 2 - 7  --- 【开始游戏】 --- 【FightRoomAction:162】【startGame】
+    方法返回值: void 
+ 
+
+==================== 其它广播推送 ====================
+路由: 2 - 51  --- 广播推送: FightRoomNotice (房间更新通知)
+路由: 2 - 50  --- 广播推送: FightPlayer (有新玩家加入房间)
+路由: 2 - 52  --- 广播推送: IntValue (对局开始，通知玩家开始选择。round 当前对局数)
+路由: 2 - 53  --- 广播推送: LongValue (通知其他玩家，有玩家做了选择。userId)
+路由: 2 - 56  --- 广播推送: none (解散房间)
+路由: 2 - 54  --- 广播推送: ByteValueList<FightRoundPlayerScore> (广播玩家对局分数)
+路由: 2 - 55  --- 广播推送: none (游戏结束)
+==================== 错误码 ====================
+ -1008 : 绑定的游戏逻辑服不存在 
+ -1007 : 强制玩家下线 
+ -1006 : 数据不存在 
+ -1005 : class 不存在 
+ -1004 : 请先登录 
+ -1003 : 心跳超时相关 
+ -1002 : 路由错误 
+ -1001 : 参数验错误 
+ -1000 : 系统其它错误 
+ 1 : 玩家在房间里 
+ 3 : 房间不存在 
+ 4 : 非法操作 
+ 6 : 开始游戏需要的最小人数不足 
+ 7 : 请等待其他玩家准备 
+ 8 : 房间空间不足，人数已满 
+
+```
+
+---
+
+
+
+**[light-game-room]**
+
+room 模块相关文档 - [room 桌游、房间类 (yuque.com)](https://www.yuque.com/iohao/game/vtzbih)
+
+[#278](https://github.com/iohao/ioGame/issues/278) 桌游类、房间类游戏的扩展模块，简化与规范化房间管理相关的、开始游戏流程相关的、玩法操作相关的相关扩展
+
+
+
+light-game-room 房间，是 ioGame 提供的一个轻量小部件 - 可按需选择的模块。
+
+> **light-game-room + 领域事件 + 内置 Kit  = 轻松搞定桌游类游戏**
+
+
+
+该模块是桌游类、房间类游戏的解决方案。比较适合桌游类、房间类的游戏基础搭建，基于该模型可以做一些如，炉石传说、三国杀、斗地主、麻将 ...等类似的桌游。或者说只要是房间类的游戏，该模型都适用。比如，CS、泡泡堂、飞行棋、坦克大战 ...等。
+
+
+
+如果你计划做一些桌游类的游戏，那么推荐你基于该模块做扩展。该模块遵循面向对象的设计原则，没有强耦合，可扩展性强。且帮助开发者屏蔽了很多重复性的工作，并可为项目中的功能模块结构、开发流程等进行清晰的组织定义，减少了后续的项目维护成本。
+
+
+
+**主要解决的问题与职责**
+
+桌游、房间类的游戏在功能职责上可以分为 3 大类，分别是
+
+1. **房间管理相关的**
+   1. 管理着所有的房间、查询房间列表、房间的添加、房间的删除、房间与玩家之间的关联、房间查找（通过 roomId 查找、通过 userId 查找）。
+1. **开始游戏流程相关的**
+   1. 通常桌游、房间类的游戏都有一些固定的流程，如创建房间、玩家进入房间、玩家退出房间、解散房间、玩家准备、开始游戏 ...等。
+   2. 开始游戏时，需要做开始前的验证，如房间内的玩家是否符足够 ...等，当一切符合业务时，才是真正的开始游戏。
+1. **玩法操作相关的**
+   1. 游戏开始后，由于不同游戏之间的具体操作是不相同的。如坦克的射击，炉石的战前选牌、出牌，麻将的吃、碰、杠、过、胡，回合制游戏的普攻、防御、技能 ...等。
+   2. 由于玩法操作的不同，所以我们的玩法操作需要是可扩展的，并用于处理具体的玩法操作。同时这种扩展方式更符合单一职责，使得我们后续的扩展与维护成本更低。
+
+以上功能职责（房间管理相关、流程相关、玩法操作相关）属于相对通用的功能。如果每款游戏都重复的做这些工作，除了枯燥之外，还将浪费巨大的人力成本。
+
+而当前模块则能很好的帮助开发者屏蔽这些重复性的工作，并可为项目中的功能模块结构、开发流程等进行清晰的组织定义，减少了后续的项目维护成本。更重要的是有相关文档，将来当你的团队有新进成员时，可以快速的上手。
+
+---
+
+
+
+**room 实战简介**
+
+[room 桌游、房间类实战(yuque.com)](https://www.yuque.com/iohao/game/vtzbih#JX2i1)
+
+文档中，我们基于该 room 模块做一个实战示例，该示例整体比较简单，多名玩家在房间里猜拳（石头、剪刀、布）得分。实战示例包括了前后端，前端使用 [FXGL](https://github.com/almasB/FXGL) 引擎，这样开发者在学习时，只需 JDK 环境就可以了，而不需要安装更多的环境。启动游戏后玩家会将加入大厅（类似地图），多名玩家相互可见，并且玩家可以在大厅内移动。
+
+
+
+---
+
+
+
+[示例集合整理] 
+
+将 SimpleExample（文档中所有功能点的示例）、SpringBootExample（[综合示例](https://www.yuque.com/iohao/game/ruaqza)）、ioGameWeb2Game（[web 转游戏 - 示例理解篇](https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z)）、fxglSimpleGame（[移动同步](https://www.yuque.com/iohao/game/bolt) FXGL + netty）合并成一个示例项目。
+
+
+
+| github                                                     | gitee                                                     |
+| ---------------------------------------------------------- | --------------------------------------------------------- |
+| [ioGame 示例集合](https://github.com/iohao/ioGameExamples) | [ioGame 示例集合](https://gitee.com/iohao/ioGameExamples) |
+
+
 
 
 
