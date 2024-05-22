@@ -21,6 +21,7 @@ package com.iohao.game.bolt.broker.core.client;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.DevConfig;
 import com.iohao.game.action.skeleton.core.commumication.BroadcastContext;
+import com.iohao.game.action.skeleton.kit.RangeBroadcast;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastOrderMessage;
@@ -153,8 +154,8 @@ class BroadcastDebug {
                 return index + 1;
             }
 
-            // 房间内的广播
-            if ("com.iohao.game.widget.light.room.AbstractRoom".equals(name)) {
+            // 范围广播
+            if (RangeBroadcast.class.getName().equals(name)) {
                 return index + 1;
             }
         }
