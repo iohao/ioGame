@@ -82,6 +82,71 @@ import java.util.Set;
  *                 .execute();
  * }
  * </pre>
+ * 此外，还支持协议碎片及 List。关于协议碎片可阅读 <a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片 - 文档</a>
+ * for example
+ * <pre>{@code
+ *     // ------------ object ------------
+ *     // 广播单个对象
+ *     DemoBroadcastMessage message = new DemoBroadcastMessage();
+ *     message.msg = "helloBroadcast --- 1";
+ *
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessage(cmdInfo, message);
+ *
+ *     List<DemoBroadcastMessage> messageList = List.of(message);
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessageList(cmdInfo, messageList);
+ *
+ *     // ------------ int ------------
+ *
+ *     // 广播 int
+ *     int intValue = 1;
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessage(cmdInfo, intValue);
+ *
+ *     // 广播 int list
+ *     List<Integer> intValueList = List.of(1, 2);
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessageIntList(cmdInfo, intValueList);
+ *
+ *     // ------------ long ------------
+ *
+ *     // 广播 long
+ *     long longValue = 1L;
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessage(cmdInfo, longValue);
+ *
+ *     // 广播 long list
+ *     List<Long> longValueList = List.of(1L, 2L);
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessageLongList(cmdInfo, longValueList);
+ *
+ *     // ------------ String ------------
+ *
+ *     // 广播 String
+ *     String stringValue = "1";
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessage(cmdInfo, stringValue);
+ *
+ *     // 广播 String list
+ *     List<String> stringValueList = List.of("1L", "2L");
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessageStringList(cmdInfo, stringValueList);
+ *
+ *     // ------------ boolean ------------
+ *
+ *     // 广播 boolean
+ *     boolean boolValue = true;
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessage(cmdInfo, boolValue);
+ *
+ *     // 广播 boolean list
+ *     List<Boolean> boolValueList = List.of(true, false);
+ *     new RangeBroadcast(flowContext)
+ *             .setResponseMessageBoolList(cmdInfo, boolValueList);
+ * }
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2024-04-23
@@ -298,7 +363,7 @@ public class RangeBroadcast {
      * @param bizData 业务数据
      * @return this
      */
-    public RangeBroadcast setResponseMessageList(CmdInfo cmdInfo, List<? extends Object> bizData) {
+    public RangeBroadcast setResponseMessageList(CmdInfo cmdInfo, Collection<? extends Object> bizData) {
         var value = ByteValueList.ofList(bizData);
         return this.setResponseMessage(cmdInfo, value);
     }
@@ -398,5 +463,4 @@ public class RangeBroadcast {
         var value = BoolValueList.of(bizData);
         return this.setResponseMessage(cmdInfo, value);
     }
-
 }

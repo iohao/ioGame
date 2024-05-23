@@ -149,7 +149,8 @@ class DocInfo {
             if (Objects.nonNull(actionSendDoc)) {
                 String dataClassName = actionSendDoc.getDataClassName();
                 String description = actionSendDoc.getDescription();
-                format = StrKit.format("    广播推送: {} {}", dataClassName, description);
+                String dataDescription = actionSendDoc.getDataDescription();
+                format = StrKit.format("    广播推送: {} {}，({})", dataClassName, dataDescription, description);
                 lineList.add(format);
             }
 

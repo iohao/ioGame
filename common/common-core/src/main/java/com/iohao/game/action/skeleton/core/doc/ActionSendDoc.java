@@ -20,11 +20,10 @@ package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.action.skeleton.annotation.DocActionSend;
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Optional;
 
 /**
  * @author 渔民小镇
@@ -44,8 +43,10 @@ public final class ActionSendDoc {
     String description;
     /** true 已经被读取过一次或以上 */
     boolean read;
-
+    /** 业务参数 */
     String dataClassName;
+    /** 广播业务参数的描述 */
+    String dataDescription;
 
     public ActionSendDoc(DocActionSend docActionSend) {
         this(docActionSend.cmd(), docActionSend.subCmd(), docActionSend.dataClass(), docActionSend.description());

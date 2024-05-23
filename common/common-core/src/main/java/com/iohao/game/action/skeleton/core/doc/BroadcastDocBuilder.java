@@ -46,6 +46,8 @@ public final class BroadcastDocBuilder {
     String description;
     @Setter(AccessLevel.PRIVATE)
     String dataClassName;
+    /** 广播业务参数的描述 */
+    String dataDescription;
 
     BroadcastDocBuilder(CmdInfo cmdInfo) {
         this.cmdInfo = cmdInfo;
@@ -71,6 +73,19 @@ public final class BroadcastDocBuilder {
      * @return this
      */
     public BroadcastDocBuilder setDataClass(Class<?> dataClass) {
+        return setDataClass(dataClass, "");
+    }
+
+    /**
+     * set 推送的数据类型
+     *
+     * @param dataClass       推送的数据类型
+     * @param dataDescription 业务数据描述
+     * @return this
+     */
+    public BroadcastDocBuilder setDataClass(Class<?> dataClass, String dataDescription) {
+
+        this.dataDescription = dataDescription;
 
         dataClassName = WrapperKit.optionalRefType(dataClass)
                 .map(Class::getSimpleName)
@@ -93,6 +108,7 @@ public final class BroadcastDocBuilder {
         ActionSendDoc actionSendDoc = new ActionSendDoc(this.cmdInfo);
         actionSendDoc.setDescription(this.description);
         actionSendDoc.setDataClassName(this.dataClassName);
+        actionSendDoc.setDataDescription(this.dataDescription);
 
         return actionSendDoc;
     }

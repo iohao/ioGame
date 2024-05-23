@@ -169,10 +169,10 @@ public class BarSkeletonDoc {
 
         for (ActionSendDoc actionSendDoc : actionSendDocList) {
 
-            String template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass}";
+            String template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}";
 
             if (StrKit.isNotEmpty(actionSendDoc.getDescription())) {
-                template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} ({description})";
+                template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}，({description})";
             }
 
             var stringObjectMap = new HashMap<>();
@@ -180,6 +180,7 @@ public class BarSkeletonDoc {
             stringObjectMap.put("subCmd", actionSendDoc.getSubCmd());
             stringObjectMap.put("dataClass", actionSendDoc.getDataClassName());
             stringObjectMap.put("description", actionSendDoc.getDescription());
+            stringObjectMap.put("dataDescription", actionSendDoc.getDataDescription());
 
             String format = StrKit.format(template, stringObjectMap);
 
