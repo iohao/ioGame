@@ -104,6 +104,7 @@ public final class BroadcastDocBuilder {
         Objects.requireNonNull(this.description);
 
         this.dataClassName = Optional.ofNullable(this.dataClassName).orElse("none");
+        this.dataDescription = Optional.ofNullable(this.dataDescription).orElse("");
 
         ActionSendDoc actionSendDoc = new ActionSendDoc(this.cmdInfo);
         actionSendDoc.setDescription(this.description);
