@@ -113,12 +113,7 @@ public interface RoomCreateContext {
      * @return 如果 option 不存在，则使用默认的 option 值。
      */
     default <T> T option(AttrOption<T> option) {
-        T value = this.getOptions().option(option);
-        if (Objects.isNull(value)) {
-            value = option.defaultValue();
-        }
-
-        return value;
+        return this.getOptions().option(option);
     }
 
     /**

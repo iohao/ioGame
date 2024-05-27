@@ -363,7 +363,7 @@ public class RangeBroadcast {
      * @param bizData 业务数据
      * @return this
      */
-    public RangeBroadcast setResponseMessageList(CmdInfo cmdInfo, Collection<? extends Object> bizData) {
+    public RangeBroadcast setResponseMessageList(CmdInfo cmdInfo, Collection<?> bizData) {
         var value = ByteValueList.ofList(bizData);
         return this.setResponseMessage(cmdInfo, value);
     }

@@ -20,6 +20,7 @@ package com.iohao.game.common.kit.attr;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * 动态属性的属性项
@@ -31,7 +32,27 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2022-01-31
  */
-public record AttrOption<T>(String name, T defaultValue) implements Serializable {
+public final class AttrOption<T> implements Serializable {
+    final String name;
+    final T defaultValue;
+    final Supplier<T> supplier;
+
+    AttrOption(String name, T devault, Supplier<T> supplier) {
+        Objects.requireNonNull(name);
+
+        this.name = name;
+        this.defaultValue = devault;
+        this.supplier = supplier;
+    }
+
+    public String name() {
+        return this.name;
+    }
+
+    public T defaultValue() {
+        return this.defaultValue;
+    }
+
     /**
      * 初始化 一个 AttrOption
      *
@@ -40,20 +61,31 @@ public record AttrOption<T>(String name, T defaultValue) implements Serializable
      * @return AttrOption
      */
     public static <T> AttrOption<T> valueOf(String name) {
-        return valueOf(name, null);
+        return new AttrOption<>(name, null, null);
     }
 
     /**
      * 初始化 一个 AttrOption
      *
      * @param name         name
-     * @param defaultValue 默认值
+     * @param defaultValue 默认值（单例）
      * @param <T>          t
      * @return AttrOption
      */
     public static <T> AttrOption<T> valueOf(String name, T defaultValue) {
-        Objects.requireNonNull(name);
-        return new AttrOption<>(name, defaultValue);
+        return new AttrOption<>(name, defaultValue, null);
+    }
+
+    /**
+     * 初始化一个 AttrOption
+     *
+     * @param name     name
+     * @param supplier 如果值不存在，则从 supplier 获取
+     * @param <T>      t
+     * @return AttrOption
+     */
+    public static <T> AttrOption<T> valueOf(String name, Supplier<T> supplier) {
+        return new AttrOption<>(name, null, supplier);
     }
 
     @Override
