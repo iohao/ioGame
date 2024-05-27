@@ -74,5 +74,4 @@ public class SimpleRoom implements Room {
         // 为房间设置通讯接口
         aggregationContext = BrokerClientHelper.getBrokerClient().getCommunicationAggregationContext();
     }
-
 }

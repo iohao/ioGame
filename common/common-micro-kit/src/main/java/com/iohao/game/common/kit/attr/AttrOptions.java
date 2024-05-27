@@ -24,7 +24,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 
 /**
  * 动态属性的选项载体
@@ -56,15 +55,17 @@ public class AttrOptions implements Serializable {
             return (T) value;
         }
 
+        if (Objects.nonNull(option.supplier)) {
+            T newValue = option.supplier.get();
+            this.option(option, newValue);
+            return newValue;
+        }
+
         if (Objects.nonNull(option.defaultValue)) {
             return option.defaultValue;
         }
 
-        if (Objects.nonNull(option.supplier)) {
-            this.option(option, option.supplier.get());
-        }
-
-        return (T) options.get(option);
+        return null;
     }
 
     /**

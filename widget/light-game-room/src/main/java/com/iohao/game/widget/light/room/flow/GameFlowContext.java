@@ -24,8 +24,6 @@ import com.iohao.game.common.kit.attr.AttrOptions;
 import com.iohao.game.widget.light.room.Player;
 import com.iohao.game.widget.light.room.Room;
 
-import java.util.Objects;
-
 /**
  * 上下文 - 游戏流程上下文。
  *
@@ -92,12 +90,7 @@ public interface GameFlowContext {
      * @return 如果 option 不存在，则使用默认的 option 值。
      */
     default <T> T option(AttrOption<T> option) {
-        T value = this.getOptions().option(option);
-        if (Objects.isNull(value)) {
-            value = option.defaultValue();
-        }
-
-        return value;
+        return this.getOptions().option(option);
     }
 
     /**
@@ -116,10 +109,20 @@ public interface GameFlowContext {
      * 创建 GameFlowContext（框架内置的默认实现）
      *
      * @param room        房间
-     * @param flowContext flowContext
+     * @param flowContext flowContext 当前玩家
      * @return GameFlowContext
      */
     static GameFlowContext of(Room room, FlowContext flowContext) {
         return new SimpleGameFlowContext(room, flowContext);
+    }
+
+    /**
+     * 创建 GameFlowContext（框架内置的默认实现）
+     *
+     * @param room 房间
+     * @return GameFlowContext
+     */
+    static GameFlowContext of(Room room) {
+        return of(room, null);
     }
 }
