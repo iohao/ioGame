@@ -18,9 +18,6 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
-import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.common.kit.attr.AttrOptions;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -43,7 +40,6 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 final class SimpleRoomCreateContext implements RoomCreateContext {
     final long creatorUserId;
-    final CommunicationAggregationContext aggregationContext;
 
     long gameId;
     int spaceSize;
@@ -64,8 +60,7 @@ final class SimpleRoomCreateContext implements RoomCreateContext {
         return this;
     }
 
-    SimpleRoomCreateContext(FlowContext flowContext) {
-        this.creatorUserId = flowContext.getUserId();
-        this.aggregationContext = flowContext.option(FlowAttr.aggregationContext);
+    SimpleRoomCreateContext(long creatorUserId) {
+        this.creatorUserId = creatorUserId;
     }
 }

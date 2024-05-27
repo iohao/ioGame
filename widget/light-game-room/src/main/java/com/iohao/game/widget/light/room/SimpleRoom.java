@@ -19,6 +19,7 @@
 package com.iohao.game.widget.light.room;
 
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
+import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
 import com.iohao.game.widget.light.room.flow.RoomCreateContext;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -67,6 +68,11 @@ public class SimpleRoom implements Room {
     int spaceSize;
     /** 房间状态 */
     RoomStatusEnum roomStatusEnum = RoomStatusEnum.wait;
-    /** 通讯上下文 */
     CommunicationAggregationContext aggregationContext;
+
+    public SimpleRoom() {
+        // 为房间设置通讯接口
+        aggregationContext = BrokerClientHelper.getBrokerClient().getCommunicationAggregationContext();
+    }
+
 }

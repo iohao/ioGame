@@ -18,12 +18,9 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.attr.AttrOption;
 import com.iohao.game.common.kit.attr.AttrOptions;
-
-import java.util.Objects;
 
 /**
  * 上下文 - 创建房间信息（及玩法规则）
@@ -67,13 +64,6 @@ public interface RoomCreateContext {
      * @return 开始游戏需要的最小人数
      */
     int getStartGameMinSpaceSize();
-
-    /**
-     * get 框架网络通讯聚合接口
-     *
-     * @return 框架网络通讯聚合接口
-     */
-    CommunicationAggregationContext getAggregationContext();
 
     /**
      * 设置房间空间大小
@@ -131,10 +121,30 @@ public interface RoomCreateContext {
     /**
      * 创建一个 RoomCreateContext 对象，使用默认实现
      *
-     * @param flowContext flowContext
+     * @param creatorUserId creatorUserId 房间创建者
+     * @return default RoomCreateContext
+     */
+    static RoomCreateContext of(long creatorUserId) {
+        return new SimpleRoomCreateContext(creatorUserId);
+    }
+
+    /**
+     * 创建一个 RoomCreateContext 对象，使用默认实现
+     *
+     * @param flowContext flowContext 房间创建者
      * @return default RoomCreateContext
      */
     static RoomCreateContext of(FlowContext flowContext) {
-        return new SimpleRoomCreateContext(flowContext);
+        long userId = flowContext.getUserId();
+        return of(userId);
+    }
+
+    /**
+     * 创建一个 RoomCreateContext 对象，使用默认实现
+     *
+     * @return default RoomCreateContext
+     */
+    static RoomCreateContext of() {
+        return of(0);
     }
 }
