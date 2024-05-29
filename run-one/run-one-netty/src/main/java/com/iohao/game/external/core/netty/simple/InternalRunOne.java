@@ -57,7 +57,6 @@ class InternalRunOne {
     void startupLogic() {
         // 启动游戏逻辑服
         if (Objects.nonNull(this.logicServerList)) {
-
             this.logicServerList.forEach(logicServer -> {
                 logicServer.setWithNo(this.getWithNo());
                 this.executorService.execute(() -> BrokerClientApplication.start(logicServer));

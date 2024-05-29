@@ -105,7 +105,6 @@ interface SimpleAttachment extends SimpleCommunicationInvokeExternalModule {
      * @param attachment 元信息
      */
     default void updateAttachment(final UserAttachment attachment) {
-        Objects.requireNonNull(attachment);
 
         HeadMetadata headMetadata = this.getHeadMetadata();
         long userId = headMetadata.getUserId();
@@ -114,9 +113,13 @@ interface SimpleAttachment extends SimpleCommunicationInvokeExternalModule {
             throw new RuntimeException("userId <= 0");
         }
 
+        // 将元信息更新到 HeadMetadata 中
+        byte[] headMetadataEncode = DataCodecKit.encode(attachment);
+        headMetadata.setAttachmentData(headMetadataEncode);
+
         // 根据业务码，调用游戏对外服与业务码对应的业务实现类 （AttachmentExternalBizRegion、ExternalBizCodeCont）
         int bizCode = IoGameCommonCoreConfig.ExternalBizCode.attachment;
-        this.invokeExternalModuleCollectMessage(bizCode, attachment);
+        this.invokeExternalModuleCollectMessage(bizCode, headMetadataEncode);
     }
 
     /**

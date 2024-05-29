@@ -18,10 +18,8 @@
  */
 package com.iohao.game.external.core.broker.client.ext.impl;
 
-import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.exception.MsgException;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
-import com.iohao.game.core.common.client.Attachment;
 import com.iohao.game.core.common.client.ExternalBizCodeCont;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegion;
 import com.iohao.game.external.core.broker.client.ext.ExternalBizRegionContext;
@@ -47,10 +45,9 @@ public final class AttachmentExternalBizRegion implements ExternalBizRegion {
         ExternalBizRegionKit.checkUserExist(regionContext);
 
         RequestCollectExternalMessage request = regionContext.getRequestCollectExternalMessage();
+        long userId = request.getUserId();
+        byte[] bytes = request.getData();
 
-        Attachment attachment = request.getData();
-        long userId = attachment.getUserId();
-        byte[] bytes = DataCodecKit.encode(attachment);
         var userSessions = regionContext.getUserSessions();
         userSessions.ifPresent(userId, userSession -> userSession.option(UserSessionOption.attachment, bytes));
 
