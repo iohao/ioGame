@@ -41,7 +41,7 @@ package com.iohao.game.common.kit.concurrent;
  * @date 2023-12-01
  * @see TaskKit
  */
-public interface IntervalTaskListener extends TaskListener {
+public interface IntervalTaskListener extends CommonTaskListener {
     /**
      * 是否活跃
      *
