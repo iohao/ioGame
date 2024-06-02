@@ -18,13 +18,10 @@
  */
 package com.iohao.game.action.skeleton.kit;
 
-import com.iohao.game.action.skeleton.core.BarMessageKit;
-import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.action.skeleton.protocol.wrapper.*;
 import com.iohao.game.common.kit.CollKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,8 +29,6 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashSet;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -150,10 +145,11 @@ import java.util.Set;
  *
  * @author 渔民小镇
  * @date 2024-04-23
+ * @since 21.8
  */
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RangeBroadcast {
+public class RangeBroadcast implements RangeBroadcaster {
     @Getter(AccessLevel.PROTECTED)
     final CommunicationAggregationContext aggregationContext;
     /** 需要推送的 userId 列表 */
@@ -165,7 +161,7 @@ public class RangeBroadcast {
     /** 是否执行发送领域事件操作: true 执行推送操作 */
     boolean doSend = true;
     /** 检查 userIds ；当值为 true 时，userIds 必须有元素 */
-    boolean checkEmptyUser = true;
+    boolean checkEmptyUser = false;
 
     /**
      * create by CommunicationAggregationContext
@@ -184,6 +180,32 @@ public class RangeBroadcast {
      */
     public RangeBroadcast(FlowContext flowContext) {
         this(flowContext.option(FlowAttr.aggregationContext));
+    }
+
+    /**
+     * 检测空用户，如果没有任何用户，广播（推送）时将触发异常
+     *
+     * @return this
+     */
+    public RangeBroadcaster enableEmptyUserCheck() {
+        this.checkEmptyUser = false;
+        return this;
+    }
+
+    @Override
+    public Set<Long> listUserId() {
+        return this.userIds;
+    }
+
+    /**
+     * 设置响应的广播数据 ResponseMessage
+     *
+     * @param responseMessage ResponseMessage
+     * @return this
+     */
+    public RangeBroadcaster setResponseMessage(ResponseMessage responseMessage) {
+        this.responseMessage = responseMessage;
+        return this;
     }
 
     /**
@@ -249,7 +271,7 @@ public class RangeBroadcast {
     protected void broadcast() {
         boolean emptyUser = CollKit.isEmpty(this.userIds);
         if (checkEmptyUser && emptyUser) {
-            throw new RuntimeException("没有添加消息推送人 " + this.getClass());
+            throw new RuntimeException("没有添加消息推送人");
         }
 
         // 推送响应（广播消息）给指定的用户列表
@@ -259,208 +281,9 @@ public class RangeBroadcast {
     }
 
     /**
-     * 接收广播的用户
-     *
-     * @param userIds userIds
-     * @return this
-     */
-    public RangeBroadcast addUserId(Collection<Long> userIds) {
-        this.userIds.addAll(userIds);
-        return this;
-    }
-
-    /**
-     * 接收广播的用户
-     *
-     * @param userId userId
-     * @return this
-     */
-    public RangeBroadcast addUserId(long userId) {
-        this.userIds.add(userId);
-        return this;
-    }
-
-    /**
-     * 添加接收广播的用户，顺带排除一个不需要接收广播的用户
-     *
-     * @param userIds       接收广播的 userIds
-     * @param excludeUserId 需要排除的 userId
-     * @return this
-     */
-    public RangeBroadcast addUserId(Collection<Long> userIds, long excludeUserId) {
-        return this.addUserId(userIds).removeUserId(excludeUserId);
-    }
-
-    /**
-     * 排除 userId
-     *
-     * @param excludeUserId 需要排除的 userId
-     * @return this
-     */
-    public RangeBroadcast removeUserId(long excludeUserId) {
-        if (excludeUserId > 0) {
-            this.userIds.remove(excludeUserId);
-        }
-
-        return this;
-    }
-
-    /**
      * 不执行推送数据的操作
      */
     protected void disableSend() {
         this.doSend = false;
-    }
-
-    /**
-     * 不检测空用户，如果没有任何用户，将不会触发广播（推送）
-     *
-     * @return me
-     */
-    public RangeBroadcast disableEmptyUserCheck() {
-        this.checkEmptyUser = false;
-        return this;
-    }
-
-    /**
-     * 设置响应的广播数据 ResponseMessage
-     *
-     * @param responseMessage ResponseMessage
-     * @return this
-     */
-    public RangeBroadcast setResponseMessage(ResponseMessage responseMessage) {
-        this.responseMessage = responseMessage;
-        return this;
-    }
-
-    /**
-     * 设置响应的广播数据
-     *
-     * @param cmdInfo 路由
-     * @return this
-     */
-    public RangeBroadcast setResponseMessage(CmdInfo cmdInfo) {
-        var responseMessage = BarMessageKit.createResponseMessage(cmdInfo);
-        return this.setResponseMessage(responseMessage);
-    }
-
-    /**
-     * 设置响应的广播数据
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessage(CmdInfo cmdInfo, Object bizData) {
-        var responseMessage = BarMessageKit.createResponseMessage(cmdInfo, bizData);
-        return this.setResponseMessage(responseMessage);
-    }
-
-    /**
-     * 设置响应的广播数据。业务数据会使用 {@link ByteValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessageList(CmdInfo cmdInfo, Collection<?> bizData) {
-        var value = ByteValueList.ofList(bizData);
-        return this.setResponseMessage(cmdInfo, value);
-    }
-
-    /**
-     * 设置响应的广播数据。业务数据会使用 {@link IntValue} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessage(CmdInfo cmdInfo, int bizData) {
-        var value = IntValue.of(bizData);
-        return this.setResponseMessage(cmdInfo, value);
-    }
-
-    /**
-     * 设置响应的广播数据。业务数据会使用 {@link IntValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessageIntList(CmdInfo cmdInfo, List<Integer> bizData) {
-        var value = IntValueList.of(bizData);
-        return this.setResponseMessage(cmdInfo, value);
-    }
-
-    /**
-     * 设置响应的广播数据。业务数据会使用 {@link LongValue} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessage(CmdInfo cmdInfo, long bizData) {
-        var value = LongValue.of(bizData);
-        return this.setResponseMessage(cmdInfo, value);
-    }
-
-    /**
-     * 设置响应的广播数据。业务数据会使用 {@link LongValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessageLongList(CmdInfo cmdInfo, List<Long> bizData) {
-        var value = LongValueList.of(bizData);
-        return this.setResponseMessage(cmdInfo, value);
-    }
-
-    /**
-     * 设置响应的广播数据。业务数据会使用 {@link StringValue} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessage(CmdInfo cmdInfo, String bizData) {
-        var value = StringValue.of(bizData);
-        return this.setResponseMessage(cmdInfo, value);
-    }
-
-    /**
-     * 设置响应的广播数据。业务数据会使用 {@link StringValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessageStringList(CmdInfo cmdInfo, List<String> bizData) {
-        var value = StringValueList.of(bizData);
-        return this.setResponseMessage(cmdInfo, value);
-    }
-
-    /**
-     * 设置响应的广播数据。业务数据会使用 {@link BoolValue} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessage(CmdInfo cmdInfo, boolean bizData) {
-        var value = BoolValue.of(bizData);
-        return this.setResponseMessage(cmdInfo, value);
-    }
-
-    /**
-     * 设置响应的广播数据。业务数据会使用 {@link BoolValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
-     *
-     * @param cmdInfo 路由
-     * @param bizData 业务数据
-     * @return this
-     */
-    public RangeBroadcast setResponseMessageBoolList(CmdInfo cmdInfo, List<Boolean> bizData) {
-        var value = BoolValueList.of(bizData);
-        return this.setResponseMessage(cmdInfo, value);
     }
 }

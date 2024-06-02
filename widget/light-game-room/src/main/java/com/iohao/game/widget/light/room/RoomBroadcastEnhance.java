@@ -19,7 +19,7 @@
 package com.iohao.game.widget.light.room;
 
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
-import com.iohao.game.action.skeleton.kit.RangeBroadcast;
+import com.iohao.game.action.skeleton.kit.RangeBroadcaster;
 
 import java.util.Collection;
 
@@ -65,7 +65,7 @@ interface RoomBroadcastEnhance {
      * @param aggregationContext aggregationContext
      * @return RangeBroadcast 范围内的广播
      */
-    default RangeBroadcast ofRangeBroadcast(CommunicationAggregationContext aggregationContext) {
+    default RangeBroadcaster ofRangeBroadcast(CommunicationAggregationContext aggregationContext) {
         return this.ofEmptyRangeBroadcast(aggregationContext)
                 // 添加上房间内的所有玩家
                 .addUserId(this.listPlayerId());
@@ -77,8 +77,8 @@ interface RoomBroadcastEnhance {
      * @param aggregationContext aggregationContext
      * @return RangeBroadcast 范围内的广播
      */
-    default RangeBroadcast ofEmptyRangeBroadcast(CommunicationAggregationContext aggregationContext) {
-        return new RangeBroadcast(aggregationContext);
+    default RangeBroadcaster ofEmptyRangeBroadcast(CommunicationAggregationContext aggregationContext) {
+        return RangeBroadcaster.of(aggregationContext);
     }
 
     /**
@@ -86,7 +86,7 @@ interface RoomBroadcastEnhance {
      *
      * @return RangeBroadcast 范围内的广播
      */
-    default RangeBroadcast ofRangeBroadcast() {
+    default RangeBroadcaster ofRangeBroadcast() {
         return this.ofRangeBroadcast(this.getAggregationContext());
     }
 
@@ -95,7 +95,7 @@ interface RoomBroadcastEnhance {
      *
      * @return RangeBroadcast 范围内的广播
      */
-    default RangeBroadcast ofEmptyRangeBroadcast() {
+    default RangeBroadcaster ofEmptyRangeBroadcast() {
         return this.ofEmptyRangeBroadcast(this.getAggregationContext());
     }
 }
