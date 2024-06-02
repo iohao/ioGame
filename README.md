@@ -152,49 +152,51 @@ ioGame 在内存占用、启动速度、打包等方面也是优秀的。
 
 ---
 
-
-
 ### 源码、示例、效率
 
-|          | github                                                      | gitee                                                      |
-| -------- | ----------------------------------------------------------- | ---------------------------------------------------------- |
-| 源码地址 | [ioGame 网络游戏框架-源码](https://github.com/iohao/ioGame) | [ioGame 网络游戏框架-源码](https://gitee.com/iohao/ioGame) |
-| 示例地址 | [ioGame 示例集合](https://github.com/iohao/ioGame-example)  | [ioGame 示例集合](https://gitee.com/iohao/ioGame-example)  |
+
+| github                                                      | gitee                                                      |
+| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| [ioGame 网络游戏框架-源码](https://github.com/iohao/ioGame) | [ioGame 网络游戏框架-源码](https://gitee.com/iohao/ioGame) |
+| [ioGame 示例集合](https://github.com/iohao/ioGame-example)  | [ioGame 示例集合](https://gitee.com/iohao/ioGame-example)  |
 
 
 
 **示例**
 
-| 地址                                                         | 描述                                                    |
+| **示例**                                                     |                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------- |
 | [u3d 连接示例文档](https://www.yuque.com/iohao/game/syv5mm)  | 已经与 ioGame 的综合示例联调成功                        |
 | [cocosCreator 连接示例文档](https://www.yuque.com/iohao/game/ua4afq) | 已经与 ioGame 的综合示例联调成功                        |
 | [UE5 连接示例文档](https://www.yuque.com/iohao/game/rus213)  | 已经与 ioGame 的综合示例联调成功                        |
-| [websocket.js 连接示例文档](https://www.yuque.com/iohao/game/knqxehz2pl1sal5s) | websocket.js 连接的一个示例，使用 json 协议来传输交互。 |
-| [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、ks8）等介绍   |
-| [FXGL-ioGame-移动同步](https://www.yuque.com/iohao/game/bolt) | FXGL + ioGame 网络游戏中的多人移动演示。                |
 | [unity Tcp 移动同步 demo](https://www.yuque.com/iohao/game/kswsfk13ocg069uf) | 提供了 unity 与 ioGame 的【多人】移动同步演示           |
-| [28 行代码做个网页聊天室](https://www.yuque.com/iohao/game/we9eppym4yno9hq2) | 基于 ioGame 框架，用 28 行代码做一个简单的网页聊天室。  |
+| [websocket.js 连接示例文档](https://www.yuque.com/iohao/game/knqxehz2pl1sal5s) | websocket.js 连接的一个示例，使用 json 协议来传输交互。 |
+|                                                              |                                                         |
+| [fxgl-ioGame-移动同步](https://www.yuque.com/iohao/game/bolt) | FXGL + ioGame 网络游戏中的多人移动演示。                |
+| [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、k8s）等介绍   |
 
 
 
 **效率**
 
-| 地址                                                         | 描述                                                         |
+| **效率**                                                     |                                                              |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [ioGame 快速理解篇](https://www.yuque.com/iohao/game/le48p1go9gkdqgih) | 快速掌握 ioGame 的概念                                       |
 | [技术栈推荐与其它参考文档](https://www.yuque.com/iohao/game/swt3ls) | 游戏开发的技术栈建议，大家可以参考一下。                     |
 | [更多游戏服务器框架推荐](https://www.yuque.com/iohao/game/ytrfic) | 如果 ioGame 不能很好的满足你的需要，请别担心，这里还有更多的 java 游戏服务器框架推荐给你。 |
+| [ioGame java SDK](https://www.yuque.com/iohao/game/ot4o45f8u9566wu0) | ioGame java SDK 主要作用是与 ioGame 服务器进行通信，为开发者简化交互过程。 |
 
 
 
 ---
 
-
-
 ### **最小依赖**
 
 ioGame 已经上传到中央仓库，如果无法下载最新的框架源码，建议开发者的 maven 仓库代理使用原生的或腾讯云的代理，目前不推荐阿里云的代理。[腾讯云代理设置可参考这里](https://www.yuque.com/iohao/game/swt3ls#Amq4K)。
+
+
+
+ioGame最新版本查看 https://www.yuque.com/iohao/game/ab15oe
 
 
 
@@ -1305,6 +1307,147 @@ public class DemoAction {
 推荐实际编程经验一年以上的人员
 
 
+<br>
+
+## 更多示例代码（广播、跨服）
+
+在上面的简单示例中，我们展示了请求/响应、跨服调用时的同步与异步回调的写法。这里，将展示更多使用通讯相关的方法，分别是：
+
+1. **广播（推送）**
+   1. 全服广播
+   2. 指定单个用户广播
+   3. 指定多个用户广播
+
+2. **跨服调用**（单个游戏逻辑服之间的交互）
+   1. 同步的调用方式
+   2. 异步回调的调用方式
+
+3. **跨服调用**（请求同类型多个游戏逻辑服通信结果）
+   1. 同步的调用方式
+   2. 异步回调的调用方式
+
+
+
+
+除了上面这三种的通讯方式外，还有更多通讯方式，可阅读相关文档：[请先读我-通讯相关](https://www.yuque.com/iohao/game/nelwuz)。
+
+```java
+@ActionController(1)
+public class TestAction {
+    ... ...省略部分代码
+    // ======== 广播相关 ========
+    // https://www.yuque.com/iohao/game/qv4qfo
+    // 特点：可向任意玩家主动发送消息
+    public void broadcast() {
+        // ======== 广播相关 --- 全服、指定用户（单个、多个） ========
+        // 全服广播 - 路由、业务数据
+        flowContext.broadcast(cmdInfo, yourData);
+
+        // 广播消息给单个用户 - 路由、业务数据、userId
+        long userId = 100;
+        flowContext.broadcast(cmdInfo, yourData, userId);
+
+        // 广播消息给指定用户列表 - 路由、业务数据、userIdList
+        List<Long> userIdList = new ArrayList<>();
+        userIdList.add(100L);
+        userIdList.add(200L);
+        flowContext.broadcast(cmdInfo, yourData, userIdList);
+
+        // ======== 广播相关 --- 给自己广播 ========
+        // 给自己发送消息 - 路由、业务数据
+        flowContext.broadcastMe(cmdInfo, yourData);
+
+        // 给自己发送消息 - 业务数据
+        // 路由则使用当前 action 的路由。
+        flowContext.broadcastMe(yourData);
+    }
+
+    // ======== 单个游戏逻辑服之间的交互 - 跨服调用 ========
+    // https://www.yuque.com/iohao/game/anguu6
+    // 特点：可接收响应
+    void invokeModuleMessage() {
+        // ======== 单个游戏逻辑服之间的交互 --- 同步 ========
+        // 路由
+        ResponseMessage responseMessage = flowContext.invokeModuleMessage(cmdInfo);
+        RoomNumMsg roomNumMsg = responseMessage.getData(RoomNumMsg.class);
+        log.info("同步调用 : {}", roomNumMsg.roomCount);
+
+        // 路由、请求参数
+        ResponseMessage responseMessage2 = flowContext.invokeModuleMessage(cmdInfo, yourData);
+        RoomNumMsg roomNumMsg2 = responseMessage2.getData(RoomNumMsg.class);
+        log.info("同步调用 : {}", roomNumMsg2.roomCount);
+
+        // ======== 单个游戏逻辑服之间的交互 --- 异步回调 ========
+        // --- 此回调写法，具备全链路调用日志跟踪 ---
+        // 路由、回调
+        flowContext.invokeModuleMessageAsync(cmdInfo, responseMessage -> {
+            RoomNumMsg roomNumMsg = responseMessage.getData(RoomNumMsg.class);
+            log.info("异步回调 : {}", roomNumMsg.roomCount);
+        });
+
+        // 路由、请求参数、回调
+        flowContext.invokeModuleMessageAsync(cmdInfo, yourData, responseMessage -> {
+            RoomNumMsg roomNumMsg = responseMessage.getData(RoomNumMsg.class);
+            log.info("异步回调 : {}", roomNumMsg.roomCount);
+        });
+    }
+
+    // ======== 单个游戏逻辑服之间的交互 - 跨服调用 ========
+    // https://www.yuque.com/iohao/game/anguu6
+    // 特点：异步，不需要接收响应
+    void invokeModuleVoidMessage() {
+        // 适合不需要接收响应的业务，默认异步
+        
+        // 路由
+        flowContext.invokeModuleVoidMessage(cmdInfo);
+        // 路由、请求参数
+        flowContext.invokeModuleVoidMessage(cmdInfo, yourData);
+    }
+
+    // ======== 请求同类型多个逻辑服通信结果 - 跨同类型多个游戏逻辑服调用 ========
+    // https://www.yuque.com/iohao/game/rf9rb9
+    // 特点：可同时接收多个游戏逻辑服的响应
+    void invokeModuleCollectMessage() {
+        // ======== 请求同类型多个逻辑服通信结果 --- 同步 ========
+        // 路由
+        ResponseCollectMessage response = flowContext.invokeModuleCollectMessage(cmdInfo);
+
+        // 打印其他游戏逻辑服所响应的数据
+        for (ResponseCollectItemMessage message : response.getMessageList()) {
+            RoomNumMsg roomNumMsg = message.getData(RoomNumMsg.class);
+            log.info("同步调用 : {}", roomNumMsg.roomCount);
+        }
+
+        // 路由、请求参数
+        ResponseCollectMessage response2 = flowContext.invokeModuleCollectMessage(cmdInfo, yourData);
+        log.info("同步调用 : {}", response2.getMessageList());
+
+        // ======== 请求同类型多个逻辑服通信结果 --- 异步回调 ========
+        // --- 此回调写法，具备全链路调用日志跟踪 ---
+
+        // 路由、回调
+        flowContext.invokeModuleCollectMessageAsync(cmdInfo, responseCollectMessage -> {
+            List<ResponseCollectItemMessage> messageList = responseCollectMessage.getMessageList();
+
+            for (ResponseCollectItemMessage message : messageList) {
+                RoomNumMsg roomNumMsg = message.getData(RoomNumMsg.class);
+                log.info("异步回调 : {}", roomNumMsg.roomCount);
+            }
+        });
+
+        // 路由、请求参数、回调
+        flowContext.invokeModuleCollectMessageAsync(cmdInfo, yourData, responseCollectMessage -> {
+            log.info("异步回调 : {}", responseCollectMessage.getMessageList());
+        });
+    }
+}
+
+@ToString
+@ProtobufClass
+public class RoomNumMsg {
+    public int roomCount;
+}
+```
 
 <br>
 
@@ -1321,6 +1464,7 @@ public class DemoAction {
 - [light-jprotobuf ](https://www.yuque.com/iohao/game/vpe2t6) （补足 jprotobuf 不能让多个对象在单个 .proto 源文件中生成的需求，并简化jprotobuf对源文件的注释）
 - [分布式锁](https://www.yuque.com/iohao/game/wz7af5) (基于Redisson的简单实现)
 - [压测&模拟客户端请求](https://www.yuque.com/iohao/game/tc83ud)
+- [room 桌游、房间类](https://www.yuque.com/iohao/game/vtzbih)，该模块是桌游类、房间类游戏的解决方案。比较适合桌游类、房间类的游戏基础搭建，基于该模型可以做一些如，炉石传说、三国杀、斗地主、麻将 ...等类似的桌游。或者说只要是房间类的游戏，该模型都适用。比如，CS、泡泡堂、飞行棋、坦克大战 ...等。
 
 **内置的其他功能：**
 
@@ -1340,16 +1484,6 @@ public class DemoAction {
 ## 快速从零编写服务器完整示例
 
 如果觉得 ioGame 适合你，可以看一下 [快速从零编写服务器完整示例](https://www.yuque.com/iohao/game/zm6qg2) 。在这个示例中，你可以用很少的代码实现一个完整的、可运行的、高性能的、稳定的服务器。
-
-<br>
-
-## 坦克游戏示例
-
-ioGame 源码内提供了一个基于 [FXGL](https://github.com/AlmasB/FXGL) 游戏引擎的游戏示例 （[坦克射击](https://www.yuque.com/iohao/game/gqossg) 启动文档），FXGL 是纯 java 开发的一个游戏引擎，可以在项目中直接运行。通过示例，可以快速的掌握网络游戏编程！
-
-
-
-运行 TankApp.java 文件就可以启动游戏了。原计划用 U3D 来做游戏示例的，但想到大伙还得安装 [u3d](https://unity.cn/) 的环境，就用  [FXGL](https://github.com/AlmasB/FXGL) 来做游戏示例了。
 
 <br>
 
