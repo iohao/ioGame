@@ -77,19 +77,18 @@ import java.util.Set;
  * for example
  * <pre>{@code
  *     // ------------ object ------------
- *     // 广播单个对象
+ *     // 广播 object
  *     DemoBroadcastMessage message = new DemoBroadcastMessage();
  *     message.msg = "helloBroadcast --- 1";
- *
  *     RangeBroadcaster.of(flowContext)
  *             .setResponseMessage(cmdInfo, message);
  *
+ *     // 广播 object list
  *     List<DemoBroadcastMessage> messageList = List.of(message);
  *     RangeBroadcaster.of(flowContext)
  *             .setResponseMessageList(cmdInfo, messageList);
  *
  *     // ------------ int ------------
- *
  *     // 广播 int
  *     int intValue = 1;
  *     RangeBroadcaster.of(flowContext)
@@ -101,7 +100,6 @@ import java.util.Set;
  *             .setResponseMessageIntList(cmdInfo, intValueList);
  *
  *     // ------------ long ------------
- *
  *     // 广播 long
  *     long longValue = 1L;
  *     RangeBroadcaster.of(flowContext)
@@ -113,7 +111,6 @@ import java.util.Set;
  *             .setResponseMessageLongList(cmdInfo, longValueList);
  *
  *     // ------------ String ------------
- *
  *     // 广播 String
  *     String stringValue = "1";
  *     RangeBroadcaster.of(flowContext)
@@ -125,7 +122,6 @@ import java.util.Set;
  *             .setResponseMessageStringList(cmdInfo, stringValueList);
  *
  *     // ------------ boolean ------------
- *
  *     // 广播 boolean
  *     boolean boolValue = true;
  *     RangeBroadcaster.of(flowContext)

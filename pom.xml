@@ -6,7 +6,7 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>ioGame</artifactId>
-    <version>21.8</version>
+    <version>21.9</version>
     <name>ioGame</name>
     <description>
         生产资料公有制。
@@ -204,6 +204,7 @@
     <developers>
         <developer>
             <name>渔民小镇</name>
+            <id>luoyizhu@gmail.com</id>
             <email>262610965@qq.com</email>
         </developer>
     </developers>

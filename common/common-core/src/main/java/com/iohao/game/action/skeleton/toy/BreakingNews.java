@@ -47,11 +47,12 @@ class BreakingNews {
     News randomAdv() {
         List<News> list = new ArrayList<>();
         list.add(new News("回合制网络游戏 MMO", "https://www.yuque.com/iohao/game/sw08q89x3x7kiuhx"));
+        list.add(new News("桌游类、房间类的实战", "https://www.yuque.com/iohao/game/lul9a9t989s0q2t3"));
         return RandomKit.randomEle(list);
     }
 
     News ioGameJavadocApi() {
-        return new News("ioGame javadoc api", "https://www.yuque.com/iohao/game/nlbkmzn76mxnmhv6");
+        return new News("ioGame javadoc", "https://www.yuque.com/iohao/game/nlbkmzn76mxnmhv6");
     }
 
     private List<News> listNews() {
