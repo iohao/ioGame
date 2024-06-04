@@ -104,10 +104,10 @@ public interface AttrOptionDynamic {
     }
 
     /**
-     * 如果动态属性存在，则使用该值执行给定操作，否则不执行任何操作。
+     * 如果动态属性存在，则执行给定的操作，否则不执行任何操作。
      *
      * @param option   option
-     * @param consumer 只有 option 的值存在且不为 null 时，则要执行的动作
+     * @param consumer 给定操作。只有 option 的值存在且不为 null 时，才会执行的操作。
      * @param <T>      t
      */
     default <T> void ifPresent(AttrOption<T> option, Consumer<T> consumer) {

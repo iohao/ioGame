@@ -27,6 +27,34 @@ import java.util.function.Consumer;
  * <pre>
  *     value 为 set 集合实现
  * </pre>
+ * for example
+ * <pre>{@code
+ * SetMultiMap<Integer, String> map = SetMultiMap.of();
+ * map.put(1, "a");
+ * map.put(1, "a");
+ * map.put(1, "b");
+ *
+ * map.size(); // size == 1
+ * map.sizeValue(); // sizeValue == 2
+ *
+ * Set<String> set2 = map.get(2); // is null
+ * Set<String> set2 = map.of(2); // is empty set
+ *
+ * set2.add("2 - a");
+ * set2.add("2 - a");
+ *
+ * map.sizeValue(); // sizeValue == 3
+ *
+ * map.containsValue("a"); // true
+ * map.containsValue("b"); // true
+ *
+ * var collection = map.clearAll(1);
+ * collection.isEmpty(); // true
+ * map.size(); // size == 2
+ *
+ * Set<Integer> keySet = this.map.keySet();
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-07
@@ -64,13 +92,24 @@ public interface SetMultiMap<K, V> extends MultiMap<K, V> {
     Set<Map.Entry<K, Set<V>>> entrySet();
 
     /**
-     * 默认实现，每次 new 一个
+     * 创建 SetMultiMap（框架内置实现）请使用 {@link SetMultiMap#of()} 代替
      *
      * @param <K> k
      * @param <V> v
      * @return SetMultiMap
      */
     static <K, V> SetMultiMap<K, V> create() {
+        return of();
+    }
+
+    /**
+     * 创建 SetMultiMap（框架内置实现）
+     *
+     * @param <K> k
+     * @param <V> v
+     * @return SetMultiMap
+     */
+    static <K, V> SetMultiMap<K, V> of() {
         return new NonBlockingSetMultiMap<>();
     }
 }

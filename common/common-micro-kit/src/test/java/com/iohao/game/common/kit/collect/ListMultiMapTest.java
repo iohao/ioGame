@@ -11,7 +11,7 @@ import java.util.Set;
  * @date 2023-12-07
  */
 public class ListMultiMapTest {
-    ListMultiMap<Integer, String> map = ListMultiMap.create();
+    ListMultiMap<Integer, String> map = ListMultiMap.of();
 
     @Test
     public void test() {

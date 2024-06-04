@@ -28,6 +28,26 @@ import java.util.function.Consumer;
  * <pre>
  *     value 为 list 集合实现
  * </pre>
+ * for example
+ * <pre>{@code
+ * ListMultiMap<Integer, String> map = ListMultiMap.of();
+ * map.put(1, "a");
+ * map.put(1, "a");
+ * map.put(1, "b");
+ *
+ * List<String> list2 = map.get(2); // is null
+ * List<String> list2 = map.of(2); // is empty list
+ *
+ * list2.add("2 - a");
+ * list2.add("2 - a");
+ * map.sizeValue(); // sizeValue == 5
+ *
+ * map.containsValue("a"); // true
+ * map.containsValue("b"); // true
+ *
+ * Set<Integer> keySet = this.map.keySet();
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-07
@@ -66,7 +86,25 @@ public interface ListMultiMap<K, V> extends MultiMap<K, V> {
         return this.asMap().entrySet();
     }
 
+    /**
+     * 创建 ListMultiMap（框架内置实现）。请使用 {@link ListMultiMap#of()} 代替
+     *
+     * @param <K> k
+     * @param <V> v
+     * @return ListMultiMap
+     */
     static <K, V> ListMultiMap<K, V> create() {
+        return of();
+    }
+
+    /**
+     * 创建 ListMultiMap（框架内置实现）
+     *
+     * @param <K> k
+     * @param <V> v
+     * @return ListMultiMap
+     */
+    static <K, V> ListMultiMap<K, V> of() {
         return new NonBlockingListMultiMap<>();
     }
 }

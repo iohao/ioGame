@@ -1,8 +1,214 @@
-更新日志在线文档
-- [ioGame网络游戏服务器框架 (yuque.com)](https://www.yuque.com/iohao/game)
-- [框架版本更新日志 (yuque.com)](https://www.yuque.com/iohao/game/ab15oe)
+文档与日志
 - [ioGame javadoc api](https://www.yuque.com/iohao/game/nlbkmzn76mxnmhv6)
+- [框架版本更新日志 (yuque.com)](https://www.yuque.com/iohao/game/ab15oe)
+- [ioGame 真.轻量级网络编程框架 - 在线文档 ](https://game.iohao.com/)
 
+
+
+<br>
+
+#### 2024-06-03 - v21.9
+
+https://github.com/iohao/ioGame/releases/tag/21.9
+
+
+---
+
+**版本更新汇总**
+
+- [core]  [#294](https://github.com/iohao/ioGame/issues/294) 增加范围内的广播接口 RangeBroadcaster，业务参数支持基础类型（[协议碎片](https://www.yuque.com/iohao/game/ieimzn)）的简化使用
+- [core-对接文档]  [#293](https://github.com/iohao/ioGame/issues/293) 广播文档构建器支持对参数的单独描述
+- [light-game-room]   [#297](https://github.com/iohao/ioGame/issues/297) 模拟系统创建房间，RoomCreateContext 的使用
+- [light-game-room]   [#298](https://github.com/iohao/ioGame/issues/298) 模拟系统创建房间，GameFlowContext 的使用
+- [core]   [#301](https://github.com/iohao/ioGame/issues/301) FlowContext 更新元信息后，需要立即生效（跨服调用时）
+- [内置 kit] 开放 TaskListener 接口
+- 为 SimpleRoom aggregationContext 属性提供默认值，移除 RoomCreateContext 接口的 getAggregationContext 方法，以免产生误导。
+
+
+---
+
+
+
+**[light-game-room]**
+
+为 SimpleRoom aggregationContext 属性提供默认值
+
+<br>
+
+[#297](https://github.com/iohao/ioGame/issues/297)，模拟系统创建房间，RoomCreateContext 的使用
+
+>  移除 RoomCreateContext 接口的 getAggregationContext 方法，以免产生误导。
+>
+> RoomCreateContext 增加默认重载
+
+```java
+RoomCreateContext.of(); // 无房间创建者，通常表示系统创建
+RoomCreateContext.of(userId); // 房间创建者为 userId
+```
+
+<br>
+
+ [#298](https://github.com/iohao/ioGame/issues/298) 模拟系统创建房间，GameFlowContext 的使用
+
+```java
+public void test() {
+    Room room = ...;
+    GameFlowContext context = GameFlowContext.of(room);
+    ... 省略部分代码
+}
+```
+
+---
+
+**[core]**
+
+[#294](https://github.com/iohao/ioGame/issues/294) 增加范围内的广播接口 RangeBroadcaster，业务参数支持基础类型（[协议碎片](https://www.yuque.com/iohao/game/ieimzn)）的简化使用
+
+```java
+public void testRangeBroadcaster(FlowContext flowContext) {
+    // ------------ object ------------
+    // 广播 object
+    DemoBroadcastMessage message = new DemoBroadcastMessage();
+    message.msg = "helloBroadcast --- 1";
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessage(cmdInfo, message);
+    // 广播 object list
+    List<DemoBroadcastMessage> messageList = List.of(message);
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessageList(cmdInfo, messageList);
+
+    // ------------ int ------------
+    // 广播 int
+    int intValue = 1;
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessage(cmdInfo, intValue);
+    // 广播 int list
+    List<Integer> intValueList = List.of(1, 2);
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessageIntList(cmdInfo, intValueList);
+
+    // ------------ long ------------
+    // 广播 long
+    long longValue = 1L;
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessage(cmdInfo, longValue);
+    // 广播 long list
+    List<Long> longValueList = List.of(1L, 2L);
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessageLongList(cmdInfo, longValueList);
+
+    // ------------ String ------------
+    // 广播 String
+    String stringValue = "1";
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessage(cmdInfo, stringValue);
+    // 广播 String list
+    List<String> stringValueList = List.of("1L", "2L");
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessageStringList(cmdInfo, stringValueList);
+            
+    // ------------ boolean ------------
+    // 广播 boolean
+    boolean boolValue = true;
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessage(cmdInfo, boolValue);
+    // 广播 boolean list
+    List<Boolean> boolValueList = List.of(true, false);
+    RangeBroadcaster.of(flowContext)
+            .setResponseMessageBoolList(cmdInfo, boolValueList);
+}
+```
+
+<br>
+
+[#301](https://github.com/iohao/ioGame/issues/301) FlowContext 更新元信息后，需要立即生效（跨服调用时）
+
+> 在此之前，更新元信息后，并不会将元信息同步到 FlowContext 中，只会将元信息同步到游戏对外服中；所以在更新元信息后，紧接着执行跨服调用是不能获取新的元信息内容的。
+>
+> 当前 issues 会对这部分做增强，也就是在更新元信息后，会将元信息同步到 FlowContext 中；这样，在后续的跨服调用中也能获取到最新的元信息。
+
+```java
+void test1(FlowContext flowContext) {
+    // 获取元信息
+    MyAttachment attachment = flowContext.getAttachment(MyAttachment.class);
+    attachment.nickname = "渔民小镇";
+
+    // [同步]更新 - 将元信息同步到玩家所在的游戏对外服中
+    flowContext.updateAttachment(attachment);
+
+    // 跨服请求
+    CmdInfo helloCmdInfo = CmdInfo.of(1, 1);
+    flowContext.invokeModuleMessage(helloCmdInfo);
+}
+
+@ActionController(1)
+public class DemoFightAction {
+    @ActionMethod(1)
+    void hello(FlowContext flowContext) {
+        // 可以得到最新的元信息
+        MyAttachment attachment = flowContext.getAttachment(MyAttachment.class);
+        log.info("{}", attachment.nickname);
+    }
+}
+```
+
+<br>
+
+ [#293](https://github.com/iohao/ioGame/issues/293) 广播文档构建器支持对参数的单独描述
+
+```java
+  private void extractedDco(BarSkeletonBuilder builder) {
+      // UserCmd
+      builder.addBroadcastDoc(BroadcastDoc.newBuilder(UserCmd.of(UserCmd.enterSquare))
+              .setDataClass(SquarePlayer.class)
+              .setDescription("新玩家加入房间，给房间内的其他玩家广播")
+      ).addBroadcastDoc(BroadcastDoc.newBuilder(UserCmd.of(UserCmd.offline))
+              .setDataClass(LongValue.class, "userId")
+              .setDescription("有玩家下线了")
+      );
+}
+```
+
+>  下面是生成后的对接文档预览
+
+```text
+==================== 游戏文档格式说明 ====================
+https://www.yuque.com/iohao/game/irth38#cJLdC
+
+==================== FightHallAction 大厅（类似地图） ====================
+ 
+路由: 1 - 2  --- 【进入大厅】 --- 【FightHallAction:94】【enterSquare】
+    方法参数: EnterSquare enterSquare 进入大厅
+    方法返回值: ByteValueList<SquarePlayer> 所有玩家
+    广播推送: SquarePlayer ，(新玩家加入房间，给房间内的其他玩家广播)
+ 
+
+路由: 1 - 5  --- 【玩家下线】 --- 【FightHallAction:154】【offline】
+    方法返回值: void 
+    广播推送: LongValue userId，(有玩家下线了)
+
+```
+
+
+
+**[内置 kit]** 
+
+开放 TaskListener 接口，TaskListener 是 TaskKit 相关的任务监听接口。
+
+
+
+TaskListener 任务监听回调，使用场景有：一次性延时任务、任务调度、轻量可控的延时任务、轻量的定时入库辅助功能 ...等其他扩展场景。这些使用场景都有一个共同特点，即监听回调。接口提供了 4 个方法，如下
+
+1. CommonTaskListener.onUpdate()，监听回调
+2. CommonTaskListener.triggerUpdate()，是否触发 CommonTaskListener.onUpdate() 监听回调方法
+3. CommonTaskListener.onException(Throwable) ，异常回调。在执行 CommonTaskListener.triggerUpdate() 和 CommonTaskListener.onUpdate() 方法时，如果触发了异常，异常将被该方法捕获。
+4. CommonTaskListener.getExecutor()，指定执行器来执行上述方法，目的是不占用业务线程。
+
+
+
+更多介绍与使用，请阅读 [TaskKit (yuque.com)](https://www.yuque.com/iohao/game/gzsl8pg0si1l4bu3)
+
+<br>
 
 
 #### 2024-05-19 - v21.8
@@ -251,7 +457,7 @@ light-game-room 房间，是 ioGame 提供的一个轻量小部件 - 可按需�
 
 
 
-
+<br>
 
 #### 2024-05-11 - v21.7
 
@@ -361,7 +567,7 @@ class com.iohao.game.action.skeleton.core.action.Bird
 
 优化 action 参数解析
 
-
+<br>
 
 #### 2024-04-23 - v21.6
 
@@ -757,7 +963,7 @@ room.ifPlayerExist(userId, (FightPlayerEntity playerEntity) -> {
 });
 ```
 
-
+<br>
 
 #### 2024-04-16 - v21.5
 
@@ -804,7 +1010,7 @@ message Animal {
 }
 ```
 
-
+<br>
 
 #### 2024-03-28 - v21.4
 
@@ -849,7 +1055,7 @@ public void removeUserSession(SocketUserSession userSession) {
 }
 ```
 
-
+<br>
 
 #### 2024-03-11 - v21.3
 
@@ -919,13 +1125,13 @@ public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
 
 IoGameGlobalConfig brokerClusterLog 集群相关日志不开启。
 
-
+<br>
 
 #### 2024-02-22 - v21.2
 
 修复版本号显示错误问题（该版本没有功能上的更新与修改，不升级也不影响）
 
-
+<br>
 
 ####  2024-02-21 - v21.1
 

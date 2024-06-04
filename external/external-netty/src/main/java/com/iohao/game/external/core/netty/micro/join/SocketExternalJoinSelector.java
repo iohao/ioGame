@@ -18,7 +18,9 @@
  */
 package com.iohao.game.external.core.netty.micro.join;
 
+import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.external.core.ExternalCoreSetting;
+import com.iohao.game.external.core.hook.IdleHook;
 import com.iohao.game.external.core.hook.internal.IdleProcessSetting;
 import com.iohao.game.external.core.micro.MicroBootstrap;
 import com.iohao.game.external.core.micro.join.ExternalJoinSelector;
@@ -43,24 +45,20 @@ abstract class SocketExternalJoinSelector implements ExternalJoinSelector {
     @Override
     public void defaultSetting(ExternalCoreSetting coreSetting) {
         DefaultExternalCoreSetting setting = (DefaultExternalCoreSetting) coreSetting;
+
         // microBootstrap；如果开发者没有手动赋值，则根据当前连接方式生成
         MicroBootstrap microBootstrap = setting.getMicroBootstrap();
-        if (Objects.isNull(microBootstrap)) {
-            setting.setMicroBootstrap(new SocketMicroBootstrap());
-        }
+        PresentKit.ifNull(microBootstrap, () -> setting.setMicroBootstrap(new SocketMicroBootstrap()));
 
         // UserSessions 管理器；如果开发者没有手动赋值，则根据当前连接方式生成
         UserSessions<?, ?> userSessions = setting.getUserSessions();
-        if (Objects.isNull(userSessions)) {
-            setting.setUserSessions(new SocketUserSessions());
-        }
+        PresentKit.ifNull(userSessions, () -> setting.setUserSessions(new SocketUserSessions()));
 
         // IdleHook 心跳钩子；长连接方式开启了心跳，强制给一个心跳钩子
         IdleProcessSetting idleProcessSetting = setting.getIdleProcessSetting();
         if (Objects.nonNull(idleProcessSetting)) {
-            if (Objects.isNull(idleProcessSetting.getIdleHook())) {
-                idleProcessSetting.setIdleHook(new DefaultSocketIdleHook());
-            }
+            IdleHook<Object> idleHook = idleProcessSetting.getIdleHook();
+            PresentKit.ifNull(idleHook, () -> idleProcessSetting.setIdleHook(new DefaultSocketIdleHook()));
 
             // 心跳钩子 Handler
             setting.option(SettingOption.socketIdleHandler, new SocketIdleHandler());

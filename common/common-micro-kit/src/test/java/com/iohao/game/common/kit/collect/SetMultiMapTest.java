@@ -10,7 +10,7 @@ import java.util.Set;
  * @date 2023-12-07
  */
 public class SetMultiMapTest {
-    SetMultiMap<Integer, String> map = SetMultiMap.create();
+    SetMultiMap<Integer, String> map = SetMultiMap.of();
 
     @Test
     public void test() {
