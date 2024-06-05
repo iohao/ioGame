@@ -61,12 +61,12 @@ abstract class SocketExternalJoinSelector implements ExternalJoinSelector {
             PresentKit.ifNull(idleHook, () -> idleProcessSetting.setIdleHook(new DefaultSocketIdleHook()));
 
             // 心跳钩子 Handler
-            setting.option(SettingOption.socketIdleHandler, new SocketIdleHandler());
+            setting.ifNull(SettingOption.socketIdleHandler, SocketIdleHandler::new);
         }
 
         // pipelineCustom Handler
-        setting.option(SettingOption.socketUserSessionHandler, new SocketUserSessionHandler());
-        setting.option(SettingOption.socketCmdAccessAuthHandler, new SocketCmdAccessAuthHandler());
-        setting.option(SettingOption.socketRequestBrokerHandler, new SocketRequestBrokerHandler());
+        setting.ifNull(SettingOption.socketUserSessionHandler, SocketUserSessionHandler::new);
+        setting.ifNull(SettingOption.socketCmdAccessAuthHandler, SocketCmdAccessAuthHandler::new);
+        setting.ifNull(SettingOption.socketRequestBrokerHandler, SocketRequestBrokerHandler::new);
     }
 }

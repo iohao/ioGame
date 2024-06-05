@@ -32,8 +32,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
+ * Runners 管理器
+ *
  * @author 渔民小镇
  * @date 2023-04-23
+ * @see Runner
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class Runners {
@@ -74,11 +77,15 @@ public final class Runners {
 
     /** 启动 runner 机制 onStartAfter 方法 */
     public void onStartAfter() {
+        if (this.onStartAfter.get()) {
+            return;
+        }
+
         if (this.onStartAfter.compareAndSet(false, true)) {
-            TaskKit.newTimeout(timeout -> {
+            TaskKit.runOnceSecond(() -> {
                 // 延迟 1 秒执行，防止没连接到服务器， 或者将来增加一个注册回调的 Processor，目前先暂时这样
                 this.runnerList.forEach(runner -> runner.onStartAfter(this.barSkeleton));
-            }, 1, TimeUnit.SECONDS);
+            });
         }
     }
 

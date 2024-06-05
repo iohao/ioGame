@@ -200,7 +200,7 @@ public final class BarSkeletonBuilder {
     }
 
     /**
-     * 添加 Runner
+     * 添加 Runner 机制，会在逻辑服与 Broker（游戏网关）建立连接之前（onStart）、之后（onStartAfter）分别触发一次。
      *
      * @param runner Runner
      * @return this
