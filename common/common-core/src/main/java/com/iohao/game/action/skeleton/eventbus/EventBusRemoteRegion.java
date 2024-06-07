@@ -39,7 +39,7 @@ class EventBusRemoteRegion {
      *     value : across progress id
      * </pre>
      */
-    final SetMultiMap<String, EventBrokerClientMessage> remoteTopicMultiMap = SetMultiMap.create();
+    final SetMultiMap<String, EventBrokerClientMessage> remoteTopicMultiMap = SetMultiMap.of();
 
     /**
      * 其他进程逻辑服的信息

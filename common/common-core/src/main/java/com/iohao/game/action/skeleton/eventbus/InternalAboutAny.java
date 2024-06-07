@@ -161,7 +161,7 @@ class AnyTagViewData {
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 final class AnyTagView {
-    SetMultiMap<String, AnyTagBrokerClient> topicMultiMap = SetMultiMap.create();
+    SetMultiMap<String, AnyTagBrokerClient> topicMultiMap = SetMultiMap.of();
 
     AnyTagViewData getAnyTagData(EventBusMessage message) {
         String topic = message.getTopic();
@@ -182,7 +182,7 @@ final class AnyTagView {
 
     void reload(Collection<AnyTagBrokerClient> values) {
         // 重新加载
-        SetMultiMap<String, AnyTagBrokerClient> tempMultiMap = SetMultiMap.create();
+        SetMultiMap<String, AnyTagBrokerClient> tempMultiMap = SetMultiMap.of();
 
         for (AnyTagBrokerClient anyTagBrokerClient : values) {
             anyTagBrokerClient.streamEventBrokerClientMessage()

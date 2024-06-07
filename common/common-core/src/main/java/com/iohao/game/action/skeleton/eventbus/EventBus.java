@@ -88,7 +88,7 @@ public final class EventBus {
     public void register(Object eventBusSubscriber) {
 
         if (status != EventBusStatus.register) {
-            throw new RuntimeException("运行中不允许注册订阅者，请在 AbstractEventRunner.registerEventBus 方法中注册。 ");
+            throw new RuntimeException("运行中不允许注册订阅者，请在 EventRunner.registerEventBus 方法中注册。 ");
         }
 
         // 注册

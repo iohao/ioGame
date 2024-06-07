@@ -148,7 +148,7 @@ public class TaskKit {
     /** 虚拟线程执行器 */
     @Getter
     final ExecutorService virtualExecutor = ExecutorKit.newVirtualExecutor("ioGameVirtual-");
-    final SetMultiMap<TickTimeUnit, IntervalTaskListener> intervalTaskListenerMap = SetMultiMap.create();
+    final SetMultiMap<TickTimeUnit, IntervalTaskListener> intervalTaskListenerMap = SetMultiMap.of();
 
     record TickTimeUnit(long tick, TimeUnit timeUnit) {
     }

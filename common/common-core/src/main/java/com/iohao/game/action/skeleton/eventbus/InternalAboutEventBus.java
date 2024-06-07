@@ -151,11 +151,10 @@ record DefaultSubscriberInvoke(Subscriber subscriber) implements SubscriberInvok
     }
 
     void invoke(Object param) {
-        MethodAccess methodAccess = this.subscriber.getMethodAccess();
         Object target = this.subscriber.getTarget();
         int methodIndex = this.subscriber.getMethodIndex();
 
-        // 调用开发者在 action 类中编写的业务方法，即 action
+        MethodAccess methodAccess = this.subscriber.getMethodAccess();
         methodAccess.invoke(target, methodIndex, param);
     }
 }

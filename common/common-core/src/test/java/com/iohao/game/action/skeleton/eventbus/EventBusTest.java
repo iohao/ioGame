@@ -79,8 +79,6 @@ public class EventBusTest {
 
         sleep();
         Assert.assertEquals(6, CustomEvent.myMessageLong.sum());
-
-
     }
 
     @Test

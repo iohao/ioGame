@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 @FieldDefaults(level = AccessLevel.PACKAGE)
 final class SubscriberRegistry {
     static final AtomicLong subscriberId = new AtomicLong();
-    final ListMultiMap<Class<?>, Subscriber> subscriberMultiMap = ListMultiMap.create();
+    final ListMultiMap<Class<?>, Subscriber> subscriberMultiMap = ListMultiMap.of();
     final Set<Class<?>> eventBusSubscriberSet = new NonBlockingHashSet<>();
 
     void register(Object eventBusSubscriber, SubscriberInvokeCreator subscriberInvokeCreator) {

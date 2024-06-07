@@ -46,7 +46,7 @@ class EventBusLocalRegion {
      *     value : 订阅者集合。（当前进程内的所有订阅者）
      * </pre>
      */
-    final ListMultiMap<Class<?>, Subscriber> subscriberListMap = ListMultiMap.create();
+    final ListMultiMap<Class<?>, Subscriber> subscriberListMap = ListMultiMap.of();
 
     public EventBus getEventBus(String brokerClientId) {
         return eventBusMap.get(brokerClientId);
@@ -80,7 +80,7 @@ class EventBusLocalRegion {
 
     private void resetLocalSubscriber() {
 
-        ListMultiMap<Class<?>, Subscriber> tempMultiMap = ListMultiMap.create();
+        ListMultiMap<Class<?>, Subscriber> tempMultiMap = ListMultiMap.of();
         for (EventBus eventBus : eventBusMap.values()) {
 
             SubscriberRegistry subscriberRegistry = eventBus.subscriberRegistry;
