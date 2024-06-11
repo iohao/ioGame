@@ -24,6 +24,7 @@ package com.iohao.game.action.skeleton.eventbus;
  * @author 渔民小镇
  * @date 2023-12-24
  * @see EventBus
+ * @since 21
  */
 public interface EventBusFireType {
     /**

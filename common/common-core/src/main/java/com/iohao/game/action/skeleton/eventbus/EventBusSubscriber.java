@@ -25,6 +25,7 @@ import java.lang.annotation.*;
  *
  * @author 渔民小镇
  * @date 2023-12-24
+ * @since 21
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

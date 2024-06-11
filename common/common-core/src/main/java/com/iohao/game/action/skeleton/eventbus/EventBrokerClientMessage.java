@@ -29,6 +29,7 @@ import java.util.Objects;
  *
  * @author 渔民小镇
  * @date 2023-12-24
+ * @since 21
  */
 @Data
 public final class EventBrokerClientMessage implements Serializable {

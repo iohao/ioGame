@@ -19,10 +19,11 @@
 package com.iohao.game.action.skeleton.eventbus;
 
 /**
- * EventBusMessage creator
+ * 事件消息创建者，EventBusMessage creator
  *
  * @author 渔民小镇
  * @date 2023-12-24
+ * @since 21
  */
 public interface EventBusMessageCreator {
     EventBusMessage create(Object eventSource);

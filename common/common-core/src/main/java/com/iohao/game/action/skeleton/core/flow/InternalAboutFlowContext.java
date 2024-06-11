@@ -24,6 +24,7 @@ import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
 import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.eventbus.EventBusMessage;
+import com.iohao.game.action.skeleton.eventbus.EventBusMessageCreator;
 import com.iohao.game.action.skeleton.kit.ExecutorSelectKit;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
@@ -1264,7 +1265,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
     }
 
     /**
-     * 发送事件给订阅者
+     * [异步] 发送事件给所有订阅者
      * <pre>
      *     1 给当前进程所有逻辑服的订阅者发送事件消息
      *     2 给其他进程的订阅者发送事件消息
@@ -1280,7 +1281,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
     }
 
     /**
-     * [同步]发送事件给订阅者。
+     * [同步] 发送事件给所有订阅者
      * <pre>
      *     1 [同步] 给当前进程所有逻辑服的订阅者发送事件消息
      *     2 [异步] 给其他进程的订阅者发送事件消息
@@ -1298,12 +1299,12 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
     }
 
     /**
-     * 发送事件给订阅者
+     * [异步] 给当前进程的订阅者和远程进程的订阅者送事件消息，如果同类型逻辑服存在多个，只会给其中一个实例发送。
      * <pre>
      *     1 给当前进程所有逻辑服的订阅者发送事件消息
      *     2 给其他进程的订阅者发送事件消息
      * </pre>
-     * 使用场景：
+     * 使用场景
      * <pre>
      *     假设现在有一个发放奖励的邮件逻辑服，我们启动了两个（或者说多个）邮件逻辑服实例来处理业务。
      *     当我们使用 fireAny 方法发送事件时，只会给其中一个实例发送事件。
@@ -1319,7 +1320,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
     }
 
     /**
-     * [同步]发送事件给同类型逻辑服的订阅者。
+     * [同步] 给当前进程的订阅者和远程进程的订阅者送事件消息，如果同类型逻辑服存在多个，只会给其中一个实例发送。
      * <p>
      * 这里的同类型指的是相同类型的逻辑服，也就是拥有相同 tag 的逻辑服。
      * <pre>
@@ -1328,7 +1329,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
      *
      *     注意，这里的同步仅指当前进程订阅者的同步，对其他进程中的订阅者无效（处理远程订阅者使用的是异步）。
      * </pre>
-     * 使用场景：
+     * 使用场景
      * <pre>
      *     假设现在有一个发放奖励的邮件逻辑服，我们启动了两个（或者说多个）邮件逻辑服实例来处理业务。
      *     当我们使用 fireAny 方法发送事件时，只会给其中一个实例发送事件。
@@ -1344,10 +1345,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
     }
 
     /**
-     * 发送事件给订阅者
-     * <pre>
-     *     仅给当前进程所有逻辑服的订阅者发送事件消息
-     * </pre>
+     * [异步] 给当前进程所有逻辑服的订阅者发送事件消息
      *
      * @param eventSource 事件源
      */
@@ -1359,12 +1357,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
     }
 
     /**
-     * 发送事件给订阅者
-     * <pre>
-     *     仅给当前进程所有逻辑服的订阅者发送事件消息
-     *
-     *     [同步]，在当前线程中调用订阅者
-     * </pre>
+     * [同步] 给当前进程所有逻辑服的订阅者发送事件消息
      *
      * @param eventSource 事件源
      */
@@ -1376,11 +1369,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
     }
 
     /**
-     * 发送事件给订阅者
-     * <pre>
-     *     仅给当前 EventBus 的订阅者发送事件消息。
-     *     订阅者指的是已注册到 {@link EventBus#register(Object)} 的订阅者。
-     * </pre>
+     * [异步] 仅给当前 EventBus 的订阅者发送事件消息
      *
      * @param eventSource 事件源
      */
@@ -1392,13 +1381,7 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
     }
 
     /**
-     * 发送事件给订阅者
-     * <pre>
-     *     仅给当前 EventBus 的订阅者发送事件消息。
-     *     订阅者指的是已注册到 {@link EventBus#register(Object)} 的订阅者。
-     *
-     *     [同步]，在当前线程中调用订阅者
-     * </pre>
+     * [同步] 仅给当前 EventBus 的订阅者发送事件消息
      *
      * @param eventSource 事件源
      */
@@ -1409,6 +1392,12 @@ interface SimpleCommunicationEventBus extends SimpleCommunication {
         eventBus.fireMeSync(eventBusMessage);
     }
 
+    /**
+     * 创建事件消息
+     *
+     * @param eventSource 事件源
+     * @return 事件消息
+     */
     default EventBusMessage createEventBusMessage(Object eventSource) {
         var headMetadata = this.getHeadMetadata();
         var userId = headMetadata.getUserId();

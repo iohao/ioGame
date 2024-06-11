@@ -18,98 +18,123 @@
  */
 package com.iohao.game.action.skeleton.eventbus;
 
-import com.iohao.game.action.skeleton.core.IoGameCommonCoreConfig;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
-import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
- * EventBus 是逻辑服事件总线。
- * EventBus、业务框架、逻辑服三者是 1:1:1 的关系。
+ * 事件总线 EventBus，EventBus、业务框架、逻辑服三者是 1:1:1 的关系。
  * <p>
- * example1 - 通过 FlowContext 获取对应的 eventBus
- * <pre>{@code
- *         EventBus eventBus = flowContext.getEventBus();
- *         eventBus.fire(userLoginEventMessage);
- * }
+ * 发布事件
+ * <pre>
+ *     在发布事件时
+ *     1. 如果相关订阅者在同进程内，可控制同步和异步发送。
+ *     2. 如果相关订阅者不在同一个进程内，而是分布在不同的进程中，则只能异步发送（即使使用了同步的方法来发布事件）。
+ *
+ *     这里的【同步】指的是：发布事件时，相关订阅者执行完成后，主逻辑才会继续往下走。
+ *     这里的【异步】指的是：发布事件时，主逻辑不会阻塞，相关订阅者会在其他线程中执行。
+ *
+ *     无论是同步或者是异步，相关订阅者在执行逻辑服时，默认是线程安全的；这是因为订阅者 {@link EventSubscribe} 默认使用的是用户线程执行器。
  * </pre>
  * <p>
- * example2 - 通过逻辑服 id 获取对应的 eventBus
+ * 关于获取 EventBus 的相关示例
+ * <p>
+ * for example 1 - 通过 FlowContext 获取对应的 eventBus
  * <pre>{@code
- *         BrokerClientContext brokerClientContext = flowContext.getBrokerClientContext();
- *         String id = brokerClientContext.getId();
- *         EventBus eventBus = EventBusRegion.getEventBus(id);
+ * EventBus eventBus = flowContext.getEventBus();
+ * eventBus.fire(userLoginEventMessage);
  * }
+ * </pre>
+ * for example 2 - 通过逻辑服 id 获取对应的 eventBus
+ * <pre>{@code
+ * BrokerClientContext brokerClientContext = flowContext.getBrokerClientContext();
+ * String id = brokerClientContext.getId();
+ * EventBus eventBus = EventBusRegion.getEventBus(id);
+ * }
+ * </pre>
+ * for example 3 - 通过业务框架获取对应的 eventBus
+ * <pre>{@code
+ * BarSkeleton barSkeleton = ...
+ * EventBus eventBus = barSkeleton.option(SkeletonAttr.eventBus);
+ * }
+ * </pre>
+ * for example 4 - 在初始化时，自己保存一下引用
+ * <pre>{@code
+ * public BarSkeleton createBarSkeleton() {
+ *     // 业务框架构建器
+ *     var builder = ...
+ *     // 游戏逻辑服添加 EventBusRunner，用于处理 EventBus 相关业务
+ *     builder.addRunner(new EventBusRunner() {
+ *         @Override
+ *         public void registerEventBus(EventBus eventBus, BarSkeleton skeleton) {
+ *            // 这里保存一下 EventBus 的引用
+ *         }
+ *     });
+ * }
+ * }
+ * </pre>
+ * fire 系列提供了多个种类的事件发布机制
+ * <pre>
+ *     1. fire 发送事件给订阅者，这些订阅者包括
+ *         a. 给当前进程所有逻辑服的订阅者发送事件消息。
+ *         b. 给其他进程的订阅者发送事件消息。
+ *     2. fireLocal 给当前进程所有逻辑服的订阅者发送事件消息
+ *     3. fireMe 仅给当前 EventBus 的订阅者发送事件消息
+ *     4. fireAny 发送事件给订阅者，这些订阅者包括
+ *         a. 给当前进程所有逻辑服的订阅者发送事件消息。
+ *         b. 给其他进程的订阅者发送事件消息。
+ *         c. 当有同类型的多个逻辑服实例时，只会给同类型其中的一个逻辑服发送事件。
+ *
+ *     fire 系列提供了多个种类的事件发布机制，以上方法默认是异步的，而相关同步方法则以 fireXXXSync 命名。
+ * </pre>
+ * 便捷使用 - {@link FlowContext}
+ * <pre>
+ *     除了可以通过 EventBus 发布事件外，框架还在 {@link FlowContext} 中提供了 EventBus 的相关方法。
+ *     FlowContext 内部使用 EventBus 来发布事件。
+ *     更多使用示例请阅读 <a href="https://www.yuque.com/iohao/game/zz8xiz#3c306ed1">FlowContext - 分布式事件总线</a>文档
  * </pre>
  *
  * @author 渔民小镇
  * @date 2023-12-24
  * @see FlowContext#getEventBus()
  * @see EventBusRegion
+ * @see FlowContext
+ * @since 21
  */
-@Slf4j
-@Setter
-@FieldDefaults(level = AccessLevel.PACKAGE)
-public final class EventBus {
-    /** 订阅者管理 */
-    final SubscriberRegistry subscriberRegistry = new SubscriberRegistry();
-    final String id;
-
-    SubscribeExecutorStrategy subscribeExecutorStrategy;
-    SubscriberInvokeCreator subscriberInvokeCreator;
-    @Getter
-    EventBusMessageCreator eventBusMessageCreator;
-    EventBusListener eventBusListener;
-
-    /** 对应逻辑服的相关信息 */
-    EventBrokerClientMessage eventBrokerClientMessage;
-    /** 逻辑服 */
-    BrokerClientContext brokerClientContext;
-    /** 与业务框架所关联的线程执行器管理域 */
-    ExecutorRegion executorRegion;
-
-    @Setter(AccessLevel.PACKAGE)
-    EventBusStatus status = EventBusStatus.register;
-
-    EventBus(String id) {
-        this.id = Objects.requireNonNull(id);
-    }
-
-    public void register(Object eventBusSubscriber) {
-
-        if (status != EventBusStatus.register) {
-            throw new RuntimeException("运行中不允许注册订阅者，请在 EventRunner.registerEventBus 方法中注册。 ");
-        }
-
-        // 注册
-        this.subscriberRegistry.register(eventBusSubscriber, this.subscriberInvokeCreator);
-    }
-
-    public EventBusMessage createEventBusMessage(Object eventSource) {
-        return this.eventBusMessageCreator.create(eventSource);
-    }
-
-    public Set<String> listTopic() {
-        // 当前 eventBus 订阅的所有事件源主题
-        return this.subscriberRegistry
-                .listEventSourceClass()
-                .stream()
-                .map(Class::getName)
-                .collect(Collectors.toSet());
-    }
+public interface EventBus {
+    /**
+     * EventBus id。EventBus、业务框架、逻辑服三者是 1:1:1 的关系，默认该 id 是逻辑服的 id;
+     *
+     * @return id
+     */
+    String getId();
 
     /**
-     * [异步]发送事件给订阅者
+     * 注册订阅者
+     *
+     * @param eventBusSubscriber 订阅者
+     */
+    void register(Object eventBusSubscriber);
+
+    /**
+     * 事件消息所对应的订阅者
+     *
+     * @param eventBusMessage 事件消息
+     * @return 所对应的订阅者
+     */
+    Collection<Subscriber> listSubscriber(EventBusMessage eventBusMessage);
+
+    /**
+     * 当前 eventBus 订阅的所有事件源主题
+     *
+     * @return 当前 eventBus 订阅的所有事件源主题
+     */
+    Set<String> listTopic();
+
+    /**
+     * [异步] 发送事件给所有订阅者
      * <pre>
      *     1 给当前进程所有逻辑服的订阅者发送事件消息
      *     2 给其他进程的订阅者发送事件消息
@@ -117,19 +142,10 @@ public final class EventBus {
      *
      * @param eventBusMessage 事件消息
      */
-    public void fire(EventBusMessage eventBusMessage) {
-        // 给当前进程所有逻辑服的订阅者发送事件消息
-        this.fireLocal(eventBusMessage);
-        // 给其他进程的订阅者发送事件
-        this.fireRemote(eventBusMessage);
-
-        if (eventBusMessage.emptyFireType()) {
-            this.eventBusListener.emptySubscribe(eventBusMessage, this);
-        }
-    }
+    void fire(EventBusMessage eventBusMessage);
 
     /**
-     * [同步]发送事件给订阅者。
+     * [同步] 发送事件给所有订阅者
      * <pre>
      *     1 [同步] 给当前进程所有逻辑服的订阅者发送事件消息
      *     2 [异步] 给其他进程的订阅者发送事件消息
@@ -139,19 +155,10 @@ public final class EventBus {
      *
      * @param eventBusMessage 事件消息
      */
-    public void fireSync(EventBusMessage eventBusMessage) {
-        // 给当前进程所有逻辑服的订阅者发送事件消息
-        this.fireLocalSync(eventBusMessage);
-        // 给其他进程的订阅者发送事件
-        this.fireRemote(eventBusMessage);
-
-        if (eventBusMessage.emptyFireType()) {
-            this.eventBusListener.emptySubscribe(eventBusMessage, this);
-        }
-    }
+    void fireSync(EventBusMessage eventBusMessage);
 
     /**
-     * [异步]发送事件给订阅者
+     * [异步] 发送事件给所有订阅者
      * <pre>
      *     1 给当前进程所有逻辑服的订阅者发送事件消息
      *     2 给其他进程的订阅者发送事件消息
@@ -159,13 +166,13 @@ public final class EventBus {
      *
      * @param eventSource 事件源
      */
-    public void fire(Object eventSource) {
+    default void fire(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fire(eventBusMessage);
     }
 
     /**
-     * [同步]发送事件给订阅者。
+     * [同步] 发送事件给所有订阅者
      * <pre>
      *     1 [同步] 给当前进程所有逻辑服的订阅者发送事件消息
      *     2 [异步] 给其他进程的订阅者发送事件消息
@@ -175,292 +182,248 @@ public final class EventBus {
      *
      * @param eventSource 事件源
      */
-    public void fireSync(Object eventSource) {
+    default void fireSync(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireSync(eventBusMessage);
     }
 
-    public void fireLocal(Object eventSource) {
+    /**
+     * [异步] 给当前进程所有逻辑服的订阅者发送事件消息
+     *
+     * @param eventSource 事件源
+     */
+    default void fireLocal(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireLocal(eventBusMessage);
     }
 
     /**
-     * 给当前进程所有逻辑服的订阅者发送事件消息
+     * [异步] 给当前进程所有逻辑服的订阅者发送事件消息
      *
      * @param eventBusMessage 事件消息
      */
-    public void fireLocal(EventBusMessage eventBusMessage) {
-        this.fireLocal(eventBusMessage, true);
-    }
+    void fireLocal(EventBusMessage eventBusMessage);
 
-    public void fireLocalSync(Object eventSource) {
+    /**
+     * [同步] 给当前进程所有逻辑服的订阅者发送事件消息
+     *
+     * @param eventSource 事件源
+     */
+    default void fireLocalSync(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireLocalSync(eventBusMessage);
     }
 
     /**
-     * 给当前进程所有逻辑服的订阅者发送事件消息
-     * <pre>
-     *     [同步]
-     * </pre>
+     * [同步] 给当前进程所有逻辑服的订阅者发送事件消息
      *
      * @param eventBusMessage 事件消息
      */
-    public void fireLocalSync(EventBusMessage eventBusMessage) {
-        this.fireLocal(eventBusMessage, false);
-    }
+    void fireLocalSync(EventBusMessage eventBusMessage);
 
-    private void fireLocal(EventBusMessage eventBusMessage, boolean async) {
-        List<Subscriber> subscribers = EventBusRegion.listLocalSubscriber(eventBusMessage);
-        if (CollKit.isEmpty(subscribers)) {
-            return;
-        }
-
-        eventBusMessage.addFireType(EventBusFireType.fireLocal);
-
-        // 发送事件
-        this.invokeSubscriber(eventBusMessage, async, subscribers);
-    }
-
-    void fireRemote(EventBusMessage eventBusMessage) {
-        var messages = EventBusRegion.listRemoteEventBrokerClientMessage(eventBusMessage);
-
-        this.fireRemote(eventBusMessage, messages);
-    }
-
-    void fireRemote(EventBusMessage eventBusMessage, Collection<EventBrokerClientMessage> messages) {
-        if (CollKit.isEmpty(messages)) {
-            return;
-        }
-
-        // 如果其他进程中存在当前事件源的订阅者，将事件源发布到其他进程中
-        eventBusMessage.setEventBrokerClientMessages(messages);
-        eventBusMessage.addFireType(EventBusFireType.fireRemote);
-
-        this.extractedPrint(eventBusMessage);
-
-        try {
-            this.brokerClientContext.oneway(eventBusMessage);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    public void fireMe(Object eventSource) {
+    /**
+     * [异步] 仅给当前 EventBus 的订阅者发送事件消息
+     * <pre>
+     *     已注册到 {@link EventBus#register(Object)}  的订阅者
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireMe(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireMe(eventBusMessage);
     }
 
     /**
-     * 仅给当前 EventBus 的订阅者发送事件消息
+     * [异步] 仅给当前 EventBus 的订阅者发送事件消息
      * <pre>
      *     已注册到 {@link EventBus#register(Object)}  的订阅者
      * </pre>
      *
      * @param eventBusMessage 事件消息
      */
-    public void fireMe(EventBusMessage eventBusMessage) {
-        this.fireMe(eventBusMessage, true);
-    }
+    void fireMe(EventBusMessage eventBusMessage);
 
-    public void fireMeSync(Object eventSource) {
+    /**
+     * [同步] 仅给当前 EventBus 的订阅者发送事件消息
+     * <pre>
+     *     已注册到 {@link EventBus#register(Object)} 的订阅者
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireMeSync(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireMeSync(eventBusMessage);
     }
 
     /**
-     * 仅给当前 EventBus 的订阅者发送事件消息
+     * [同步] 仅给当前 EventBus 的订阅者发送事件消息
      * <pre>
      *     已注册到 {@link EventBus#register(Object)} 的订阅者
-     *
-     *     [同步]
      * </pre>
      *
      * @param eventBusMessage 事件消息
      */
-    public void fireMeSync(EventBusMessage eventBusMessage) {
-        this.fireMe(eventBusMessage, false);
-    }
+    void fireMeSync(EventBusMessage eventBusMessage);
 
-    private void fireMe(EventBusMessage eventBusMessage, boolean async) {
-        Collection<Subscriber> subscribers = this.listSubscriber(eventBusMessage);
-
-        if (CollKit.isEmpty(subscribers)) {
-            return;
-        }
-
-        eventBusMessage.addFireType(EventBusFireType.fireMe);
-
-        this.invokeSubscriber(eventBusMessage, async, subscribers);
-    }
-
-    public void fireAny(Object eventSource) {
+    /**
+     * [异步] 给当前进程的订阅者和远程进程的订阅者送事件消息，如果同类型逻辑服存在多个，只会给其中一个实例发送。
+     * <pre>
+     *     假设现在有一个发放奖励的邮件逻辑服，我们启动了两个（或者说多个）邮件逻辑服实例来处理业务。
+     *     当我们使用 fireAny 方法发送事件时，只会给其中一个实例发送事件。
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireAny(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireAny(eventBusMessage);
     }
 
-    public void fireAny(EventBusMessage eventBusMessage) {
-        AnyTagViewData anyTagViewData = EventBusAnyTagRegion.getAnyTagData(eventBusMessage);
+    /**
+     * [异步] 给当前进程的订阅者和远程进程的订阅者送事件消息，如果同类型逻辑服存在多个，只会给其中一个实例发送。
+     * <pre>
+     *     假设现在有一个发放奖励的邮件逻辑服，我们启动了两个（或者说多个）邮件逻辑服实例来处理业务。
+     *     当我们使用 fireAny 方法发送事件时，只会给其中一个实例发送事件。
+     * </pre>
+     *
+     * @param eventBusMessage 事件消息
+     */
+    void fireAny(EventBusMessage eventBusMessage);
 
-        List<EventBrokerClientMessage> messages = anyTagViewData.getLocalMessages();
-        this.fireAny(eventBusMessage, messages, true);
-
-        List<EventBrokerClientMessage> remoteMessages = anyTagViewData.getRemoteMessages();
-        this.fireRemote(eventBusMessage, remoteMessages);
-
-        if (eventBusMessage.emptyFireType()) {
-            this.eventBusListener.emptySubscribe(eventBusMessage, this);
-        }
-    }
-
-    public void fireAnySync(Object eventSource) {
+    /**
+     * [同步] 给当前进程的订阅者和远程进程的订阅者送事件消息，如果同类型逻辑服存在多个，只会给其中一个实例发送。
+     * <pre>
+     *     假设现在有一个发放奖励的邮件逻辑服，我们启动了两个（或者说多个）邮件逻辑服实例来处理业务。
+     *     当我们使用 fireAny 方法发送事件时，只会给其中一个实例发送事件。
+     * </pre>
+     *
+     * @param eventSource 事件源
+     */
+    default void fireAnySync(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireAnySync(eventBusMessage);
     }
 
-    public void fireAnySync(EventBusMessage eventBusMessage) {
-        AnyTagViewData anyTagViewData = EventBusAnyTagRegion.getAnyTagData(eventBusMessage);
+    /**
+     * [同步] 给当前进程的订阅者和远程进程的订阅者送事件消息，如果同类型逻辑服存在多个，只会给其中一个实例发送。
+     * <pre>
+     *     假设现在有一个发放奖励的邮件逻辑服，我们启动了两个（或者说多个）邮件逻辑服实例来处理业务。
+     *     当我们使用 fireAny 方法发送事件时，只会给其中一个实例发送事件。
+     * </pre>
+     *
+     * @param eventBusMessage 事件消息
+     */
+    void fireAnySync(EventBusMessage eventBusMessage);
 
-        List<EventBrokerClientMessage> messages = anyTagViewData.getLocalMessages();
-        this.fireAny(eventBusMessage, messages, false);
-
-        List<EventBrokerClientMessage> remoteMessages = anyTagViewData.getRemoteMessages();
-        this.fireRemote(eventBusMessage, remoteMessages);
-
-        if (eventBusMessage.emptyFireType()) {
-            this.eventBusListener.emptySubscribe(eventBusMessage, this);
-        }
-    }
-
-    void fireAny(EventBusMessage eventBusMessage, List<EventBrokerClientMessage> list, boolean async) {
-
-        if (CollKit.isEmpty(list)) {
-            return;
-        }
-
-        for (EventBrokerClientMessage brokerClientMessage : list) {
-            EventBus eventBus = EventBusRegion.getEventBus(brokerClientMessage.brokerClientId);
-            if (Objects.nonNull(eventBus)) {
-                eventBus.fireMe(eventBusMessage, async);
-            }
-        }
-    }
-
-    public void fireLocalNeighbor(Object eventSource) {
+    /**
+     * [异步] 给当前进程其他逻辑服的订阅者发送事件消息，不包括当前 EventBus。
+     *
+     * @param eventSource 事件源
+     */
+    default void fireLocalNeighbor(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireLocalNeighbor(eventBusMessage);
     }
 
-    public void fireLocalNeighbor(EventBusMessage eventBusMessage) {
-        this.fireLocalNeighbor(eventBusMessage, true);
-    }
+    /**
+     * [异步] 给当前进程其他逻辑服的订阅者发送事件消息，不包括当前 EventBus。
+     *
+     * @param eventBusMessage 事件消息
+     */
+    void fireLocalNeighbor(EventBusMessage eventBusMessage);
 
-    public void fireLocalNeighborSync(Object eventSource) {
+    /**
+     * [同步] 给当前进程其他逻辑服的订阅者发送事件消息，不包括当前 EventBus。
+     *
+     * @param eventSource 事件源
+     */
+    default void fireLocalNeighborSync(Object eventSource) {
         EventBusMessage eventBusMessage = this.createEventBusMessage(eventSource);
         this.fireLocalNeighborSync(eventBusMessage);
     }
 
-    public void fireLocalNeighborSync(EventBusMessage eventBusMessage) {
-        this.fireLocalNeighbor(eventBusMessage, false);
-    }
-
     /**
-     * 给当前进程其他逻辑服的订阅者发送事件消息，不包括当前 EventBus。
+     * [同步] 给当前进程其他逻辑服的订阅者发送事件消息，不包括当前 EventBus。
      *
      * @param eventBusMessage 事件消息
-     * @param async           true 表示异步执行
      */
-    private void fireLocalNeighbor(EventBusMessage eventBusMessage, boolean async) {
-        if (!EventBusRegion.hasLocalNeighbor()) {
-            // 当前进程仅有一个逻辑服
-            return;
-        }
+    void fireLocalNeighborSync(EventBusMessage eventBusMessage);
 
-        var subscribers = EventBusRegion.streamLocalEventBus()
-                // 排除自己（当前 EventBus）
-                .filter(eventBus -> !Objects.equals(this, eventBus))
-                // 得到所有的订阅者
-                .flatMap(eventBus -> eventBus.listSubscriber(eventBusMessage).stream())
-                .toList();
 
-        if (CollKit.isEmpty(subscribers)) {
-            return;
-        }
+    /**
+     * set 订阅者线程执行器选择策略
+     *
+     * @param subscribeExecutorStrategy 订阅者线程执行器选择策略
+     */
+    void setSubscribeExecutorStrategy(SubscribeExecutorStrategy subscribeExecutorStrategy);
 
-        eventBusMessage.addFireType(EventBusFireType.fireLocalNeighbor);
+    /**
+     * set SubscriberInvokeCreator
+     *
+     * @param subscriberInvokeCreator SubscriberInvokeCreator
+     */
+    void setSubscriberInvokeCreator(SubscriberInvokeCreator subscriberInvokeCreator);
 
-        // 发送事件
-        this.invokeSubscriber(eventBusMessage, async, subscribers);
+    /**
+     * set 事件消息创建者，EventBusMessage creator
+     *
+     * @param eventBusMessageCreator EventBusMessageCreator
+     */
+    void setEventBusMessageCreator(EventBusMessageCreator eventBusMessageCreator);
+
+    /**
+     * set 事件监听器
+     *
+     * @param eventBusListener 事件监听器
+     */
+    void setEventBusListener(EventBusListener eventBusListener);
+
+    /**
+     * set 事件总线逻辑服相关信息
+     *
+     * @param eventBrokerClientMessage 事件总线逻辑服相关信息
+     */
+    void setEventBrokerClientMessage(EventBrokerClientMessage eventBrokerClientMessage);
+
+    /**
+     * 当前服务器上下文（逻辑服）
+     *
+     * @param brokerClientContext 当前服务器上下文（逻辑服）
+     */
+    void setBrokerClientContext(BrokerClientContext brokerClientContext);
+
+    /**
+     * set 执行器管理域
+     *
+     * @param executorRegion 执行器管理域
+     */
+    void setExecutorRegion(ExecutorRegion executorRegion);
+
+    /**
+     * get 事件消息创建者
+     *
+     * @return 事件消息创建者
+     */
+    EventBusMessageCreator getEventBusMessageCreator();
+
+    /**
+     * get 事件总线逻辑服相关信息
+     *
+     * @return 事件总线逻辑服相关信息
+     */
+    EventBrokerClientMessage getEventBrokerClientMessage();
+
+    /**
+     * 创建事件消息
+     *
+     * @param eventSource 事件源
+     * @return 事件消息
+     */
+    default EventBusMessage createEventBusMessage(Object eventSource) {
+        return this.getEventBusMessageCreator().create(eventSource);
     }
 
-    private void extractedPrint(EventBusMessage eventBusMessage) {
-        if (IoGameCommonCoreConfig.eventBusLog) {
-            log.info("###### 触发远程逻辑服的订阅者 - {} -  : {}", this.eventBrokerClientMessage.getAppName(), eventBusMessage);
-            for (EventBrokerClientMessage eventBrokerClientMessage : eventBusMessage.getEventBrokerClientMessages()) {
-                log.info("远程逻辑服 : {}", eventBrokerClientMessage.getAppName());
-            }
 
-            System.out.println();
-        }
-    }
-
-    private void invokeSubscriber(EventBusMessage eventBusMessage, boolean async, Collection<Subscriber> subscribers) {
-        if (async) {
-            // 异步执行
-            for (Subscriber subscriber : subscribers) {
-                // 根据策略得到对应的执行器
-                ThreadExecutor threadExecutor = this.subscribeExecutorStrategy
-                        .select(subscriber, eventBusMessage, this.executorRegion);
-
-                SubscriberInvoke subscriberInvoke = subscriber.getSubscriberInvoke();
-
-                threadExecutor.execute(() -> {
-                    // invoke subscriber
-                    this.invoke(subscriberInvoke, eventBusMessage);
-                });
-            }
-        } else {
-            // 同步执行
-            for (Subscriber subscriber : subscribers) {
-                SubscriberInvoke subscriberInvoke = subscriber.getSubscriberInvoke();
-                this.invoke(subscriberInvoke, eventBusMessage);
-            }
-        }
-    }
-
-    private void invoke(SubscriberInvoke subscriberInvoke, EventBusMessage eventBusMessage) {
-        try {
-            subscriberInvoke.invoke(eventBusMessage);
-        } catch (Throwable e) {
-            this.eventBusListener.invokeException(e, eventBusMessage.getEventSource(), eventBusMessage);
-        }
-    }
-
-    private Collection<Subscriber> listSubscriber(EventBusMessage eventBusMessage) {
-        return this.subscriberRegistry.listSubscriber(eventBusMessage);
-    }
-
-    enum EventBusStatus {
-        register,
-        run
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof EventBus eventBus)) {
-            return false;
-        }
-
-        return this.id.equals(eventBus.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
 }

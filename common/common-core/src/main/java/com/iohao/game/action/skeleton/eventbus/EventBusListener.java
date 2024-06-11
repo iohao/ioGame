@@ -19,10 +19,11 @@
 package com.iohao.game.action.skeleton.eventbus;
 
 /**
- * 监听
+ * 事件监听器，触发条件，1.订阅者抛出未捕获的异常时、2.事件消息没有对应的订阅者时。
  *
  * @author 渔民小镇
  * @date 2023-12-24
+ * @since 21
  */
 public interface EventBusListener {
     /**

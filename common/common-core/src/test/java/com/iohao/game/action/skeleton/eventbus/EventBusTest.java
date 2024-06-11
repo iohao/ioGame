@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class EventBusTest {
-    EventBus eventBus = new EventBus("1");
-    EventBus eventBus2 = new EventBus("2");
+    EventBus eventBus = new DefaultEventBus("1");
+    EventBus eventBus2 = new DefaultEventBus("2");
 
     @Before
     public void setUp() {
@@ -33,7 +33,7 @@ public class EventBusTest {
     }
 
     private void initEventBus(EventBus eventBus) {
-        String id = eventBus.id;
+        String id = eventBus.getId();
         EventBrokerClientMessage eventBrokerClientMessage = this.createEventBrokerClientMessage(id);
         eventBus.setEventBrokerClientMessage(eventBrokerClientMessage);
 

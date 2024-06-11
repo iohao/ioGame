@@ -21,9 +21,10 @@ package com.iohao.game.action.skeleton.eventbus;
 import java.lang.annotation.*;
 
 /**
- * 将方法标记为事件订阅者（接收事件、处理事件）
+ * 订阅者注解，将方法标记为事件订阅者（接收事件、处理事件），可配置线程执行器策略与执行优先级，默认是线程安全的。
  * <pre>
- *     订阅者必须且只能有一个参数，用于接收事件源
+ *     订阅者必须且只能有一个参数，用于接收事件源。
+ *     默认是线程安全的，使用的用户线程执行器。
  * </pre>
  * example
  * <pre>{@code
@@ -47,6 +48,7 @@ import java.lang.annotation.*;
  * @author 渔民小镇
  * @date 2023-12-24
  * @see DefaultSubscribeExecutorStrategy
+ * @since 21
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

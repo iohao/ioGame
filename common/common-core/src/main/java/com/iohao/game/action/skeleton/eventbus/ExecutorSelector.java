@@ -21,10 +21,12 @@ package com.iohao.game.action.skeleton.eventbus;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 
 /**
- * 订阅者线程执行器选择策略
- * example
+ * 订阅者线程执行器选择策略。
+ * <p>
+ * for example
  * <pre>{@code
  *     public class YourEventBusSubscriber implements EventBusSubscriber {
+ *         // 指定线程执行器来执行订阅者的逻辑
  *         @EventSubscribe(ExecutorSelector.userExecutor)
  *         public void userLogin(YourEventMessage message) {
  *             log.info("event - 玩家[{}]登录", message.getUserId());
@@ -43,6 +45,8 @@ import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
  *
  * @author 渔民小镇
  * @date 2024-01-11
+ * @see EventSubscribe
+ * @since 21
  */
 public enum ExecutorSelector {
     /**

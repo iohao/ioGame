@@ -25,6 +25,7 @@ import java.util.Set;
  *
  * @author 渔民小镇
  * @date 2023-12-24
+ * @since 21
  */
 public record EventTopicMessage(Set<String> topicSet) {
 }

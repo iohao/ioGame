@@ -131,7 +131,7 @@ final class AnyTagBrokerClient {
 
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class AnyTagViewData {
+final class AnyTagViewData {
     static final AnyTagViewData empty = new AnyTagViewData();
     List<EventBrokerClientMessage> localMessages;
     List<EventBrokerClientMessage> remoteMessages;
@@ -260,4 +260,3 @@ record BrokerClientId(String id) {
         return id.hashCode();
     }
 }
-

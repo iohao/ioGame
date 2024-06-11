@@ -36,6 +36,7 @@ import java.lang.reflect.Method;
  * @author 渔民小镇
  * @date 2023-12-24
  * @see EventSubscribe
+ * @since 21
  */
 @Accessors(chain = true)
 @Setter(AccessLevel.PACKAGE)

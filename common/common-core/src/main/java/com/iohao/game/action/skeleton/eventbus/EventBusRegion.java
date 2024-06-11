@@ -35,6 +35,7 @@ import java.util.stream.Stream;
  *
  * @author 渔民小镇
  * @date 2023-12-24
+ * @since 21
  */
 @UtilityClass
 public final class EventBusRegion {
@@ -45,7 +46,7 @@ public final class EventBusRegion {
     void addLocal(EventBus eventBus) {
         EventBusLocalRegion.addLocal(eventBus);
 
-        EventBusAnyTagRegion.add(eventBus.eventBrokerClientMessage);
+        EventBusAnyTagRegion.add(eventBus.getEventBrokerClientMessage());
     }
 
     Stream<EventBus> streamLocalEventBus() {
