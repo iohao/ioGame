@@ -351,13 +351,19 @@ public interface EventBus {
      */
     void fireLocalNeighborSync(EventBusMessage eventBusMessage);
 
-
     /**
      * set 订阅者线程执行器选择策略
      *
      * @param subscribeExecutorStrategy 订阅者线程执行器选择策略
      */
     void setSubscribeExecutorStrategy(SubscribeExecutorStrategy subscribeExecutorStrategy);
+
+    /**
+     * get 订阅者线程执行器选择策略
+     *
+     * @return 订阅者线程执行器选择策略
+     */
+    SubscribeExecutorStrategy getSubscribeExecutorStrategy();
 
     /**
      * set SubscriberInvokeCreator
@@ -381,6 +387,13 @@ public interface EventBus {
     void setEventBusListener(EventBusListener eventBusListener);
 
     /**
+     * get 事件监听器
+     *
+     * @return 事件监听器
+     */
+    EventBusListener getEventBusListener();
+
+    /**
      * set 事件总线逻辑服相关信息
      *
      * @param eventBrokerClientMessage 事件总线逻辑服相关信息
@@ -395,11 +408,18 @@ public interface EventBus {
     void setBrokerClientContext(BrokerClientContext brokerClientContext);
 
     /**
-     * set 执行器管理域
+     * set 线程执行器管理域
      *
-     * @param executorRegion 执行器管理域
+     * @param executorRegion 线程执行器管理域
      */
     void setExecutorRegion(ExecutorRegion executorRegion);
+
+    /**
+     * get 线程执行器管理域
+     *
+     * @return 线程执行器管理域
+     */
+    ExecutorRegion getExecutorRegion();
 
     /**
      * get 事件消息创建者

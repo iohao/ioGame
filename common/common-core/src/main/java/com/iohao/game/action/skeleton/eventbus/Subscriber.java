@@ -78,6 +78,9 @@ public final class Subscriber {
     /** 订阅者执行 */
     @Getter
     SubscriberInvoke subscriberInvoke;
+    /** EventBus */
+    @Getter(AccessLevel.PACKAGE)
+    EventBus eventBus;
 
     Subscriber(long id) {
         this.id = id;

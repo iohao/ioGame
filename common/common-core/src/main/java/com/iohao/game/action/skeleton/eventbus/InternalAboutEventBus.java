@@ -396,6 +396,8 @@ final class SubscriberRegistry {
     final ListMultiMap<Class<?>, Subscriber> subscriberMultiMap = ListMultiMap.of();
     final Set<Class<?>> eventBusSubscriberSet = new NonBlockingHashSet<>();
 
+    EventBus eventBus;
+
     void register(Object eventBusSubscriber, SubscriberInvokeCreator subscriberInvokeCreator) {
 
         Class<?> clazz = eventBusSubscriber.getClass();
@@ -433,6 +435,7 @@ final class SubscriberRegistry {
                     .setParameterName(parameter.getName())
                     .setParameterClass(parameterClass)
                     .setOrder(order)
+                    .setEventBus(eventBus)
                     .setExecutorSelect(executorSelector);
 
             SubscriberInvoke subscriberInvoke = subscriberInvokeCreator.create(subscriber);
@@ -494,28 +497,25 @@ enum EventBusStatus {
 
 @Slf4j
 @Setter
+@Getter
 @FieldDefaults(level = AccessLevel.PACKAGE)
 final class DefaultEventBus implements EventBus {
     /** 订阅者管理 */
     final SubscriberRegistry subscriberRegistry = new SubscriberRegistry();
-    @Getter
-    final String id;
 
+    final String id;
     SubscribeExecutorStrategy subscribeExecutorStrategy;
     SubscriberInvokeCreator subscriberInvokeCreator;
-    @Getter
     EventBusMessageCreator eventBusMessageCreator;
     EventBusListener eventBusListener;
 
     /** 对应逻辑服的相关信息 */
-    @Getter
     EventBrokerClientMessage eventBrokerClientMessage;
     /** 逻辑服 */
     BrokerClientContext brokerClientContext;
     /** 与业务框架所关联的线程执行器管理域 */
     ExecutorRegion executorRegion;
 
-    @Setter(AccessLevel.PACKAGE)
     EventBusStatus status = EventBusStatus.register;
 
     DefaultEventBus(String id) {
@@ -530,6 +530,7 @@ final class DefaultEventBus implements EventBus {
         }
 
         // 注册
+        this.subscriberRegistry.eventBus = this;
         this.subscriberRegistry.register(eventBusSubscriber, this.subscriberInvokeCreator);
     }
 
@@ -725,9 +726,9 @@ final class DefaultEventBus implements EventBus {
         }
 
         for (EventBrokerClientMessage brokerClientMessage : list) {
-            DefaultEventBus eventBus = (DefaultEventBus) EventBusRegion.getEventBus(brokerClientMessage.brokerClientId);
-            if (Objects.nonNull(eventBus)) {
-                eventBus.fireMe(eventBusMessage, async);
+            EventBus eventBus = EventBusRegion.getEventBus(brokerClientMessage.brokerClientId);
+            if (eventBus instanceof DefaultEventBus defaultEventBus) {
+                defaultEventBus.fireMe(eventBusMessage, async);
             }
         }
     }
@@ -786,31 +787,30 @@ final class DefaultEventBus implements EventBus {
         if (async) {
             // 异步执行
             for (Subscriber subscriber : subscribers) {
+                EventBus eventBus = subscriber.getEventBus();
+                ExecutorRegion executorRegion = eventBus.getExecutorRegion();
+
                 // 根据策略得到对应的执行器
-                ThreadExecutor threadExecutor = this.subscribeExecutorStrategy
-                        .select(subscriber, eventBusMessage, this.executorRegion);
-
-                SubscriberInvoke subscriberInvoke = subscriber.getSubscriberInvoke();
-
-                threadExecutor.execute(() -> {
-                    // invoke subscriber
-                    this.invoke(subscriberInvoke, eventBusMessage);
-                });
+                SubscribeExecutorStrategy executorStrategy = eventBus.getSubscribeExecutorStrategy();
+                ThreadExecutor threadExecutor = executorStrategy.select(subscriber, eventBusMessage, executorRegion);
+                threadExecutor.execute(() -> this.invoke(subscriber, eventBusMessage));
             }
         } else {
             // 同步执行
             for (Subscriber subscriber : subscribers) {
-                SubscriberInvoke subscriberInvoke = subscriber.getSubscriberInvoke();
-                this.invoke(subscriberInvoke, eventBusMessage);
+                this.invoke(subscriber, eventBusMessage);
             }
         }
     }
 
-    private void invoke(SubscriberInvoke subscriberInvoke, EventBusMessage eventBusMessage) {
+    private void invoke(Subscriber subscriber, EventBusMessage eventBusMessage) {
         try {
+            SubscriberInvoke subscriberInvoke = subscriber.getSubscriberInvoke();
             subscriberInvoke.invoke(eventBusMessage);
         } catch (Throwable e) {
-            this.eventBusListener.invokeException(e, eventBusMessage.getEventSource(), eventBusMessage);
+            EventBus eventBus = subscriber.getEventBus();
+            EventBusListener eventBusListener = eventBus.getEventBusListener();
+            eventBusListener.invokeException(e, eventBusMessage.getEventSource(), eventBusMessage);
         }
     }
 
