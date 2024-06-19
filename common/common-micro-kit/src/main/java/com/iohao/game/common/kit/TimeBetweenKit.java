@@ -157,5 +157,4 @@ public class TimeBetweenKit implements Serializable {
     private static int convertTimeIndex(int hours, int minute) {
         return hours * 60 + minute;
     }
-
 }

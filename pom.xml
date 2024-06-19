@@ -60,7 +60,7 @@
         <encoding>UTF-8</encoding>
 
         <!-- 网络库 : https://mvnrepository.com/artifact/io.netty/netty-all -->
-        <netty.version>4.1.108.Final</netty.version>
+        <netty.version>4.1.111.Final</netty.version>
         <!--  bolt https://mvnrepository.com/artifact/com.alipay.sofa/bolt  -->
         <bolt.version>1.6.6</bolt.version>
         <!-- hessian 格式化 https://mvnrepository.com/artifact/com.caucho/hessian -->
@@ -71,8 +71,7 @@
         <qdox.version>2.1.0</qdox.version>
 
         <!-- JCTools 是一款对jdk并发数据结构进行增强的并发工具 see http://jctools.github.io/JCTools/ https://mvnrepository.com/artifact/org.jctools/jctools-core -->
-        <jctools-core.version>4.0.2</jctools-core.version>
-
+        <jctools-core.version>4.0.5</jctools-core.version>
 
         <!-- redis internal : https://mvnrepository.com/artifact/org.redisson/redisson -->
         <redisson.version>3.17.7</redisson.version>
@@ -120,7 +119,7 @@
         https://github.com/jhunters/jprotobuf/
         https://mvnrepository.com/artifact/com.baidu/jprotobuf
         -->
-        <jprotobuf.version>2.4.22</jprotobuf.version>
+        <jprotobuf.version>2.4.23</jprotobuf.version>
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
         <protobuf-java.version>3.25.1</protobuf-java.version>
 

@@ -24,6 +24,7 @@ import lombok.experimental.UtilityClass;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -39,12 +40,41 @@ public class TimeKit {
     public final DateTimeFormatter dateFormatterYMD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     final DateTimeFormatter dateFormatterYMDShort = DateTimeFormatter.ofPattern("yyyyMMdd");
 
+    volatile LocalDate localDate;
+    volatile long currentTimeMillis;
+
     /** 时间更新策略 */
     @Setter
-    UpdateCurrentTimeMillis updateCurrentTimeMillis = new SecondUpdateCurrentTimeMillis();
+    UpdateCurrentTimeMillis updateCurrentTimeMillis;
+
+    public LocalDate nowLocalDate() {
+
+        if (Objects.nonNull(localDate)) {
+            return localDate;
+        }
+
+        if (Objects.isNull(localDate)) {
+            LocalDateTimeUpdatingStrategy.me().update();
+        }
+
+        return LocalDate.now();
+    }
 
     public long currentTimeMillis() {
-        return updateCurrentTimeMillis.getCurrentTimeMillis();
+
+        if (currentTimeMillis != 0) {
+            return currentTimeMillis;
+        }
+
+        if (Objects.nonNull(updateCurrentTimeMillis)) {
+            return updateCurrentTimeMillis.getCurrentTimeMillis();
+        }
+
+        if (currentTimeMillis == 0) {
+            SecondUpdatingStrategy.me().update();
+        }
+
+        return System.currentTimeMillis();
     }
 
     public int toSecond(LocalDateTime localDateTime) {
@@ -130,19 +160,49 @@ public class TimeKit {
         }
     }
 
-    private final class SecondUpdateCurrentTimeMillis implements UpdateCurrentTimeMillis {
-        volatile long currentTimeMillis;
+    interface TimeUpdatingStrategy {
+        default void update() {
+        }
+    }
 
-        public SecondUpdateCurrentTimeMillis() {
+    private final class LocalDateTimeUpdatingStrategy implements TimeUpdatingStrategy {
+
+        private LocalDateTimeUpdatingStrategy() {
+            localDate = LocalDate.now();
+
+            TaskKit.runInterval(() -> {
+                // 每分钟更新一次当前时间
+                localDate = LocalDate.now();
+            }, 1, TimeUnit.MINUTES);
+        }
+
+        public static LocalDateTimeUpdatingStrategy me() {
+            return Holder.ME;
+        }
+
+        /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+        private static class Holder {
+            static final LocalDateTimeUpdatingStrategy ME = new LocalDateTimeUpdatingStrategy();
+        }
+    }
+
+    private final class SecondUpdatingStrategy implements TimeUpdatingStrategy {
+        private SecondUpdatingStrategy() {
+            currentTimeMillis = System.currentTimeMillis();
+
             TaskKit.runInterval(() -> {
                 // 每秒更新一次当前时间
                 currentTimeMillis = System.currentTimeMillis();
             }, 1, TimeUnit.SECONDS);
         }
 
-        @Override
-        public long getCurrentTimeMillis() {
-            return this.currentTimeMillis;
+        public static SecondUpdatingStrategy me() {
+            return Holder.ME;
+        }
+
+        /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+        private static class Holder {
+            static final SecondUpdatingStrategy ME = new SecondUpdatingStrategy();
         }
     }
 }

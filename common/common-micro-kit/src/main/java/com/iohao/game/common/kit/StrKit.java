@@ -70,7 +70,6 @@ public class StrKit {
         return str == null || str.length() == 0;
     }
 
-
     /**
      * <p>字符串是否为非空白，非空白的定义如下： </p>
      * <ol>

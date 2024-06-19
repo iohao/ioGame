@@ -444,6 +444,4 @@ public interface EventBus {
     default EventBusMessage createEventBusMessage(Object eventSource) {
         return this.getEventBusMessageCreator().create(eventSource);
     }
-
-
 }
