@@ -110,7 +110,7 @@
         <!-- slf4j https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <logback.version>1.4.14</logback.version>
         <!-- lombok 消除冗长的 Java 代码 https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.32</lombok.version>
         <!--  junit https://mvnrepository.com/artifact/junit/junit  -->
         <junit.version>4.13.2</junit.version>
 
@@ -121,7 +121,7 @@
         -->
         <jprotobuf.version>2.4.23</jprotobuf.version>
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
-        <protobuf-java.version>3.25.1</protobuf-java.version>
+        <protobuf-java.version>3.25.3</protobuf-java.version>
 
         <!-- 后期整理需要移除的 https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
         <snakeyaml.version>1.33</snakeyaml.version>

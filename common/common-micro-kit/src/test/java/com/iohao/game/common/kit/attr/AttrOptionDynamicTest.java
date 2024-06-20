@@ -18,6 +18,7 @@ public class AttrOptionDynamicTest {
     public void ifNull() {
         Assert.assertNull(myAttrOptions.option(catAttrOption));
 
+        // 如果 catAttrOption 属性为 null，创建 AttrCat 对象，并赋值到属性中
         myAttrOptions.ifNull(catAttrOption, AttrCat::new);
         Assert.assertNotNull(myAttrOptions.option(catAttrOption));
 

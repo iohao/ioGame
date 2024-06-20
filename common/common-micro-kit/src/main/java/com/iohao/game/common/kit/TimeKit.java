@@ -47,6 +47,11 @@ public class TimeKit {
     @Setter
     UpdateCurrentTimeMillis updateCurrentTimeMillis;
 
+    /**
+     * 获取 LocalDate，默认每分钟更新一次，可有效减少 LocalDate 对象的创建。
+     *
+     * @return LocalDate
+     */
     public LocalDate nowLocalDate() {
 
         if (Objects.nonNull(localDate)) {
@@ -60,6 +65,11 @@ public class TimeKit {
         return LocalDate.now();
     }
 
+    /**
+     * 获取 currentTimeMillis 的时间，默认每秒更新一次，如果对时间要求不需要很精准的，可以考虑使用。
+     *
+     * @return System.currentTimeMillis()
+     */
     public long currentTimeMillis() {
 
         if (currentTimeMillis != 0) {
