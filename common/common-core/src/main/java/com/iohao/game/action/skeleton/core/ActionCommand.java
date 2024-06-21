@@ -31,6 +31,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
@@ -127,6 +128,29 @@ public final class ActionCommand {
 
     public Stream<ParamInfo> streamParamInfo() {
         return this.methodHasParam ? Arrays.stream(this.paramInfos) : Stream.empty();
+    }
+
+    /**
+     * action method 是否包含相关注解
+     *
+     * @param annotationClass 相关注解
+     * @return true 是的
+     * @since 21.10
+     */
+    public boolean containAnnotation(Class<? extends Annotation> annotationClass) {
+        return this.getAnnotation(annotationClass) != null;
+    }
+
+    /**
+     * 获取 action method 相关注解
+     *
+     * @param annotationClass 相关注解
+     * @param <T>             t
+     * @return 相关注解
+     * @since 21.10
+     */
+    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+        return actionMethod.getAnnotation(annotationClass);
     }
 
     /**
