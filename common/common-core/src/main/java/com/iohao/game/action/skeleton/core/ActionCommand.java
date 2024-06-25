@@ -359,8 +359,8 @@ public final class ActionCommand {
     /**
      * action 方法参数返回值信息
      */
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     @Getter
+    @FieldDefaults(level = AccessLevel.PRIVATE)
     public static final class ActionMethodReturnInfo implements MethodParamResultInfo {
         /** 返回类型 */
         final Class<?> returnTypeClazz;

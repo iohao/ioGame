@@ -19,7 +19,6 @@
 package com.iohao.game.bolt.broker.core.client;
 
 import com.iohao.game.action.skeleton.core.DataCodecKit;
-import com.iohao.game.action.skeleton.core.DevConfig;
 import com.iohao.game.action.skeleton.core.commumication.BroadcastContext;
 import com.iohao.game.action.skeleton.kit.RangeBroadcast;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
@@ -105,13 +104,7 @@ class BroadcastDebug {
             log.error(e.getMessage(), e);
         }
 
-        Object returnData = DataCodecKit.decode(responseMessage.getData(), aClass);
-
-        // 保存 cmd 路由对应的响应数据类型 class 信息
-        int cmdMerge = responseMessage.getHeadMetadata().getCmdMerge();
-        DevConfig.put(cmdMerge, aClass);
-
-        return returnData;
+        return DataCodecKit.decode(responseMessage.getData(), aClass);
     }
 
     private Class<?> getDataClass(String dataClass) throws ClassNotFoundException {

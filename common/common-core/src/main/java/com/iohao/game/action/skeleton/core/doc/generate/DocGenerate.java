@@ -16,22 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.doc;
-
-import lombok.Getter;
-import org.jctools.maps.NonBlockingHashMap;
-
-import java.util.Map;
+package com.iohao.game.action.skeleton.core.doc.generate;
 
 /**
+ * 文档生成接口，可扩展不同的实现
+ *
  * @author 渔民小镇
- * @date 2022-02-01
+ * @date 2024-06-25
  */
-@Getter
-public class ActionSendDocsRegion {
-    Map<Integer, ActionSendDoc> actionSendDocMap = new NonBlockingHashMap<>();
-
-    public void addActionSendDocs(ActionSendDocs actionSendDocs) {
-        this.actionSendDocMap.putAll(actionSendDocs.getActionSendDocMap());
-    }
+public interface DocGenerate {
+    void generate(IoGameDoc ioGameDoc);
 }

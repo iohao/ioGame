@@ -31,9 +31,9 @@ import java.util.function.Predicate;
  * @author 渔民小镇
  * @date 2022-02-01
  */
+@Getter
 public class ActionSendDocs {
 
-    @Getter
     Map<Integer, ActionSendDoc> actionSendDocMap = new NonBlockingHashMap<>();
 
     public void add(ActionSendDoc actionSendDoc) {
@@ -45,20 +45,6 @@ public class ActionSendDocs {
         actionSendDocMap.put(cmdMerge, actionSendDoc);
     }
 
-    public ActionSendDoc getActionSendDoc(int cmd, int subCmd) {
-        return this.getActionSendDoc(CmdKit.merge(cmd, subCmd));
-    }
-
-    public ActionSendDoc getActionSendDoc(int cmdMerge) {
-        ActionSendDoc actionSendDoc = actionSendDocMap.get(cmdMerge);
-
-        if (Objects.nonNull(actionSendDoc)) {
-            actionSendDoc.setRead(true);
-        }
-
-        return actionSendDoc;
-    }
-
     public void buildActionSendDoc(List<Class<?>> actionSendClassList) {
 
         Set<Class<?>> classSet = new HashSet<>(actionSendClassList);
@@ -67,19 +53,12 @@ public class ActionSendDocs {
         Predicate<Class<?>> predicate = controllerClazz -> Objects.nonNull(controllerClazz.getAnnotation(DocActionSends.class));
 
         classSet.stream().filter(predicate).forEach(actionSendClass -> {
-
             DocActionSends annotation = actionSendClass.getAnnotation(DocActionSends.class);
-
             DocActionSend[] docActionSends = annotation.value();
-
             for (DocActionSend docActionSend : docActionSends) {
-
                 ActionSendDoc actionSendDoc = new ActionSendDoc(docActionSend);
-
                 this.put(actionSendDoc);
             }
-
         });
-
     }
 }

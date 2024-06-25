@@ -73,7 +73,7 @@ public class ActionDoc {
         }
     }
 
-    Stream<ActionCommandDoc> stream() {
+    public Stream<ActionCommandDoc> stream() {
         return actionCommandDocMap
                 .values()
                 .stream()

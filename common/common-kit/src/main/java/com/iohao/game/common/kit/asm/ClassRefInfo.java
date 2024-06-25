@@ -149,5 +149,4 @@ public final class ClassRefInfo implements Serializable {
         methodRefInfo.invokeMethod(object, value);
         return this;
     }
-
 }

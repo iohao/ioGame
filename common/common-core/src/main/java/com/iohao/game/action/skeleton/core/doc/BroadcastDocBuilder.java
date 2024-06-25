@@ -48,6 +48,9 @@ public final class BroadcastDocBuilder {
     String dataClassName;
     /** 广播业务参数的描述 */
     String dataDescription;
+    boolean list;
+    /** 业务数据类型 */
+    Class<?> dataClass;
 
     BroadcastDocBuilder(CmdInfo cmdInfo) {
         this.cmdInfo = cmdInfo;
@@ -60,9 +63,17 @@ public final class BroadcastDocBuilder {
      * @return this
      */
     public BroadcastDocBuilder setDataClassList(Class<?> dataClass) {
+        return this.setDataClassList(dataClass, "");
+    }
+
+    public BroadcastDocBuilder setDataClassList(Class<?> dataClass, String dataDescription) {
         String simpleName = ByteValueList.class.getSimpleName();
         String simpleNameActualClazz = dataClass.getSimpleName();
-        dataClassName = String.format("%s<%s>", simpleName, simpleNameActualClazz);
+        this.dataClassName = String.format("%s<%s>", simpleName, simpleNameActualClazz);
+        this.list = true;
+        this.dataClass = dataClass;
+        this.dataDescription = dataDescription;
+
         return this;
     }
 
@@ -87,9 +98,11 @@ public final class BroadcastDocBuilder {
 
         this.dataDescription = dataDescription;
 
-        dataClassName = WrapperKit.optionalRefType(dataClass)
+        this.dataClassName = WrapperKit.optionalRefType(dataClass)
                 .map(Class::getSimpleName)
                 .orElse(dataClass.getSimpleName());
+
+        this.dataClass = dataClass;
 
         return this;
     }
@@ -110,6 +123,7 @@ public final class BroadcastDocBuilder {
         actionSendDoc.setDescription(this.description);
         actionSendDoc.setDataClassName(this.dataClassName);
         actionSendDoc.setDataDescription(this.dataDescription);
+        actionSendDoc.setDataClass(this.dataClass);
 
         return actionSendDoc;
     }

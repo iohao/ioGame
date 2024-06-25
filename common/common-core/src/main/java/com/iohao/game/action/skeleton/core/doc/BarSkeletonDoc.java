@@ -18,15 +18,13 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.core.*;
-import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.common.kit.io.FileKit;
+import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.doc.generate.DocGenerate;
+import com.iohao.game.action.skeleton.core.doc.generate.IoGameDoc;
+import com.iohao.game.action.skeleton.core.doc.generate.TextDocGenerate;
 import lombok.Setter;
 
-import java.io.File;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * 游戏文档生成
@@ -37,10 +35,14 @@ import java.util.stream.Stream;
 public class BarSkeletonDoc {
 
     final List<BarSkeleton> skeletonList = new LinkedList<>();
+    final Map<String, DocGenerate> docGenerateMap = new HashMap<>();
+
     @Setter
+    @Deprecated
     String docFileName = "doc_game.txt";
 
     @Setter
+    @Deprecated
     String docPath;
 
     /** true 生成文档 */
@@ -62,141 +64,77 @@ public class BarSkeletonDoc {
         skeletonList.add(barSkeleton);
     }
 
+    public void addDocGenerate(DocGenerate docGenerate) {
+        String key = docGenerate.getClass().getName();
+        docGenerateMap.put(key, docGenerate);
+    }
+
     public void buildDoc() {
 
         if (!generateDoc) {
             return;
         }
 
-        // 路径为当前项目
-        if (Objects.isNull(this.docPath)) {
-            this.docPath = System.getProperty("user.dir") + File.separator + docFileName;
-        }
+        IoGameDoc ioGameDoc = ofIoGameDoc();
+        docGenerateMap.values().forEach(docGenerate -> docGenerate.generate(ioGameDoc));
 
-        this.buildDoc(this.docPath);
+        docGenerateMap.values().clear();
     }
 
+    @Deprecated
     public void buildDoc(String docPath) {
-
-        Objects.requireNonNull(docPath);
-
-        if (FileKit.isDirectory(docPath)) {
-            throw new RuntimeException("file is Directory ");
+        if (!generateDoc) {
+            return;
         }
 
-        cmdDataClassRegionDevInfo();
+        // 兼容
+        if (docGenerateMap.get(TextDocGenerate.class.getName()) instanceof TextDocGenerate textDocGenerate) {
+            textDocGenerate.setPath(docPath);
+        }
 
-        ActionSendDocsRegion actionSendDocsRegion = this.createActionSendDocsRegion();
+        buildDoc();
+    }
 
-        List<String> docContentList = new ArrayList<>(128);
+    private IoGameDoc ofIoGameDoc() {
 
-        // 加上游戏文档格式说明
-        this.gameDocURLDescription(docContentList);
+        IoGameDoc ioGameDoc = new IoGameDoc();
+        ioGameDoc.setActionDocMap(ActionDocs.actionDocMap);
 
-        // 生成文档 - action
-        ActionDocs.stream().forEach(actionDoc -> {
-            DocInfo docInfo = new DocInfo();
-            docInfo.actionSendDocsRegion = actionSendDocsRegion;
+        BroadcastDocRecordRegion broadcastDocRecordRegion = this.createBroadcastDocRegion();
+        ioGameDoc.setBroadcastDocRecordRegion(broadcastDocRecordRegion);
 
-            actionDoc.stream()
-                    .map(ActionCommandDoc::getActionCommand)
-                    .filter(Objects::nonNull)
-                    .forEach(subBehavior -> {
-                        docInfo.setHead(subBehavior);
-                        docInfo.add(subBehavior);
-                    });
+        ErrorCodeDocsRegion errorCodeDocsRegion = this.createErrorCodeDocsRegion();
+        ioGameDoc.setErrorCodeDocsRegion(errorCodeDocsRegion);
 
-            String render = docInfo.render();
-            docContentList.add(render);
-
-        });
-
-        // 生成文档 - 广播（推送）文档
-        extractedActionSend(actionSendDocsRegion, docContentList);
-
-        // 生成文档 - 错误码文档
-        extractedErrorCode(docContentList);
-
-        String docText = String.join("", docContentList);
-        FileKit.writeUtf8String(docText, docPath);
+        return ioGameDoc;
     }
 
     public List<BarSkeleton> listBarSkeleton() {
         return new ArrayList<>(this.skeletonList);
     }
 
-    private void gameDocURLDescription(List<String> docContentList) {
-        // 加上游戏文档格式说明
-        String gameDocInfo = """
-                ==================== 游戏文档格式说明 ====================
-                https://www.yuque.com/iohao/game/irth38#cJLdC
-                                
-                """;
-
-        docContentList.add(gameDocInfo);
-    }
-
-    private void extractedErrorCode(List<String> docContentList) {
-        ErrorCodeDocsRegion errorCodeDocsRegion = this.createErrorCodeDocsRegion();
-
-
-        String separator = System.lineSeparator();
-
-        docContentList.add("==================== 错误码 ====================");
-        docContentList.add(separator);
-
-        for (ErrorCodeDoc errorCodeDoc : errorCodeDocsRegion.listErrorCodeDoc()) {
-            String template = " {} : {} ";
-
-            String format = StrKit.format(template, errorCodeDoc.getCode(), errorCodeDoc.getMsg());
-            docContentList.add(format);
-            docContentList.add(separator);
-        }
-    }
-
-    private void extractedActionSend(ActionSendDocsRegion actionSendDocsRegion, List<String> docContentList) {
-        // 生成剩余的推送文档
-        List<ActionSendDoc> actionSendDocList = actionSendDocsRegion.listActionSendDoc();
-
-        if (actionSendDocList.isEmpty()) {
-            return;
-        }
-
-        String separator = System.lineSeparator();
-
-        docContentList.add("==================== 其它广播推送 ====================");
-        docContentList.add(separator);
-
-        for (ActionSendDoc actionSendDoc : actionSendDocList) {
-
-            String template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}";
-
-            if (StrKit.isNotEmpty(actionSendDoc.getDescription())) {
-                template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}，({description})";
-            }
-
-            var stringObjectMap = new HashMap<>();
-            stringObjectMap.put("cmd", actionSendDoc.getCmd());
-            stringObjectMap.put("subCmd", actionSendDoc.getSubCmd());
-            stringObjectMap.put("dataClass", actionSendDoc.getDataClassName());
-            stringObjectMap.put("description", actionSendDoc.getDescription());
-            stringObjectMap.put("dataDescription", actionSendDoc.getDataDescription());
-
-            String format = StrKit.format(template, stringObjectMap);
-
-            docContentList.add(format);
-            docContentList.add(separator);
-        }
-    }
-
-    private ActionSendDocsRegion createActionSendDocsRegion() {
-        ActionSendDocsRegion actionSendDocsRegion = new ActionSendDocsRegion();
+    private BroadcastDocRecordRegion createBroadcastDocRegion() {
+        BroadcastDocRecordRegion broadcastDocRecordRegion = new BroadcastDocRecordRegion();
 
         skeletonList.stream()
                 .map(BarSkeleton::getActionSendDocs)
-                .forEach(actionSendDocsRegion::addActionSendDocs);
+                .flatMap(actionSendDocs -> actionSendDocs.getActionSendDocMap().values().stream())
+                .map(actionSendDoc -> {
+                    // 转换为 BroadcastDocRecord
+                    BroadcastDocRecord record = new BroadcastDocRecord();
+                    record.setCmd(actionSendDoc.getCmd())
+                            .setSubCmd(actionSendDoc.getSubCmd())
+                            .setDataClass(actionSendDoc.getDataClass())
+                            .setDescription(actionSendDoc.getDescription())
+                            .setDataClassName(actionSendDoc.getDataClassName())
+                            .setDataDescription(actionSendDoc.getDataDescription())
+                            .setList(actionSendDoc.isList())
+                            .setMethodName(actionSendDoc.getMethodName())
+                    ;
+                    return record;
+                }).forEach(broadcastDocRecordRegion::add);
 
-        return actionSendDocsRegion;
+        return broadcastDocRecordRegion;
     }
 
     private ErrorCodeDocsRegion createErrorCodeDocsRegion() {
@@ -208,28 +146,8 @@ public class BarSkeletonDoc {
         return region;
     }
 
-    private void cmdDataClassRegionDevInfo() {
-        // 这个方法主要是保存一下 cmd 路由对应的响应数据类型信息
-        skeletonList.stream()
-                // 得到业务框架的 ActionCommandRegions
-                .map(BarSkeleton::getActionCommandRegions)
-                // 将 map.values 合并成一个 list，即将 ActionCommandRegions 中的 regionMap 的 value 转为 stream
-                .flatMap((Function<ActionCommandRegions, Stream<ActionCommandRegion>>) actionCommandRegions -> actionCommandRegions.getRegionMap().values().stream())
-                // 将 map.values 合并成一个 list，即将 ActionCommandRegion 中的 subActionCommandMap 的 value 转为 stream
-                .flatMap((Function<ActionCommandRegion, Stream<ActionCommand>>) actionCommandRegion -> actionCommandRegion.values().stream())
-                .forEach(actionCommand -> {
-                    // 路由
-                    CmdInfo cmdInfo = actionCommand.getCmdInfo();
-                    // action 的返回值
-                    ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo = actionCommand.getActionMethodReturnInfo();
-                    Class<?> dataClass = actionMethodReturnInfo.getActualTypeArgumentClazz();
-                    // cmd 路由对应的响应数据类型信息
-                    DevConfig.put(cmdInfo.getCmdMerge(), dataClass);
-                });
-    }
-
     private BarSkeletonDoc() {
-
+        addDocGenerate(new TextDocGenerate());
     }
 
     public static BarSkeletonDoc me() {

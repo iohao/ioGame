@@ -31,6 +31,23 @@ import java.util.Map;
 @UtilityClass
 public class StrKit {
 
+    /**
+     * 首字母转换为大写
+     *
+     * @param value 字符串
+     * @return 转换后的字符串
+     */
+    public String firstCharToUpperCase(String value) {
+        char firstChar = value.charAt(0);
+        if (firstChar >= 'a' && firstChar <= 'z') {
+            char[] arr = value.toCharArray();
+            arr[0] -= 32;
+            return String.valueOf(arr);
+        }
+
+        return value;
+    }
+
     public String format(@NonNull CharSequence template, @NonNull Map<?, ?> map) {
         return AdapterHuUtils.format(template, map);
     }
@@ -67,7 +84,7 @@ public class StrKit {
     }
 
     public boolean isEmpty(CharSequence str) {
-        return str == null || str.length() == 0;
+        return str == null || str.isEmpty();
     }
 
     /**

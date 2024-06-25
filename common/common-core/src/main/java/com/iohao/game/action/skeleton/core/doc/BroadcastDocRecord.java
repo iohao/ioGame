@@ -18,25 +18,25 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.annotation.DocActionSend;
-import com.iohao.game.action.skeleton.core.CmdInfo;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 /**
  * @author 渔民小镇
- * @date 2022-02-01
+ * @date 2024-06-25
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class ActionSendDoc {
+public class BroadcastDocRecord {
     /** 主路由 */
-    final int cmd;
+    int cmd;
     /** 子路由 */
-    final int subCmd;
+    int subCmd;
     /** 业务类型 */
     Class<?> dataClass;
     /** 推送描述 */
@@ -48,24 +48,4 @@ public final class ActionSendDoc {
     /** 广播业务参数是否是 List */
     boolean list;
     String methodName;
-
-    public ActionSendDoc(DocActionSend docActionSend) {
-        this(docActionSend.cmd(), docActionSend.subCmd(), docActionSend.dataClass(), docActionSend.description());
-    }
-
-    public ActionSendDoc(CmdInfo cmdInfo, Class<?> dataClass, String description) {
-        this(cmdInfo.getCmd(), cmdInfo.getSubCmd(), dataClass, description);
-    }
-
-    public ActionSendDoc(int cmd, int subCmd, Class<?> dataClass, String description) {
-        this.cmd = cmd;
-        this.subCmd = subCmd;
-        this.dataClass = dataClass;
-        this.description = description;
-    }
-
-    public ActionSendDoc(CmdInfo cmdInfo) {
-        this.cmd = cmdInfo.getCmd();
-        this.subCmd = cmdInfo.getSubCmd();
-    }
 }

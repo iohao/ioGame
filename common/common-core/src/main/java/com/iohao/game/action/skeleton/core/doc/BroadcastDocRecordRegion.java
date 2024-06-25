@@ -18,20 +18,36 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.iohao.game.action.skeleton.core.CmdKit;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashMap;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
+ * 广播相关文档
+ *
  * @author 渔民小镇
- * @date 2022-02-01
+ * @date 2024-06-25
  */
 @Getter
-public class ActionSendDocsRegion {
-    Map<Integer, ActionSendDoc> actionSendDocMap = new NonBlockingHashMap<>();
+@Setter(AccessLevel.PACKAGE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class BroadcastDocRecordRegion {
+    Map<Integer, BroadcastDocRecord> map = new NonBlockingHashMap<>();
 
-    public void addActionSendDocs(ActionSendDocs actionSendDocs) {
-        this.actionSendDocMap.putAll(actionSendDocs.getActionSendDocMap());
+    public void add(BroadcastDocRecord broadcastDocRecord) {
+        int cmd = broadcastDocRecord.getCmd();
+        int subCmd = broadcastDocRecord.getSubCmd();
+        int merge = CmdKit.merge(cmd, subCmd);
+        map.put(merge, broadcastDocRecord);
+    }
+
+    public Collection<BroadcastDocRecord> values() {
+        return map.values();
     }
 }

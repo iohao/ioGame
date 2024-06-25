@@ -16,9 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.doc;
+package com.iohao.game.action.skeleton.core.doc.generate;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
+import com.iohao.game.action.skeleton.core.CmdKit;
+import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
+import com.iohao.game.action.skeleton.core.doc.BroadcastDocRecord;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
 import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
 import com.iohao.game.common.kit.StrKit;
@@ -34,11 +37,11 @@ import java.util.*;
 class DocInfo {
     String actionSimpleName;
     String classComment;
-    ActionSendDocsRegion actionSendDocsRegion;
+    Map<Integer, BroadcastDocRecord> broadcastDocRecordMap;
 
     final List<Map<String, String>> subBehaviorList = new ArrayList<>();
 
-    public void setHead(ActionCommand subBehavior) {
+    void setHead(ActionCommand subBehavior) {
         ActionCommandDoc actionCommandDoc = subBehavior.getActionCommandDoc();
         this.actionSimpleName = subBehavior.getActionControllerClazz().getSimpleName();
         this.classComment = actionCommandDoc.getClassComment();
@@ -75,7 +78,6 @@ class DocInfo {
 
         paramMap.put("methodParamComment", actionCommandDoc.getMethodParamComment());
         paramMap.put("methodReturnComment", actionCommandDoc.getMethodReturnComment());
-
     }
 
     private String paramInfoToString(ActionCommand.ParamInfo paramInfo) {
@@ -121,11 +123,6 @@ class DocInfo {
 
         for (Map<String, String> paramMap : subBehaviorList) {
 
-            int cmd = Integer.parseInt(paramMap.get("cmd"));
-            int subCmd = Integer.parseInt(paramMap.get("subCmd"));
-
-            ActionSendDoc actionSendDoc = this.actionSendDocsRegion.getActionSendDoc(cmd, subCmd);
-
             String format = StrKit.format(subActionCommandTemplate, paramMap);
             lineList.add(format);
 
@@ -146,10 +143,14 @@ class DocInfo {
             }
 
             // 广播推送
-            if (Objects.nonNull(actionSendDoc)) {
-                String dataClassName = actionSendDoc.getDataClassName();
-                String description = actionSendDoc.getDescription();
-                String dataDescription = actionSendDoc.getDataDescription();
+            int cmd = Integer.parseInt(paramMap.get("cmd"));
+            int subCmd = Integer.parseInt(paramMap.get("subCmd"));
+            int merge = CmdKit.merge(cmd, subCmd);
+            var broadcastDocRecord = this.broadcastDocRecordMap.remove(merge);
+            if (Objects.nonNull(broadcastDocRecord)) {
+                String dataClassName = broadcastDocRecord.getDataClassName();
+                String description = broadcastDocRecord.getDescription();
+                String dataDescription = broadcastDocRecord.getDataDescription();
                 format = StrKit.format("    广播推送: {} {}，({})", dataClassName, dataDescription, description);
                 lineList.add(format);
             }
