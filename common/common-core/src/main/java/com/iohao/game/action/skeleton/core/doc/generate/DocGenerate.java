@@ -25,5 +25,10 @@ package com.iohao.game.action.skeleton.core.doc.generate;
  * @date 2024-06-25
  */
 public interface DocGenerate {
+    /**
+     * 生成文档
+     *
+     * @param ioGameDoc ioGameDoc
+     */
     void generate(IoGameDoc ioGameDoc);
 }

@@ -43,9 +43,10 @@ public interface GameFlowContext {
     /**
      * get room
      *
+     * @param <T> t
      * @return room
      */
-    Room getRoom();
+    <T extends Room> T getRoom();
 
     /**
      * get FlowContext
@@ -55,11 +56,12 @@ public interface GameFlowContext {
     FlowContext getFlowContext();
 
     /**
-     * 得到当前操作的玩家
+     * get 当前操作的玩家
      *
+     * @param <T> t
      * @return 当前玩家
      */
-    default Player getPlayer() {
+    default <T extends Player> T getPlayer() {
         long userId = getUserId();
         Room room = getRoom();
         return room.getPlayerById(userId);
