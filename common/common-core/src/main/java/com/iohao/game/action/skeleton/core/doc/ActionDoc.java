@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ActionDoc {
+public final class ActionDoc {
     final int cmd;
     final Class<?> controllerClazz;
     /**

@@ -18,27 +18,33 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
- * 错误码文档相关
+ * 类型映射记录
  *
  * @author 渔民小镇
- * @date 2022-02-03
+ * @date 2024-06-26
  */
-@Getter
-public final class ErrorCodeDocs {
-    List<ErrorCodeDoc> errorCodeDocList = new ArrayList<>();
+@Setter
+@Accessors(chain = true)
+public final class TypeMappingRecord {
+    @Getter
+    String paramTypeName;
+    String listParamTypeName;
 
-    public void addMsgExceptionInfo(MsgExceptionInfo msgExceptionInfo) {
-        ErrorCodeDoc errorCodeDoc = new ErrorCodeDoc()
-                .setCode(msgExceptionInfo.getCode())
-                .setMsg(msgExceptionInfo.getMsg());
+    String ofMethodTypeName;
+    String ofMethodListTypeName;
+    /** 内置扩展类型 */
+    boolean internalType = true;
 
-        this.errorCodeDocList.add(errorCodeDoc);
+    public String getParamTypeName(boolean isList) {
+        return isList ? listParamTypeName : paramTypeName;
+    }
+
+    public String getOfMethodTypeName(boolean isList) {
+        return isList ? ofMethodListTypeName : ofMethodTypeName;
     }
 }

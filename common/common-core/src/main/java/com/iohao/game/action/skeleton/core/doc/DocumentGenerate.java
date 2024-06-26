@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.doc.generate;
+package com.iohao.game.action.skeleton.core.doc;
 
 /**
  * 文档生成接口，可扩展不同的实现
@@ -24,11 +24,11 @@ package com.iohao.game.action.skeleton.core.doc.generate;
  * @author 渔民小镇
  * @date 2024-06-25
  */
-public interface DocGenerate {
+public interface DocumentGenerate {
     /**
      * 生成文档
      *
-     * @param ioGameDoc ioGameDoc
+     * @param ioGameDocument ioGameDocument
      */
-    void generate(IoGameDoc ioGameDoc);
+    void generate(IoGameDocument ioGameDocument);
 }

@@ -16,12 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.doc.generate;
+package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.CmdKit;
-import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
-import com.iohao.game.action.skeleton.core.doc.BroadcastDocRecord;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
 import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
 import com.iohao.game.common.kit.StrKit;
@@ -34,10 +32,10 @@ import java.util.*;
  * @date 2022-01-29
  */
 @Getter
-class DocInfo {
+final class DocInfo {
     String actionSimpleName;
     String classComment;
-    Map<Integer, BroadcastDocRecord> broadcastDocRecordMap;
+    Map<Integer, BroadcastDocument> broadcastDocumentMap;
 
     final List<Map<String, String>> subBehaviorList = new ArrayList<>();
 
@@ -146,11 +144,11 @@ class DocInfo {
             int cmd = Integer.parseInt(paramMap.get("cmd"));
             int subCmd = Integer.parseInt(paramMap.get("subCmd"));
             int merge = CmdKit.merge(cmd, subCmd);
-            var broadcastDocRecord = this.broadcastDocRecordMap.remove(merge);
-            if (Objects.nonNull(broadcastDocRecord)) {
-                String dataClassName = broadcastDocRecord.getDataClassName();
-                String description = broadcastDocRecord.getDescription();
-                String dataDescription = broadcastDocRecord.getDataDescription();
+            var broadcastDocument = this.broadcastDocumentMap.remove(merge);
+            if (Objects.nonNull(broadcastDocument)) {
+                String dataClassName = broadcastDocument.getDataClassName();
+                String description = broadcastDocument.getDescription();
+                String dataDescription = broadcastDocument.getDataDescription();
                 format = StrKit.format("    广播推送: {} {}，({})", dataClassName, dataDescription, description);
                 lineList.add(format);
             }

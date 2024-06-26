@@ -51,6 +51,8 @@ public final class BroadcastDocBuilder {
     boolean list;
     /** 业务数据类型 */
     Class<?> dataClass;
+    /** 广播方法名 */
+    String methodName;
 
     BroadcastDocBuilder(CmdInfo cmdInfo) {
         this.cmdInfo = cmdInfo;
@@ -124,6 +126,14 @@ public final class BroadcastDocBuilder {
         actionSendDoc.setDataClassName(this.dataClassName);
         actionSendDoc.setDataDescription(this.dataDescription);
         actionSendDoc.setDataClass(this.dataClass);
+        actionSendDoc.setList(this.list);
+
+        // 如果没有指定广播的方法名，则方法名使用下述规则
+        String theMethodName = Objects.isNull(methodName)
+                ? "Method_%d_%d".formatted(cmdInfo.getCmd(), cmdInfo.getSubCmd())
+                : methodName;
+
+        actionSendDoc.setMethodName(theMethodName);
 
         return actionSendDoc;
     }

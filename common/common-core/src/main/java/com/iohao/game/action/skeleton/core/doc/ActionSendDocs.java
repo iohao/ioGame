@@ -32,7 +32,7 @@ import java.util.function.Predicate;
  * @date 2022-02-01
  */
 @Getter
-public class ActionSendDocs {
+public final class ActionSendDocs {
 
     Map<Integer, ActionSendDoc> actionSendDocMap = new NonBlockingHashMap<>();
 

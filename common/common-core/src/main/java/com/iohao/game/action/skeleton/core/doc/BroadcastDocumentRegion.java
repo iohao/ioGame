@@ -18,27 +18,36 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
+import com.iohao.game.action.skeleton.core.CmdKit;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import org.jctools.maps.NonBlockingHashMap;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 
 /**
- * 错误码文档相关
+ * 广播相关文档
  *
  * @author 渔民小镇
- * @date 2022-02-03
+ * @date 2024-06-25
  */
 @Getter
-public final class ErrorCodeDocs {
-    List<ErrorCodeDoc> errorCodeDocList = new ArrayList<>();
+@Setter(AccessLevel.PACKAGE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public final class BroadcastDocumentRegion {
+    Map<Integer, BroadcastDocument> map = new NonBlockingHashMap<>();
 
-    public void addMsgExceptionInfo(MsgExceptionInfo msgExceptionInfo) {
-        ErrorCodeDoc errorCodeDoc = new ErrorCodeDoc()
-                .setCode(msgExceptionInfo.getCode())
-                .setMsg(msgExceptionInfo.getMsg());
+    public void add(BroadcastDocument broadcastDocument) {
+        int cmd = broadcastDocument.getCmd();
+        int subCmd = broadcastDocument.getSubCmd();
+        int merge = CmdKit.merge(cmd, subCmd);
+        map.put(merge, broadcastDocument);
+    }
 
-        this.errorCodeDocList.add(errorCodeDoc);
+    public Collection<BroadcastDocument> values() {
+        return map.values();
     }
 }

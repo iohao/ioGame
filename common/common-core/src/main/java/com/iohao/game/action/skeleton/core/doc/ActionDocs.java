@@ -31,7 +31,7 @@ import java.util.stream.Stream;
  * @author 渔民小镇
  * @date 2023-07-13
  */
-public class ActionDocs {
+public final class ActionDocs {
     /**
      * action 文档
      * <pre>

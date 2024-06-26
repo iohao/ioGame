@@ -28,7 +28,7 @@ import java.util.Map;
  * @date 2022-02-01
  */
 @Getter
-public class ActionSendDocsRegion {
+public final class ActionSendDocsRegion {
     Map<Integer, ActionSendDoc> actionSendDocMap = new NonBlockingHashMap<>();
 
     public void addActionSendDocs(ActionSendDocs actionSendDocs) {

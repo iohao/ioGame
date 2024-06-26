@@ -26,7 +26,7 @@ import java.util.*;
  * @author 渔民小镇
  * @date 2022-02-03
  */
-public class ErrorCodeDocsRegion {
+public final class ErrorCodeDocsRegion {
 
     Set<ErrorCodeDoc> errorCodeDocSet = new HashSet<>();
 

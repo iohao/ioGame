@@ -16,15 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.doc.generate;
+package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.core.doc.ActionDoc;
-import com.iohao.game.action.skeleton.core.doc.BroadcastDocRecordRegion;
-import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocsRegion;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -36,7 +34,7 @@ import java.util.stream.Stream;
  */
 @Getter
 @Setter
-public class IoGameDoc {
+public final class IoGameDocument {
     /**
      * action 文档相关信息
      * <pre>
@@ -45,10 +43,13 @@ public class IoGameDoc {
      *  </pre>
      */
     Map<Class<?>, ActionDoc> actionDocMap;
-    /** 广播文档 */
-    BroadcastDocRecordRegion broadcastDocRecordRegion;
     /** 错误码域 */
     ErrorCodeDocsRegion errorCodeDocsRegion;
+
+    /** 已经解析好的广播文档 */
+    BroadcastDocumentRegion broadcastDocumentRegion;
+    /** 已经解析好的错误码文档 */
+    List<ErrorCodeDocument> errorCodeDocumentList;
 
     public Stream<ActionDoc> streamActionDoc() {
         return this.actionDocMap

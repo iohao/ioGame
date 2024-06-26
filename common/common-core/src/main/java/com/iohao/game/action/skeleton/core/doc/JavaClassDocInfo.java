@@ -34,7 +34,7 @@ import java.util.Map;
  * @author 渔民小镇
  * @date 2022-01-28
  */
-public class JavaClassDocInfo {
+public final class JavaClassDocInfo {
     final JavaClass javaClass;
     Map<String, JavaMethod> javaMethodMap = new HashMap<>();
 
@@ -78,18 +78,20 @@ public class JavaClassDocInfo {
         }
 
         for (DocletTag tag : tags) {
+            String name = tag.getName();
             String value = tag.getValue();
+
             if (StrKit.isEmpty(value) || value.contains("flowContext")) {
                 continue;
             }
 
-            String name = tag.getName();
-            if ("return".equals(name)) {
+            int paramIndex = value.indexOf(" ");
+            if ("param".equals(name) && paramIndex != -1) {
+                String trim = value.substring(paramIndex).trim();
+                actionCommandDoc.setMethodParamComment(trim);
+            } else if ("return".equals(name)) {
                 actionCommandDoc.setMethodReturnComment(value);
-                continue;
             }
-
-            actionCommandDoc.setMethodParamComment(value);
         }
     }
 

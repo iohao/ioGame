@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.doc.generate;
+package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.core.doc.*;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
 import lombok.Setter;
@@ -32,26 +31,26 @@ import java.util.*;
  * @date 2024-06-25
  */
 @Setter
-public class TextDocGenerate implements DocGenerate {
+public final class TextDocumentGenerate implements DocumentGenerate {
     /** 文档生成后所存放的目录 */
     String path = System.getProperty("user.dir") + File.separator + "doc_game.txt";
 
     @Override
-    public void generate(IoGameDoc ioGameDoc) {
-        BroadcastDocRecordRegion broadcastDocRecordRegion = ioGameDoc.getBroadcastDocRecordRegion();
+    public void generate(IoGameDocument ioGameDocument) {
+        BroadcastDocumentRegion broadcastDocumentRegion = ioGameDocument.getBroadcastDocumentRegion();
 
         List<String> docContentList = new ArrayList<>(128);
 
         // 加上游戏文档格式说明
         this.gameDocURLDescription(docContentList);
 
-        Map<Integer, BroadcastDocRecord> broadcastDocRecordMap = new NonBlockingHashMap<>();
-        broadcastDocRecordMap.putAll(broadcastDocRecordRegion.getMap());
+        Map<Integer, BroadcastDocument> broadcastDocumentMap = new NonBlockingHashMap<>();
+        broadcastDocumentMap.putAll(broadcastDocumentRegion.getMap());
 
         // 生成文档 - action
-        ioGameDoc.streamActionDoc().forEach(actionDoc -> {
+        ioGameDocument.streamActionDoc().forEach(actionDoc -> {
             DocInfo docInfo = new DocInfo();
-            docInfo.broadcastDocRecordMap = broadcastDocRecordMap;
+            docInfo.broadcastDocumentMap = broadcastDocumentMap;
 
             actionDoc.stream()
                     .map(ActionCommandDoc::getActionCommand)
@@ -66,10 +65,10 @@ public class TextDocGenerate implements DocGenerate {
         });
 
         // 生成文档 - 广播（推送）文档
-        extractedBroadcastDoc(broadcastDocRecordMap, docContentList);
+        extractedBroadcastDoc(broadcastDocumentMap, docContentList);
 
         // 生成文档 - 错误码文档
-        ErrorCodeDocsRegion errorCodeDocsRegion = ioGameDoc.getErrorCodeDocsRegion();
+        ErrorCodeDocsRegion errorCodeDocsRegion = ioGameDocument.getErrorCodeDocsRegion();
         extractedErrorCode(errorCodeDocsRegion, docContentList);
 
         // 写文件
@@ -88,10 +87,10 @@ public class TextDocGenerate implements DocGenerate {
         docContentList.add(gameDocInfo);
     }
 
-    private void extractedBroadcastDoc(Map<Integer, BroadcastDocRecord> broadcastDocRecordMap, List<String> docContentList) {
+    private void extractedBroadcastDoc(Map<Integer, BroadcastDocument> broadcastDocumentMap, List<String> docContentList) {
 
-        var docRecords = broadcastDocRecordMap.values();
-        if (docRecords.isEmpty()) {
+        var broadcastDocumentList = broadcastDocumentMap.values();
+        if (broadcastDocumentList.isEmpty()) {
             return;
         }
 
@@ -100,20 +99,20 @@ public class TextDocGenerate implements DocGenerate {
         docContentList.add("==================== 其它广播推送 ====================");
         docContentList.add(separator);
 
-        for (BroadcastDocRecord docRecord : docRecords) {
+        for (BroadcastDocument broadcastDocument : broadcastDocumentList) {
 
             String template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}";
 
-            if (StrKit.isNotEmpty(docRecord.getDescription())) {
+            if (StrKit.isNotEmpty(broadcastDocument.getDescription())) {
                 template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}，({description})";
             }
 
             var stringObjectMap = new HashMap<>();
-            stringObjectMap.put("cmd", docRecord.getCmd());
-            stringObjectMap.put("subCmd", docRecord.getSubCmd());
-            stringObjectMap.put("dataClass", docRecord.getDataClassName());
-            stringObjectMap.put("description", docRecord.getDescription());
-            stringObjectMap.put("dataDescription", docRecord.getDataDescription());
+            stringObjectMap.put("cmd", broadcastDocument.getCmd());
+            stringObjectMap.put("subCmd", broadcastDocument.getSubCmd());
+            stringObjectMap.put("dataClass", broadcastDocument.getDataClassName());
+            stringObjectMap.put("description", broadcastDocument.getDescription());
+            stringObjectMap.put("dataDescription", broadcastDocument.getDataDescription());
 
             String format = StrKit.format(template, stringObjectMap);
 

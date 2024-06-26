@@ -19,10 +19,10 @@
 package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.doc.generate.DocGenerate;
-import com.iohao.game.action.skeleton.core.doc.generate.IoGameDoc;
-import com.iohao.game.action.skeleton.core.doc.generate.TextDocGenerate;
+import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
+import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import lombok.Setter;
+import org.jctools.maps.NonBlockingHashSet;
 
 import java.util.*;
 
@@ -32,10 +32,11 @@ import java.util.*;
  * @author 渔民小镇
  * @date 2022-01-23
  */
-public class BarSkeletonDoc {
+public final class BarSkeletonDoc {
 
     final List<BarSkeleton> skeletonList = new LinkedList<>();
-    final Map<String, DocGenerate> docGenerateMap = new HashMap<>();
+    final Map<String, DocumentGenerate> docGenerateMap = new HashMap<>();
+    final Set<Class<? extends MsgExceptionInfo>> errorCodeClassSet = new NonBlockingHashSet<>();
 
     @Setter
     @Deprecated
@@ -60,13 +61,25 @@ public class BarSkeletonDoc {
         }
     }
 
+    /**
+     * 添加枚举错误码 class
+     * <pre>
+     *     参考 {@link com.iohao.game.action.skeleton.core.exception.ActionErrorEnum} 的实现
+     * </pre>
+     *
+     * @param clazz 枚举错误码 class
+     */
+    public void addErrorCodeClass(Class<? extends MsgExceptionInfo> clazz) {
+        errorCodeClassSet.add(clazz);
+    }
+
     public void addSkeleton(BarSkeleton barSkeleton) {
         skeletonList.add(barSkeleton);
     }
 
-    public void addDocGenerate(DocGenerate docGenerate) {
-        String key = docGenerate.getClass().getName();
-        docGenerateMap.put(key, docGenerate);
+    public void addDocGenerate(DocumentGenerate documentGenerate) {
+        String key = documentGenerate.getClass().getName();
+        docGenerateMap.put(key, documentGenerate);
     }
 
     public void buildDoc() {
@@ -75,8 +88,9 @@ public class BarSkeletonDoc {
             return;
         }
 
-        IoGameDoc ioGameDoc = ofIoGameDoc();
-        docGenerateMap.values().forEach(docGenerate -> docGenerate.generate(ioGameDoc));
+        IoGameDocument ioGameDocument = ofIoGameDoc();
+
+        docGenerateMap.values().forEach(documentGenerate -> documentGenerate.generate(ioGameDocument));
 
         docGenerateMap.values().clear();
     }
@@ -88,41 +102,41 @@ public class BarSkeletonDoc {
         }
 
         // 兼容
-        if (docGenerateMap.get(TextDocGenerate.class.getName()) instanceof TextDocGenerate textDocGenerate) {
+        if (docGenerateMap.get(TextDocumentGenerate.class.getName()) instanceof TextDocumentGenerate textDocGenerate) {
             textDocGenerate.setPath(docPath);
         }
 
         buildDoc();
     }
 
-    private IoGameDoc ofIoGameDoc() {
+    private IoGameDocument ofIoGameDoc() {
 
-        IoGameDoc ioGameDoc = new IoGameDoc();
-        ioGameDoc.setActionDocMap(ActionDocs.actionDocMap);
+        IoGameDocument ioGameDocument = new IoGameDocument();
+        ioGameDocument.actionDocMap = ActionDocs.actionDocMap;
+        ioGameDocument.broadcastDocumentRegion = this.createBroadcastDocRegion();
+        ioGameDocument.errorCodeDocsRegion = this.createErrorCodeDocsRegion();
+        ioGameDocument.errorCodeDocumentList = this.errorCodeClassSet.stream().flatMap(clazz -> {
+            // to stream
+            return DocumentAnalyseKit.analyseErrorCodeDocument(clazz).stream();
+        }).sorted(Comparator.comparingInt(ErrorCodeDocument::getValue)).toList();
 
-        BroadcastDocRecordRegion broadcastDocRecordRegion = this.createBroadcastDocRegion();
-        ioGameDoc.setBroadcastDocRecordRegion(broadcastDocRecordRegion);
-
-        ErrorCodeDocsRegion errorCodeDocsRegion = this.createErrorCodeDocsRegion();
-        ioGameDoc.setErrorCodeDocsRegion(errorCodeDocsRegion);
-
-        return ioGameDoc;
+        return ioGameDocument;
     }
 
     public List<BarSkeleton> listBarSkeleton() {
         return new ArrayList<>(this.skeletonList);
     }
 
-    private BroadcastDocRecordRegion createBroadcastDocRegion() {
-        BroadcastDocRecordRegion broadcastDocRecordRegion = new BroadcastDocRecordRegion();
+    private BroadcastDocumentRegion createBroadcastDocRegion() {
+        BroadcastDocumentRegion broadcastDocumentRegion = new BroadcastDocumentRegion();
 
         skeletonList.stream()
                 .map(BarSkeleton::getActionSendDocs)
                 .flatMap(actionSendDocs -> actionSendDocs.getActionSendDocMap().values().stream())
                 .map(actionSendDoc -> {
                     // 转换为 BroadcastDocRecord
-                    BroadcastDocRecord record = new BroadcastDocRecord();
-                    record.setCmd(actionSendDoc.getCmd())
+                    BroadcastDocument broadcastDocument = new BroadcastDocument();
+                    broadcastDocument.setCmd(actionSendDoc.getCmd())
                             .setSubCmd(actionSendDoc.getSubCmd())
                             .setDataClass(actionSendDoc.getDataClass())
                             .setDescription(actionSendDoc.getDescription())
@@ -131,10 +145,10 @@ public class BarSkeletonDoc {
                             .setList(actionSendDoc.isList())
                             .setMethodName(actionSendDoc.getMethodName())
                     ;
-                    return record;
-                }).forEach(broadcastDocRecordRegion::add);
+                    return broadcastDocument;
+                }).forEach(broadcastDocumentRegion::add);
 
-        return broadcastDocRecordRegion;
+        return broadcastDocumentRegion;
     }
 
     private ErrorCodeDocsRegion createErrorCodeDocsRegion() {
@@ -147,7 +161,10 @@ public class BarSkeletonDoc {
     }
 
     private BarSkeletonDoc() {
-        addDocGenerate(new TextDocGenerate());
+        addDocGenerate(new TextDocumentGenerate());
+
+        // 框架默认提供的错误码
+        addErrorCodeClass(ActionErrorEnum.class);
     }
 
     public static BarSkeletonDoc me() {

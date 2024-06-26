@@ -18,27 +18,40 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
+import com.iohao.game.action.skeleton.core.CmdKit;
+import lombok.AccessLevel;
 import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import lombok.experimental.FieldDefaults;
 
 /**
- * 错误码文档相关
- *
  * @author 渔民小镇
- * @date 2022-02-03
+ * @date 2024-06-25
  */
 @Getter
-public final class ErrorCodeDocs {
-    List<ErrorCodeDoc> errorCodeDocList = new ArrayList<>();
+@Setter
+@Accessors(chain = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public final class BroadcastDocument {
+    /** 主路由 */
+    int cmd;
+    /** 子路由 */
+    int subCmd;
+    /** 业务类型 */
+    Class<?> dataClass;
+    /** 推送描述 */
+    String description;
+    /** 业务参数 */
+    String dataClassName;
+    /** 广播业务参数的描述 */
+    String dataDescription;
+    /** 广播业务参数是否是 List */
+    boolean list;
+    String methodName;
+    String bizDataType;
 
-    public void addMsgExceptionInfo(MsgExceptionInfo msgExceptionInfo) {
-        ErrorCodeDoc errorCodeDoc = new ErrorCodeDoc()
-                .setCode(msgExceptionInfo.getCode())
-                .setMsg(msgExceptionInfo.getMsg());
-
-        this.errorCodeDocList.add(errorCodeDoc);
+    public int getCmdMerge() {
+        return CmdKit.merge(cmd, subCmd);
     }
 }

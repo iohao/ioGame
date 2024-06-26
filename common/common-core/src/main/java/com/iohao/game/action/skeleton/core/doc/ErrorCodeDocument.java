@@ -21,31 +21,24 @@ package com.iohao.game.action.skeleton.core.doc;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 /**
+ * 错误码文档
+ *
  * @author 渔民小镇
- * @date 2024-06-25
+ * @date 2024-06-26
  */
 @Getter
-@Setter
-@Accessors(chain = true)
+@ToString
+@Setter(AccessLevel.PACKAGE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BroadcastDocRecord {
-    /** 主路由 */
-    int cmd;
-    /** 子路由 */
-    int subCmd;
-    /** 业务类型 */
-    Class<?> dataClass;
-    /** 推送描述 */
+public final class ErrorCodeDocument {
+    /** 错误码 - 变量名 */
+    String name;
+    /** 错误码 - 值 */
+    int value;
+    /** 错误码 - 描述 */
     String description;
-    /** 业务参数 */
-    String dataClassName;
-    /** 广播业务参数的描述 */
-    String dataDescription;
-    /** 广播业务参数是否是 List */
-    boolean list;
-    String methodName;
 }

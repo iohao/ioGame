@@ -18,27 +18,28 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
-import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
- * 错误码文档相关
+ * 类型映射
  *
  * @author 渔民小镇
- * @date 2022-02-03
+ * @date 2024-06-26
  */
-@Getter
-public final class ErrorCodeDocs {
-    List<ErrorCodeDoc> errorCodeDocList = new ArrayList<>();
+public interface TypeMappingDocument {
+    Map<Class<?>, TypeMappingRecord> getTypeMappingRecordMap();
 
-    public void addMsgExceptionInfo(MsgExceptionInfo msgExceptionInfo) {
-        ErrorCodeDoc errorCodeDoc = new ErrorCodeDoc()
-                .setCode(msgExceptionInfo.getCode())
-                .setMsg(msgExceptionInfo.getMsg());
+    default TypeMappingRecord getTypeMappingRecord(Class<?> protoTypeClazz) {
+        var map = getTypeMappingRecordMap();
+        if (map.containsKey(protoTypeClazz)) {
+            return map.get(protoTypeClazz);
+        }
 
-        this.errorCodeDocList.add(errorCodeDoc);
+        String simpleName = protoTypeClazz.getSimpleName();
+
+        return new TypeMappingRecord()
+                .setInternalType(false)
+                .setParamTypeName(simpleName).setListParamTypeName("List<%s>".formatted(simpleName))
+                .setOfMethodTypeName("").setOfMethodListTypeName("ValueList");
     }
 }

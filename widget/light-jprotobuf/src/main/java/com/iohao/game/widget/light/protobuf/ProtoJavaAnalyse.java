@@ -113,6 +113,7 @@ public class ProtoJavaAnalyse {
             String filePackage = annotation.filePackage();
             JavaClass javaClass = protoJavaSourceFileMap.get(clazz.toString());
 
+            System.out.println("~~~~" + clazz.getSimpleName());
             ProtoJava protoJava = new ProtoJava()
                     .setClassName(clazz.getSimpleName())
                     .setComment(javaClass.getComment())
@@ -145,7 +146,7 @@ public class ProtoJavaAnalyse {
                     // java的Enum有一个隐藏的$VALUES(private)，需要过滤掉---枚举其他属性默认public static
                     continue;
                 }
-                
+
                 fieldList.add(enumField);
             }
 

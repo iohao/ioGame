@@ -29,7 +29,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class ErrorCodeDoc {
+public final class ErrorCodeDoc {
     /** 异常码 */
     int code;
     /** 异常消息 */
