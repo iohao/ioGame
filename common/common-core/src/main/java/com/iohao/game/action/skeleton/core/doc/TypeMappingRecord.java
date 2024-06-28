@@ -18,9 +18,11 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.experimental.FieldDefaults;
 
 /**
  * 类型映射记录
@@ -30,14 +32,27 @@ import lombok.experimental.Accessors;
  */
 @Setter
 @Accessors(chain = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public final class TypeMappingRecord {
     @Getter
     String paramTypeName;
+    /** list 参数类型名 */
     String listParamTypeName;
 
+    /** sdk 方法名 */
     String ofMethodTypeName;
+    /** sdk list 参数的方法名 */
     String ofMethodListTypeName;
+
+    /** sdk result get 方法名 */
+    @Getter
+    String resultMethodTypeName;
+    /** sdk result get list 方法名 */
+    @Getter
+    String resultMethodListTypeName;
+
     /** 内置扩展类型 */
+    @Getter
     boolean internalType = true;
 
     public String getParamTypeName(boolean isList) {

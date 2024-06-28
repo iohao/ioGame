@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,10 +28,10 @@ import java.util.Map;
  * @date 2024-06-26
  */
 public interface TypeMappingDocument {
-    Map<Class<?>, TypeMappingRecord> getTypeMappingRecordMap();
+    Map<Class<?>, TypeMappingRecord> getMap();
 
     default TypeMappingRecord getTypeMappingRecord(Class<?> protoTypeClazz) {
-        var map = getTypeMappingRecordMap();
+        var map = getMap();
         if (map.containsKey(protoTypeClazz)) {
             return map.get(protoTypeClazz);
         }
@@ -41,5 +42,11 @@ public interface TypeMappingDocument {
                 .setInternalType(false)
                 .setParamTypeName(simpleName).setListParamTypeName("List<%s>".formatted(simpleName))
                 .setOfMethodTypeName("").setOfMethodListTypeName("ValueList");
+    }
+
+    default void mapping(TypeMappingRecord record, List<Class<?>> clazzList) {
+        for (Class<?> clazz : clazzList) {
+            this.getMap().put(clazz, record);
+        }
     }
 }
