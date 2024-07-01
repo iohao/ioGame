@@ -51,7 +51,7 @@ public final class BroadcastDocBuilder {
     boolean list;
     /** 业务数据类型 */
     Class<?> dataClass;
-    /** 广播方法名 */
+    /** 广播方法名，仅在生成客户端代码时使用 */
     String methodName;
 
     BroadcastDocBuilder(CmdInfo cmdInfo) {
@@ -119,7 +119,6 @@ public final class BroadcastDocBuilder {
         Objects.requireNonNull(this.description);
 
         this.dataClassName = Optional.ofNullable(this.dataClassName).orElse("none");
-        this.dataDescription = Optional.ofNullable(this.dataDescription).orElse("");
 
         ActionSendDoc actionSendDoc = new ActionSendDoc(this.cmdInfo);
         actionSendDoc.setDescription(this.description);

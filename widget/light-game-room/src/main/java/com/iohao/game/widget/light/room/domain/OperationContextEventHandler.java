@@ -38,6 +38,19 @@ import lombok.extern.slf4j.Slf4j;
  * DomainEventPublish.send(operationContext);
  * }
  * </pre>
+ * <p>
+ * 将 OperationContextEventHandler 添加到 DomainEventContext 中
+ * <pre>{@code
+ *         // 领域事件上下文参数
+ *         DomainEventContextParam contextParam = new DomainEventContextParam();
+ *         // 配置领域事件 - 玩法操作相关
+ *         contextParam.addEventHandler(new OperationContextEventHandler());
+ *
+ *         // 启动事件驱动
+ *         DomainEventContext domainEventContext = new DomainEventContext(contextParam);
+ *         domainEventContext.startup();
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2024-05-12

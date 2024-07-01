@@ -147,7 +147,7 @@ final class DocInfo {
             var broadcastDocument = this.broadcastDocumentMap.remove(merge);
             if (Objects.nonNull(broadcastDocument)) {
                 String dataClassName = broadcastDocument.getDataClassName();
-                String description = broadcastDocument.getDescription();
+                String description = broadcastDocument.getMethodDescription();
                 String dataDescription = broadcastDocument.getDataDescription();
                 format = StrKit.format("    广播推送: {} {}，({})", dataClassName, dataDescription, description);
                 lineList.add(format);

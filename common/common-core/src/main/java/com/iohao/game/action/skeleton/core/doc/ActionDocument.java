@@ -61,12 +61,13 @@ public final class ActionDocument {
     private ActionMemberCmdDocument generateMemberCmdCode(ActionCommandDoc actionCommandDoc) {
         ActionCommand actionCommand = actionCommandDoc.getActionCommand();
 
-        String comment = actionCommandDoc.getComment();
-        String memberName = actionCommand.getActionMethodName();
-
         CmdInfo cmdInfo = actionCommand.getCmdInfo();
         int cmd = cmdInfo.getCmd();
         int subCmd = cmdInfo.getSubCmd();
+
+        String comment = actionCommandDoc.getComment();
+        String actionMethodName = actionCommand.getActionMethodName();
+        String memberName = "%s_%d_%d".formatted(actionMethodName, cmd, subCmd);
 
         return new ActionMemberCmdDocument(cmd, subCmd, memberName, comment);
     }

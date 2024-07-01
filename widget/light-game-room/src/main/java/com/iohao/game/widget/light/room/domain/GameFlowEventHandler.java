@@ -24,6 +24,20 @@ import com.iohao.game.widget.light.room.flow.GameFlowService;
 
 /**
  * EventHandler，消费 GameFlowEo
+ * <p>
+ * 将 GameFlowEventHandler 添加到 DomainEventContext 中
+ * <pre>{@code
+ *         // 领域事件上下文参数
+ *         DomainEventContextParam contextParam = new DomainEventContextParam();
+ *         // 游戏流程相关
+ *         contextParam.addEventHandler(new GameFlowEventHandler());
+ *
+ *         // 启动事件驱动
+ *         DomainEventContext domainEventContext = new DomainEventContext(contextParam);
+ *         domainEventContext.startup();
+ * }
+ *
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2024-05-12

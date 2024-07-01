@@ -113,7 +113,6 @@ public class ProtoJavaAnalyse {
             String filePackage = annotation.filePackage();
             JavaClass javaClass = protoJavaSourceFileMap.get(clazz.toString());
 
-            System.out.println("~~~~" + clazz.getSimpleName());
             ProtoJava protoJava = new ProtoJava()
                     .setClassName(clazz.getSimpleName())
                     .setComment(javaClass.getComment())

@@ -139,10 +139,10 @@ public final class BarSkeletonDoc {
                     broadcastDocument.setCmd(actionSendDoc.getCmd())
                             .setSubCmd(actionSendDoc.getSubCmd())
                             .setDataClass(actionSendDoc.getDataClass())
-                            .setDescription(actionSendDoc.getDescription())
+                            .setMethodDescription(actionSendDoc.getDescription())
                             .setDataClassName(actionSendDoc.getDataClassName())
                             .setDataDescription(actionSendDoc.getDataDescription())
-                            .setList(actionSendDoc.isList())
+                            .setDataIsList(actionSendDoc.isList())
                             .setMethodName(actionSendDoc.getMethodName())
                     ;
                     return broadcastDocument;

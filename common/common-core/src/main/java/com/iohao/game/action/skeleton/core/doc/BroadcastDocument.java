@@ -38,18 +38,33 @@ public final class BroadcastDocument {
     int cmd;
     /** 子路由 */
     int subCmd;
+    /** 推送方法描述 */
+    String methodDescription;
+    /** 方法名 */
+    String methodName;
+
     /** 业务类型 */
     Class<?> dataClass;
-    /** 推送描述 */
-    String description;
     /** 业务参数 */
     String dataClassName;
     /** 广播业务参数的描述 */
     String dataDescription;
+
+    /** true 表示协议碎片，false 表示开发者自定义的协议 */
+    boolean dataTypeIsInternal;
     /** 广播业务参数是否是 List */
-    boolean list;
-    String methodName;
+    boolean dataIsList;
+
     String bizDataType;
+
+    /** sdk result get 方法名 */
+    String resultMethodTypeName;
+    /** sdk result get list 方法名 */
+    String resultMethodListTypeName;
+
+    String dataActualTypeName;
+
+    String exampleCode;
 
     public int getCmdMerge() {
         return CmdKit.merge(cmd, subCmd);

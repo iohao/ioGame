@@ -103,7 +103,7 @@ public final class TextDocumentGenerate implements DocumentGenerate {
 
             String template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}";
 
-            if (StrKit.isNotEmpty(broadcastDocument.getDescription())) {
+            if (StrKit.isNotEmpty(broadcastDocument.getMethodDescription())) {
                 template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}，({description})";
             }
 
@@ -111,7 +111,7 @@ public final class TextDocumentGenerate implements DocumentGenerate {
             stringObjectMap.put("cmd", broadcastDocument.getCmd());
             stringObjectMap.put("subCmd", broadcastDocument.getSubCmd());
             stringObjectMap.put("dataClass", broadcastDocument.getDataClassName());
-            stringObjectMap.put("description", broadcastDocument.getDescription());
+            stringObjectMap.put("description", broadcastDocument.getMethodDescription());
             stringObjectMap.put("dataDescription", broadcastDocument.getDataDescription());
 
             String format = StrKit.format(template, stringObjectMap);

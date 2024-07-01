@@ -20,6 +20,8 @@
  * 桌游类、房间类游戏的扩展模块 - 规避并发的领域事件。
  * see <a href="https://www.yuque.com/iohao/game/gmfy1k">文档 - domain-event 领域事件</a>
  * 在使用 room 模块的领域事件时，还需要做以下配置。将领域事件集成到 room 模块中。
+ * <p>
+ * 启动项. see <a href="https://www.yuque.com/iohao/game/dpwe6r6sqwwtrh1q">文档 - Runner 扩展机制</a>
  * <pre>{@code
  * public class MyRoomDomainRunner implements Runner {
  *     @Override
@@ -39,9 +41,48 @@
  *
  * // 业务框架构建器
  * BarSkeletonBuilder builder = ...;
- * // 启动项. see <a href="https://www.yuque.com/iohao/game/dpwe6r6sqwwtrh1q">文档 - Runner 扩展机制</a>
+ * // 启动项
  * builder.addRunner(new MyRoomDomainRunner());
- * }</pre>
+ * }
+ * </pre>
+ * <p>
+ * OperationContext 玩法操作上下文领域事件，用于规避并发
+ * <pre>{@code
+ * // 创建玩法操作上下文
+ * OperationContext operationContext = OperationContext.of(room, operationHandler)
+ *     // 当前操作的玩家
+ *     .setFlowContext(flowContext)
+ *     // 开发者根据游戏业务定制的操作数据
+ *     .setCommand(command);
+ *
+ * // 领域事件相关，https://www.yuque.com/iohao/game/gmfy1k
+ * DomainEventPublish.send(operationContext);
+ * }
+ * </pre>
+ * <p>
+ * GameFlowEo，可规避 GameFlowService 中的并发问题
+ * <pre>{@code
+ * // 发送领域事件
+ * GameFlowContext context = GameFlowContext.of(room, flowContext);
+ * new GameFlowEo(flowContext, () -> {
+ *     // 进入房间
+ *     this.roomService.enterRoom(context);
+ * }).send();
+ *
+ * GameFlowContext gameFlowContext = GameFlowContext.of(room, flowContext);
+ * new GameFlowEo(flowContext, () -> {
+ *     // 退出房间
+ *     this.roomService.quitRoom(gameFlowContext);
+ * }).send();
+ *
+ * GameFlowContext context = GameFlowContext.of(room, flowContext);
+ * new GameFlowEo(flowContext, () -> {
+ *     // 开始游戏
+ *     this.roomService.startGame(context);
+ * }).send();
+ *
+ * }
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2024-05-15

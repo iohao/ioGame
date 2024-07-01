@@ -19,6 +19,7 @@
 package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
+import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -68,6 +69,9 @@ public final class ActionMethodDocument {
     /** 方法返回值的注释 */
     String returnComment;
     String returnDataName;
+    /** 返回值类型（原始的，即使参数是 List，也会取泛型） */
+    String returnDataActualTypeName;
+
     boolean returnDataIsList;
     /** true 表示协议碎片，false 表示开发者自定义的协议 */
     boolean returnDataTypeIsInternal;
@@ -87,7 +91,9 @@ public final class ActionMethodDocument {
         this.actionMethodName = StrKit.firstCharToUpperCase(actionCommand.getActionMethodName());
         // 方法注释
         this.methodComment = this.actionCommandDoc.getComment();
-        this.memberCmdName = actionMethodName;
+
+        CmdInfo cmdInfo = actionCommand.getCmdInfo();
+        this.memberCmdName = "%s_%d_%d".formatted(actionCommand.getActionMethodName(), cmdInfo.getCmd(), cmdInfo.getSubCmd());
 
         // --------- 方法返回值相关 ---------
         extractedReturnInfo(actionCommand);
@@ -114,6 +120,8 @@ public final class ActionMethodDocument {
         this.returnDataTypeIsInternal = typeMappingRecord.isInternalType();
         this.resultMethodTypeName = typeMappingRecord.getResultMethodTypeName();
         this.resultMethodListTypeName = typeMappingRecord.getResultMethodListTypeName();
+
+        this.returnDataActualTypeName = typeMappingRecord.getParamTypeName();
     }
 
     private void extractedParamInfo(ActionCommand.ParamInfo paramInfo, ActionCommandDoc actionCommandDoc) {
