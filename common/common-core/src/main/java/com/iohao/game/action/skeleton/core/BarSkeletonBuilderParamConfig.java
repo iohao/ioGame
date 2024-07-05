@@ -20,6 +20,7 @@ package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.DocActionSends;
+import com.iohao.game.action.skeleton.core.doc.BroadcastDocBuilder;
 import com.iohao.game.action.skeleton.core.enhance.BarSkeletonBuilderEnhances;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
@@ -83,7 +84,7 @@ public final class BarSkeletonBuilderParamConfig {
         enhance(builder);
 
         // action send class. class has @DocActionSend
-        this.scanClassActionSend(builder::addActionSend);
+//        this.scanClassActionSend(builder::addActionSend);
 
         // action controller class. class has @ActionController
         this.scanClassActionController(builder::addActionController);
@@ -140,7 +141,6 @@ public final class BarSkeletonBuilderParamConfig {
         return this;
     }
 
-
     private void enhance(BarSkeletonBuilder builder) {
         if (this.enhance) {
             BarSkeletonBuilderEnhances.enhance(builder);
@@ -161,10 +161,12 @@ public final class BarSkeletonBuilderParamConfig {
      * 扫描 actionSendClassList 并把扫描好的类交给 sendConsumer 消费
      *
      * @param sendConsumer 消费者
+     * @deprecated 请使用 {@link BarSkeletonBuilder#addBroadcastDoc(BroadcastDocBuilder)} 代替
      */
+    @Deprecated
     private void scanClassActionSend(Consumer<Class<?>> sendConsumer) {
         // action controller class. class has @ActionController
-        scanClass(this.actionSendClassList, this.actionSendPredicate, sendConsumer);
+//        scanClass(this.actionSendClassList, this.actionSendPredicate, sendConsumer);
     }
 
     private void scanClass(final List<Class<?>> actionList

@@ -18,8 +18,6 @@
  */
 package com.iohao.game.action.skeleton.core;
 
-import com.iohao.game.action.skeleton.core.doc.ActionSendDocs;
-import com.iohao.game.action.skeleton.core.doc.ErrorCodeDocs;
 import com.iohao.game.action.skeleton.core.flow.*;
 import com.iohao.game.action.skeleton.core.runner.Runners;
 import com.iohao.game.common.kit.attr.AttrOptionDynamic;
@@ -71,10 +69,6 @@ public final class BarSkeleton implements AttrOptionDynamic {
     ActionAfter actionAfter;
     /** 响应对象的创建 */
     ResponseMessageCreate responseMessageCreate;
-    /** 推送相关的文档 */
-    ActionSendDocs actionSendDocs;
-    /** 错误码相关的文档 */
-    ErrorCodeDocs errorCodeDocs;
     /** 业务框架 flow 上下文 工厂 */
     FlowContextFactory flowContextFactory;
     /** 与业务框架所关联的线程执行器管理域 */

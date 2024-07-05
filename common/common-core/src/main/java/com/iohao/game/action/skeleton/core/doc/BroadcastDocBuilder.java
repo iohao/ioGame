@@ -19,15 +19,9 @@
 package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
-import com.iohao.game.action.skeleton.protocol.wrapper.WrapperKit;
 import lombok.AccessLevel;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * 广播文档构建器
@@ -35,27 +29,48 @@ import java.util.Optional;
  * @author 渔民小镇
  * @date 2024-05-18
  * @since 21.8
+ * @deprecated 请使用 {@link BroadcastDocumentBuilder}
  */
-@Setter
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PACKAGE)
+@Deprecated
 public final class BroadcastDocBuilder {
-    /** 路由 */
-    final CmdInfo cmdInfo;
-    /** 广播（推送）描述 */
-    String description;
-    @Setter(AccessLevel.PRIVATE)
-    String dataClassName;
-    /** 广播业务参数的描述 */
-    String dataDescription;
-    boolean list;
-    /** 业务数据类型 */
-    Class<?> dataClass;
-    /** 广播方法名，仅在生成客户端代码时使用 */
-    String methodName;
+    final BroadcastDocumentBuilder proxy;
 
     BroadcastDocBuilder(CmdInfo cmdInfo) {
-        this.cmdInfo = cmdInfo;
+        this.proxy = BroadcastDocument.newBuilder(cmdInfo);
+    }
+
+    public BroadcastDocBuilder setMethodDescription(String methodDescription) {
+        this.proxy.setMethodDescription(methodDescription);
+        return this;
+    }
+
+
+    public BroadcastDocBuilder setDataDescription(String dataDescription) {
+        this.proxy.setDataDescription(dataDescription);
+        return this;
+    }
+
+    public BroadcastDocBuilder setList(boolean list) {
+        this.proxy.setList(list);
+        return this;
+    }
+
+    public BroadcastDocBuilder setMethodName(String methodName) {
+        this.proxy.setMethodName(methodName);
+        return this;
+    }
+
+    /**
+     * set 广播（推送）描述
+     *
+     * @param description 广播（推送）描述
+     * @return this
+     */
+    public BroadcastDocBuilder setDescription(String description) {
+        this.proxy.setMethodDescription(description);
+        return this;
     }
 
     /**
@@ -69,13 +84,7 @@ public final class BroadcastDocBuilder {
     }
 
     public BroadcastDocBuilder setDataClassList(Class<?> dataClass, String dataDescription) {
-        String simpleName = ByteValueList.class.getSimpleName();
-        String simpleNameActualClazz = dataClass.getSimpleName();
-        this.dataClassName = String.format("%s<%s>", simpleName, simpleNameActualClazz);
-        this.list = true;
-        this.dataClass = dataClass;
-        this.dataDescription = dataDescription;
-
+        this.proxy.setDataClassList(dataClass, dataDescription);
         return this;
     }
 
@@ -86,7 +95,7 @@ public final class BroadcastDocBuilder {
      * @return this
      */
     public BroadcastDocBuilder setDataClass(Class<?> dataClass) {
-        return setDataClass(dataClass, "");
+        return setDataClass(dataClass, null);
     }
 
     /**
@@ -98,13 +107,7 @@ public final class BroadcastDocBuilder {
      */
     public BroadcastDocBuilder setDataClass(Class<?> dataClass, String dataDescription) {
 
-        this.dataDescription = dataDescription;
-
-        this.dataClassName = WrapperKit.optionalRefType(dataClass)
-                .map(Class::getSimpleName)
-                .orElse(dataClass.getSimpleName());
-
-        this.dataClass = dataClass;
+        this.proxy.setDataClass(dataClass, dataDescription);
 
         return this;
     }
@@ -113,27 +116,19 @@ public final class BroadcastDocBuilder {
      * 构建广播文档
      *
      * @return 广播文档
+     * @deprecated 请使用 {@link BroadcastDocBuilder#buildDocument()}
      */
+    @Deprecated
     public ActionSendDoc build() {
+        return null;
+    }
 
-        Objects.requireNonNull(this.description);
-
-        this.dataClassName = Optional.ofNullable(this.dataClassName).orElse("none");
-
-        ActionSendDoc actionSendDoc = new ActionSendDoc(this.cmdInfo);
-        actionSendDoc.setDescription(this.description);
-        actionSendDoc.setDataClassName(this.dataClassName);
-        actionSendDoc.setDataDescription(this.dataDescription);
-        actionSendDoc.setDataClass(this.dataClass);
-        actionSendDoc.setList(this.list);
-
-        // 如果没有指定广播的方法名，则方法名使用下述规则
-        String theMethodName = Objects.isNull(methodName)
-                ? "Method_%d_%d".formatted(cmdInfo.getCmd(), cmdInfo.getSubCmd())
-                : methodName;
-
-        actionSendDoc.setMethodName(theMethodName);
-
-        return actionSendDoc;
+    /**
+     * 构建广播文档
+     *
+     * @return BroadcastDocument 广播文档
+     */
+    public BroadcastDocument buildDocument() {
+        return this.proxy.build();
     }
 }

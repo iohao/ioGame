@@ -26,8 +26,10 @@ import java.util.Map;
 /**
  * @author 渔民小镇
  * @date 2022-02-01
+ * @deprecated 请使用 {@link IoGameDocument}
  */
 @Getter
+@Deprecated
 public final class ActionSendDocsRegion {
     Map<Integer, ActionSendDoc> actionSendDocMap = new NonBlockingHashMap<>();
 

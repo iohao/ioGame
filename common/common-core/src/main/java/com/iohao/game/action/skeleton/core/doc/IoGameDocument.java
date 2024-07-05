@@ -19,47 +19,22 @@
 package com.iohao.game.action.skeleton.core.doc;
 
 import lombok.Getter;
-import lombok.Setter;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * 文档相关信息，如 action 相关、广播相关、错误码相关。
  *
  * @author 渔民小镇
  * @date 2024-06-25
+ * @since 21.11
  */
 @Getter
-@Setter
 public final class IoGameDocument {
-    /**
-     * action 文档相关信息
-     * <pre>
-     *      key : action controller
-     *      value : action 文档
-     *  </pre>
-     */
-    Map<Class<?>, ActionDoc> actionDocMap;
-    /** 错误码域 */
-    ErrorCodeDocsRegion errorCodeDocsRegion;
-
     /** 已经解析好的广播文档 */
-    BroadcastDocumentRegion broadcastDocumentRegion;
+    List<BroadcastDocument> broadcastDocumentList;
     /** 已经解析好的错误码文档 */
     List<ErrorCodeDocument> errorCodeDocumentList;
-
-    public Stream<ActionDoc> streamActionDoc() {
-        return this.actionDocMap
-                .values()
-                .stream()
-                .sorted(Comparator
-                        // 先按 cmd 排序
-                        .comparingInt(ActionDoc::getCmd)
-                        // 若 cmd 相同，则按 className 排序
-                        .thenComparing(o -> o.getControllerClazz().getName())
-                );
-    }
+    /** 已经解析好的 action 文档 */
+    List<ActionDoc> actionDocList;
 }

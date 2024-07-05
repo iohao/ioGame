@@ -26,6 +26,7 @@ import lombok.Setter;
  *
  * @author 渔民小镇
  * @date 2024-06-26
+ * @since 21.11
  */
 @Getter
 @Setter
@@ -35,7 +36,7 @@ public final class ActionMemberCmdDocument {
     String comment;
     String memberName;
 
-    public ActionMemberCmdDocument(int cmd, int subCmd, String memberName, String comment) {
+    ActionMemberCmdDocument(int cmd, int subCmd, String memberName, String comment) {
         this.cmd = cmd;
         this.subCmd = subCmd;
         this.comment = comment;

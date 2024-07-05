@@ -18,6 +18,8 @@
  */
 package com.iohao.game.action.skeleton.annotation;
 
+import com.iohao.game.action.skeleton.core.doc.BroadcastDocument;
+
 import java.lang.annotation.*;
 
 /**
@@ -28,10 +30,12 @@ import java.lang.annotation.*;
  *
  * @author 渔民小镇
  * @date 2022-01-31
+ * @deprecated 请使用 {@link BroadcastDocument} 代替
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Deprecated
 public @interface DocActionSends {
     DocActionSend[] value();
 }

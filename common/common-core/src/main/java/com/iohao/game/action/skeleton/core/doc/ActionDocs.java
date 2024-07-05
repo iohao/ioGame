@@ -18,30 +18,15 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import org.jctools.maps.NonBlockingHashMap;
-
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Stream;
-
 /**
  * action 文档管理
  *
  * @author 渔民小镇
  * @date 2023-07-13
+ * @deprecated 请使用 {@link IoGameDocumentHelper}
  */
+@Deprecated
 public final class ActionDocs {
-    /**
-     * action 文档
-     * <pre>
-     *     使用 static 避免同进程启动多个相同游戏逻辑服时，重复生成文档
-     *     key : action class
-     *     value: ActionDoc
-     * </pre>
-     */
-    static final Map<Class<?>, ActionDoc> actionDocMap = new NonBlockingHashMap<>();
-
     /**
      * 获取 ActionDoc，如果 ActionDoc 不存在则创建
      *
@@ -50,30 +35,6 @@ public final class ActionDocs {
      * @return 一定不为 null
      */
     public static ActionDoc ofActionDoc(int cmd, Class<?> controllerClazz) {
-        ActionDoc actionDocRegion = actionDocMap.get(controllerClazz);
-
-        if (Objects.isNull(actionDocRegion)) {
-            actionDocRegion = new ActionDoc(cmd, controllerClazz);
-
-            actionDocRegion = actionDocMap.putIfAbsent(controllerClazz, actionDocRegion);
-            if (Objects.isNull(actionDocRegion)) {
-                actionDocRegion = actionDocMap.get(controllerClazz);
-            }
-        }
-
-        return actionDocRegion;
-    }
-
-    static Stream<ActionDoc> stream() {
-        // 先按 cmd 排序
-        // 若 cmd 相同，则按 className 排序
-        return actionDocMap
-                .values()
-                .stream()
-                .sorted(
-                        Comparator
-                                .comparingInt(ActionDoc::getCmd)
-                                .thenComparing(o -> o.getControllerClazz().getName())
-                );
+        return IoGameDocumentHelper.ofActionDoc(cmd, controllerClazz);
     }
 }

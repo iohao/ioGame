@@ -68,7 +68,7 @@ final class ActionCommandDocParser {
             extractedDeprecate(actionCommandRegions, controllerClazz, javaClassDocInfo, cmd);
 
             // action 文档
-            ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
+            ActionDoc actionDoc = IoGameDocumentHelper.ofActionDoc(cmd, controllerClazz);
             actionDoc.setJavaClassDocInfo(javaClassDocInfo);
 
             this.actionCommandParser.getMethodStream(controllerClazz).forEach(method -> {

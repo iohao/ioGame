@@ -39,7 +39,7 @@ import java.util.function.Function;
 class DocumentAnalyseKit {
     List<ActionDocument> analyseActionDocument(IoGameDocument ioGameDocument, TypeMappingDocument typeMappingDocument) {
         // 数据类型对应的映射值
-        return ioGameDocument.streamActionDoc().map(actionDoc -> {
+        return ioGameDocument.getActionDocList().stream().map(actionDoc -> {
             // 生成 action 文件
             ActionDocument actionDocument = new ActionDocument(actionDoc, typeMappingDocument);
             actionDocument.analyse();
@@ -48,6 +48,11 @@ class DocumentAnalyseKit {
     }
 
     List<ErrorCodeDocument> analyseErrorCodeDocument(Class<? extends MsgExceptionInfo> clazz) {
+        JavaClass javaClass = analyseJavaClass(clazz);
+        return analyseErrorCodeDocument(javaClass);
+    }
+
+    JavaClass analyseJavaClass(Class<?> clazz) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
 
         URL resource = clazz.getResource(clazz.getSimpleName() + ".class");
@@ -56,9 +61,7 @@ class DocumentAnalyseKit {
         File file = new File(srcPath);
         javaProjectBuilder.addSourceTree(file);
 
-        JavaClass javaClass = javaProjectBuilder.getClassByName(clazz.getName());
-
-        return analyseErrorCodeDocument(javaClass);
+        return javaProjectBuilder.getClassByName(clazz.getName());
     }
 
     private final Function<URL, String> sourceFilePathFun = resourceUrl -> {

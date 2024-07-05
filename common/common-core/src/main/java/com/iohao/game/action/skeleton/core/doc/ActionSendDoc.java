@@ -28,10 +28,12 @@ import lombok.experimental.FieldDefaults;
 /**
  * @author 渔民小镇
  * @date 2022-02-01
+ * @deprecated 请使用 {@link BroadcastDocument}
  */
 @Data
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Deprecated
 public final class ActionSendDoc {
     /** 主路由 */
     final int cmd;

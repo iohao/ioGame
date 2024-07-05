@@ -19,10 +19,11 @@
 package com.iohao.game.action.skeleton.core.doc;
 
 /**
- * 文档生成接口，可扩展不同的实现
+ * 对接文档生成接口，可扩展不同的实现
  *
  * @author 渔民小镇
  * @date 2024-06-25
+ * @since 21.11
  */
 public interface DocumentGenerate {
     /**

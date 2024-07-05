@@ -29,8 +29,10 @@ import java.util.List;
  *
  * @author 渔民小镇
  * @date 2022-02-03
+ * @deprecated 请使用 {@link IoGameDocumentHelper#addErrorCodeClass(Class)}
  */
 @Getter
+@Deprecated
 public final class ErrorCodeDocs {
     List<ErrorCodeDoc> errorCodeDocList = new ArrayList<>();
 

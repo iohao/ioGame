@@ -18,7 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.core.CmdKit;
+import com.iohao.game.action.skeleton.core.CmdInfo;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +26,8 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 /**
+ * 广播文档
+ *
  * @author 渔民小镇
  * @date 2024-06-25
  */
@@ -34,10 +36,8 @@ import lombok.experimental.FieldDefaults;
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class BroadcastDocument {
-    /** 主路由 */
-    int cmd;
-    /** 子路由 */
-    int subCmd;
+    /** 路由 */
+    final CmdInfo cmdInfo;
     /** 推送方法描述 */
     String methodDescription;
     /** 方法名 */
@@ -67,6 +67,22 @@ public final class BroadcastDocument {
     String exampleCode;
 
     public int getCmdMerge() {
-        return CmdKit.merge(cmd, subCmd);
+        return this.cmdInfo.getCmdMerge();
+    }
+
+    public int getCmd() {
+        return this.cmdInfo.getCmd();
+    }
+
+    public int getSubCmd() {
+        return this.cmdInfo.getSubCmd();
+    }
+
+    BroadcastDocument(CmdInfo cmdInfo) {
+        this.cmdInfo = cmdInfo;
+    }
+
+    public static BroadcastDocumentBuilder newBuilder(CmdInfo cmdInfo) {
+        return new BroadcastDocumentBuilder(cmdInfo);
     }
 }

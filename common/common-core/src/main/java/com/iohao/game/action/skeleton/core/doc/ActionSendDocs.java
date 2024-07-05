@@ -23,6 +23,7 @@ import com.iohao.game.action.skeleton.annotation.DocActionSends;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import lombok.Getter;
 import org.jctools.maps.NonBlockingHashMap;
+import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -30,8 +31,10 @@ import java.util.function.Predicate;
 /**
  * @author 渔民小镇
  * @date 2022-02-01
+ * @deprecated 请使用 {@link BarSkeletonBuilder#addBroadcastDoc(BroadcastDocBuilder)}
  */
 @Getter
+@Deprecated
 public final class ActionSendDocs {
 
     Map<Integer, ActionSendDoc> actionSendDocMap = new NonBlockingHashMap<>();

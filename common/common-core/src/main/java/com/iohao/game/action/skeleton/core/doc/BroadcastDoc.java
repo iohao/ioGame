@@ -24,8 +24,17 @@ import com.iohao.game.action.skeleton.core.CmdInfo;
  * @author 渔民小镇
  * @date 2024-05-18
  * @since 21.8
+ * @deprecated 请使用 {@link BroadcastDocument}
  */
+@Deprecated
 public interface BroadcastDoc {
+    /**
+     * newBuilder
+     *
+     * @param cmdInfo cmdInfo
+     * @return BroadcastDocBuilder
+     * @deprecated 请使用 {@link BroadcastDocument#newBuilder(CmdInfo)}
+     */
     static BroadcastDocBuilder newBuilder(CmdInfo cmdInfo) {
         return new BroadcastDocBuilder(cmdInfo);
     }

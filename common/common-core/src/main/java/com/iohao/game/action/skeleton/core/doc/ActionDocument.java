@@ -29,8 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Action Document
+ *
  * @author 渔民小镇
  * @date 2024-06-26
+ * @since 21.11
  */
 @Getter
 @Setter
@@ -42,7 +45,7 @@ public final class ActionDocument {
     List<ActionMemberCmdDocument> actionMemberCmdDocumentList = new ArrayList<>();
     List<ActionMethodDocument> actionMethodDocumentList = new ArrayList<>();
 
-    public ActionDocument(ActionDoc actionDoc, TypeMappingDocument typeMappingDocument) {
+    ActionDocument(ActionDoc actionDoc, TypeMappingDocument typeMappingDocument) {
         this.actionDoc = actionDoc;
         this.typeMappingDocument = typeMappingDocument;
     }

@@ -25,7 +25,9 @@ import java.util.*;
  *
  * @author 渔民小镇
  * @date 2022-02-03
+ * @deprecated 请使用 {@link IoGameDocumentHelper#addErrorCodeClass(Class)}
  */
+@Deprecated
 public final class ErrorCodeDocsRegion {
 
     Set<ErrorCodeDoc> errorCodeDocSet = new HashSet<>();

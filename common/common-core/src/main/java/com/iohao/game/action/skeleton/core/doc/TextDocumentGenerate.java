@@ -21,12 +21,13 @@ package com.iohao.game.action.skeleton.core.doc;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
 import lombok.Setter;
-import org.jctools.maps.NonBlockingHashMap;
 
 import java.io.File;
 import java.util.*;
 
 /**
+ * 文本文档生成
+ *
  * @author 渔民小镇
  * @date 2024-06-25
  */
@@ -37,18 +38,20 @@ public final class TextDocumentGenerate implements DocumentGenerate {
 
     @Override
     public void generate(IoGameDocument ioGameDocument) {
-        BroadcastDocumentRegion broadcastDocumentRegion = ioGameDocument.getBroadcastDocumentRegion();
 
         List<String> docContentList = new ArrayList<>(128);
 
         // 加上游戏文档格式说明
         this.gameDocURLDescription(docContentList);
 
-        Map<Integer, BroadcastDocument> broadcastDocumentMap = new NonBlockingHashMap<>();
-        broadcastDocumentMap.putAll(broadcastDocumentRegion.getMap());
+        Map<Integer, BroadcastDocument> broadcastDocumentMap = new TreeMap<>();
+        ioGameDocument.getBroadcastDocumentList().forEach(broadcastDocument -> {
+            // map put
+            broadcastDocumentMap.put(broadcastDocument.getCmdMerge(), broadcastDocument);
+        });
 
         // 生成文档 - action
-        ioGameDocument.streamActionDoc().forEach(actionDoc -> {
+        ioGameDocument.getActionDocList().forEach(actionDoc -> {
             DocInfo docInfo = new DocInfo();
             docInfo.broadcastDocumentMap = broadcastDocumentMap;
 
@@ -68,8 +71,7 @@ public final class TextDocumentGenerate implements DocumentGenerate {
         extractedBroadcastDoc(broadcastDocumentMap, docContentList);
 
         // 生成文档 - 错误码文档
-        ErrorCodeDocsRegion errorCodeDocsRegion = ioGameDocument.getErrorCodeDocsRegion();
-        extractedErrorCode(errorCodeDocsRegion, docContentList);
+        extractedErrorCode(ioGameDocument, docContentList);
 
         // 写文件
         String docText = String.join("", docContentList);
@@ -121,17 +123,22 @@ public final class TextDocumentGenerate implements DocumentGenerate {
         }
     }
 
-    private void extractedErrorCode(ErrorCodeDocsRegion errorCodeDocsRegion, List<String> docContentList) {
+    private void extractedErrorCode(IoGameDocument ioGameDocument, List<String> docContentList) {
 
         String separator = System.lineSeparator();
 
         docContentList.add("==================== 错误码 ====================");
         docContentList.add(separator);
 
-        for (ErrorCodeDoc errorCodeDoc : errorCodeDocsRegion.listErrorCodeDoc()) {
-            String template = " {} : {} ";
+        for (ErrorCodeDocument errorCodeDocument : ioGameDocument.getErrorCodeDocumentList()) {
+            String template = "{} : {} : {}";
 
-            String format = StrKit.format(template, errorCodeDoc.getCode(), errorCodeDoc.getMsg());
+            String format = StrKit.format(template,
+                    errorCodeDocument.getValue(),
+                    errorCodeDocument.getDescription(),
+                    errorCodeDocument.getName()
+            );
+
             docContentList.add(format);
             docContentList.add(separator);
         }
