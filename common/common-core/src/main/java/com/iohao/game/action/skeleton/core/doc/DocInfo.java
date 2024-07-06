@@ -156,8 +156,6 @@ final class DocInfo {
             lineList.add(" ");
         }
 
-        lineList.add(separator);
-
         return String.join(separator, lineList);
     }
 }

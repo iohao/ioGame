@@ -19,6 +19,7 @@
 package com.iohao.game.widget.light.protobuf;
 
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.TimeFormatterKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -70,7 +71,6 @@ public class ProtoJavaRegion {
                 fileNameBuilder.append(filePackageString);
             }
 
-
             String templateHead = """
                     syntax = "proto3";
                     package {};
@@ -85,7 +85,14 @@ public class ProtoJavaRegion {
         this.regionHead.filePackage = this.filePackage;
         String protoHead = this.regionHead.toProtoHead();
 
+        String firstLine = """
+                // 生成时间 %s
+                // https://github.com/iohao/ioGame
+                """.formatted(TimeFormatterKit.formatter());
+
         StringBuilder builder = new StringBuilder();
+        builder.append(firstLine);
+        builder.append(System.lineSeparator());
         builder.append(protoHead);
 
         this.protoJavaList.stream()

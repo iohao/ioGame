@@ -32,9 +32,20 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 对接文档生成器辅助
+ * <p>
+ * for example
+ * <pre>{@code
+ *     // 添加自定义的文档生成器
+ *     IoGameDocumentHelper.addDocumentGenerate(new YourDocumentGenerate());
+ *     // 添加枚举错误码 class，用于生成错误码相关信息
+ *     IoGameDocumentHelper.addErrorCodeClass(YourGameCode.class);
+ *     // 生成文档
+ *     IoGameDocumentHelper.generateDocument();
+ * }</pre>
  *
  * @author 渔民小镇
  * @date 2024-07-05
+ * @see DocumentGenerate
  */
 @UtilityClass
 public class IoGameDocumentHelper {

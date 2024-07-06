@@ -136,63 +136,9 @@ public final class BarSkeletonBuilder {
         return barSkeleton;
     }
 
-    /**
-     * addMsgExceptionInfo
-     *
-     * @param msgExceptionInfo msgExceptionInfo
-     * @return BarSkeletonBuilder
-     * @deprecated 请使用 {@link IoGameDocumentHelper#addErrorCodeClass(Class)} 代替
-     */
-    @Deprecated
-    public BarSkeletonBuilder addMsgExceptionInfo(MsgExceptionInfo msgExceptionInfo) {
-//        Objects.requireNonNull(msgExceptionInfo);
-//        this.errorCodeDocs.addMsgExceptionInfo(msgExceptionInfo);
-        return this;
-    }
-
     public BarSkeletonBuilder addActionController(Class<?> controller) {
         Objects.requireNonNull(controller);
         this.actionControllerClazzList.add(controller);
-        return this;
-    }
-
-    /**
-     * addActionSend
-     *
-     * @param actionSend actionSend
-     * @return BarSkeletonBuilder
-     * @deprecated 请使用 {@link BarSkeletonBuilder#addBroadcastDoc(BroadcastDocBuilder)} 代替
-     */
-    @Deprecated
-    public BarSkeletonBuilder addActionSend(Class<?> actionSend) {
-//        Objects.requireNonNull(actionSend);
-//        this.actionSendClazzList.add(actionSend);
-        return this;
-    }
-
-    /**
-     * addActionSendDoc
-     *
-     * @param actionSendDoc actionSendDoc
-     * @return BarSkeletonBuilder
-     * @deprecated 请使用 {@link BarSkeletonBuilder#addBroadcastDoc(BroadcastDocBuilder)} 代替
-     */
-    @Deprecated
-    public BarSkeletonBuilder addActionSendDoc(ActionSendDoc actionSendDoc) {
-//        this.actionSendDocs.add(actionSendDoc);
-        return this;
-    }
-
-    /**
-     * 添加广播文档
-     *
-     * @param broadcastDocBuilder broadcastDocBuilder
-     * @return this
-     * @deprecated 请使用 {@link BarSkeletonBuilder#addBroadcastDocument(BroadcastDocumentBuilder)}
-     */
-    @Deprecated
-    public BarSkeletonBuilder addBroadcastDoc(BroadcastDocBuilder broadcastDocBuilder) {
-        IoGameDocumentHelper.addBroadcastDocument(broadcastDocBuilder.buildDocument());
         return this;
     }
 
@@ -273,5 +219,59 @@ public final class BarSkeletonBuilder {
         if (Objects.isNull(this.executorRegion)) {
             this.executorRegion = ExecutorRegionKit.createExecutorRegion();
         }
+    }
+
+    /**
+     * addMsgExceptionInfo
+     *
+     * @param msgExceptionInfo msgExceptionInfo
+     * @return BarSkeletonBuilder
+     * @deprecated 请使用 {@link IoGameDocumentHelper#addErrorCodeClass(Class)} 代替
+     */
+    @Deprecated
+    public BarSkeletonBuilder addMsgExceptionInfo(MsgExceptionInfo msgExceptionInfo) {
+//        Objects.requireNonNull(msgExceptionInfo);
+//        this.errorCodeDocs.addMsgExceptionInfo(msgExceptionInfo);
+        return this;
+    }
+
+    /**
+     * addActionSend
+     *
+     * @param actionSend actionSend
+     * @return BarSkeletonBuilder
+     * @deprecated 请使用 {@link BarSkeletonBuilder#addBroadcastDoc(BroadcastDocBuilder)} 代替
+     */
+    @Deprecated
+    public BarSkeletonBuilder addActionSend(Class<?> actionSend) {
+//        Objects.requireNonNull(actionSend);
+//        this.actionSendClazzList.add(actionSend);
+        return this;
+    }
+
+    /**
+     * addActionSendDoc
+     *
+     * @param actionSendDoc actionSendDoc
+     * @return BarSkeletonBuilder
+     * @deprecated 请使用 {@link BarSkeletonBuilder#addBroadcastDoc(BroadcastDocBuilder)} 代替
+     */
+    @Deprecated
+    public BarSkeletonBuilder addActionSendDoc(ActionSendDoc actionSendDoc) {
+//        this.actionSendDocs.add(actionSendDoc);
+        return this;
+    }
+
+    /**
+     * 添加广播文档
+     *
+     * @param broadcastDocBuilder broadcastDocBuilder
+     * @return this
+     * @deprecated 请使用 {@link BarSkeletonBuilder#addBroadcastDocument(BroadcastDocumentBuilder)}
+     */
+    @Deprecated
+    public BarSkeletonBuilder addBroadcastDoc(BroadcastDocBuilder broadcastDocBuilder) {
+        IoGameDocumentHelper.addBroadcastDocument(broadcastDocBuilder.buildDocument());
+        return this;
     }
 }

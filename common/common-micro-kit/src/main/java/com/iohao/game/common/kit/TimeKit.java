@@ -36,9 +36,9 @@ import java.util.concurrent.TimeUnit;
 @UtilityClass
 public class TimeKit {
     public ZoneId defaultZoneId = ZoneId.systemDefault();
-    public DateTimeFormatter defaultFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    public final DateTimeFormatter dateFormatterYMD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    final DateTimeFormatter dateFormatterYMDShort = DateTimeFormatter.ofPattern("yyyyMMdd");
+    public DateTimeFormatter defaultFormatter = TimeFormatterKit.defaultFormatter;
+    public final DateTimeFormatter dateFormatterYMD = TimeFormatterKit.ofPattern("yyyy-MM-dd");
+    final DateTimeFormatter dateFormatterYMDShort = TimeFormatterKit.ofPattern("yyyyMMdd");
 
     volatile LocalDate localDate;
     volatile long currentTimeMillis;

@@ -41,17 +41,21 @@ import java.util.Objects;
 public class BroadcastDocumentBuilder {
     /** 路由 */
     final CmdInfo cmdInfo;
-    /** 广播（推送）描述 */
-    String methodDescription;
+
+    /** 业务数据类型 */
+    Class<?> dataClass;
     @Setter(AccessLevel.PRIVATE)
     String dataClassName;
     /** 广播业务参数的描述 */
     String dataDescription;
+
+    @Setter(AccessLevel.PACKAGE)
     boolean list;
-    /** 业务数据类型 */
-    Class<?> dataClass;
+
     /** 广播方法名，仅在生成客户端代码时使用 */
     String methodName;
+    /** 广播（推送）描述 */
+    String methodDescription;
 
     BroadcastDocumentBuilder(CmdInfo cmdInfo) {
         this.cmdInfo = cmdInfo;
@@ -141,5 +145,4 @@ public class BroadcastDocumentBuilder {
     public void buildToDocument() {
         IoGameDocumentHelper.addBroadcastDocument(this.build());
     }
-
 }

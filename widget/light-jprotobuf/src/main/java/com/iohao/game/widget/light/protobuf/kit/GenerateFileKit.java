@@ -23,7 +23,6 @@ import com.iohao.game.widget.light.protobuf.ProtoGenerateFile;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
-import java.util.regex.Matcher;
 
 /**
  * proto 文件生成工具
@@ -36,9 +35,10 @@ public class GenerateFileKit {
     /**
      * 生成 proto 文件
      *
-     * @param packagePath proto 类所在包名
+     * @param protoPackagePath proto 类所在包名
+     * @param generateFolder   生成 proto file 的目录
      */
-    public void generate(String packagePath) {
+    public void generate(String protoPackagePath, String generateFolder) {
         /*
          * .proto 文件生成
          * 相关文档 https://www.yuque.com/iohao/game/vpe2t6
@@ -46,39 +46,36 @@ public class GenerateFileKit {
          * 运行该类，会在当前项目 target/proto 目录下生成 .proto 文件
          */
 
-        // 需要扫描的包名
-
         String currentDir = System.getProperty("user.dir");
-        String[] protoSourcePathArray = new String[]{
-                currentDir
-                , "src"
-                , "main"
-                , "java"
-                , packagePath.replaceAll("\\.", Matcher.quoteReplacement(File.separator))
-        };
-
-        // 源码目录
-        String protoSourcePath = ArrayKit.join(protoSourcePathArray, File.separator);
-
-        String[] generateFolderArray = new String[]{
-                currentDir
-                , "target"
-                , "proto"
-        };
-
-        // 生成 .proto 文件存放的目录
-        String generateFolder = ArrayKit.join(generateFolderArray, File.separator);
 
         ProtoGenerateFile protoGenerateFile = ProtoGenerateFile.builder()
                 // 源码目录
-                .protoSourcePath(protoSourcePath)
+                .protoSourcePath(currentDir)
                 // 需要扫描的包名
-                .protoPackagePath(packagePath)
+                .protoPackagePath(protoPackagePath)
                 // 生成 .proto 文件存放的目录
                 .generateFolder(generateFolder)
                 .build();
 
         // 生成 .proto 文件
         protoGenerateFile.generate();
+    }
+
+    /**
+     * 生成 proto 文件
+     *
+     * @param protoPackagePath proto 类所在包名
+     */
+    public void generate(String protoPackagePath) {
+        String currentDir = System.getProperty("user.dir");
+
+        // 生成 .proto 文件存放的目录
+        String generateFolder = ArrayKit.join(new String[]{
+                currentDir
+                , "target"
+                , "proto"
+        }, File.separator);
+
+        generate(protoPackagePath, generateFolder);
     }
 }

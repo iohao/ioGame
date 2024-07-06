@@ -86,5 +86,4 @@ public class ProtoJava {
 
         return StrKit.format(template, messageMap);
     }
-
 }

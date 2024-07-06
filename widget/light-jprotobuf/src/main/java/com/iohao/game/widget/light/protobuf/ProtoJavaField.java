@@ -105,5 +105,4 @@ public class ProtoJavaField {
 
         return templateFiled.toString();
     }
-
 }

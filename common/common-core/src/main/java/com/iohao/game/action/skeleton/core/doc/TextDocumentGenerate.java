@@ -20,6 +20,7 @@ package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
+import com.iohao.game.common.kit.TimeFormatterKit;
 import lombok.Setter;
 
 import java.io.File;
@@ -31,18 +32,16 @@ import java.util.*;
  * @author 渔民小镇
  * @date 2024-06-25
  */
-@Setter
 public final class TextDocumentGenerate implements DocumentGenerate {
+    private final StringJoiner docContentJoiner = new StringJoiner(System.lineSeparator());
     /** 文档生成后所存放的目录 */
+    @Setter
     String path = System.getProperty("user.dir") + File.separator + "doc_game.txt";
 
     @Override
     public void generate(IoGameDocument ioGameDocument) {
-
-        List<String> docContentList = new ArrayList<>(128);
-
         // 加上游戏文档格式说明
-        this.gameDocURLDescription(docContentList);
+        this.gameDocURLDescription();
 
         Map<Integer, BroadcastDocument> broadcastDocumentMap = new TreeMap<>();
         ioGameDocument.getBroadcastDocumentList().forEach(broadcastDocument -> {
@@ -64,42 +63,39 @@ public final class TextDocumentGenerate implements DocumentGenerate {
                     });
 
             String render = docInfo.render();
-            docContentList.add(render);
+            this.docContentJoiner.add(render);
         });
 
         // 生成文档 - 广播（推送）文档
-        extractedBroadcastDoc(broadcastDocumentMap, docContentList);
+        extractedBroadcastDoc(broadcastDocumentMap);
 
         // 生成文档 - 错误码文档
-        extractedErrorCode(ioGameDocument, docContentList);
+        extractedErrorCode(ioGameDocument);
 
         // 写文件
-        String docText = String.join("", docContentList);
+        String docText = this.docContentJoiner.toString();
         FileKit.writeUtf8String(docText, path);
     }
 
-    private void gameDocURLDescription(List<String> docContentList) {
+    private void gameDocURLDescription() {
         // 加上游戏文档格式说明
         String gameDocInfo = """
                 ==================== 游戏文档格式说明 ====================
                 https://www.yuque.com/iohao/game/irth38#cJLdC
-                                
                 """;
 
-        docContentList.add(gameDocInfo);
+        this.docContentJoiner.add("生成时间 %s".formatted(TimeFormatterKit.formatter()));
+        this.docContentJoiner.add(gameDocInfo);
     }
 
-    private void extractedBroadcastDoc(Map<Integer, BroadcastDocument> broadcastDocumentMap, List<String> docContentList) {
+    private void extractedBroadcastDoc(Map<Integer, BroadcastDocument> broadcastDocumentMap) {
 
         var broadcastDocumentList = broadcastDocumentMap.values();
         if (broadcastDocumentList.isEmpty()) {
             return;
         }
 
-        String separator = System.lineSeparator();
-
-        docContentList.add("==================== 其它广播推送 ====================");
-        docContentList.add(separator);
+        this.docContentJoiner.add("==================== 其它广播推送 ====================");
 
         for (BroadcastDocument broadcastDocument : broadcastDocumentList) {
 
@@ -117,30 +113,23 @@ public final class TextDocumentGenerate implements DocumentGenerate {
             stringObjectMap.put("dataDescription", broadcastDocument.getDataDescription());
 
             String format = StrKit.format(template, stringObjectMap);
-
-            docContentList.add(format);
-            docContentList.add(separator);
+            this.docContentJoiner.add(format);
         }
+
+        this.docContentJoiner.add("");
     }
 
-    private void extractedErrorCode(IoGameDocument ioGameDocument, List<String> docContentList) {
+    private void extractedErrorCode(IoGameDocument ioGameDocument) {
 
-        String separator = System.lineSeparator();
-
-        docContentList.add("==================== 错误码 ====================");
-        docContentList.add(separator);
+        this.docContentJoiner.add("==================== 错误码 ====================");
 
         for (ErrorCodeDocument errorCodeDocument : ioGameDocument.getErrorCodeDocumentList()) {
-            String template = "{} : {} : {}";
-
-            String format = StrKit.format(template,
-                    errorCodeDocument.getValue(),
+            String format = "%s : %s : %s".formatted(errorCodeDocument.getValue(),
                     errorCodeDocument.getDescription(),
                     errorCodeDocument.getName()
             );
 
-            docContentList.add(format);
-            docContentList.add(separator);
+            this.docContentJoiner.add(format);
         }
     }
 }
