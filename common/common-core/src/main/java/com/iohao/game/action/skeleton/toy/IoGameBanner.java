@@ -116,6 +116,7 @@ public final class IoGameBanner {
     private void clean() {
         this.startTime = null;
         this.countDownLatch = null;
+        flag21 = "ioGame21 ";
     }
 
     private void extractedTime(ToyTable table) {
@@ -152,7 +153,7 @@ public final class IoGameBanner {
     private void extractedIoGameJavadocApi() {
         String s = BreakingNews.ioGameJavadocApi().toString();
         String builder = "| javadoc  | %s%n";
-        System.out.printf(builder,  s);
+        System.out.printf(builder, s);
         System.out.println("+----------+--------------------------------------------------------------------------------------");
     }
 
@@ -194,10 +195,10 @@ public final class IoGameBanner {
     }
 
     private IoGameBanner() {
+        flag21 = "ioGame21";
     }
 
     public static IoGameBanner me() {
-        flag21 = "ioGame21";
         return Holder.ME;
     }
 
