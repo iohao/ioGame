@@ -59,7 +59,10 @@ class DocumentAnalyseKit {
         String srcPath = sourceFilePathFun.apply(resource).replace("class", "java");
 
         File file = new File(srcPath);
-        javaProjectBuilder.addSourceTree(file);
+        // 源码在此包才做处理
+        if (file.exists()) {
+            javaProjectBuilder.addSourceTree(file);
+        }
 
         return javaProjectBuilder.getClassByName(clazz.getName());
     }
