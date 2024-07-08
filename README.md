@@ -208,7 +208,7 @@ ioGame 是轻量级的网络编程框架，**不依赖任何第三方**中间件
 <dependency>
     <groupId>com.iohao.game</groupId>
     <artifactId>run-one-netty</artifactId>
-    <version>21.11</version>
+    <version>21.12</version>
 </dependency>
 ```
 
