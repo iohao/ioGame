@@ -131,7 +131,8 @@ public final class SocketUserSessions extends AbstractUserSessions<ChannelHandle
 
     private void removeUserSessionMap(SocketUserSession userSession) {
         long userId = userSession.getUserId();
-        this.userIdMap.remove(userId);
+        // #334，kv 与预期一致时才移除。（类似联合主键）
+        this.userIdMap.remove(userId, userSession);
 
         UserChannelId userChannelId = userSession.getUserChannelId();
         if (Objects.nonNull(userChannelId)) {
