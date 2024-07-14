@@ -76,7 +76,7 @@
  *             public void registerEventBus(EventBus eventBus, BarSkeleton skeleton) {
  *                 // 注册订阅者
  *                 eventBus.register(new EmailEventBusSubscriber());
- *                 eventBus.register(new UserLoginEventMessage());
+ *                 eventBus.register(new UserEventBusSubscriber());
  *             }
  *         });
  *

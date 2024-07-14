@@ -36,7 +36,7 @@ import java.util.Set;
  *     @Override
  *     public BarSkeleton createBarSkeleton() {
  *         // 业务框架构建器
- *         var builder = ...
+ *         BarSkeletonBuilder builder = ...
  *
  *         // 开启分布式事件总线。逻辑服添加 EventBusRunner，用于处理 EventBus 相关业务
  *         builder.addRunner(new EventBusRunner() {

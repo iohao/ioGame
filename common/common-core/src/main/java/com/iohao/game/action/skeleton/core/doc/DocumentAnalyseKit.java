@@ -24,6 +24,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.expression.Expression;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.net.URL;
@@ -35,6 +36,7 @@ import java.util.function.Function;
  * @author 渔民小镇
  * @date 2024-06-26
  */
+@Slf4j
 @UtilityClass
 class DocumentAnalyseKit {
     List<ActionDocument> analyseActionDocument(IoGameDocument ioGameDocument, TypeMappingDocument typeMappingDocument) {
@@ -62,6 +64,8 @@ class DocumentAnalyseKit {
         // 源码在此包才做处理
         if (file.exists()) {
             javaProjectBuilder.addSourceTree(file);
+        } else {
+            log.warn("无法获取 {} 相关源码", clazz);
         }
 
         return javaProjectBuilder.getClassByName(clazz.getName());
