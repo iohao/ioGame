@@ -21,7 +21,8 @@ package com.iohao.game.action.skeleton.core.flow.internal;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.CollKit;
-import com.iohao.game.common.kit.TimeKit;
+import com.iohao.game.common.kit.TimeFormatterKit;
+import com.iohao.game.common.kit.concurrent.IntervalTaskListener;
 import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.Getter;
 import org.jctools.maps.NonBlockingHashMap;
@@ -74,9 +75,27 @@ import java.util.stream.Stream;
  * 	22:00 共 1 次; - [45~59分钟 1 次]
  * 	23:00 共 2 次; - [15~30分钟 1 次] - [45~59分钟 1 次]
  * </pre>
+ * set Listener example
+ * <pre>{@code
+ * private void setListener(TimeRangeInOut inOut) {
+ *     inOut.setListener(new TimeRangeInOut.ChangeListener() {
+ *         @Override
+ *         public List<TimeRangeInOut.TimeRangeMinute> createListenerTimeRangeMinuteList() {
+ *             return List.of(
+ *                     // 只统计 0、1、59 分钟这 3 个时间点
+ *                     TimeRangeInOut.TimeRangeMinute.create(0, 0),
+ *                     TimeRangeInOut.TimeRangeMinute.create(1, 1),
+ *                     TimeRangeInOut.TimeRangeMinute.create(59, 59)
+ *             );
+ *         }
+ *     });
+ * }
+ *
+ * }</pre>
  *
  * @author 渔民小镇
  * @date 2023-11-29
+ * @see ChangeListener
  */
 @Getter
 public final class TimeRangeInOut implements ActionMethodInOut {
@@ -85,7 +104,17 @@ public final class TimeRangeInOut implements ActionMethodInOut {
 
     ChangeListener listener = new DefaultChangeListener();
 
+    /**
+     * 设置监听器
+     *
+     * @param listener 监听器
+     */
     public void setListener(ChangeListener listener) {
+
+        if (this.listener instanceof DefaultChangeListener that) {
+            that.active = false;
+        }
+
         this.listener = Objects.requireNonNull(listener);
     }
 
@@ -101,8 +130,11 @@ public final class TimeRangeInOut implements ActionMethodInOut {
         this.region.update(localDate, localTime, flowContext);
     }
 
+    /**
+     * 调用统计对象域
+     */
     @Getter
-    public class TimeRangeDayRegion {
+    public final class TimeRangeDayRegion {
         final Map<LocalDate, TimeRangeDay> map = new NonBlockingHashMap<>();
 
         public void forEach(BiConsumer<LocalDate, TimeRangeDay> action) {
@@ -192,7 +224,7 @@ public final class TimeRangeInOut implements ActionMethodInOut {
         @Override
         public String toString() {
 
-            String localDateFormat = TimeKit.dateFormatterYMD.format(this.localDate);
+            String localDateFormat = TimeFormatterKit.ofPattern("yyyy-MM-dd").format(this.localDate);
 
             List<TimeRangeHour> timeRangeHoursList = stream()
                     .filter(timeRangeHour -> timeRangeHour.count.sum() > 0)
@@ -272,11 +304,18 @@ public final class TimeRangeInOut implements ActionMethodInOut {
     /**
      * 分钟范围记录
      *
-     * @param start 开始时间（分钟）
-     * @param end   结束时间（分钟）
+     * @param start 开始时间（分钟），包含该时间
+     * @param end   结束时间（分钟），包含该时间
      * @param count 该时间范围所触发的执行次数
      */
     public record TimeRangeMinute(int start, int end, LongAdder count) {
+        /**
+         * 创建分钟范围记录
+         *
+         * @param start 开始时间（分钟），包含该时间
+         * @param end   结束时间（分钟），包含该时间
+         * @return 分钟范围记录
+         */
         public static TimeRangeMinute create(int start, int end) {
             return new TimeRangeMinute(start, end, new LongAdder());
         }
@@ -296,7 +335,7 @@ public final class TimeRangeInOut implements ActionMethodInOut {
     }
 
     /**
-     * 监听
+     * 监听器
      */
     public interface ChangeListener {
 
@@ -311,19 +350,40 @@ public final class TimeRangeInOut implements ActionMethodInOut {
         default void callbackYesterday(TimeRangeDay timeRangeYesterday) {
         }
 
+        /**
+         * LocalDate now
+         *
+         * @return LocalDate
+         */
         default LocalDate nowLocalDate() {
             return LocalDate.now();
         }
 
+        /**
+         * LocalTime now
+         *
+         * @return LocalTime
+         */
         default LocalTime nowLocalTime() {
             return LocalTime.now();
         }
 
+        /**
+         * 创建 TimeRangeDay （一天的调用统计对象）
+         *
+         * @param localDate 日期
+         * @return TimeRangeDay
+         */
         default TimeRangeDay createTimeRangeDay(LocalDate localDate) {
             List<TimeRangeHour> timeRangeHourList = this.createListenerTimeRangeHourList();
             return TimeRangeDay.create(localDate, timeRangeHourList);
         }
 
+        /**
+         * create TimeRangeHour list，需要统计的小时范围列表
+         *
+         * @return list TimeRangeHour 一小时的调用统计对象
+         */
         default List<TimeRangeHour> createListenerTimeRangeHourList() {
             // 创建对应 24 个小时的数据
             return IntStream.range(0, 24)
@@ -331,11 +391,22 @@ public final class TimeRangeInOut implements ActionMethodInOut {
                     .toList();
         }
 
+        /**
+         * create TimeRangeHour ，需要统计的小时范围
+         *
+         * @param hour 小时
+         * @return 一小时的调用统计对象
+         */
         default TimeRangeHour createListenerTimeRangeHour(int hour) {
             List<TimeRangeMinute> timeRangeMinuteList = this.createListenerTimeRangeMinuteList();
             return TimeRangeHour.create(hour, timeRangeMinuteList);
         }
 
+        /**
+         * create TimeRangeMinute list，分钟范围记录列表
+         *
+         * @return list 分钟范围记录
+         */
         default List<TimeRangeMinute> createListenerTimeRangeMinuteList() {
             return Collections.emptyList();
         }
@@ -344,12 +415,21 @@ public final class TimeRangeInOut implements ActionMethodInOut {
     private static class DefaultChangeListener implements ChangeListener {
         LocalDate nowLocalDate = LocalDate.now();
         LocalTime nowLocalTime = LocalTime.now();
+        volatile boolean active = true;
 
         DefaultChangeListener() {
-            TaskKit.runIntervalMinute(() -> {
-                // 1 minute update
-                nowLocalDate = LocalDate.now();
-                nowLocalTime = LocalTime.now();
+            TaskKit.runIntervalMinute(new IntervalTaskListener() {
+                @Override
+                public void onUpdate() {
+                    // 1 minute update
+                    nowLocalDate = LocalDate.now();
+                    nowLocalTime = LocalTime.now();
+                }
+
+                @Override
+                public boolean isActive() {
+                    return active;
+                }
             }, 1);
         }
 

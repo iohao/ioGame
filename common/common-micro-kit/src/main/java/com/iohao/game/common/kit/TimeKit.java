@@ -35,8 +35,12 @@ import java.util.concurrent.TimeUnit;
  */
 @UtilityClass
 public class TimeKit {
-    public ZoneId defaultZoneId = ZoneId.systemDefault();
+    public ZoneId defaultZoneId = TimeFormatterKit.defaultZoneId;
+    /** 请使用 {@link TimeFormatterKit#defaultFormatter}  代替 */
+    @Deprecated
     public DateTimeFormatter defaultFormatter = TimeFormatterKit.defaultFormatter;
+    /** 请使用 {@link TimeFormatterKit#ofPattern(String)}  代替 */
+    @Deprecated
     public final DateTimeFormatter dateFormatterYMD = TimeFormatterKit.ofPattern("yyyy-MM-dd");
     final DateTimeFormatter dateFormatterYMDShort = TimeFormatterKit.ofPattern("yyyyMMdd");
 
@@ -115,7 +119,7 @@ public class TimeKit {
     }
 
     public String formatter(LocalDateTime localDateTime) {
-        return localDateTime.format(defaultFormatter);
+        return localDateTime.format(TimeFormatterKit.defaultFormatter);
     }
 
     public String formatter() {
@@ -124,7 +128,7 @@ public class TimeKit {
 
     public String formatter(long milliseconds) {
         LocalDateTime localDateTime = toLocalDateTime(milliseconds);
-        return localDateTime.format(defaultFormatter);
+        return localDateTime.format(TimeFormatterKit.defaultFormatter);
     }
 
     /**

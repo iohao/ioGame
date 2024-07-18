@@ -22,6 +22,7 @@ import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Objects;
@@ -36,6 +37,8 @@ import java.util.Objects;
 @UtilityClass
 public class TimeFormatterKit {
     final Map<String, DateTimeFormatter> map = new NonBlockingHashMap<>();
+
+    public ZoneId defaultZoneId = ZoneId.systemDefault();
     public DateTimeFormatter defaultFormatter = ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public DateTimeFormatter ofPattern(String pattern) {

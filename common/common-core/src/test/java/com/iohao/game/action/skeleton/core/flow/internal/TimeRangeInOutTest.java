@@ -23,7 +23,6 @@ public class TimeRangeInOutTest {
         TimeRangeInOut inOut = new TimeRangeInOut();
         setListener(inOut);
 
-
         RequestMessage requestMessage = BarMessageKit.createRequestMessage(CmdInfo.of(1, 1));
         FlowContext flowContext = new FlowContext();
         flowContext.setRequest(requestMessage);
@@ -56,13 +55,6 @@ public class TimeRangeInOutTest {
     }
 
     private void setListener(TimeRangeInOut inOut) {
-        TimeRangeInOut.TimeRangeDayRegion region = inOut.getRegion();
-
-        // 取指定日期的 TimeRangeDay 对象
-        LocalDate localDate = LocalDate.now();
-        TimeRangeInOut.TimeRangeDay timeRangeDay = region.getTimeRangeDay(localDate);
-        System.out.println(timeRangeDay);
-
         inOut.setListener(new TimeRangeInOut.ChangeListener() {
             @Override
             public void callbackYesterday(TimeRangeInOut.TimeRangeDay timeRangeYesterday) {
@@ -84,7 +76,14 @@ public class TimeRangeInOutTest {
 
                 });
             }
+
+            @Override
+            public List<TimeRangeInOut.TimeRangeMinute> createListenerTimeRangeMinuteList() {
+                return List.of(
+                        TimeRangeInOut.TimeRangeMinute.create(0, 29),
+                        TimeRangeInOut.TimeRangeMinute.create(30, 59)
+                );
+            }
         });
     }
-
 }
