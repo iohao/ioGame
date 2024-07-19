@@ -59,6 +59,7 @@ public final class RequestCollectExternalMessage implements Serializable {
      * </pre>
      */
     int bizCode;
+    /** 发起请求的 userId */
     long userId;
     /** 请求业务数据 */
     Serializable data;

@@ -343,8 +343,8 @@ public final class StatActionInOut implements ActionMethodInOut {
     /**
      * 时间范围记录
      *
-     * @param start 开始时间
-     * @param end   结束时间
+     * @param start 开始时间，包含该时间
+     * @param end   结束时间，包含该时间
      * @param count 该时间范围所触发的执行次数
      * @param name  name
      */
@@ -352,8 +352,8 @@ public final class StatActionInOut implements ActionMethodInOut {
         /**
          * 创建时间范围
          *
-         * @param start 开始时间
-         * @param end   结束时间
+         * @param start 开始时间，包含该时间
+         * @param end   结束时间，包含该时间
          * @return TimeRange
          */
         public static TimeRange create(long start, long end) {
@@ -363,8 +363,8 @@ public final class StatActionInOut implements ActionMethodInOut {
         /**
          * 创建时间范围，并指定名称
          *
-         * @param start 开始时间
-         * @param end   结束时间
+         * @param start 开始时间，包含该时间
+         * @param end   结束时间，包含该时间
          * @param name  打印时的名称
          * @return TimeRange
          */

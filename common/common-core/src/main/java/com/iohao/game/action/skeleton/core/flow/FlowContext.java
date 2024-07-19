@@ -20,15 +20,12 @@ package com.iohao.game.action.skeleton.core.flow;
 
 import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.SkeletonAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
-import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

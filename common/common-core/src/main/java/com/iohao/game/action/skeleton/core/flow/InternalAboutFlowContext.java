@@ -24,7 +24,6 @@ import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
 import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.eventbus.EventBusMessage;
-import com.iohao.game.action.skeleton.eventbus.EventBusMessageCreator;
 import com.iohao.game.action.skeleton.kit.ExecutorSelectKit;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
@@ -820,22 +819,46 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      */
     default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(int bizCode, Serializable data) {
         var request = createRequestCollectExternalMessage(bizCode, data);
+
+        this.extractedSourceClientId(request);
+
         return this.invokeExternalModuleCollectMessage(request);
     }
 
-    private RequestCollectExternalMessage createRequestCollectExternalMessage(int bizCode, Serializable data) {
+    private void extractedSourceClientId(RequestCollectExternalMessage request) {
+        // 强制指定需要访问的游戏对外服；当指定 id 后，将不会访问所有的游戏对外服
+        var headMetadata = this.getHeadMetadata();
+        request.setSourceClientId(headMetadata.getSourceClientId());
+    }
+
+    /**
+     * 创建 RequestCollectExternalMessage，RequestCollectExternalMessage 会附带 userId、traceId 相关信息
+     *
+     * @param bizCode 业务码
+     * @return RequestCollectExternalMessage
+     */
+    default RequestCollectExternalMessage createRequestCollectExternalMessage(int bizCode) {
+        return this.createRequestCollectExternalMessage(bizCode, null);
+    }
+
+    /**
+     * 创建 RequestCollectExternalMessage，RequestCollectExternalMessage 会附带 userId、traceId 相关信息
+     *
+     * @param bizCode 业务码
+     * @param data    业务数据
+     * @return RequestCollectExternalMessage
+     */
+    default RequestCollectExternalMessage createRequestCollectExternalMessage(int bizCode, Serializable data) {
         // 得到发起请求的游戏对外服 id
         var headMetadata = this.getHeadMetadata();
-        var sourceClientId = headMetadata.getSourceClientId();
 
         return new RequestCollectExternalMessage()
                 // 根据业务码，调用游戏对外服与业务码对应的业务实现类
                 .setBizCode(bizCode)
-                .setUserId(headMetadata.getUserId())
                 // 业务数据
                 .setData(data)
-                // 强制指定需要访问的游戏对外服；当指定 id 后，将不会访问所有的游戏对外服
-                .setSourceClientId(sourceClientId)
+                // userId、traceId
+                .setUserId(headMetadata.getUserId())
                 .setTraceId(headMetadata.getTraceId())
                 ;
     }
@@ -893,8 +916,11 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     default CompletableFuture<ResponseCollectExternalMessage> invokeExternalModuleCollectMessageFuture(
             int bizCode, Serializable data) {
 
-        RequestCollectExternalMessage message = this.createRequestCollectExternalMessage(bizCode, data);
-        return this.invokeExternalModuleCollectMessageFuture(message);
+        RequestCollectExternalMessage request = this.createRequestCollectExternalMessage(bizCode, data);
+
+        this.extractedSourceClientId(request);
+
+        return this.invokeExternalModuleCollectMessageFuture(request);
     }
 
     /**
@@ -946,8 +972,11 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     default void invokeExternalModuleCollectMessageAsync(int bizCode
             , Serializable data, Consumer<ResponseCollectExternalMessage> callback) {
 
-        RequestCollectExternalMessage message = this.createRequestCollectExternalMessage(bizCode, data);
-        this.invokeExternalModuleCollectMessageAsync(message, callback);
+        RequestCollectExternalMessage request = this.createRequestCollectExternalMessage(bizCode, data);
+
+        this.extractedSourceClientId(request);
+
+        this.invokeExternalModuleCollectMessageAsync(request, callback);
     }
 
     /**
