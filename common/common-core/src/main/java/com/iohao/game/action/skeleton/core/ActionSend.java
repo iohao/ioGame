@@ -22,6 +22,7 @@ package com.iohao.game.action.skeleton.core;
  * @author 渔民小镇
  * @date 2022-01-30
  */
+@Deprecated
 public interface ActionSend {
 
     /**

@@ -40,8 +40,8 @@
 	<a href="http://game.iohao.com">http://game.iohao.com</a>
 </p>
 <p align="center">
-	<a target="_blank" href="https://www.oracle.com/java/technologies/downloads/#java17">
-		<img src="https://img.shields.io/badge/JDK-21-green.svg" alt="JDK 21" />
+	<a target="_blank" href="https://www.oracle.com/java/technologies/downloads/#java21">
+		<img src="https://img.shields.io/badge/JDK-21-success.svg" alt="JDK 21" />
 	</a>
 	<br>
 	<a target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.txt">
@@ -55,7 +55,9 @@
 		<img src="https://img.shields.io/github/stars/iohao/ioGame.svg?logo=github" alt="github star"/>
 	</a>
   <br />
-  <a href="https://www.murphysec.com/dr/O8oMcWWWVoU9hV4M9z" alt="OSCS Status"><img src="https://www.oscs1024.com/platform/badge/iohao/ioGame.git.svg?size=small"/></a>
+	<a target="_blank" href='https://app.codacy.com/gh/iohao/ioGame/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade'>
+		<img src="https://app.codacy.com/project/badge/Grade/4981fff112754686baad7442be998b17" alt="github star"/>
+</a>
 </p>
 <hr />
 

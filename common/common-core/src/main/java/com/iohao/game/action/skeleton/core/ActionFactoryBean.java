@@ -26,7 +26,7 @@ import com.iohao.game.action.skeleton.annotation.ActionController;
  *     负责创建 action 类的实例化对象
  *
  *     对于 action 的解释可以参考这里:
- *     https://www.yuque.com/iohao/game/sqcevl
+ *     <a href="https://www.yuque.com/iohao/game/sqcevl">Action 相关文档</a>
  * </pre>
  *
  * @param <T> t

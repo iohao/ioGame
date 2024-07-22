@@ -25,7 +25,7 @@ package com.iohao.game.action.skeleton.core.flow;
  *     通常用于给 FlowContext 子类添加上一些自定义方法
  *
  *     FlowContext 还支持开发者自定义，具体参考
- *     https://www.yuque.com/iohao/game/zz8xiz#sLySn
+ *     <a href="https://www.yuque.com/iohao/game/zz8xiz#sLySn">FlowContext 相关文档</a>
  * </pre>
  *
  * @author 渔民小镇

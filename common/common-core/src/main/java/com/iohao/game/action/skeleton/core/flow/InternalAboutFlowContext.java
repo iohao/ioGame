@@ -832,7 +832,7 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 创建 RequestCollectExternalMessage，RequestCollectExternalMessage 会附带 userId、traceId 相关信息
+     * 创建 RequestCollectExternalMessage，{@link RequestCollectExternalMessage} 会附带 userId、traceId 相关信息
      *
      * @param bizCode 业务码
      * @return RequestCollectExternalMessage
@@ -842,7 +842,7 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 创建 RequestCollectExternalMessage，RequestCollectExternalMessage 会附带 userId、traceId 相关信息
+     * 创建 RequestCollectExternalMessage，{@link RequestCollectExternalMessage} 会附带 userId、traceId 相关信息
      *
      * @param bizCode 业务码
      * @param data    业务数据
@@ -864,9 +864,8 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服。
-     * <p>
-     * 如果需要访问多个游戏对外服
+     * 【游戏逻辑服】访问【游戏对外服】，为会 {@link RequestCollectExternalMessage} 会附带 userId、traceId 相关信息，
+     * 如果 request 没有指定 sourceClientId，将会访问所有的游戏对外服。
      * <pre>
      *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
@@ -878,8 +877,15 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
      */
     default ResponseCollectExternalMessage invokeExternalModuleCollectMessage(RequestCollectExternalMessage request) {
         // MDC
-        var traceId = this.getHeadMetadata().getTraceId();
-        request.setTraceId(traceId);
+        if (Objects.isNull(request.getTraceId())) {
+            var traceId = this.getHeadMetadata().getTraceId();
+            request.setTraceId(traceId);
+        }
+
+        if (request.getUserId() == 0) {
+            long userId = this.getUserId();
+            request.setUserId(userId);
+        }
 
         // 【游戏逻辑服】与【游戏对外服】通讯上下文
         var invokeExternalModuleContext = this.getInvokeExternalModuleContext();
@@ -924,7 +930,8 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * 【游戏逻辑服】访问【游戏对外服】，为会 {@link RequestCollectExternalMessage} 会附带 userId、traceId 相关信息，
+     * 如果 request 没有指定 sourceClientId，将会访问所有的游戏对外服。
      * <pre>
      *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
@@ -997,7 +1004,7 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
+     * 【游戏逻辑服】访问【游戏对外服】，如果 {@link RequestCollectExternalMessage} 没有指定 sourceClientId，将会访问所有的游戏对外服。
      * <pre>
      *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
