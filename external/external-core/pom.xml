@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.iohao.game</groupId>
         <artifactId>ioGame</artifactId>
-        <version>21.12</version>
+        <version>21.13</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
