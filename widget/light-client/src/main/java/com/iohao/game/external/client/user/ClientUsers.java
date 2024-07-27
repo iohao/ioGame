@@ -70,7 +70,11 @@ public class ClientUsers {
         });
     }
 
+    boolean executeStart;
+
     private void extractedExecute() {
+        executeStart = true;
+
         TaskKit.execute(() -> {
             if (clientUsers.size() > 1) {
                 int sleep = 5;
@@ -83,7 +87,7 @@ public class ClientUsers {
                 }
             }
 
-            while (true) {
+            while (executeStart) {
                 try {
                     Runnable take = runnableQueue.take();
                     TaskKit.execute(take);

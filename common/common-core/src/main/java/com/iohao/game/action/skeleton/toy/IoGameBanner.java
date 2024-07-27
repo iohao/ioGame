@@ -23,6 +23,7 @@ import com.iohao.game.common.kit.RandomKit;
 import com.iohao.game.common.kit.concurrent.TaskKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -40,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author 渔民小镇
  * @date 2023-01-30
  */
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class IoGameBanner {
     /** 特殊字段，开发者不要使用 */
@@ -81,6 +83,7 @@ public final class IoGameBanner {
                     }
                 }
             } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
             }
 
             var table = new ToyTable();
