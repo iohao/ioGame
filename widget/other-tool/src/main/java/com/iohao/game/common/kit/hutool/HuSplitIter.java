@@ -11,7 +11,6 @@ import java.util.function.Function;
  * @date 2023-01-19
  */
 class HuSplitIter extends HuComputeIter<String> implements Serializable {
-    private static final long serialVersionUID = 1L;
     private final String text;
     private final HuTextFinder finder;
     private final int limit;

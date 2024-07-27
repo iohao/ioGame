@@ -11,7 +11,6 @@ import java.net.URL;
  * @date 2023-01-19
  */
 class HuUrlResource implements HuResource, Serializable {
-    private static final long serialVersionUID = 1L;
 
     protected URL url;
     protected String name;

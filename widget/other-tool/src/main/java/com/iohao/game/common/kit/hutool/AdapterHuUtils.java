@@ -25,7 +25,7 @@ public class AdapterHuUtils {
         return HuFileUtil.file(path);
     }
 
-    public File writeUtf8String(String content, String path) throws HuIoRuntimeException {
+    public File writeUtf8String(String content, String path) {
         return HuFileUtil.writeUtf8String(content, path);
     }
 
@@ -44,5 +44,4 @@ public class AdapterHuUtils {
     public String format(@NonNull CharSequence template, Object... params) {
         return HuStrUtil.format(template, params);
     }
-
 }

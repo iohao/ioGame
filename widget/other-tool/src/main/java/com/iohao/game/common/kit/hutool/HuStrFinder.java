@@ -6,7 +6,6 @@ package com.iohao.game.common.kit.hutool;
  * @date 2023-01-19
  */
 class HuStrFinder extends HuTextFinder {
-    private static final long serialVersionUID = 1L;
 
     private final CharSequence strToFind;
     private final boolean caseInsensitive;

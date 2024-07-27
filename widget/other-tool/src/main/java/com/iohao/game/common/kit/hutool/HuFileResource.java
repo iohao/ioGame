@@ -13,7 +13,6 @@ import java.util.function.Supplier;
  * @date 2023-01-19
  */
 class HuFileResource implements HuResource, Serializable {
-    private static final long serialVersionUID = 1L;
 
     private final File file;
     private final String name;

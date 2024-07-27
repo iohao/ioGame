@@ -8,7 +8,6 @@ import java.io.Serializable;
  * @date 2023-01-19
  */
 abstract class HuTextFinder implements HuFinder, Serializable {
-    private static final long serialVersionUID = 1L;
 
     protected CharSequence text;
     protected int endIndex = -1;
