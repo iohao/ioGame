@@ -5,9 +5,442 @@
 
 
 
+### 2024-07
+
+#### 2024-07-24 - v21.13
+
+https://github.com/iohao/ioGame/releases/tag/21.13
+
+
+
+**版本更新汇总**
+
+- [external]  [#334](https://github.com/iohao/ioGame/issues/334) 顶号操作 bug，有概率触发并发问题
+- [core]  FlowContext 新增 createRequestCollectExternalMessage 方法
+- [javadoc] 源码 javadoc 增强
+
+------
+
+
+
+**[core]**
+
+FlowContext 新增 createRequestCollectExternalMessage 方法，request 与游戏对外服交互。相关使用文档请阅读 [获取游戏对外服的数据与扩展 (yuque.com)](https://www.yuque.com/iohao/game/ivxsw5)
+
+```java
+... ... 省略部分代码
+@ActionMethod(ExternalBizRegionCmd.listOnlineUserAll)
+public List<Long> listOnlineUserAll(FlowContext flowContext) {
+
+    // 创建 RequestCollectExternalMessage
+    var request = flowContext
+            .createRequestCollectExternalMessage(MyExternalBizCode.onlineUser);
+
+    // 访问多个【游戏对外服】
+    var collectExternalMessage = flowContext
+            .invokeExternalModuleCollectMessage(request);
+
+    return listUserId(collectExternalMessage);
+}
+```
+
+------
+
+
+
+**[其他更新]**
+
+```xml
+<netty.version>4.1.112.Final</netty.version>
+<lombok.version>1.18.34</lombok.version>
+```
+
+------
+
+
+
+#### 2024-07-08 - v21.12
+
+https://github.com/iohao/ioGame/releases/tag/21.12
+
+
+
+**版本更新汇总**
+
+- [light-game-room]  [#326](https://github.com/iohao/ioGame/issues/326) GameFlowContext getRoom、getPlayer 方法返回值改成泛型
+- [对接文档]  [#330](https://github.com/iohao/ioGame/issues/330) 增强，支持对接文档生成与扩展，包括文本文档生成、联调代码生成 ...等
+
+
+
+当前版本，为之后生成联调代码做了充分的准备
+
+------
+
+
+
+**[light-game-room]**
+
+[#326](https://github.com/iohao/ioGame/issues/326) GameFlowContext getRoom、getPlayer 方法返回值改成泛型
+
+```java
+GameFlowContext gameFlowContext = ...;
+// FightRoomEntity 是自定义的 Room 对象
+
+// Room、Player 在使用时，不需要强制转换了
+FightRoomEntity room =  gameFlowContext.getRoom();
+FightPlayerEntity player = gameFlowContext.getPlayer();
+```
+
+------
+
+
+
+**[对接文档]** 
+
+[#330](https://github.com/iohao/ioGame/issues/330) 增强，支持对接文档生成与扩展，包括文本文档生成、联调代码生成 ...等。开发者做更多个性化的扩展
+
+
+
+在该版本中，我们已经新做了对接文档相关模块；该版本功能更加的强大，使用上也更加的简洁。新版本的对接文档模块，除了能提供文本文档的生成外，还能支持生成与客户端联调的代码、并且是可扩展的。通常，客户端联调代码有：
+
+1. 支持生成 C# 客户端的联调代码，通常用在 Unity、Godot 客户端，具体可阅读 [SDK C# 代码生成](https://www.yuque.com/iohao/game/fgrizbhz4qqzd1vl)。
+2. 支持生成 TypeScript 客户端的联调代码，通常用在 cocos、laya 客户端，具体可阅读 [SDK TypeScript 代码生成](https://www.yuque.com/iohao/game/mywnvkhemv8wm396)。
+
+
+
+```java
+public static void main(String[] args) {
+    // 添加枚举错误码 class，用于生成错误码相关信息
+    IoGameDocumentHelper.addErrorCodeClass(GameCode.class);
+
+    // 添加文档生成器，文本文档
+    IoGameDocumentHelper.addDocumentGenerate(new TextDocumentGenerate());
+    // 添加文档生成器，Ts 联调代码生成
+    IoGameDocumentHelper.addDocumentGenerate(new TypeScriptDocumentGenerate());
+    // 生成文档
+    IoGameDocumentHelper.generateDocument();
+}
+```
+
+上述代码
+
+- 添加了错误码的生成
+- 添加了文本文档的生成
+- 添加了 Ts 客户端联调代码的生成（包括 action、广播、错误码...相关代码的生成）， [SDK TypeScript 客户端代码生成；方便 CocosCeator、或其他支持 TypeScript 的客户端对接。 #329](https://github.com/iohao/ioGame/issues/329)
+
+
+
+addDocumentGenerate 是可扩展的，这将意味着开发者可以扩展出 C#、GodotScript、Js ...等不同客户端的联调代码。默认，我们提供了一个文本文档，即 TextDocumentGenerate，如果默认的实现满足不了当下需求，开发者也可以定制个性化的文档，如 json 格式的。
+
+
+
+更多内容请阅读 [游戏对接文档生成 (yuque.com)](https://www.yuque.com/iohao/game/irth38)
+
+
+
+**新增 DocumentGenerate 接口**
+
+开发者可利用该接口进行定制个性化的对接文档，如代码生成 ...等。
+
+```java
+/**
+ * 对接文档生成接口，可扩展不同的实现
+ */
+public interface DocumentGenerate {
+    /**
+     * 生成文档
+     *
+     * @param ioGameDocument ioGameDocument
+     */
+    void generate(IoGameDocument ioGameDocument);
+}
+
+/**
+ * 文档相关信息，如 action 相关、广播相关、错误码相关。
+ */
+@Getter
+public final class IoGameDocument {
+    /** 已经解析好的广播文档 */
+    List<BroadcastDocument> broadcastDocumentList;
+    /** 已经解析好的错误码文档 */
+    List<ErrorCodeDocument> errorCodeDocumentList;
+    /** 已经解析好的 action 文档 */
+    List<ActionDoc> actionDocList;
+}
+```
+
+
+
+开发者可以通过实现 DocumentGenerate 接口来扩展不同的文档生成，开发者可以扩展此接口来定制更多个性化的扩展，如
+
+- html 版本的文档。
+- json 版本的文档。
+- 其他语言的联调文档 ...等。
+
+
+
+```java
+// 使用示例
+private static void test() {
+    var documentGenerate = new YourDocumentGenerate();
+    IoGameDocumentHelper.addDocumentGenerate(documentGenerate);
+}
+```
+
+
+
+------
+
+其他：废弃旧版本对接文档相关类 DocActionSend、DocActionSends、ActionDocs、ActionSendDoc、ActionSendDocs、ActionSendDocsRegion、BarSkeletonDoc、BroadcastDoc、BroadcastDocBuilder、ErrorCodeDocs、ErrorCodeDocsRegion。
+
+------
+
+21.10 及之前版本的使用示例（对接文档）
+
+```java
+public static void main(String[] args) {
+    ... 省略部分代码
+
+    new NettyRunOne()
+            ... ...
+            .startup();
+
+    // 生成对接文档
+    BarSkeletonDoc.me().buildDoc();
+}
+```
+
+------
+
+
+
+### 2024-06
+
+#### 2024-06-21 - v21.10（问题版本）
+
+https://github.com/iohao/ioGame/releases/tag/21.10
+
+------
+
+**版本更新汇总**
+
+- [core] [#315](https://github.com/iohao/ioGame/issues/315) ResponseMessage 增加协议碎片便捷获取，简化跨服调用时的使用
+- [core] ActionCommand 增加 containAnnotation、getAnnotation 方法，简化获取 action 相关注解信息的使用。
+- [kit] [动态属性]  增加 ifNull 方法，如果动态属性值为 null，则执行给定的操作，否则不执行任何操作。执行给定操作后将得到一个返回值，该返回值会设置到动态属性中。
+- [kit]  TimeKit 增加 nowLocalDate 方法，可减少 LocalDate 对象的创建；优化 currentTimeMillis 方法的时间更新策略。同时，优化 nowLocalDate、currentTimeMillis 方法，不使用时将不会占用相关资源。
+- [EventBus]  分布式事件总线增加 EventBusRunner 接口。EventBus 接口化，方便开发者自定义扩展。fix 订阅者使用自身所关联的 EventBus 处理相关事件。
+
+------
+
+**[core]** [315](https://github.com/iohao/ioGame/issues/315) ResponseMessage 增加协议碎片便捷获取，简化跨服调用时的使用
+
+框架具备[协议碎片](https://www.yuque.com/iohao/game/ieimzn)特性。某些业务中，我们需要跨服访问其他游戏逻辑服，以获取某些业务数据；一些简单的数据，我们可以通过协议碎片来返回，从而避免定义过多的协议。
+
+
+
+现为 ResponseMessage 增加协议碎片支持，简化跨服调用时的使用，新增的方法如下
+
+```java
+public void test() {
+    ResponseMessage responseMessage = ...;
+
+    // object
+    responseMessage.getValue(Student.class);
+    List<Student> listValue = responseMessage.listValue(Student.class);
+
+    // int
+    int intValue = responseMessage.getInt();
+    List<Integer> listInt = responseMessage.listInt();
+
+    // long
+    long longValue = responseMessage.getLong();
+    List<Long> listLong = responseMessage.listLong();
+
+    // String
+    String stringValue = responseMessage.getString();
+    List<String> listString = responseMessage.listString();
+
+    // boolean
+    boolean boolValue = responseMessage.getBoolean();
+    List<Boolean> listBoolean = responseMessage.listBoolean();
+}
+```
+
+
+
+示例说明
+
+- HomeAction 是 【Home 游戏逻辑服】提供的 action
+- UserAction 是 【User 游戏逻辑服】提供的 action
+
+两个逻辑服的交互如下，UserAction 使用跨服方式调用了【Home 游戏逻辑服】的几个方法，并通过 responseMessage 的协议碎片支持，简化跨服调用时的使用。
+
+
+
+示例中演示了 string、string list、object list 的简化使用（协议碎片获取时的简化使用）。
+
+```java
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+public class Student {
+    String name;
+}
+
+// home 游戏逻辑服提供的 action
+public class HomeAction {
+    @ActionMethod(HomeCmd.name)
+    public String name() {
+        return "a";
+    }
+
+    @ActionMethod(HomeCmd.listName)
+    public List<String> listName() {
+        return List.of("a", "b");
+    }
+
+    @ActionMethod(HomeCmd.listStudent)
+    public List<Student> listStudent() {
+        Student student = new Student();
+        student.name = "a";
+
+        Student student2 = new Student();
+        student2.name = "b";
+
+        return List.of(student, student2);
+    }
+}
+
+@ActionController(UserCmd.cmd)
+public class UserAction {
+    @ActionMethod(UserCmd.userSleep)
+    public void userSleep(FlowContext flowContext) {
+
+        flowContext.invokeModuleMessageAsync(HomeCmd.of(HomeCmd.name), responseMessage -> {
+            String name = responseMessage.getString();
+            log.info("{}", name);
+        });
+
+        flowContext.invokeModuleMessageAsync(HomeCmd.of(HomeCmd.listName), responseMessage -> {
+            var listName = responseMessage.listString();
+            log.info("{}", listName);
+        });
+
+        flowContext.invokeModuleMessageAsync(HomeCmd.of(HomeCmd.listStudent), responseMessage -> {
+            List<Student> studentList = responseMessage.listValue(Student.class);
+            log.info("{}", studentList);
+        });
+    }
+}
+```
+
+
+
+------
+
+**[core]** ActionCommand 增加 containAnnotation、getAnnotation 方法，简化获取 action 相关注解信息的使用。
+
+```java
+ActionCommand actionCommand = flowContext.getActionCommand();
+
+bool contain = actionCommand.containAnnotation(DisableDebugInout.class);
+var annotation = actionCommand.getAnnotation(DisableDebugInout.class);
+```
+
+
+
+------
+
+**[EventBus] 分布式事件总线**
+
+1. [增强扩展] 将抽象类 AbstractEventBusRunner 标记为过时的，由接口 EventBusRunner 代替。
+2. [增强扩展] 分布式事件总线 EventBus 接口化，方便开发者自定义扩展。增加[总线相关的 javadoc](https://iohao.github.io/javadoc/com/iohao/game/action/skeleton/eventbus/package-summary.html)。
+3. [fix] 订阅者使用自身所关联的 EventBus 处理相关事件。
+
+
+
+关于 fix 订阅者使用自身所关联的 EventBus 处理相关事件，在此之前可能引发 bug 的场景如下
+
+1. 【游戏逻辑服 A】 发布事件。
+2. 【游戏逻辑服 B】 订阅者接收事件并处理，在处理过程中又调用了【游戏逻辑服 A】 某个 action 方法。
+
+
+
+该业务场景，会在多服单进程下会引发调用超时，但在多服多进程下则不会超时。
+
+
+
+------
+
+**[kit] TimeKit**
+
+增强 TimeKit 增加 nowLocalDate 方法，可减少 LocalDate 对象的创建；
+
+优化 currentTimeMillis 方法的时间更新策略。
+
+优化 nowLocalDate、currentTimeMillis 不使用时将不会占用相关资源。
+
+```csharp
+@Test
+public void test() {
+    long millis = TimeKit.currentTimeMillis();
+    Assert.assertTrue(millis > 0);
+
+    LocalDate localDate = TimeKit.nowLocalDate();
+    Assert.assertTrue(localDate.isEqual(LocalDate.now()));
+}
+```
+
+
+
+------
+
+**[kit] 动态属性**
+
+[动态属性] 增加 ifNull 方法，如果动态属性值为 null，则执行给定的操作，否则不执行任何操作。执行给定操作后将得到一个返回值，该返回值会设置到动态属性中。
+
+```csharp
+public class AttrOptionDynamicTest {
+    // 动态属性 key
+    AttrOption<AttrCat> attrCatOption = AttrOption.valueOf("AttrCat");
+
+    @Test
+    public void ifNull() {
+        var myAttrOptions = new MyAttrOptions();
+        Assert.assertNull(myAttrOptions.option(attrCatOption));
+
+        // 如果 catAttrOption 属性为 null，则创建 AttrCat 对象，并赋值到属性中
+        myAttrOptions.ifNull(attrCatOption, AttrCat::new);
+        Assert.assertNotNull(myAttrOptions.option(attrCatOption));
+    }
+
+    private static class AttrCat {
+        String name;
+    }
+
+    @Getter
+    private static class MyAttrOptions implements AttrOptionDynamic {
+        final AttrOptions options = new AttrOptions();
+    }
+}
+```
+
+
+
+------
+
+**[其他 - 相关库升级]**
+
+<netty.version>4.1.111.Final</netty.version>
+
+<jctools-core.version>4.0.5</jctools-core.version>
+
+<jprotobuf.version>2.4.23</jprotobuf.version>
+
+
+
 <br>
 
-#### 2024-06-03 - v21.9
+#### 2024-06-03 - v21.9（问题版本）
 
 https://github.com/iohao/ioGame/releases/tag/21.9
 
@@ -209,6 +642,8 @@ TaskListener 任务监听回调，使用场景有：一次性延时任务、任�
 更多介绍与使用，请阅读 [TaskKit (yuque.com)](https://www.yuque.com/iohao/game/gzsl8pg0si1l4bu3)
 
 <br>
+
+### 2024-05
 
 
 #### 2024-05-19 - v21.8
@@ -568,6 +1003,8 @@ class com.iohao.game.action.skeleton.core.action.Bird
 优化 action 参数解析
 
 <br>
+
+### 2024-04
 
 #### 2024-04-23 - v21.6
 
@@ -1012,6 +1449,8 @@ message Animal {
 
 <br>
 
+### 2024-03
+
 #### 2024-03-28 - v21.4
 
 https://github.com/iohao/ioGame/releases/tag/21.4
@@ -1127,6 +1566,8 @@ IoGameGlobalConfig brokerClusterLog 集群相关日志不开启。
 
 <br>
 
+### 2024-02
+
 #### 2024-02-22 - v21.2
 
 修复版本号显示错误问题（该版本没有功能上的更新与修改，不升级也不影响）
@@ -1158,6 +1599,8 @@ ioGame21 首发计划
 | [FlowContext](https://www.yuque.com/iohao/game/zz8xiz#HQYmm) 增加更新、获取元信息的便捷使用 | ✅    | 功能增强               | [#236](https://github.com/game-town/ioGame/issues/236)       |
 
 
+
+### 2024
 
 #### ioGame21 首发内容简介
 
