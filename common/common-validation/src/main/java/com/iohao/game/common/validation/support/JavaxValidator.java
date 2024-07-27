@@ -36,8 +36,9 @@ public class JavaxValidator implements Validator {
     private final javax.validation.Validator validator;
 
     public JavaxValidator() {
-        ValidatorFactory factory = javax.validation.Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        try (ValidatorFactory factory = javax.validation.Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
     }
 
     /**

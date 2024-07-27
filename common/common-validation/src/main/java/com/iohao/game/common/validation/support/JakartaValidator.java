@@ -37,8 +37,9 @@ public class JakartaValidator implements Validator {
     private final jakarta.validation.Validator validator;
 
     public JakartaValidator() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
     }
 
     /**
