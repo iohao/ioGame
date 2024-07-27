@@ -35,7 +35,6 @@ public class DefaultRedissonDistributedLock implements DistributedLock {
         try {
             boolean tryLock = lock.tryLock(waitTime, leaseTime, unit);
             if (tryLock) {
-                log.info("{} 获取锁成功", key);
                 return action.execute();
             }
         } finally {
@@ -52,10 +51,7 @@ public class DefaultRedissonDistributedLock implements DistributedLock {
         try {
             boolean tryLock = lock.tryLock(waitTime, leaseTime, unit);
             if (tryLock) {
-                log.info("{} 获取锁成功", key);
                 action.execute();
-            } else {
-                log.info("{} 获取锁超时", key);
             }
         } finally {
             if (lock.isHeldByCurrentThread()) {
@@ -69,7 +65,6 @@ public class DefaultRedissonDistributedLock implements DistributedLock {
         RLock lock = redissonClient.getLock(key);
         try {
             lock.lock(leaseTime, unit);
-            log.info("{} 获取锁成功", key);
             return action.execute();
         } finally {
             if (lock.isHeldByCurrentThread()) {
@@ -83,7 +78,6 @@ public class DefaultRedissonDistributedLock implements DistributedLock {
         RLock lock = redissonClient.getLock(key);
         try {
             lock.lock(leaseTime, unit);
-            log.info("{} 获取锁成功", key);
             action.execute();
         } finally {
             if (lock.isHeldByCurrentThread()) {

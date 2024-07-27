@@ -24,7 +24,8 @@ public class RedissonConfig {
     }
 
     public static RedissonClient getRedissonClientFromConfig() {
-        Config config = null;
+        Config config;
+
         try {
             config = Config.fromYAML(RedissonConfig.class.getClassLoader().getResource("redisson-config.yml"));
         } catch (IOException e) {

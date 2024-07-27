@@ -124,8 +124,7 @@ public class InputCommandCreate {
 
     public RequestDataDelegate nextParamLong(String paramTips) {
         return () -> {
-            String info = "请输入{} | 参数类型 : {}";
-            log.info(info, paramTips, long.class);
+            log.info("请输入{} | 参数类型 : long.class", paramTips);
 
             long longValue = ScannerKit.nextLong();
             return LongValue.of(longValue);
