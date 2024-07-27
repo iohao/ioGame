@@ -28,15 +28,9 @@ public class RedissonConfig {
         try {
             config = Config.fromYAML(RedissonConfig.class.getClassLoader().getResource("redisson-config.yml"));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-//        if (Objects.isNull(config)) {
-//            config.useSingleServer()
-//                    .setAddress("redis://localhost:6379");
-//        }
-
-        RedissonClient redisson = Redisson.create(config);
-        return redisson;
+        return Redisson.create(config);
     }
 }

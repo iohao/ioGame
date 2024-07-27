@@ -73,18 +73,9 @@ public class DomainEventContext {
             String typeName = type.getTypeName();
 
             try {
-                return Class.forName(typeName);
+                return forName(typeName);
             } catch (ClassNotFoundException e) {
-
-                try {
-                    // 尝试从当前线程的类加载器中加载；#194
-                    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-                    return Class.forName(typeName, true, contextClassLoader);
-                } catch (ClassNotFoundException e1) {
-                    log.error(e1.getMessage(), e1);
-                }
-
-                return null;
+                throw new RuntimeException(e);
             }
         })).forEach((Class<?> topic, List<DomainEventHandler<?>> eventHandlers) -> {
 
@@ -111,6 +102,16 @@ public class DomainEventContext {
         domainEventHandlerSet.clear();
 
         return init.get();
+    }
+
+    private static Class<?> forName(String typeName) throws ClassNotFoundException {
+        try {
+            return Class.forName(typeName);
+        } catch (ClassNotFoundException e) {
+            // 尝试从当前线程的类加载器中加载；#194
+            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+            return Class.forName(typeName, true, contextClassLoader);
+        }
     }
 
     /**
