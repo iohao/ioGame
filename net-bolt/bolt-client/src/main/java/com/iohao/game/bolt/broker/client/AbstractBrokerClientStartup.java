@@ -104,7 +104,7 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
      * @return BoltBrokerClientBuilder
      */
     BrokerClientBuilder initConfig() {
-        IoGameBanner.me();
+        IoGameBanner.me().init();
         // 业务框架
         this.barSkeleton = this.createBarSkeleton();
         // 连接到游戏网关的地址

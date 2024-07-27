@@ -89,7 +89,7 @@ public class BrokerServer implements GroupWith {
     }
 
     public void startup() {
-        IoGameBanner.me();
+        IoGameBanner.me().init();
 
         // #100
         System.setProperty(RpcConfigs.DISPATCH_MSG_LIST_IN_DEFAULT_EXECUTOR, "false");

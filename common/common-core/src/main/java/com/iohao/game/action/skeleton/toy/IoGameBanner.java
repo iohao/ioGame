@@ -75,7 +75,10 @@ public final class IoGameBanner {
 
             try {
                 if (Objects.nonNull(IoGameBanner.me().countDownLatch)) {
-                    IoGameBanner.me().countDownLatch.await(5, TimeUnit.SECONDS);
+                    boolean r = IoGameBanner.me().countDownLatch.await(5, TimeUnit.SECONDS);
+                    if (!r) {
+                        System.out.println("countDownLatch await is false");
+                    }
                 }
             } catch (InterruptedException e) {
             }
@@ -204,5 +207,9 @@ public final class IoGameBanner {
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
         static final IoGameBanner ME = new IoGameBanner();
+    }
+
+    public void init() {
+
     }
 }

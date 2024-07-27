@@ -543,7 +543,7 @@ final class MurmurHash3 {
             int offset2 = 0;
             if (tailLen > 0) {
                 offset2 = (4 - tailLen);
-                int k = -1;
+                int k;
                 switch (tailLen) {
                     case 1:
                         k = orBytes(tail[0], data[offset], data[offset + 1], data[offset + 2]);
