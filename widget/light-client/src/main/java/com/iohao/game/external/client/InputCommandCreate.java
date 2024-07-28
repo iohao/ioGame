@@ -138,8 +138,8 @@ public class InputCommandCreate {
 
     public RequestDataDelegate nextParamInt(String paramTips) {
         return () -> {
-            String info = "请输入{} | 参数类型 : {}";
-            log.info(info, paramTips, int.class);
+            String info = "请输入{} | 参数类型 : int.class";
+            log.info(info, paramTips);
 
             int intValue = ScannerKit.nextInt();
             return IntValue.of(intValue);
@@ -153,8 +153,8 @@ public class InputCommandCreate {
 
     public RequestDataDelegate nextParamString(String paramTips) {
         return () -> {
-            String info = "请输入{} | 参数类型 : {}";
-            log.info(info, paramTips, String.class);
+            String info = "请输入{} | 参数类型 : String.class";
+            log.info(info, paramTips);
             String s = ScannerKit.nextLine();
             Objects.requireNonNull(s);
 
