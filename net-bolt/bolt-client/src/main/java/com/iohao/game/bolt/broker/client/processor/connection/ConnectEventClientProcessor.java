@@ -62,12 +62,6 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
     }
 
     private void extracted(String remoteAddress, Connection conn) {
-        if (IoGameGlobalConfig.openLog) {
-            log.info("连接网关 ConnectionEventType:【{}】 remoteAddress:【{}】，Connection:【{}】",
-                    ConnectionEventType.CONNECT, remoteAddress, conn
-            );
-        }
-
         doCheckConnection(conn);
         this.remoteAddress = remoteAddress;
         this.connection = conn;
@@ -79,21 +73,21 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
         brokerClientItem.setConnection(conn);
         count.increment();
 
-        if (IoGameGlobalConfig.openLog) {
-            BrokerClient brokerClient = brokerClientItem.getBrokerClient();
-            BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
+        BrokerClient brokerClient = brokerClientItem.getBrokerClient();
+        BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
+        // 重连
+        brokerClientManager.register(brokerClientItem);
 
-            log.info("连接网关 ConnectionEventType:【{}】 remoteAddress:【{}】，网关连接数量:【{}】",
-                    ConnectionEventType.CONNECT, remoteAddress, brokerClientManager.countActiveItem()
+        if (IoGameGlobalConfig.openLog) {
+            log.info("连接网关 ConnectionEventType:【{}】 remoteAddress:【{}】，网关连接数量:【{}】，Connection:【{}】",
+                    ConnectionEventType.CONNECT,
+                    remoteAddress,
+                    brokerClientManager.countActiveItem(),
+                    conn
             );
         }
     }
 
-    /**
-     * do check connection
-     *
-     * @param conn
-     */
     private void doCheckConnection(Connection conn) {
         Objects.requireNonNull(conn);
         Objects.requireNonNull(conn.getPoolKeys());
@@ -127,5 +121,4 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
         this.connected.set(false);
         this.connection = null;
     }
-
 }

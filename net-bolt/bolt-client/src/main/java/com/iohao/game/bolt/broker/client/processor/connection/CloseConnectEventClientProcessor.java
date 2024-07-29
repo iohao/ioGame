@@ -70,7 +70,6 @@ public class CloseConnectEventClientProcessor implements ConnectionEventProcesso
         BrokerClient brokerClient = brokerClientItem.getBrokerClient();
         BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
 
-
         //  在集群时，需要移除与当前 broker （游戏网关）连接的 brokerClientItem
         brokerClientManager.remove(brokerClientItem);
 

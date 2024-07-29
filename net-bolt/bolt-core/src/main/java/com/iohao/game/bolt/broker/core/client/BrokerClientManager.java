@@ -104,6 +104,11 @@ public final class BrokerClientManager {
         // 初始化
         brokerClientItem.startup();
 
+        register(brokerClientItem);
+    }
+
+    public void register(BrokerClientItem brokerClientItem) {
+        String address = brokerClientItem.getAddress();
         // 添加映射关系
         this.brokerClientItemMap.put(address, brokerClientItem);
         // 生成负载对象
