@@ -27,7 +27,6 @@ import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
 import com.iohao.game.common.kit.TimeKit;
-import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,14 +57,19 @@ public class UserIdSettingKit {
     public boolean settingUserId(FlowContext flowContext, long userId) {
 
         if (userId <= 0) {
-            ThrowKit.ofIllegalArgumentException("userId 需要 > 0");
+            log.error("The userId must be greater than 0");
+            return false;
         }
 
-        // 这个 userId 一般是首次建立连接时，系统随机分配的临时 id
-        HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
+        HeadMetadata headMetadata = flowContext.getHeadMetadata();
+        //  FlowContext 存在 userId 表示已经登录过了，返回 false
+        if (headMetadata.getUserId() != 0) {
+            log.error("玩家[{}] 已经登录", headMetadata.getUserId());
+            return false;
+        }
+
         // 一般指用户的 channelId （来源于对外服的 channel 长连接）
         String userChannelId = headMetadata.getChannelId();
-
         SettingUserIdMessage userIdMessage = new SettingUserIdMessage()
                 .setUserId(userId)
                 .setUserChannelId(userChannelId)
