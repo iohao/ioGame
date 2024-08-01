@@ -28,6 +28,7 @@ import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
 import com.iohao.game.bolt.broker.server.balanced.region.BrokerClientProxy;
+import com.iohao.game.common.kit.exception.ThrowKit;
 
 import java.util.function.Consumer;
 
@@ -56,7 +57,7 @@ public final class PulseSignalRequestBrokerProcessor extends AbstractAsyncUserPr
             try {
                 client.oneway(request);
             } catch (RemotingException | InterruptedException e) {
-                throw new RuntimeException(e);
+                ThrowKit.ofRuntimeException(e);
             }
         };
 

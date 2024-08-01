@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -19,6 +19,7 @@
 package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;
@@ -83,7 +84,7 @@ public class ActionCommandRegionGlobalCheckKit {
                             actionCommand.getActionControllerClazz()
                     );
 
-                    throw new RuntimeException(message);
+                    ThrowKit.ofRuntimeException(message);
                 }
 
                 cmdMap.put(cmdMerge, actionCommand);

@@ -27,6 +27,7 @@ import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
 import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
 import com.iohao.game.common.kit.TimeKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,7 +58,7 @@ public class UserIdSettingKit {
     public boolean settingUserId(FlowContext flowContext, long userId) {
 
         if (userId <= 0) {
-            throw new IllegalArgumentException("userId 需要 > 0");
+            ThrowKit.ofIllegalArgumentException("userId 需要 > 0");
         }
 
         // 这个 userId 一般是首次建立连接时，系统随机分配的临时 id

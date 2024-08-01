@@ -18,24 +18,17 @@
  */
 package com.alipay.sofa.common.log.factory;
 
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.classic.util.DefaultJoranConfigurator;
-import ch.qos.logback.classic.util.LogbackMDCAdapter;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-
-
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.classic.util.ContextInitializer;
+import ch.qos.logback.classic.util.LogbackMDCAdapter;
 import ch.qos.logback.core.joran.spi.JoranException;
 import com.alipay.sofa.common.log.SpaceInfo;
 import com.alipay.sofa.common.log.adapter.level.AdapterLevel;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import org.slf4j.Logger;
 
 import java.net.URL;
-import java.util.Map;
 
 /**
  * 兼容 slf4j 2.0.x、logback 1.4.x ...等系列。
@@ -70,7 +63,7 @@ public class LoggerSpaceFactory4LogbackBuilder extends AbstractLoggerSpaceFactor
                 configurator.setContext(loggerContext);
                 configurator.doConfigure(url);
             } catch (JoranException e) {
-                throw new IllegalStateException("Logback loggerSpaceFactory build error", e);
+                ThrowKit.ofIllegalArgumentException("Logback loggerSpaceFactory build error", e);
             }
         }
 
@@ -92,7 +85,7 @@ public class LoggerSpaceFactory4LogbackBuilder extends AbstractLoggerSpaceFactor
 
             private ch.qos.logback.classic.Level toLogbackLevel(AdapterLevel adapterLevel) {
                 if (adapterLevel == null) {
-                    throw new IllegalStateException("AdapterLevel is NULL when adapter to logback.");
+                    ThrowKit.ofIllegalArgumentException("AdapterLevel is NULL when adapter to logback.");
                 }
 
                 return switch (adapterLevel) {

@@ -22,6 +22,7 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.cluster.ClusterMessageListenerImpl;
 import com.iohao.game.common.consts.IoGameLogName;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +104,7 @@ public class BrokerClusterManagerBuilder {
 
     private void checked() {
         if (this.gossipListenPort <= 0) {
-            throw new RuntimeException("gossipListenPort error!");
+            ThrowKit.ofRuntimeException("gossipListenPort error!");
         }
     }
 

@@ -139,7 +139,6 @@ class HuFileUtil extends HuPathUtil {
         // 如果资源不存在，则返回一个拼接的资源绝对路径
         final String classPath = HuClassUtil.getClassPath();
         if (null == classPath) {
-            // throw new NullPointerException("ClassPath is null !");
             // 在jar运行模式中，ClassPath有可能获取不到，此时返回原始相对路径（此时获取的文件为相对工作目录）
             return path;
         }

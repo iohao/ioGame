@@ -41,6 +41,7 @@ import com.iohao.game.bolt.broker.server.processor.*;
 import com.iohao.game.bolt.broker.server.processor.ConnectionEventBrokerProcessor;
 import com.iohao.game.bolt.broker.server.service.BrokerClientModules;
 import com.iohao.game.bolt.broker.server.service.DefaultBrokerClientModules;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -249,11 +250,11 @@ public class BrokerServerBuilder implements AwareInject {
 
     private void checked() {
         if (this.port <= 0) {
-            throw new RuntimeException("port error!");
+            ThrowKit.ofRuntimeException("port error!");
         }
 
         if (Objects.isNull(this.brokerRunMode)) {
-            throw new RuntimeException("brokerRunMode expected: " + Arrays.toString(BrokerRunModeEnum.values()));
+            ThrowKit.ofRuntimeException("brokerRunMode expected: " + Arrays.toString(BrokerRunModeEnum.values()));
         }
     }
 

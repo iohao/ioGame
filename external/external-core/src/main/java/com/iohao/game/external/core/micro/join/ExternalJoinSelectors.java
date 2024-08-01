@@ -18,6 +18,7 @@
  */
 package com.iohao.game.external.core.micro.join;
 
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
 import lombok.experimental.UtilityClass;
 
@@ -52,7 +53,7 @@ public final class ExternalJoinSelectors {
      */
     public ExternalJoinSelector getExternalJoinSelector(ExternalJoinEnum joinEnum) {
         if (!map.containsKey(joinEnum)) {
-            throw new RuntimeException(joinEnum + " 还没有对应的连接实现类");
+            ThrowKit.ofRuntimeException(joinEnum + " 还没有对应的连接实现类");
         }
 
         return map.get(joinEnum);

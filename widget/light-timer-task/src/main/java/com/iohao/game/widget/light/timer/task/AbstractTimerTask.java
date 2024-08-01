@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.timer.task;
 
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.common.kit.id.IdKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -97,7 +98,7 @@ public abstract class AbstractTimerTask implements TimerTask {
         }
 
         if (this.delayExecutionTime <= 0) {
-            throw new RuntimeException("必须配置执行时间");
+            ThrowKit.ofRuntimeException("必须配置执行时间");
         }
 
         // 任务启动时间 = 当前时间 + 预期延后执行时间

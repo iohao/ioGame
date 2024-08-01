@@ -33,6 +33,7 @@ import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMe
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.common.kit.trace.TraceKit;
 import lombok.experimental.UtilityClass;
 import org.slf4j.MDC;
@@ -110,7 +111,7 @@ interface SimpleAttachment extends SimpleCommunicationInvokeExternalModule {
         long userId = headMetadata.getUserId();
 
         if (userId <= 0) {
-            throw new RuntimeException("userId <= 0");
+            ThrowKit.ofRuntimeException("userId <= 0");
         }
 
         // 将元信息更新到 HeadMetadata 中

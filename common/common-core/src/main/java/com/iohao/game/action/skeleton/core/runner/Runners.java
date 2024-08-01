@@ -20,6 +20,7 @@ package com.iohao.game.action.skeleton.core.runner;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.common.kit.concurrent.TaskKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +28,6 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -56,7 +56,7 @@ public final class Runners {
     public void addRunner(Runner runner) {
 
         if (this.onStart.get()) {
-            throw new RuntimeException("运行中，不能添加 Runner 了");
+            ThrowKit.ofRuntimeException("运行中，不能添加 Runner 了");
         }
 
         Objects.requireNonNull(runner);

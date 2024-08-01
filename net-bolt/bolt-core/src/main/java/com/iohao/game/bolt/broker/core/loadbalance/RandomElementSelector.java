@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -18,6 +18,7 @@
  */
 package com.iohao.game.bolt.broker.core.loadbalance;
 
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -67,7 +68,7 @@ public final class RandomElementSelector<T> implements ElementSelector<T> {
         T next = next();
 
         if (Objects.isNull(next)) {
-            throw new NullPointerException("RandomSelector next is null!");
+            ThrowKit.ofNullPointerException("RandomSelector next is null!");
         }
 
         return next;

@@ -18,6 +18,7 @@
  */
 package com.iohao.game.common.kit.trace;
 
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -75,11 +76,11 @@ public class TraceKit {
 
         public SnowTraceIdSupplier(long dataCenterId, long machineId) {
             if (dataCenterId > MAX_DATACENTER_NUM || dataCenterId < 0) {
-                throw new IllegalArgumentException("Datacenter ID can't be greater than MAX_DATACENTER_NUM or less than 0");
+                ThrowKit.ofIllegalArgumentException("Datacenter ID can't be greater than MAX_DATACENTER_NUM or less than 0");
             }
 
             if (machineId > MAX_MACHINE_NUM || machineId < 0) {
-                throw new IllegalArgumentException("Machine ID can't be greater than MAX_MACHINE_NUM or less than 0");
+                ThrowKit.ofIllegalArgumentException("Machine ID can't be greater than MAX_MACHINE_NUM or less than 0");
             }
 
             this.dataCenterId = dataCenterId;
@@ -94,7 +95,7 @@ public class TraceKit {
         synchronized long nextId() {
             long currTimestamp = getTimestamp();
             if (currTimestamp < lastTimestamp) {
-                throw new RuntimeException("Clock moved backwards. Refusing to generate id");
+                ThrowKit.ofRuntimeException("Clock moved backwards. Refusing to generate id");
             }
 
             // 如果是同一时间生成的，则进行毫秒内序列

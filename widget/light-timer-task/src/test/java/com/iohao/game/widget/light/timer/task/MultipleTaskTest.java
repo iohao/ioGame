@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author 渔民小镇
@@ -62,9 +63,9 @@ public class MultipleTaskTest {
                     log.info("Thread -- StudentTask.longAdder : {}", StudentTask.longAdder);
                     log.info("Thread -- 剩余任务数量 : {}", stringTimerTaskConcurrentMap.size());
 
-                    Thread.sleep(500);
+                    TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    log.error(e.getMessage(), e);
                 }
 
             }

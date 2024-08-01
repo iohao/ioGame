@@ -24,6 +24,7 @@ import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.common.kit.ProtoKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.external.core.ExternalCore;
 import com.iohao.game.external.core.config.ExternalJoinEnum;
 import com.iohao.game.external.core.hook.UserHook;
@@ -80,7 +81,7 @@ public final class DefaultExternalCore implements ExternalCore {
 
         int externalCorePort = setting.getExternalCorePort();
         if (externalCorePort <= 0) {
-            throw new IllegalArgumentException("游戏对外服端口必须 >0 " + externalCorePort);
+            ThrowKit.ofIllegalArgumentException("游戏对外服端口必须 >0 " + externalCorePort);
         }
 
         Objects.requireNonNull(setting.getExternalJoinEnum()

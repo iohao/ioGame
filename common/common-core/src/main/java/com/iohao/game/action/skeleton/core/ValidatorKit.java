@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core;
 
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.common.validation.Validation;
 import com.iohao.game.common.validation.Validator;
 import lombok.Setter;
@@ -52,7 +53,7 @@ public class ValidatorKit {
         try {
             validator = Validation.getValidator();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            ThrowKit.ofRuntimeException(e);
         }
 
         return validator;

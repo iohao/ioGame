@@ -27,6 +27,7 @@ import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.collect.ListMultiMap;
 import com.iohao.game.common.kit.collect.SetMultiMap;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.common.kit.trace.TraceKit;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegionKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
@@ -403,7 +404,7 @@ final class SubscriberRegistry {
         Class<?> clazz = eventBusSubscriber.getClass();
 
         if (!eventBusSubscriberSet.add(clazz)) {
-            throw new RuntimeException("已经存在 " + clazz);
+            ThrowKit.ofRuntimeException("已经存在 " + clazz);
         }
 
         // 方法访问器: 获取类中自己定义的方法
@@ -526,7 +527,7 @@ final class DefaultEventBus implements EventBus {
     public void register(Object eventBusSubscriber) {
 
         if (status != EventBusStatus.register) {
-            throw new RuntimeException("运行中不允许注册订阅者，请在 EventRunner.registerEventBus 方法中注册。 ");
+            ThrowKit.ofRuntimeException("运行中不允许注册订阅者，请在 EventRunner.registerEventBus 方法中注册。 ");
         }
 
         // 注册

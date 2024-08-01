@@ -92,7 +92,7 @@ public class TraceKitTest {
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -189,7 +189,7 @@ public class TraceKitTest {
         try {
             TimeUnit.MILLISECONDS.sleep(milliseconds);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage(), e);
         }
     }
 }

@@ -99,7 +99,7 @@ public final class ClientRunOne {
             log.info("启动成功");
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage(), e);
         }
     }
 

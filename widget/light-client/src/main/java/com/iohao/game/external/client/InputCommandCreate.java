@@ -22,6 +22,7 @@ import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.external.client.command.InputCommand;
 import com.iohao.game.external.client.command.RequestDataDelegate;
 import com.iohao.game.external.client.kit.AssertKit;
@@ -95,7 +96,7 @@ public class InputCommandCreate {
             var inputName = ClientKit.toInputName(cmdInfo);
             InputCommand inputCommand = clientUserInputCommands.getInputCommand(inputName);
             if (Objects.nonNull(inputCommand)) {
-                throw new RuntimeException("存在重复的路由命令 : " + cmdInfo);
+                ThrowKit.ofRuntimeException("存在重复的路由命令 : " + cmdInfo);
             }
         }
     }

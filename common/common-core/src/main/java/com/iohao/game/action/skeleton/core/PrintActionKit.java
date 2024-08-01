@@ -24,6 +24,7 @@ import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.runner.Runners;
 import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.experimental.UtilityClass;
 import org.fusesource.jansi.Ansi;
 
@@ -230,7 +231,7 @@ class PrintActionKit {
     private void checkReturnType(final Class<?> returnTypeClazz) {
         if (Set.class.isAssignableFrom(returnTypeClazz) || Map.class.isAssignableFrom(returnTypeClazz)) {
             // 参数的不支持不写逻辑了，这里告诉一下就行了。看之后的需要在考虑是否支持吧
-            throw new RuntimeException("action 返回值和参数不支持 set、map 和 基础类型!");
+            ThrowKit.ofRuntimeException("action 返回值和参数不支持 set、map 和 基础类型!");
         }
     }
 

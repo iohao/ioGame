@@ -18,6 +18,7 @@
  */
 package com.iohao.game.external.core.broker.client.ext;
 
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.external.core.broker.client.ext.impl.*;
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
@@ -53,7 +54,7 @@ public final class ExternalBizRegions {
         int bizCode = externalBizRegion.getBizCode();
 
         if (regionMap.containsKey(bizCode)) {
-            throw new RuntimeException("重复添加已经存在的业务码:" + bizCode);
+            ThrowKit.ofRuntimeException("重复添加已经存在的业务码:" + bizCode);
         }
 
         regionMap.put(bizCode, externalBizRegion);

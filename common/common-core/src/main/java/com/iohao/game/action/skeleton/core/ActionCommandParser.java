@@ -32,6 +32,7 @@ import com.iohao.game.action.skeleton.core.action.parser.ProtobufActionParserLis
 import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
 import com.iohao.game.action.skeleton.core.action.parser.ActionParserContext;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -255,7 +256,7 @@ final class ActionCommandParser {
                     subCmd,
                     controllerClass);
 
-            throw new RuntimeException(message);
+            ThrowKit.ofRuntimeException(message);
         }
     }
 

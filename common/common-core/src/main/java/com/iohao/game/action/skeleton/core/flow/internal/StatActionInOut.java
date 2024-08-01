@@ -24,6 +24,7 @@ import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.MoreKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -173,7 +174,7 @@ public final class StatActionInOut implements ActionMethodInOut {
                     : StatActionInOut.this.listener.createTimeRangeList();
 
             if (CollKit.isEmpty(this.timeRangeList)) {
-                throw new IllegalArgumentException("this.timeRangeList is empty");
+                ThrowKit.ofIllegalArgumentException("this.timeRangeList is empty");
             }
 
             this.cmdInfo = cmdInfo;

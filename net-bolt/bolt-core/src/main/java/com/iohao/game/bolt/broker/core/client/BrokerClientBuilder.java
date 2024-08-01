@@ -32,6 +32,7 @@ import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientLis
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import com.iohao.game.common.kit.HashKit;
 import com.iohao.game.common.kit.NetworkKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -220,7 +221,7 @@ public class BrokerClientBuilder {
         }
 
         if (Objects.isNull(this.appName)) {
-            throw new RuntimeException("必须设置 appName");
+            ThrowKit.ofRuntimeException("必须设置 appName");
         }
 
         if (Objects.isNull(this.tag)) {

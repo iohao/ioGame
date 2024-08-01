@@ -19,6 +19,7 @@
 package com.iohao.game.common.kit;
 
 import com.iohao.game.common.consts.IoGameLogName;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashSet;
 
@@ -81,7 +82,7 @@ public class ClassScanner {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            ThrowKit.ofRuntimeException(e);
         }
 
         return new ArrayList<>(clazzSet);
