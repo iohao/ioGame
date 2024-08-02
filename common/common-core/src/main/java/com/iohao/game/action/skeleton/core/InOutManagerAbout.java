@@ -21,8 +21,6 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
@@ -90,7 +88,7 @@ final class PipelineInOutManager implements InOutManager {
         }
 
         for (ActionMethodInOut inOut : this.inList) {
-            inOut.fuckOut(flowContext);
+            inOut.fuckIn(flowContext);
         }
     }
 

@@ -21,8 +21,8 @@ public class InOutManagerTest {
 
     @Test
     public void test() {
-        extracted(InOutManager.ofAbcAbc(), "ABCABC");
-        extracted(InOutManager.ofPipeline(), "ABCCBA");
+        extracted(InOutManager.ofAbcAbc(), "Ain Bin Cin Aout Bout Cout");
+        extracted(InOutManager.ofPipeline(), "Ain Bin Cin Cout Bout Aout");
     }
 
     private void extracted(InOutManager inOutManager, String result) {
@@ -36,7 +36,7 @@ public class InOutManagerTest {
         inOutManager.fuckOut(flowContext);
 
         List<String> resultList = flowContext.option(resultListOption);
-        var line = String.join("", resultList);
+        var line = String.join(" ", resultList);
         Assert.assertEquals(line, result);
 
         System.out.println();
@@ -48,13 +48,13 @@ class A_ActionMethodInOut implements ActionMethodInOut {
     @Override
     public void fuckIn(FlowContext flowContext) {
         log.info("A in");
-        flowContext.option(InOutManagerTest.resultListOption).add("A");
+        flowContext.option(InOutManagerTest.resultListOption).add("Ain");
     }
 
     @Override
     public void fuckOut(FlowContext flowContext) {
         log.info("A out");
-        flowContext.option(InOutManagerTest.resultListOption).add("A");
+        flowContext.option(InOutManagerTest.resultListOption).add("Aout");
     }
 }
 
@@ -63,13 +63,13 @@ class B_ActionMethodInOut implements ActionMethodInOut {
     @Override
     public void fuckIn(FlowContext flowContext) {
         log.info("B in");
-        flowContext.option(InOutManagerTest.resultListOption).add("B");
+        flowContext.option(InOutManagerTest.resultListOption).add("Bin");
     }
 
     @Override
     public void fuckOut(FlowContext flowContext) {
         log.info("B out");
-        flowContext.option(InOutManagerTest.resultListOption).add("B");
+        flowContext.option(InOutManagerTest.resultListOption).add("Bout");
     }
 }
 
@@ -78,12 +78,12 @@ class C_ActionMethodInOut implements ActionMethodInOut {
     @Override
     public void fuckIn(FlowContext flowContext) {
         log.info("C in");
-        flowContext.option(InOutManagerTest.resultListOption).add("C");
+        flowContext.option(InOutManagerTest.resultListOption).add("Cin");
     }
 
     @Override
     public void fuckOut(FlowContext flowContext) {
         log.info("C out");
-        flowContext.option(InOutManagerTest.resultListOption).add("C");
+        flowContext.option(InOutManagerTest.resultListOption).add("Cout");
     }
 }
