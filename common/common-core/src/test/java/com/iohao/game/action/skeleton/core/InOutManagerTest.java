@@ -20,20 +20,12 @@ public class InOutManagerTest {
     static FlowOption<List<String>> resultListOption = FlowOption.valueOf("resultListOption");
 
     @Test
-    public void config() {
-        BarSkeletonBuilder builder = new BarSkeletonBuilder();
-
-        builder.setInOutManager(InOutManager.ofAbcAbc());
-        builder.setInOutManager(InOutManager.ofPipeline());
-    }
-
-    @Test
     public void test() {
-        testAbcAbc(InOutManager.ofAbcAbc(), "ABCABC");
-        testAbcAbc(InOutManager.ofPipeline(), "ABCCBA");
+        extracted(InOutManager.ofAbcAbc(), "ABCABC");
+        extracted(InOutManager.ofPipeline(), "ABCCBA");
     }
 
-    private void testAbcAbc(InOutManager inOutManager, String result) {
+    private void extracted(InOutManager inOutManager, String result) {
 
         inOutManager.addInOut(new A_ActionMethodInOut());
         inOutManager.addInOut(new B_ActionMethodInOut());
