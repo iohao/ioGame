@@ -25,6 +25,7 @@ import ch.qos.logback.classic.util.LogbackMDCAdapter;
 import ch.qos.logback.core.joran.spi.JoranException;
 import com.alipay.sofa.common.log.SpaceInfo;
 import com.alipay.sofa.common.log.adapter.level.AdapterLevel;
+import com.iohao.game.common.kit.exception.CommonIllegalArgumentException;
 import com.iohao.game.common.kit.exception.ThrowKit;
 import org.slf4j.Logger;
 
@@ -85,7 +86,7 @@ public class LoggerSpaceFactory4LogbackBuilder extends AbstractLoggerSpaceFactor
 
             private ch.qos.logback.classic.Level toLogbackLevel(AdapterLevel adapterLevel) {
                 if (adapterLevel == null) {
-                    ThrowKit.ofIllegalArgumentException("AdapterLevel is NULL when adapter to logback.");
+                    throw new CommonIllegalArgumentException("AdapterLevel is NULL when adapter to logback.");
                 }
 
                 return switch (adapterLevel) {

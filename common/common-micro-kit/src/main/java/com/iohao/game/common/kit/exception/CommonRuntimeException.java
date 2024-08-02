@@ -18,33 +18,18 @@
  */
 package com.iohao.game.common.kit.exception;
 
-import lombok.experimental.UtilityClass;
-
 /**
- * 实验性工具，仅限内部使用
+ * RuntimeException
  *
  * @author 渔民小镇
- * @date 2024-08-01
+ * @date 2024-08-02
  */
-@UtilityClass
-public class ThrowKit {
-    public void ofIllegalArgumentException(String msg) throws CommonIllegalArgumentException {
-        throw new CommonIllegalArgumentException(msg);
+public class CommonRuntimeException extends RuntimeException {
+    public CommonRuntimeException(String message) {
+        super(message);
     }
 
-    public void ofIllegalArgumentException(String msg, Exception e) throws CommonIllegalArgumentException {
-        throw new CommonIllegalArgumentException(msg, e);
-    }
-
-    public void ofRuntimeException(String msg) throws CommonRuntimeException {
-        throw new CommonRuntimeException(msg);
-    }
-
-    public void ofRuntimeException(Throwable e) throws CommonRuntimeException {
-        throw new CommonRuntimeException(e.getMessage(), e);
-    }
-
-    public void ofNullPointerException(String msg) throws NullPointerException {
-        throw new NullPointerException(msg);
+    public CommonRuntimeException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

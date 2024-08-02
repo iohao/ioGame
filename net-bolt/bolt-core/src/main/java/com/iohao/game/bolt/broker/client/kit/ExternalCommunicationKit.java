@@ -24,6 +24,7 @@ import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalItemMessage;
 import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
+import com.iohao.game.common.kit.exception.CommonRuntimeException;
 import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.core.common.client.Attachment;
 import com.iohao.game.core.common.client.ExternalBizCodeCont;
@@ -113,7 +114,7 @@ public class ExternalCommunicationKit {
                 .map(HeadMetadata::getUserId).orElse(0L);
 
         if (userId <= 0) {
-            ThrowKit.ofRuntimeException("userId <= 0");
+            throw new CommonRuntimeException("userId <= 0");
         }
 
         RequestCollectExternalMessage request = new RequestCollectExternalMessage()
