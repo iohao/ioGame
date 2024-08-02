@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,15 +23,31 @@ public class InOutManagerTest {
 
     @Test
     public void test() {
-        extracted(InOutManager.ofAbcAbc(), "Ain Bin Cin Aout Bout Cout");
-        extracted(InOutManager.ofPipeline(), "Ain Bin Cin Cout Bout Aout");
+        List<ActionMethodInOut> inOutList = new ArrayList<>();
+        inOutList.add(new A_ActionMethodInOut());
+        inOutList.add(new B_ActionMethodInOut());
+        inOutList.add(new C_ActionMethodInOut());
+
+        System.out.println("------ 测试多个 inout ------");
+        extracted(InOutManager.ofAbcAbc(), "Ain Bin Cin Aout Bout Cout", inOutList);
+        extracted(InOutManager.ofPipeline(), "Ain Bin Cin Cout Bout Aout", inOutList);
+
+        // 测试单个 inout
+        System.out.println("------ 测试 1 个 inout ------");
+        extracted(InOutManager.ofAbcAbc(), "Ain Aout", List.of(new A_ActionMethodInOut()));
+        extracted(InOutManager.ofPipeline(), "Ain Aout", List.of(new A_ActionMethodInOut()));
+
+        // 测试 0 个 inout
+        System.out.println("------ 测试 0 个 inout ------");
+        extracted(InOutManager.ofAbcAbc(), "", Collections.emptyList());
+        extracted(InOutManager.ofPipeline(), "", Collections.emptyList());
     }
 
-    private void extracted(InOutManager inOutManager, String result) {
+    private void extracted(InOutManager inOutManager, String result, List<ActionMethodInOut> inOutList) {
 
-        inOutManager.addInOut(new A_ActionMethodInOut());
-        inOutManager.addInOut(new B_ActionMethodInOut());
-        inOutManager.addInOut(new C_ActionMethodInOut());
+        for (ActionMethodInOut actionMethodInOut : inOutList) {
+            inOutManager.addInOut(actionMethodInOut);
+        }
 
         flowContext.option(resultListOption, new ArrayList<>());
         inOutManager.fuckIn(flowContext);
