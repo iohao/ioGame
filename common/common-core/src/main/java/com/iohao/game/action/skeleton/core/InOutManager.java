@@ -20,8 +20,6 @@ package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 import java.util.Objects;
@@ -33,61 +31,34 @@ import java.util.Optional;
  * @author 渔民小镇
  * @date 2022-03-08
  */
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public final class InOutManager {
-    /** true : 开放拦截 in */
-    final boolean openIn;
-    /** true : 开放拦截 out */
-    final boolean openOut;
-    /** inOuts */
-    final ActionMethodInOut[] inOuts;
+public interface InOutManager {
+    /**
+     * 执行所有 inOut fuckIn 方法
+     *
+     * @param flowContext flowContext
+     */
+    void fuckIn(FlowContext flowContext);
 
-    InOutManager(BarSkeletonSetting setting, List<ActionMethodInOut> inOutList) {
-        this(setting.openIn, setting.openOut, inOutList);
-    }
+    /**
+     * 执行所有 inOut fuckOut 方法
+     *
+     * @param flowContext flowContext
+     */
+    void fuckOut(FlowContext flowContext);
 
-    private InOutManager(boolean openIn, boolean openOut, List<ActionMethodInOut> inOutList) {
-        this.inOuts = new ActionMethodInOut[inOutList.size()];
-        inOutList.toArray(this.inOuts);
+    /**
+     * 添加 inOut
+     *
+     * @param inOut inOut 插件
+     */
+    void addInOut(ActionMethodInOut inOut);
 
-        if (inOuts.length == 0) {
-            openIn = false;
-            openOut = false;
-        }
-
-        this.openIn = openIn;
-        this.openOut = openOut;
-    }
-
-    public void fuckIn(FlowContext flowContext) {
-        if (!this.openIn) {
-            return;
-        }
-
-        if (this.inOuts.length == 1) {
-            this.inOuts[0].fuckIn(flowContext);
-            return;
-        }
-
-        for (ActionMethodInOut inOut : this.inOuts) {
-            inOut.fuckIn(flowContext);
-        }
-    }
-
-    public void fuckOut(FlowContext flowContext) {
-        if (!this.openOut) {
-            return;
-        }
-
-        if (this.inOuts.length == 1) {
-            this.inOuts[0].fuckOut(flowContext);
-            return;
-        }
-
-        for (ActionMethodInOut inOut : this.inOuts) {
-            inOut.fuckOut(flowContext);
-        }
-    }
+    /**
+     * 得到插件列表
+     *
+     * @return ActionMethodInOut list
+     */
+    List<ActionMethodInOut> listInOut();
 
     /**
      * 通过 clazz 找到对应的 inOut 对象
@@ -98,8 +69,8 @@ public final class InOutManager {
      * @see ActionMethodInOut
      */
     @SuppressWarnings("unchecked")
-    public <T extends ActionMethodInOut> Optional<T> getOptional(Class<? extends T> clazz) {
-        for (ActionMethodInOut inOut : this.inOuts) {
+    default <T extends ActionMethodInOut> Optional<T> getOptional(Class<? extends T> clazz) {
+        for (ActionMethodInOut inOut : this.listInOut()) {
             if (Objects.equals(inOut.getClass(), clazz)) {
                 return (Optional<T>) Optional.of(inOut);
             }
@@ -108,7 +79,21 @@ public final class InOutManager {
         return Optional.empty();
     }
 
-    List<ActionMethodInOut> listInOut() {
-        return List.of(this.inOuts);
+    /**
+     * 创建 InOutManager 对象实现。inOut 的执行顺序为 in ABC，out ABC
+     *
+     * @return InOutManager ABC, ABC
+     */
+    static InOutManager ofAbcAbc() {
+        return new AbcAbcInOutManager();
+    }
+
+    /**
+     * 创建 InOutManager 对象实现。inOut 的执行顺序为 in ABC，out CBA。（默认策略）
+     *
+     * @return InOutManager ABC, CBA
+     */
+    static InOutManager ofPipeline() {
+        return new PipelineInOutManager();
     }
 }

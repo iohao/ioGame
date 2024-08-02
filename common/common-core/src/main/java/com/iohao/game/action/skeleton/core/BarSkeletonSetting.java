@@ -60,8 +60,10 @@ public final class BarSkeletonSetting {
     boolean printRunners = true;
 
     /** inOut 的 in 。 true 开启 */
+    @Deprecated
     boolean openIn = true;
     /** inOut 的 out 。 true 开启 */
+    @Deprecated
     boolean openOut = true;
 
     /**
