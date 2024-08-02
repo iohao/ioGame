@@ -101,7 +101,7 @@ final class PipelineInOutManager implements InOutManager {
         }
 
         if (size == 1) {
-            this.outList.getFirst().fuckIn(flowContext);
+            this.outList.getFirst().fuckOut(flowContext);
             return;
         }
 
