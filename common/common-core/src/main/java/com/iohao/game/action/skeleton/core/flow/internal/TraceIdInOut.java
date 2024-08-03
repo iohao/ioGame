@@ -36,7 +36,7 @@ public final class TraceIdInOut implements ActionMethodInOut {
     @Override
     public void fuckIn(FlowContext flowContext) {
 
-        HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
+        HeadMetadata headMetadata = flowContext.getHeadMetadata();
         String traceId = headMetadata.getTraceId();
 
         if (Objects.nonNull(traceId)) {

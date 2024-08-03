@@ -45,8 +45,7 @@ public class ExecutorSelectKit {
      * @return true 表示请求被执行
      */
     public boolean processLogic(BarSkeleton barSkeleton, FlowContext flowContext) {
-        HeadMetadata headMetadata = flowContext.getRequest().getHeadMetadata();
-
+        HeadMetadata headMetadata = flowContext.getHeadMetadata();
         final ThreadExecutor threadExecutor = getThreadExecutor(barSkeleton, headMetadata);
 
         if (Objects.isNull(threadExecutor)) {

@@ -143,7 +143,7 @@ public final class DebugInOut implements ActionMethodInOut {
         paramMap.put("time", ms);
         paramMap.put("lineNumber", actionCommandDoc.getLineNumber());
         // 路由信息
-        CmdInfo cmdInfo = flowContext.getRequest().getHeadMetadata().getCmdInfo();
+        CmdInfo cmdInfo = flowContext.getCmdInfo();
         paramMap.put("cmdInfo", CmdKit.mergeToShort(cmdInfo.getCmdMerge()));
         paramMap.put("userId", flowContext.getUserId());
 

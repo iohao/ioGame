@@ -29,6 +29,12 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class IoGameCommonCoreConfig {
     public boolean eventBusLog;
+    /**
+     * true 打印广播日志，默认不打印
+     * <p>
+     * see {@link BarSkeletonBuilderParamConfig#createBuilder()}
+     */
+    public boolean broadcastLog;
 
     public interface ExternalBizCode {
         /** 用户（玩家）的元信息同步，AttachmentExternalBizRegion */

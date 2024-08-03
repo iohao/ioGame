@@ -571,8 +571,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @see HeadMetadata#getCmdInfo()
      */
     default void broadcastMe(Object bizData) {
-        var headMetadata = this.getHeadMetadata();
-        var cmdInfo = headMetadata.getCmdInfo();
+        var cmdInfo = this.getCmdInfo();
         this.broadcastMe(cmdInfo, bizData);
     }
 
@@ -683,8 +682,7 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      * @see HeadMetadata#getCmdInfo()
      */
     default void broadcastOrderMe(Object bizData) {
-        var headMetadata = this.getHeadMetadata();
-        var cmdInfo = headMetadata.getCmdInfo();
+        var cmdInfo = this.getCmdInfo();
         this.broadcastOrderMe(cmdInfo, bizData);
     }
 

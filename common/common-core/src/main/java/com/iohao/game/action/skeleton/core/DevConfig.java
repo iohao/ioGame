@@ -29,14 +29,17 @@ import java.util.Map;
  * @author 渔民小镇
  * @date 2022-05-19
  */
-
+@Deprecated
 public final class DevConfig {
     /**
      * true 打印广播日志，默认不打印
      * <p>
      * see {@link BarSkeletonBuilderParamConfig#createBuilder()}
+     *
+     * @deprecated 请使用 {@link IoGameCommonCoreConfig#broadcastLog}
      */
     @Getter
+    @Deprecated
     static boolean broadcastLog;
 
     /**

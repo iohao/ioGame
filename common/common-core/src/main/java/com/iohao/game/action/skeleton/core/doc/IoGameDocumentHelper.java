@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * 对接文档生成器辅助
+ * 对接文档生成器辅助，<a href="https://www.yuque.com/iohao/game/irth38">游戏对接文档生成</a>
  * <p>
  * for example
  * <pre>{@code

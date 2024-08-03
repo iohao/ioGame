@@ -19,13 +19,13 @@
 package com.iohao.game.action.skeleton.core;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
-import com.iohao.game.action.skeleton.annotation.DocActionSends;
 import com.iohao.game.action.skeleton.core.doc.BroadcastDocBuilder;
 import com.iohao.game.action.skeleton.core.enhance.BarSkeletonBuilderEnhances;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.ClassScanner;
+import com.iohao.game.action.skeleton.core.doc.IoGameDocumentHelper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -59,6 +59,7 @@ public final class BarSkeletonBuilderParamConfig {
     /** action send class. class has @DocActionSend */
     final List<Class<?>> actionSendClassList = new ArrayList<>();
     /** 错误码 class */
+    @Deprecated
     final List<MsgExceptionInfo> msgExceptionInfoList = new ArrayList<>();
 
     /** true 打印广播日志，默认不打印 */
@@ -66,8 +67,6 @@ public final class BarSkeletonBuilderParamConfig {
 
     /** ActionController filter */
     Predicate<Class<?>> actionControllerPredicate = clazz -> Objects.nonNull(clazz.getAnnotation(ActionController.class));
-    /** 推送相关的 class */
-    Predicate<Class<?>> actionSendPredicate = clazz -> Objects.nonNull(clazz.getAnnotation(DocActionSends.class));
     boolean enhance = true;
 
     /**
@@ -83,17 +82,11 @@ public final class BarSkeletonBuilderParamConfig {
         BarSkeletonBuilder builder = BarSkeleton.newBuilder();
         enhance(builder);
 
-        // action send class. class has @DocActionSend
-//        this.scanClassActionSend(builder::addActionSend);
-
         // action controller class. class has @ActionController
         this.scanClassActionController(builder::addActionController);
 
-        // 错误码相关的
-        this.getMsgExceptionInfoList().forEach(builder::addMsgExceptionInfo);
-
         // true 打印广播日志，默认不打印
-        DevConfig.broadcastLog = this.broadcastLog;
+        IoGameCommonCoreConfig.broadcastLog = this.broadcastLog;
 
         extracted();
 
@@ -135,7 +128,9 @@ public final class BarSkeletonBuilderParamConfig {
      *
      * @param msgExceptionInfoArray msgExceptionInfoArray
      * @return this
+     * @deprecated 请使用 {@link IoGameDocumentHelper#addErrorCodeClass(Class)}
      */
+    @Deprecated
     public BarSkeletonBuilderParamConfig addErrorCode(MsgExceptionInfo[] msgExceptionInfoArray) {
         msgExceptionInfoList.addAll(Arrays.asList(msgExceptionInfoArray));
         return this;

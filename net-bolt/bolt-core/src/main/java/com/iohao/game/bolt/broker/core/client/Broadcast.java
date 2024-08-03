@@ -20,6 +20,7 @@ package com.iohao.game.bolt.broker.core.client;
 
 import com.alipay.remoting.exception.RemotingException;
 import com.iohao.game.action.skeleton.core.DevConfig;
+import com.iohao.game.action.skeleton.core.IoGameCommonCoreConfig;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
@@ -94,7 +95,7 @@ public record Broadcast(BrokerClientItem brokerClientItem) {
             log.error(e.getMessage(), e);
         }
 
-        if (DevConfig.isBroadcastLog()) {
+        if (IoGameCommonCoreConfig.broadcastLog) {
             // 打印广播日志
             BroadcastDebug.print(broadcastMessage);
         }
