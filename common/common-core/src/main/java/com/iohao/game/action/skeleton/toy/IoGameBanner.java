@@ -140,7 +140,7 @@ public final class IoGameBanner {
 
     private void extractedBreakingNews() {
         // 每次展示 N 条小报
-        var newsList = BreakingNews.randomNewsList(2);
+        var newsList = BreakingNews.randomNewsList();
         for (BreakingNews.News news : newsList) {
             System.out.printf("| News     | %s%n", news);
         }
@@ -156,8 +156,8 @@ public final class IoGameBanner {
     }
 
     private void extractedIoGameJavadocApi() {
-        String s = BreakingNews.ioGameJavadocApi().toString();
-        String builder = "| javadoc  | %s%n";
+        String s = BreakingNews.randomMainNews().toString();
+        String builder = "|          | %s%n";
         System.out.printf(builder, s);
         System.out.println("+----------+--------------------------------------------------------------------------------------");
     }

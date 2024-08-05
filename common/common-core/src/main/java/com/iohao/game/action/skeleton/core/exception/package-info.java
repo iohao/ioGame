@@ -17,12 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 系统异常全局统一处理
- *
- * <pre>
- *     关于异常机制的解释可以参考这里:
- *     <a href="https://www.yuque.com/iohao/game/avlo99">断言 + 异常机制 = 清晰简洁的代码</a>
- * </pre>
+ * 业务框架 - 系统异常全局统一处理，<a href="https://www.yuque.com/iohao/game/avlo99">断言 + 异常机制 = 清晰简洁的代码</a>
  *
  * @author 渔民小镇
  * @date 2022-01-14

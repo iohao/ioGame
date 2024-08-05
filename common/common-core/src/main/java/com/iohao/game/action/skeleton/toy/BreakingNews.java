@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * ioGame 启动新闻
  * <pre>
- *     名字来源 Michael Jackson 的歌曲 BreakingNews
+ *     名字来源 Michael Jackson 的歌曲 Breaking News
  * </pre>
  *
  * @author 渔民小镇
@@ -37,11 +37,11 @@ import java.util.List;
 @UtilityClass
 class BreakingNews {
 
-    List<News> randomNewsList(int num) {
+    List<News> randomNewsList() {
         List<News> news = listNews();
         Collections.shuffle(news);
 
-        return news.stream().limit(num).toList();
+        return news.stream().limit(2).toList();
     }
 
     News randomAdv() {
@@ -51,8 +51,14 @@ class BreakingNews {
         return RandomKit.randomEle(list);
     }
 
-    News ioGameJavadocApi() {
-        return new News("ioGame javadoc", "https://www.yuque.com/iohao/game/nlbkmzn76mxnmhv6");
+    News randomMainNews() {
+        var list = List.of(
+                new BreakingNews.News("ioGame javadoc", "https://www.yuque.com/iohao/game/nlbkmzn76mxnmhv6"),
+                new BreakingNews.News("ioGame issues", "https://github.com/iohao/ioGame/issues"),
+                new BreakingNews.News("ioGame 框架各版本更新日志", "https://www.yuque.com/iohao/game/ab15oe")
+        );
+
+        return RandomKit.randomEle(list);
     }
 
     private List<News> listNews() {
@@ -75,7 +81,6 @@ class BreakingNews {
         list.add(new News("ioGameAdmin 运维监控", "https://www.yuque.com/iohao/game/xwxxcynh9yz0z8w4"));
 
         list.add(new News("ioGame 诞生、发展", "https://www.yuque.com/iohao/game/mun9gbwzfph3y5vn"));
-        list.add(new News("框架版本更新日志", "https://www.yuque.com/iohao/game/ab15oe"));
         list.add(new News("需要给到游戏前端的", "https://www.yuque.com/iohao/game/zfg3ci"));
 
         // 整体、架构相关
