@@ -30,7 +30,7 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import java.util.Objects;
 
 /**
- * 业务方法参数解析器
+ * flow - 业务方法参数解析器
  *
  * @author 渔民小镇
  * @date 2022-01-12
@@ -45,36 +45,32 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
             return METHOD_PARAMS;
         }
 
-        // 请求、响应对象
-        var request = flowContext.getRequest();
-        var response = flowContext.getResponse();
-
         // 方法参数信息 数组
-        final var paramInfos = actionCommand.getParamInfos();
+        var paramInfos = actionCommand.getParamInfos();
+        var params = new Object[paramInfos.length];
 
-        final var len = paramInfos.length;
-        final var params = new Object[len];
-
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < paramInfos.length; i++) {
             // 方法参数信息
             ActionCommand.ParamInfo paramInfo = paramInfos[i];
-
             // flow 上下文
             if (paramInfo.isFlowContext()) {
                 params[i] = flowContext;
                 continue;
             }
 
+            // 业务参数
+            var data = flowContext.getRequest().getData();
             // 得到方法参数解析器，把字节解析成 action 业务参数
             Class<?> paramClazz = paramInfo.getActualTypeArgumentClazz();
             var methodParser = MethodParsers.getMethodParser(paramClazz);
-            var param = methodParser.parseParam(request.getData(), paramInfo);
+            var param = methodParser.parseParam(data, paramInfo);
             params[i] = param;
 
             flowContext.option(FlowAttr.actionBizParam, param);
 
             // 如果开启了验证
             if (paramInfo.isValidator()) {
+                var response = flowContext.getResponse();
                 extractedValidator(response, paramInfo, param);
             }
         }

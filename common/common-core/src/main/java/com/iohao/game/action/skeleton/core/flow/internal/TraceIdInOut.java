@@ -27,7 +27,7 @@ import org.slf4j.MDC;
 import java.util.Objects;
 
 /**
- * MDC traceId 日志插件
+ * 业务框架插件 - <a href="https://www.yuque.com/iohao/game/xhvpqy">全链路调用日志跟踪插件</a>
  *
  * @author 渔民小镇
  * @date 2023-12-20

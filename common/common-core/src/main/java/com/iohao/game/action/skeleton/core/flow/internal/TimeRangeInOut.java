@@ -36,10 +36,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * 每日各时间段调用统计插件
- * <pre>
- *     <a href="https://www.yuque.com/iohao/game/umzk2d6lovo4n9gz">文档</a>
- * </pre>
+ * 业务框架插件 - <a href="https://www.yuque.com/iohao/game/umzk2d6lovo4n9gz">各时间段调用统计插件</a>
+ *
  * <pre>{@code
  *     BarSkeletonBuilder builder = ...;
  *     // 各时间段 action 调用统计插件，将插件添加到业务框架中
@@ -131,7 +129,7 @@ public final class TimeRangeInOut implements ActionMethodInOut {
     }
 
     /**
-     * 调用统计对象域
+     * 各时间段调用统计插件 - 调用统计对象域
      */
     @Getter
     public final class TimeRangeDayRegion {
@@ -181,7 +179,7 @@ public final class TimeRangeInOut implements ActionMethodInOut {
     }
 
     /**
-     * 一天的调用统计对象
+     * 各时间段调用统计插件 - 一天的调用统计对象
      *
      * @param localDate      日期
      * @param count          一天的 action 调用总次数
@@ -247,7 +245,7 @@ public final class TimeRangeInOut implements ActionMethodInOut {
     }
 
     /**
-     * 一小时的调用统计对象
+     * 各时间段调用统计插件 - 一小时的调用统计对象
      *
      * @param hourTime   小时
      * @param count      一小时的 action 调用次数
@@ -302,7 +300,7 @@ public final class TimeRangeInOut implements ActionMethodInOut {
     }
 
     /**
-     * 分钟范围记录
+     * 各时间段调用统计插件 - 分钟范围记录
      *
      * @param start 开始时间（分钟），包含该时间
      * @param end   结束时间（分钟），包含该时间
@@ -335,7 +333,7 @@ public final class TimeRangeInOut implements ActionMethodInOut {
     }
 
     /**
-     * 监听器
+     * 各时间段调用统计插件 - 监听器
      */
     public interface ChangeListener {
 

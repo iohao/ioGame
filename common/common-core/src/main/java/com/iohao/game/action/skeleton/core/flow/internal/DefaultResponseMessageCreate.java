@@ -22,7 +22,7 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.core.flow.ResponseMessageCreate;
 
 /**
- * 创建响应对象
+ * flow - 创建响应对象
  *
  * @author 渔民小镇
  * @date 2022-01-16

@@ -39,10 +39,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 业务框架 action 调用统计插件
+ * 业务框架插件 - <a href="https://www.yuque.com/iohao/game/znapzm1dqgehdyw8">action 调用统计插件</a>
  * <pre>
- *     <a href="https://www.yuque.com/iohao/game/znapzm1dqgehdyw8">action 调用统计插件-文档</a>
- *
  *     StatActionInOut 是 action 调用统计插件，可以用来统计各 action 调用时的相关数据，
  *     如 action 的执行次数、总耗时、平均耗时、最大耗时、触发异常次数...等相关数据
  *     开发者可以通过这些数据来分析出项目中的热点方法、耗时方法，从而做到精准优化。
@@ -51,7 +49,7 @@ import java.util.stream.Stream;
  *     "StatAction{cmd[1 - 0], 执行[1]次, 总耗时[8], 平均耗时[8], 最大耗时[8], 异常[0]次}"
  * </pre>
  * <p>
- * 使用示例
+ * for example
  * <pre>{@code
  *         BarSkeletonBuilder builder = ...;
  *         // action 调用统计插件，将插件添加到业务框架中
@@ -104,7 +102,7 @@ public final class StatActionInOut implements ActionMethodInOut {
         this.region.update(time, flowContext);
     }
 
-    /** 统计域，管理所有 StatAction 统计记录 */
+    /** action 调用统计插件 - 统计域，管理所有 StatAction 统计记录 */
     public final class StatActionRegion {
         final Map<CmdInfo, StatAction> map = new NonBlockingHashMap<>();
 
@@ -148,7 +146,7 @@ public final class StatActionInOut implements ActionMethodInOut {
         }
     }
 
-    /** action 统计记录，与 action 是对应关系 1:1 */
+    /** action 调用统计插件 - action 统计记录，与 action 是对应关系 1:1 */
     @Getter
     public final class StatAction {
         static final List<TimeRange> emptyRangeList = List.of(TimeRange.create(Long.MAX_VALUE - 1, Long.MAX_VALUE, ""));
@@ -256,7 +254,7 @@ public final class StatActionInOut implements ActionMethodInOut {
     }
 
     /**
-     * StatAction 更新监听
+     * action 调用统计插件 - StatAction 更新监听
      */
     public interface StatActionChangeListener {
         /**
@@ -342,7 +340,7 @@ public final class StatActionInOut implements ActionMethodInOut {
     }
 
     /**
-     * 时间范围记录
+     * action 调用统计插件 - 时间范围记录
      *
      * @param start 开始时间，包含该时间
      * @param end   结束时间，包含该时间

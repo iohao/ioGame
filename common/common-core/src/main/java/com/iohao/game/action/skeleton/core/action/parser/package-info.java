@@ -17,9 +17,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - action 构建时的监听器
+ * 业务框架 - action 构建时的监听器，开发者可以利用该接口观察 action 构建过程，或者做一些额外的扩展。
+ * <p>
+ * for example
+ * <pre>{@code // 简单打印
+ * public final class YourActionParserListener implements ActionParserListener {
+ *     @Override
+ *     public void onActionCommand(ActionParserContext context) {
+ *         ActionCommand actionCommand = context.getActionCommand();
+ *         log.info(actionCommand);
+ *     }
+ * }
+ *
+ * void test() {
+ *     BarSkeletonBuilder builder = ...;
+ *     builder.addActionParserListener(new YourActionParserListener());
+ * }
+ * }</pre>
  *
  * @author 渔民小镇
  * @date 2024-08-05
+ * @see com.iohao.game.action.skeleton.core.action.parser.ProtobufActionParserListener
  */
 package com.iohao.game.action.skeleton.core.action.parser;

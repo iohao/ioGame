@@ -28,7 +28,7 @@ import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 
 /**
- * 结果包装器
+ * flow - 结果包装器
  *
  * @author 渔民小镇
  * @date 2022-01-12

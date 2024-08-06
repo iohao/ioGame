@@ -41,13 +41,21 @@ import java.util.function.BiConsumer;
 
 
 /**
- * debug info 开发阶段推荐, see beetlsql DebugInterceptor
- *
+ * 业务框架插件 - <a href="https://www.yuque.com/iohao/game/pf3sx0">控制台输出插件</a>。
+ * <p>
+ * DebugInOut 是控制台输出插件，主要关注点
  * <pre>
- *     <a href="https://www.yuque.com/iohao/game/pf3sx0">DebugInOut 插件-文档</a>
- *
+ *     1. 快速导航到请求处理的业务代码中（执行的 action ）
+ *     2. 当前发起请求的用户（玩家）
+ *     3. 玩家当前所使用的连接方式（webSocket、Tcp、udp）
+ *     4. 执行 action 的线程
+ *     5. 执行 action 耗时情况
+ *     6. 路由、类信息、方法信息等
+ *     7. action 接收的请求参数
+ *     8. action 响应给玩家的数据（响应结果）
+ * </pre>
  * 日志输出预览
- *
+ * <pre>
  * ┏━━━━━ Debug. [(ActivityAction.java:1).hello] ━━━━━ [cmd:1-0 65536] ━━━━━ [xxx逻辑服] ━━━━━ [id:76526c134cc88232379167be83e4ddfc]
  * ┣ userId: 1
  * ┣ 参数: active : Active(id=101, name=塔姆)
@@ -82,6 +90,8 @@ import java.util.function.BiConsumer;
  * 其中代码导航可以让开发者快速的跳转到业务类对应代码中，在多人合作的项目中，可以快速的知道业务经过了哪些方法的执行，使得我们可以快速的进行阅读或修改；
  *
  * </pre>
+ * <p>
+ * see beetlsql DebugInterceptor
  *
  * @author 渔民小镇
  * @date 2021-12-12

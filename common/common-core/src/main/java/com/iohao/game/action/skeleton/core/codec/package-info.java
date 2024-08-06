@@ -24,20 +24,32 @@
  *     ioGame 支持同样的一套业务代码，且无需做变更任何业务代码就能支持序列化库的切换，如 protobuf、json，或其他的扩展序列化库。
  *     在 ioGame 中切换协议是简单的，只需要一行代码。这种扩展方式基本做到了：零迁移成本、零维护成本、零学习成本。
  * </pre>
+ * <p>
+ * 下面，我们通过一个示例来简单的说明。
+ * <p>
+ * 使用 java 类来定义一个业务数据协议
+ * <pre>{@code
+ * @ProtobufClass
+ * @FieldDefaults(level = AccessLevel.PUBLIC)
+ * public class Student {
+ *     String name;
+ * }
+ * }</pre>
+ * <p>
  * ioGame 中的业务数据协议是通过 java 类来定义的，这么做的优点有
  * <pre>
  *     1. 即使是 java 新手也能看得明白，而通过 DSL 生成的 java 代码，是不可能这么清晰的。
- *     2. 同时，`Student` 类既能支持 protobuf ，又能支持 json ，且开发者无需做任何变更；这点是 DSL 做不到的。
- *     3. 还能支持 [JSR380 验证 (yuque.com)](https://www.yuque.com/iohao/game/ghng6g)，在属性上添加 JSR380 相关注解即可；这点是 DSL 做不到的。
+ *     2. 同时，java 类定义的协议既能支持 protobuf ，又能支持 json ，且开发者无需做任何变更，这点是 DSL 做不到的。
+ *     3. 还能支持 <a href="https://www.yuque.com/iohao/game/ghng6g">JSR380 验证</a>，在属性上添加 JSR380 相关注解即可，这点是 DSL 做不到的。
  *     4. 此外，还能在协议类中添加一些自定义方法，这点是 DSL 做不到的。
- *     5. 减少学习成本，不需要学习各种 DSL 相关库的语法；
+ *     5. 减少学习成本，不需要学习各种 DSL 相关库的语法。
  *
  *     结论，支持 java 代码定义协议的序列化库，会优先做支持。比如，将来支持了 Fury，那么开发者无需变更现有的业务代码，就能直接使用。从而为开发者减少迁移成本、维护成本、学习成本。
  *
- *     相关讨论 https://github.com/iohao/ioGame/issues/317
+ *     相关讨论 <a href="https://github.com/iohao/ioGame/issues/317">issue-317</a>
  * </pre>
- *
- * 不对现有的业务代码做变更，只需设置当前所使用的编解码器就能切换序列化库。
+ * <p>
+ * 协议切换示例
  * <pre>{@code
  * public void chooseCodec() {
  *     // 使用 JSON 编解码
@@ -48,6 +60,7 @@
  *     IoGameGlobalSetting.setDataCodec(new FuryDataCodec());
  * }
  * }</pre>
+ * 不对现有的业务代码做变更，只需设置当前所使用的编解码器就能切换序列化库。
  * 之后，如果支持了 Fury，我们只需要扩展一个 FuryDataCodec 编解码器即可。
  * 这种扩展方式基本做到了：零迁移成本、零维护成本、零学习成本。
  *

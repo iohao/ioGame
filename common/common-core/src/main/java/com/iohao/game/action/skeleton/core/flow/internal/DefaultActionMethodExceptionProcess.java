@@ -24,7 +24,7 @@ import com.iohao.game.action.skeleton.core.flow.ActionMethodExceptionProcess;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * default 异常处理
+ * flow - default 异常处理
  *
  * @author 渔民小镇
  * @date 2021-12-20

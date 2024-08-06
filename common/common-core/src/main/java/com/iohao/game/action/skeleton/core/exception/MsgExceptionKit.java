@@ -26,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Objects;
 
 /**
+ * MsgExceptionKit
+ *
  * @author 渔民小镇
  * @date 2024-05-12
  * @since 21.8
