@@ -26,8 +26,12 @@ import lombok.experimental.UtilityClass;
 import java.util.Objects;
 
 /**
+ * 创建 RequestMessage，ResponseMessage 相关内部消息的工具类
+ *
  * @author 渔民小镇
  * @date 2022-06-07
+ * @see RequestMessage
+ * @see ResponseMessage
  */
 @UtilityClass
 public class BarMessageKit {
@@ -35,6 +39,13 @@ public class BarMessageKit {
         return createRequestMessage(cmdInfo, null);
     }
 
+    /**
+     * 创建 RequestMessage
+     *
+     * @param cmdInfo 路由
+     * @param data    业务数据
+     * @return RequestMessage
+     */
     public RequestMessage createRequestMessage(CmdInfo cmdInfo, Object data) {
 
         RequestMessage requestMessage = new RequestMessage();
@@ -44,6 +55,13 @@ public class BarMessageKit {
         return requestMessage;
     }
 
+    /**
+     * 将路由、业务数据设置到 RequestMessage 中
+     *
+     * @param requestMessage RequestMessage
+     * @param cmdInfo        路由
+     * @param data           业务数据
+     */
     public void employ(RequestMessage requestMessage, CmdInfo cmdInfo, Object data) {
 
         var headMetadata = new HeadMetadata()

@@ -17,9 +17,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - 内部协议 - <a href="https://www.yuque.com/iohao/game/ivxsw5">获取游戏对外服的数据与扩展</a>
+ * 业务框架 - 内部协议
  *
  * @author 渔民小镇
- * @date 2022-07-27
+ * @date 2024-08-07
  */
-package com.iohao.game.action.skeleton.protocol.external;
+package com.iohao.game.action.skeleton.protocol;

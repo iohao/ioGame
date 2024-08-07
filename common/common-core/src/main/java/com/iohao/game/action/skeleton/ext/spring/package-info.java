@@ -17,9 +17,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - 内部协议 - <a href="https://www.yuque.com/iohao/game/ivxsw5">获取游戏对外服的数据与扩展</a>
+ * 生态融合（集成扩展）- 在生态融合方面，ioGame 可以很方便的与 <a href="https://www.yuque.com/iohao/game/evkgnz">spring 集成（5 行代码）</a>，从而能方便的使用其相关生态。
+ * <pre>{@code
+ * @SpringBootApplication
+ * public class DemoSpringApplication {
+ *     @Bean
+ *     public ActionFactoryBeanForSpring actionFactoryBean() {
+ *         // 将业务框架交给 spring 管理
+ *         return ActionFactoryBeanForSpring.me();
+ *     }
+ * }
+ * }</pre>
  *
  * @author 渔民小镇
- * @date 2022-07-27
+ * @date 2024-08-07
  */
-package com.iohao.game.action.skeleton.protocol.external;
+package com.iohao.game.action.skeleton.ext.spring;

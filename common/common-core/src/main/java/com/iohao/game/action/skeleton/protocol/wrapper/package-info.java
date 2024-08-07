@@ -17,7 +17,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * <a href="https://www.yuque.com/iohao/game/ieimzn">装箱、拆箱包装;解决协议碎片</a>
+ * 业务框架 - 内部协议 - <a href="https://www.yuque.com/iohao/game/ieimzn">装箱、拆箱包装；解决协议碎片</a>
+ * 主要解决两个问题：碎片协议、使用时可自动装箱和拆箱。
+ * <p>
+ * for example
+ * <pre>{@code
+ * // 可以方便的接收与返回基础类型的数据
+ * @ActionController(6)
+ * public class IntAction {
+ *     @ActionMethod(10)
+ *     public int int2int(int value) {
+ *         return value + 1;
+ *     }
+ *
+ *     @ActionMethod(12)
+ *     public List<Integer> intList2intList(List<Integer> intList) {
+ *         List<Integer> list = new ArrayList<>();
+ *         list.add(1);
+ *         list.add(2);
+ *         return list;
+ *     }
+ *
+ *     @ActionMethod(30)
+ *     public String string2string(String s) {
+ *         return s + 1;
+ *     }
+ *
+ *     @ActionMethod(32)
+ *     public List<String> stringList2stringList(List<String> stringList) {
+ *         List<String> list = new ArrayList<>();
+ *         list.add(11L + "");
+ *         list.add(22L + "");
+ *         return list;
+ *     }
+ * }
+ * }</pre>
  *
  * @author 渔民小镇
  * @date 2023-06-09
