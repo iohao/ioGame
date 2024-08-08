@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 桌游类、房间类游戏的扩展模块 - 规避并发的领域事件。
+ * 扩展模块 - 桌游类、房间类游戏 - 规避并发的领域事件。
  * see <a href="https://www.yuque.com/iohao/game/gmfy1k">文档 - domain-event 领域事件</a>
  * 在使用 room 模块的领域事件时，还需要做以下配置。将领域事件集成到 room 模块中。
  * <p>

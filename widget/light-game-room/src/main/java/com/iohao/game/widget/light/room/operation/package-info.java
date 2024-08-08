@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 桌游类、房间类游戏的扩展模块 - 房间内的玩法操作扩展。
+ * 扩展模块 - 桌游类、房间类游戏 - 房间内的玩法操作扩展。
  * <p>
  * 玩法操作业务 - 设计模式: 策略模式 + 享元模式
  * <pre>

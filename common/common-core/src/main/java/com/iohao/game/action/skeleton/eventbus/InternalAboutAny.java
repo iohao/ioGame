@@ -75,7 +75,6 @@ final class AnyTagBrokerClient {
     }
 
     EventBrokerClientMessage anyEventBrokerClientMessage() {
-
         // 优先使用同进程的
         int localLength = this.eventLocalBrokerClientMessages.length;
         if (localLength > 0) {
@@ -86,7 +85,6 @@ final class AnyTagBrokerClient {
             int index = getIndex(this.nextLocal++, this.eventLocalBrokerClientMessages);
             return this.eventLocalBrokerClientMessages[index];
         }
-
 
         int remoteLength = this.eventRemoteBrokerClientMessages.length;
         if (remoteLength == 1) {

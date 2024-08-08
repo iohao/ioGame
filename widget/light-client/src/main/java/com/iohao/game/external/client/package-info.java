@@ -16,26 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.domain.event.message;
-
-import com.iohao.game.widget.light.domain.event.DomainEventPublish;
-import com.iohao.game.widget.light.domain.event.disruptor.DomainEventSource;
-
 /**
- * 领域事件的业务接口 (Event Object)
- * <pre>
- *     通常是业务数据载体实现的接口
-// *     实现该接口后，会得到领域事件发送的能力
- * </pre>
+ * 扩展模块 - <a href="https://www.yuque.com/iohao/game/tc83ud">压测、模拟客户端请求</a>
  *
  * @author 渔民小镇
- * @date 2021-12-26
+ * @date 2024-08-08
  */
-public interface Eo extends DomainEventSource {
-    /**
-     * 领域事件发送
-     */
-    default void send() {
-        DomainEventPublish.send(this);
-    }
-}
+package com.iohao.game.external.client;
