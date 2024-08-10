@@ -58,20 +58,30 @@ final class DefaultUserProcessorExecutorStrategy implements UserProcessorExecuto
         }
 
         String userProcessorName = userProcessorExecutorAware.getClass().getSimpleName();
-        if ("RequestMessageClientProcessor".equals(userProcessorName)) {
-            // 单独一个池
-            return ofExecutor("RequestMessage");
-        }
 
-        return ofExecutor("common");
+        return switch (userProcessorName) {
+            // RequestMessage 相关的单独一个池，使用单线程传递请求消息。
+            case "RequestMessageClientProcessor" -> ofExecutorRequestMessage();
+            case "RequestMessageBrokerProcessor" -> ofExecutorRequestMessage();
+            // 其他 UserProcessor 使用 common 多线程消费任务
+            default -> ofExecutorCommon();
+        };
     }
 
-    Executor ofExecutor(String name) {
+    private Executor ofExecutorRequestMessage() {
+        // 使用单线程传递请求消息
+        return ofExecutorCommon("RequestMessage", 1);
+    }
 
+    private Executor ofExecutorCommon() {
+        int corePoolSize = RuntimeKit.availableProcessors;
+        return ofExecutorCommon("common", corePoolSize);
+    }
+
+    private Executor ofExecutorCommon(String name, int corePoolSize) {
         Executor executor = this.executorMap.get(name);
 
         if (Objects.isNull(executor)) {
-            int corePoolSize = RuntimeKit.availableProcessors;
             var tempExecutor = createExecutor(name, corePoolSize, corePoolSize);
             executor = MoreKit.firstNonNull(this.executorMap.putIfAbsent(name, tempExecutor), tempExecutor);
 
@@ -84,7 +94,7 @@ final class DefaultUserProcessorExecutorStrategy implements UserProcessorExecuto
         return executor;
     }
 
-    Executor createExecutor(String userProcessorName, int corePoolSize, int maximumPoolSize) {
+    private Executor createExecutor(String userProcessorName, int corePoolSize, int maximumPoolSize) {
 
         /*
          * 下面对于 UserProcessor 提供了一些默认的 Executor 配置，
