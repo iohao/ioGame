@@ -34,4 +34,37 @@ public class RuntimeKit {
      * 如果有一些特殊环境需要模拟的，可以设置该变量。
      */
     public int availableProcessors = Runtime.getRuntime().availableProcessors();
+
+    /**
+     * 数量是不大于 Runtime.getRuntime().availableProcessors() 的 2 次幂。
+     * 当 availableProcessors 的值分别为 4、8、12、16、32 时，对应的数量则是 4、8、8、16、32。
+     * <p>
+     * for example
+     * <table>
+     *     <thead>
+     *         <th scope="col">availableProcessors 值</th>
+     *         <th scope="col">实际值</th>
+     *     </thead>
+     *     <tbody>
+     *         <tr><td>4</td><td>4</td></tr>
+     *         <tr><td>8</td><td>8</td></tr>
+     *         <tr><td>12</td><th scope="row">8</th></tr>
+     *         <tr><td>16</td><td>16</td></tr>
+     *         <tr><td>32</td><td>32</td></tr>
+     *     </tbody>
+     * </table>
+     * <p>
+     * 另外，如果有一些特殊环境需要模拟的，可以设置该变量。
+     */
+    public int availableProcessors2n = availableProcessors2n();
+
+    static int availableProcessors2n() {
+        int n = RuntimeKit.availableProcessors;
+        n |= (n >> 1);
+        n |= (n >> 2);
+        n |= (n >> 4);
+        n |= (n >> 8);
+        n |= (n >> 16);
+        return (n + 1) >> 1;
+    }
 }

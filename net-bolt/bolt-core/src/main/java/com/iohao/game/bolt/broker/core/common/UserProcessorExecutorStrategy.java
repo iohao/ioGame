@@ -25,8 +25,7 @@ import java.util.concurrent.Executor;
 /**
  * 主要用于给 UserProcessor 构建 Executor 的策略
  * <pre>
- *     框架会在启动时，
- *     如果检测到 UserProcessor 实现了 UserProcessorExecutorAware 接口，就会触发一次
+ *     框架会在启动时，如果检测到 UserProcessor 实现了 {@link UserProcessorExecutorAware} 接口，就会触发一次
  *
  *     通过该接口，开发者可以给 UserProcessor 配置 Executor；
  *

@@ -254,18 +254,14 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
             this.awareInject.aware(obj);
         }
 
+        AwareKit.aware(obj);
+
         if (obj instanceof BrokerClientItemAware aware) {
             aware.setBrokerClientItem(this);
         }
 
         if (obj instanceof BrokerClientAware aware) {
             aware.setBrokerClient(this.brokerClient);
-        }
-
-        if (obj instanceof UserProcessorExecutorAware aware && Objects.isNull(aware.getUserProcessorExecutor())) {
-            // 如果开发者没有自定义 Executor，则使用框架提供的 Executor 策略
-            Executor executor = IoGameGlobalConfig.getExecutor(aware);
-            aware.setUserProcessorExecutor(executor);
         }
 
         if (obj instanceof PulseConsumerAware aware) {

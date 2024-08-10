@@ -40,7 +40,7 @@ import com.iohao.game.common.kit.RuntimeKit;
  */
 final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion {
     UserThreadExecutorRegion(String threadName) {
-        super(threadName, availableProcessors2n());
+        super(threadName, RuntimeKit.availableProcessors2n);
     }
 
     UserThreadExecutorRegion() {
@@ -57,15 +57,5 @@ final class UserThreadExecutorRegion extends AbstractThreadExecutorRegion {
     public ThreadExecutor getThreadExecutor(long userId) {
         int index = (int) (userId & (this.executorLength - 1));
         return this.threadExecutors[index];
-    }
-
-    static int availableProcessors2n() {
-        int n = RuntimeKit.availableProcessors;
-        n |= (n >> 1);
-        n |= (n >> 2);
-        n |= (n >> 4);
-        n |= (n >> 8);
-        n |= (n >> 16);
-        return (n + 1) >> 1;
     }
 }

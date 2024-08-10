@@ -16,52 +16,47 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.common.kit.concurrent.executor;
+package com.iohao.game.bolt.broker.core.common;
 
+import com.iohao.game.common.kit.RuntimeKit;
 import com.iohao.game.common.kit.concurrent.FixedNameThreadFactory;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
+import com.iohao.game.common.kit.concurrent.executor.ThreadExecutorRegion;
 
 import java.util.concurrent.*;
 
 /**
- * 线程执行器管理域父类
- *
  * @author 渔民小镇
- * @date 2023-12-01
+ * @date 2024-08-10
  */
-@FieldDefaults(level = AccessLevel.PROTECTED)
-abstract sealed class AbstractThreadExecutorRegion implements ThreadExecutorRegion
-        permits
-        UserThreadExecutorRegion,
-        UserVirtualThreadExecutorRegion,
-        SimpleThreadExecutorRegion {
-
-    final int executorLength;
-    /** 线程执行器 */
+final class ProcessorSelectorThreadExecutorRegion implements ThreadExecutorRegion {
     final ThreadExecutor[] threadExecutors;
+    final int executorLength;
 
-    AbstractThreadExecutorRegion(String threadName, int executorSize) {
-        this.executorLength = executorSize;
-        this.threadExecutors = new ThreadExecutor[executorSize];
+    ProcessorSelectorThreadExecutorRegion() {
+        threadExecutors = new ThreadExecutor[RuntimeKit.availableProcessors2n];
+        executorLength = threadExecutors.length - 1;
 
-        for (int i = 0; i < executorSize; i++) {
+        String threadName = "ProcessorSelector";
+        for (int i = 0; i < threadExecutors.length; i++) {
             // 线程名：name-线程总数-当前线程编号
             int threadNo = i + 1;
-            String threadNamePrefix = String.format("%s-%s-%s", threadName, executorSize, threadNo);
-
+            String threadNamePrefix = String.format("%s-%s-%s", threadName, threadExecutors.length, threadNo);
             var executor = this.createExecutorService(threadNamePrefix);
-
             this.threadExecutors[i] = new ThreadExecutor(threadNamePrefix, executor, threadNo);
         }
     }
 
-    protected ExecutorService createExecutorService(String name) {
-        ThreadFactory threadFactory = new FixedNameThreadFactory(name);
+    @Override
+    public ThreadExecutor getThreadExecutor(long executorIndex) {
+        int index = (int) (executorIndex & (this.executorLength));
+        return this.threadExecutors[index];
+    }
 
+    private ExecutorService createExecutorService(String threadNamePrefix) {
         return new ThreadPoolExecutor(1, 1,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(),
-                threadFactory);
+                new FixedNameThreadFactory(threadNamePrefix));
     }
 }

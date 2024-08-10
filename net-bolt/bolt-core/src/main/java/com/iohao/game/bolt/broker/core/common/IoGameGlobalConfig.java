@@ -103,7 +103,7 @@ public class IoGameGlobalConfig {
     /**
      * UserProcessor 构建 Executor 的策略
      * <pre>
-     *     默认使用 VirtualThreadUserProcessorExecutorStrategy 实现类，
+     *     默认使用 DefaultUserProcessorExecutorStrategy 实现类，
      *     内容使用 Executors.newVirtualThreadPerTaskExecutor()
      * </pre>
      *
@@ -120,6 +120,27 @@ public class IoGameGlobalConfig {
         }
 
         return userProcessorExecutorStrategy.getExecutor(userProcessorExecutorAware);
+    }
+
+    boolean userProcessorExecutorSelectorEnable;
+
+    public void enableUserProcessorExecutorSelector() {
+        userProcessorExecutorSelectorEnable = true;
+    }
+
+    public UserProcessorExecutorSelectorStrategy userProcessorExecutorSelectorStrategy;
+
+    public UserProcessorExecutorSelectorStrategy getExecutorSelector() {
+
+        if (!userProcessorExecutorSelectorEnable) {
+            return null;
+        }
+
+        if (Objects.isNull(userProcessorExecutorSelectorStrategy)) {
+            userProcessorExecutorSelectorStrategy = DefaultUserProcessorExecutorSelectorStrategy.me();
+        }
+
+        return userProcessorExecutorSelectorStrategy;
     }
 
     public boolean isExternalLog() {

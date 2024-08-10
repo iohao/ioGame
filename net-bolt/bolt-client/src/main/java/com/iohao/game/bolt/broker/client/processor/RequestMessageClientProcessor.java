@@ -21,17 +21,17 @@ package com.iohao.game.bolt.broker.client.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
-import com.iohao.game.action.skeleton.core.SkeletonAttr;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.bolt.broker.client.action.skeleton.BoltChannelContext;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
+import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorSelectorAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
+import com.iohao.game.bolt.broker.core.common.UserProcessorExecutorSelectorStrategy;
 import com.iohao.game.bolt.broker.core.common.processor.hook.ClientProcessorHooks;
 import com.iohao.game.bolt.broker.core.common.processor.hook.RequestMessageClientProcessorHook;
 import com.iohao.game.common.consts.IoGameLogName;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j(topic = IoGameLogName.CommonStdout)
 public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<RequestMessage>
-        implements BrokerClientAware {
+        implements BrokerClientAware, UserProcessorExecutorSelectorAware {
     BrokerClient brokerClient;
     RequestMessageClientProcessorHook requestMessageClientProcessorHook;
 
@@ -86,7 +86,6 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
 
             // 设置 flowContext 的一些属性值
             FlowContextKit.employ(flowContext);
-
             // 执行业务框架
             this.requestMessageClientProcessorHook.processLogic(barSkeleton, flowContext);
         } catch (Throwable e) {
@@ -106,5 +105,10 @@ public class RequestMessageClientProcessor extends AbstractAsyncUserProcessor<Re
     @Override
     public String interest() {
         return RequestMessage.class.getName();
+    }
+
+    @Override
+    public void setUserProcessorExecutorSelector(UserProcessorExecutorSelectorStrategy executorSelector) {
+        this.setExecutorSelector(executorSelector);
     }
 }

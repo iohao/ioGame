@@ -28,8 +28,10 @@ import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
+import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorSelectorAware;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import com.iohao.game.bolt.broker.core.common.UserProcessorExecutorSelectorStrategy;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.aware.BrokerServerAware;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -55,7 +57,9 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public final class RequestMessageBrokerProcessor extends AbstractAsyncUserProcessor<RequestMessage>
-        implements BrokerServerAware, CmdRegionsAware {
+        implements BrokerServerAware
+        , UserProcessorExecutorSelectorAware
+        , CmdRegionsAware {
 
     BrokerServer brokerServer;
 
@@ -132,6 +136,11 @@ public final class RequestMessageBrokerProcessor extends AbstractAsyncUserProces
         } catch (RemotingException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void setUserProcessorExecutorSelector(UserProcessorExecutorSelectorStrategy executorSelector) {
+        this.setExecutorSelector(executorSelector);
     }
 
     @Override
