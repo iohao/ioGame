@@ -90,11 +90,6 @@ public class ConnectionEventBrokerProcessor implements ConnectionEventProcessor,
         }
     }
 
-    /**
-     * do check connection
-     *
-     * @param conn
-     */
     private void doCheckConnection(Connection conn) {
         Objects.requireNonNull(conn);
         Objects.requireNonNull(conn.getPoolKeys());

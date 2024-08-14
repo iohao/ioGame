@@ -157,6 +157,10 @@ public final class BrokerClientManager {
                 .count();
     }
 
+    public int countItem() {
+        return brokerClientItemMap.size();
+    }
+
     public BrokerClientItem next() {
         if (Objects.nonNull(this.brokerClientItemWith)) {
             return this.brokerClientItemWith;

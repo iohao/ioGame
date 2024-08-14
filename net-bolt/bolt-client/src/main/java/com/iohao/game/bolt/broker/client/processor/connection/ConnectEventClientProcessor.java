@@ -79,11 +79,11 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
         brokerClientManager.register(brokerClientItem);
 
         if (IoGameGlobalConfig.openLog) {
-            log.info("连接网关 ConnectionEventType:【{}】 remoteAddress:【{}】，网关连接数量:【{}】，Connection:【{}】",
+            log.info("ConnectionEventType:【{}】 remoteAddress:【{}】，网关连接数量:【{}】，registerActive:【{}】",
                     ConnectionEventType.CONNECT,
                     remoteAddress,
-                    brokerClientManager.countActiveItem(),
-                    conn
+                    brokerClientManager.countItem(),
+                    brokerClientManager.countActiveItem()
             );
         }
     }
