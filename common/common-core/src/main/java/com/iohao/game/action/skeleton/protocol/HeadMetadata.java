@@ -156,6 +156,7 @@ public final class HeadMetadata implements Serializable {
     ExecutorSelectEnum executorSelect;
     /** traceId */
     String traceId;
+    /** 框架自用字段。将来变化可能较大，开发者请不要使用。 */
     byte[] userProcessorExecutorSelectorBytes;
     /** 临时变量 */
     transient Object other;

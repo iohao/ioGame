@@ -134,7 +134,7 @@ public class IoGameDocumentHelper {
                 .forEach(broadcastDocument -> {
                     // 广播业务数据解析，使用类信息的文档注释
                     Class<?> dataClass = broadcastDocument.getDataClass();
-                    JavaClass javaClass = DocumentAnalyseKit.analyseJavaClass(dataClass);
+                    JavaClass javaClass = DocumentAnalyseKit.analyseJavaClass(dataClass).javaClass();
                     String classComment = javaClass.getComment();
 
                     broadcastDocument.setDataDescription(classComment);
