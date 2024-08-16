@@ -21,7 +21,9 @@ package com.iohao.game.external.core.session;
 
 import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.common.kit.attr.AttrOptionDynamic;
+import com.iohao.game.external.core.message.ExternalCodecKit;
 
 /**
  * UserSession 接口
@@ -110,4 +112,23 @@ public interface UserSession extends AttrOptionDynamic {
      * @return 玩家 ip
      */
     String getIp();
+
+    /**
+     * 创建 RequestMessage，内部会将 User 自身的相关信息设置到 RequestMessage 中。
+     *
+     * @param cmdMerge 路由
+     * @return RequestMessage
+     * @since 21.15
+     */
+    default RequestMessage ofRequestMessage(int cmdMerge) {
+        RequestMessage request = ExternalCodecKit.createRequest();
+
+        HeadMetadata headMetadata = request.getHeadMetadata();
+        headMetadata.setCmdMerge(cmdMerge);
+
+        // 给请求消息加上一些 user 自身的数据
+        this.employ(headMetadata);
+
+        return request;
+    }
 }

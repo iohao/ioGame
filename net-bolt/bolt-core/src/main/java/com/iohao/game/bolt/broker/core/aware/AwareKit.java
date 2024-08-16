@@ -19,10 +19,6 @@
 package com.iohao.game.bolt.broker.core.aware;
 
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;
 
 import java.util.Objects;
@@ -31,6 +27,7 @@ import java.util.concurrent.Executor;
 /**
  * @author 渔民小镇
  * @date 2024-08-10
+ * @since 21.15
  */
 @UtilityClass
 public class AwareKit {

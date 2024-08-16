@@ -35,6 +35,7 @@ import java.util.concurrent.Executor;
 /**
  * @author 渔民小镇
  * @date 2024-08-10
+ * @since 21.15
  */
 @Slf4j
 final class DefaultUserProcessorExecutorSelectorStrategy extends DefaultCustomSerializer
@@ -49,6 +50,7 @@ final class DefaultUserProcessorExecutorSelectorStrategy extends DefaultCustomSe
             HeadMetadata headMetadata = message.getHeadMetadata();
 
             if (Objects.isNull(headMetadata.getUserProcessorExecutorSelectorBytes())) {
+                // 做一个简单的优化，避免多次序列化
                 long executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
                 headMetadata.setUserProcessorExecutorSelectorBytes(ByteKit.toBytes(executorIndex));
             }
@@ -76,6 +78,10 @@ final class DefaultUserProcessorExecutorSelectorStrategy extends DefaultCustomSe
 
     @Override
     public Executor select(String requestClass, Object requestHeader) {
+        if (Objects.isNull(requestHeader)) {
+            return null;
+        }
+
         // see RpcRequestProcessor.java:105
         long executorIndex = (long) requestHeader;
         return threadExecutorRegion.getThreadExecutor(executorIndex).executor();

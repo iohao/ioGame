@@ -23,6 +23,7 @@ package com.iohao.game.common.kit.exception;
  *
  * @author 渔民小镇
  * @date 2024-08-02
+ * @since 21.14
  */
 public class CommonIllegalArgumentException extends IllegalArgumentException {
     public CommonIllegalArgumentException(String s) {

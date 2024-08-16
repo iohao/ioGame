@@ -23,6 +23,7 @@ import com.iohao.game.bolt.broker.core.common.UserProcessorExecutorSelectorStrat
 /**
  * @author 渔民小镇
  * @date 2024-08-10
+ * @since 21.15
  */
 public interface UserProcessorExecutorSelectorAware {
     void setUserProcessorExecutorSelector(UserProcessorExecutorSelectorStrategy executorSelector);

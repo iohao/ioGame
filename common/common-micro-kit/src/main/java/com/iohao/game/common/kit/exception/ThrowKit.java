@@ -25,6 +25,7 @@ import lombok.experimental.UtilityClass;
  *
  * @author 渔民小镇
  * @date 2024-08-01
+ * @since 21.14
  */
 @UtilityClass
 public class ThrowKit {

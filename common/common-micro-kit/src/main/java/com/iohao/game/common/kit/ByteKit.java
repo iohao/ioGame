@@ -23,6 +23,7 @@ import lombok.experimental.UtilityClass;
 /**
  * @author 渔民小镇
  * @date 2024-08-10
+ * @since 21.15
  */
 @UtilityClass
 public class ByteKit {

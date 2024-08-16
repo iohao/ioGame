@@ -16,15 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.common;
-
-import com.alipay.remoting.rpc.protocol.UserProcessor;
+package com.iohao.game.common.kit.exception;
 
 /**
+ * NullPointerException
+ *
  * @author 渔民小镇
- * @date 2024-08-10
+ * @date 2024-08-16
  * @since 21.15
  */
-public interface UserProcessorExecutorSelectorStrategy
-        extends UserProcessor.ExecutorSelector {
+public class CommonNullPointerException extends NullPointerException {
+    public CommonNullPointerException() {
+    }
+
+    public CommonNullPointerException(String s) {
+        super(s);
+    }
 }

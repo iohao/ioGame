@@ -23,6 +23,7 @@ import java.util.concurrent.ThreadFactory;
 /**
  * @author 渔民小镇
  * @date 2024-08-10
+ * @since 21.15
  */
 public final class FixedNameThreadFactory extends ThreadCreator implements ThreadFactory {
     public FixedNameThreadFactory(String threadNamePrefix) {
