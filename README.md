@@ -56,7 +56,7 @@
 	</a>
   <br />
 	<a target="_blank" href='https://app.codacy.com/gh/iohao/ioGame/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade'>
-		<img src="https://app.codacy.com/project/badge/Grade/4981fff112754686baad7442be998b17" alt="github star"/>
+		<img src="https://app.codacy.com/project/badge/Grade/4981fff112754686baad7442be998b17" alt="code quality"/>
 </a>
 </p>
 <hr />
@@ -256,7 +256,20 @@ https://www.yuque.com/iohao/game/gpxk93#TwVa8
 
 ---
 
-**框架的安全质量**
+**框架的代码质量、安全质量**
+
+[ioGame - Qodana Cloud](https://qodana.cloud/organizations/3k6Pm/teams/zxRGm) 
+
+<a target="_blank" href='https://app.codacy.com/gh/iohao/ioGame/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade'>
+<img src="https://app.codacy.com/project/badge/Grade/4981fff112754686baad7442be998b17" alt="code quality"/>
+</a>
+
+>  Qodana 是 JetBrains 推出的代码质量检测工具。它将 JetBrains IDE 具有的智能代码检查带入了项目 CI/CD 管道中。它可以识别代码中的错误，安全漏洞，重复项和缺陷并提出修复建议。使开发人员轻松地改善代码结构，使代码符合众多准则和标准，解决潜在的性能问题。
+
+![](https://raw.githubusercontent.com/iohao/ioGameResource/main/images/Qodana.png)
+
+
+
 
 ioGame 已经接入 OSCS 墨菲安全扫描，框架的安全质量近乎100%，游戏开发者们可放心使用。更详细的可以到 [ioGame 框架的安全质量、代码质量、性能](https://www.yuque.com/iohao/game/azpsro) 来了解。
 
@@ -506,6 +519,38 @@ ioGame 在架构上解决了传统框架所产生的 **N\*N 问题**（[与传�
 
 
 
+在[架构灵活性](https://www.yuque.com/iohao/game/zqgdv3g9if8w37vr)方面，ioGame 的架构由三部分组成：1.游戏对外服、2.Broker（游戏网关）、3.游戏逻辑服；三者既可相互独立，又可相互融合。这意味着使用 ioGame 可以**适应任何类型的游戏**，因为只需通过调整部署方式，就可以满足不同类型的游戏需求。在 ioGame 中进行这些调整工作非常简单，而且不会对现有代码产生不良影响。
+
+
+
+架构是可以动态扩缩的，游戏对外服、游戏逻辑服、Broker（游戏网关）都**支持动态增加和减少**。无论未来玩家数量增加或减少，我们都能够轻松应对。同时，架构是**支持玩家无感知更新**的，这得益于分布式设计。举例来说，如果 A 类型的游戏逻辑服需要增加一些新功能，我们可以启动 A-3、A-4 等已经支持了新功能的服务器，然后逐步将之前的 A-1 和 A-2 下线，从而实现了无感知的更新。
+
+
+
+在[生态规划](https://www.yuque.com/iohao/game/ddbovlbhb3g6bno2)方面，我们的游戏逻辑服是支持独立运行的，只需接入 Broker（游戏网关）上，就可以为玩家和其他游戏逻辑服提供功能上的扩展与增强。我们可以将一些**游戏逻辑服组件化**，并制作成相对通用的组件，**从而实现功能模块化的可能性**。这么做有几个优点：
+
+1. 避免一些重复开发的工作量。
+
+2. 减少各功能模块的耦合。
+
+3. 更符合单一职责的设计，将相对通用的功能扩展成一个个的【功能逻辑服】。比如：公会逻辑服、好友逻辑服、登录逻辑服、抽奖逻辑服、公告逻辑服、排行榜逻辑服 ...等。
+
+4. 由于模块功能是独立，那么将来可以对任意的功能逻辑服进行扩容，且不需要改动任何代码。
+
+5. 这些组件化后的功能逻辑服就好比一件件武器，积累得足够多时就形成了自己的生态武器库，可以更好的帮助公司与同行竞争。
+
+6. 代码泄漏机率更小。传统的游戏项目通常采用单机结构，把所有的代码放在一个目录中。这样做有很大的风险，因为如果代码泄漏了，就会泄漏整个项目的内容。当功能模块化后，可以让不同的开发人员只负责自己的游戏逻辑服模块，从而避免代码泄漏的风险和影响。
+
+7. 团队管理员只需要在内网服务器上部署一个游戏网关和游戏对外服，而开发人员就可以在本机上编码和测试自己的游戏逻辑服模块。这样还有以下好处：
+
+   - 游戏客户端不会因为游戏逻辑服的变更或重启而断开连接。
+
+   - 开发人员不需要启动其他人的游戏逻辑服模块。
+
+   - 开发人员可以通过 ioGame 自动生成的文档来进行模块间的对接。
+
+
+
 ioGame 具备[全链路调用日志跟踪](https://www.yuque.com/iohao/game/zurusq)特性，这在分布式下非常的实用。该特性为每个请求分配一个唯一标识，并记录在日志中，通过唯一标识可以快速的在日志中过滤出指定请求的信息。ioGame 提供的全链路调用日志跟踪特性更是强大，**支持跨机器、跨进程**。简单的说，从玩家的请求进来到结束，无论该请求经过了多少个游戏逻辑服，都能精准记录。
 
 
@@ -608,14 +653,6 @@ ioGame 具备[全链路调用日志跟踪](https://www.yuque.com/iohao/game/zuru
 
 
 在模拟客户端测试方面，ioGame 提供了[压测&模拟客户端请求](https://www.yuque.com/iohao/game/tc83ud)模块。此模块是用于模拟客户端，简化模拟工作量，只需要编写对应请求与回调。除了可以模拟简单的请求外，通常还可以做一些复杂的请求编排，并支持复杂业务的压测。**与单元测试不同的是，该模块可以模拟真实的网络环境，并且在模拟测试的过程中与服务器的交互是可持续的、可互动的，同时也是支持自动化的**。
-
-
-
-在[架构灵活性](https://www.yuque.com/iohao/game/zqgdv3g9if8w37vr)方面，ioGame 的架构由三部分组成：1.游戏对外服、2.Broker（游戏网关）、3.游戏逻辑服；三者既可相互独立，又可相互融合。这意味着使用 ioGame 可以**适应任何类型的游戏**，因为只需通过调整部署方式，就可以满足不同类型的游戏需求。在 ioGame 中进行这些调整工作非常简单，而且不会对现有代码产生不良影响。
-
-
-
-架构是可以动态扩缩的，游戏对外服、游戏逻辑服、Broker（游戏网关）都**支持动态增加和减少**。无论未来玩家数量增加或减少，我们都能够轻松应对。同时，架构是**支持玩家无感知更新**的，这得益于分布式设计。举例来说，如果 A 类型的游戏逻辑服需要增加一些新功能，我们可以启动 A-3、A-4 等已经支持了新功能的服务器，然后逐步将之前的 A-1 和 A-2 下线，从而实现了无感知的更新。
 
 
 
