@@ -37,21 +37,17 @@ abstract sealed class AbstractThreadExecutorRegion implements ThreadExecutorRegi
         UserVirtualThreadExecutorRegion,
         SimpleThreadExecutorRegion {
 
-    final int executorLength;
     /** 线程执行器 */
     final ThreadExecutor[] threadExecutors;
 
     AbstractThreadExecutorRegion(String threadName, int executorSize) {
-        this.executorLength = executorSize;
         this.threadExecutors = new ThreadExecutor[executorSize];
 
         for (int i = 0; i < executorSize; i++) {
             // 线程名：name-线程总数-当前线程编号
             int threadNo = i + 1;
             String threadNamePrefix = String.format("%s-%s-%s", threadName, executorSize, threadNo);
-
             var executor = this.createExecutorService(threadNamePrefix);
-
             this.threadExecutors[i] = new ThreadExecutor(threadNamePrefix, executor, threadNo);
         }
     }

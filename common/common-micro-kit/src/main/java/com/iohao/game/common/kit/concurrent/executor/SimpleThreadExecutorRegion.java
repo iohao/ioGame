@@ -18,6 +18,7 @@
  */
 package com.iohao.game.common.kit.concurrent.executor;
 
+import com.iohao.game.common.kit.RuntimeKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -37,13 +38,11 @@ import lombok.experimental.FieldDefaults;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 final class SimpleThreadExecutorRegion extends AbstractThreadExecutorRegion {
-
-    SimpleThreadExecutorRegion(String threadName) {
-        super(threadName, Runtime.getRuntime().availableProcessors());
-    }
+    final int executorLength;
 
     SimpleThreadExecutorRegion() {
-        this("Simple");
+        super("Simple", RuntimeKit.availableProcessors);
+        executorLength = RuntimeKit.availableProcessors;
     }
 
     @Override
