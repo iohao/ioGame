@@ -96,8 +96,6 @@ public class IoGameGlobalConfig {
     public boolean brokerClusterFixedRateLog;
     /** true 表示开启 traceId 特性 */
     public boolean openTraceId;
-    /** ture 开启逻辑服上线、下线监听日志。 */
-    public boolean brokerClientListenerPrintLog = true;
 
     @Getter
     boolean eventBusLog;

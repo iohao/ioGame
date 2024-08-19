@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.client;
+package com.iohao.game.bolt.broker.core.common.processor.listener;
 
-import com.iohao.game.bolt.broker.core.common.processor.listener.BrokerClientListener;
+import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.message.BrokerClientModuleMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 打印其他进程的逻辑服信息
+ * 打印其他进程逻辑服的上线与下线信息
  *
  * @author 渔民小镇
  * @date 2024-08-19
  * @since 21.15
  */
 @Slf4j
-final class PrintBrokerClientListener implements BrokerClientListener {
+public final class SimplePrintBrokerClientListener implements BrokerClientListener {
     @Override
     public void onlineExternal(BrokerClientModuleMessage otherModuleMessage, BrokerClient client) {
         if (client.getWithNo() == otherModuleMessage.getWithNo()) {
@@ -71,15 +71,15 @@ final class PrintBrokerClientListener implements BrokerClientListener {
         log.info("【下线监听】其他进程的游戏逻辑服信息 {}", otherModuleMessage);
     }
 
-    private PrintBrokerClientListener() {
+    private SimplePrintBrokerClientListener() {
     }
 
-    public static PrintBrokerClientListener me() {
+    public static SimplePrintBrokerClientListener me() {
         return Holder.ME;
     }
 
     /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
-        static final PrintBrokerClientListener ME = new PrintBrokerClientListener();
+        static final SimplePrintBrokerClientListener ME = new SimplePrintBrokerClientListener();
     }
 }

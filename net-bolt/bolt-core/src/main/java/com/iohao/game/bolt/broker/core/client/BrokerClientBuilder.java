@@ -236,10 +236,6 @@ public class BrokerClientBuilder {
         // 处理分布式事件总线的 listener
         this.addListener(new EventBusBrokerClientListener());
 
-        if (IoGameGlobalConfig.brokerClientListenerPrintLog) {
-            this.addListener(PrintBrokerClientListener.me());
-        }
-
         for (Class<?> removeClass : this.removeProcessorList) {
             Iterator<Supplier<UserProcessor<?>>> iterator = this.processorList.iterator();
             while (iterator.hasNext()) {
