@@ -17,7 +17,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 线程执行器，任务监听回调、单次任务、延时任务、任务调度、轻量可控的延时任务、轻量的定时入库辅助功能
+ * 工具相关 - 线程执行器，任务监听回调、单次任务、延时任务、任务调度、轻量可控的延时任务、轻量的定时入库辅助功能。
+ * <p>
+ * 相关文档
+ * <pre>
+ *     <a href="https://www.yuque.com/iohao/game/gzsl8pg0si1l4bu3">TaskKit 任务相关</a>
+ * </pre>
  *
  * @author 渔民小镇
  * @date 2024-06-01

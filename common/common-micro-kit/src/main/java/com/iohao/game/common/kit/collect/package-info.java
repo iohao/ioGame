@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 提供 MultiMap 结构，ListMultiMap、SetMultiMap。
+ * 工具相关 - 提供线程安全的多集合结构 MultiMap、ListMultiMap、SetMultiMap。
  *
  * @author 渔民小镇
  * @date 2024-06-04

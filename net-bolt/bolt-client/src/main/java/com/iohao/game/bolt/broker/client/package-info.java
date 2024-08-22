@@ -17,9 +17,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 工具相关 - <a href="https://www.yuque.com/iohao/game/uqn84q41f58xe5f0">动态属性</a>
+ * 逻辑服，逻辑服通常指的是游戏对外服和游戏逻辑服。
+ * <p>
+ * 相关文档介绍
+ * <pre>
+ *     <a href="https://www.yuque.com/iohao/game/wotnhl">游戏对外服</a>
+ *     <a href="https://www.yuque.com/iohao/game/ensevx">游戏逻辑服</a>
+ * </pre>
  *
  * @author 渔民小镇
- * @date 2022-01-02
+ * @date 2024-08-22
  */
-package com.iohao.game.common.kit.attr;
+package com.iohao.game.bolt.broker.client;

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 一个比java 反射更好的工具
+ * 工具相关 - asm
  * <pre>
  *     使用示例:
  *     ClassRefInfo classRefInfo = ClassRefInfoKit.getClassRefInfo(Your.class);

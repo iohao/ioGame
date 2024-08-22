@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 属性值变更监听特性，属性可添加监听器，当某些属性值的发生变化时，触发监听器。
+ * 工具相关 - <a href="https://www.yuque.com/iohao/game/uqn84q41f58xe5f0">属性值变更监听</a>特性，属性可添加监听器，当某些属性值的发生变化时，触发监听器。
  *
  * @author 渔民小镇
  * @date 2024-04-17

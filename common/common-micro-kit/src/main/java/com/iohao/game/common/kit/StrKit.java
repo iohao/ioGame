@@ -18,7 +18,7 @@
  */
 package com.iohao.game.common.kit;
 
-import com.iohao.game.common.kit.hutool.AdapterHuUtils;
+import com.iohao.game.common.kit.adapter.AdapterHuUtils;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 

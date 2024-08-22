@@ -17,9 +17,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 工具相关 - <a href="https://www.yuque.com/iohao/game/uqn84q41f58xe5f0">动态属性</a>
+ * 工具相关 - Trace 相关工具，相关参考<a href="https://www.yuque.com/iohao/game/zurusq">全链路调用日志跟踪</a>。
  *
  * @author 渔民小镇
- * @date 2022-01-02
+ * @date 2024-08-22
  */
-package com.iohao.game.common.kit.attr;
+package com.iohao.game.common.kit.trace;

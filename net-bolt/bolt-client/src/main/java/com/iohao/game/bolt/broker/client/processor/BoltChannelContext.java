@@ -16,10 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.iohao.game.bolt.broker.client.processor;
+
+import com.alipay.remoting.AsyncContext;
+import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
+import lombok.NonNull;
+
 /**
- * 工具相关 - <a href="https://www.yuque.com/iohao/game/uqn84q41f58xe5f0">动态属性</a>
- *
  * @author 渔民小镇
- * @date 2022-01-02
+ * @date 2022-12-04
  */
-package com.iohao.game.common.kit.attr;
+public record BoltChannelContext(@NonNull AsyncContext asyncContext) implements ChannelContext {
+    @Override
+    public void sendResponse(Object responseObject) {
+        this.asyncContext.sendResponse(responseObject);
+    }
+}

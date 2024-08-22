@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 线程执行器：用户线程执行器、用户虚拟线程执行器、简单的线程执行器管理域
+ * 工具相关 - <a href="https://www.yuque.com/iohao/game/eixd6x">ioGame 线程相关</a>的线程执行器：用户线程执行器、用户虚拟线程执行器、简单的线程执行器管理域。
  *
  * @author 渔民小镇
  * @date 2024-06-01

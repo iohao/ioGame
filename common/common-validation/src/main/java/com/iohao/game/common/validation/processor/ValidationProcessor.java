@@ -31,9 +31,9 @@ import java.io.Writer;
 import java.util.Set;
 
 /**
- * 在META-INF 生成 ioGame/com.iohao.game.common.validation.Validator 用于游戏服务支持 javax.validation
+ * 在 META-INF 生成 ioGame/com.iohao.game.common.validation.Validator 用于游戏服务支持 javax.validation
  * 使用示例：
- * 在DemoApplication 上加入注解：@EnableValidation("com.iohao.game.common.validation.support.JakartaValidator")
+ * 在 DemoApplication 上加入注解：@EnableValidation("com.iohao.game.common.validation.support.JakartaValidator")
  *
  * @author shenjk
  * @date 2022-09-26

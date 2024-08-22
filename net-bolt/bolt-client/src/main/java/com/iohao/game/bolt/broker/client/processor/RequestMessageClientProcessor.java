@@ -26,7 +26,6 @@ import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
-import com.iohao.game.bolt.broker.client.action.skeleton.BoltChannelContext;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.aware.UserProcessorExecutorSelectorAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;

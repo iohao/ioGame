@@ -112,7 +112,7 @@ public class Validation {
     }
 
     /**
-     * 获取数据校验器的package
+     * 获取数据校验器的 package
      *
      * @return packageName;
      */

@@ -18,7 +18,7 @@
  */
 package com.iohao.game.common.kit.io;
 
-import com.iohao.game.common.kit.hutool.AdapterHuUtils;
+import com.iohao.game.common.kit.adapter.AdapterHuUtils;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
@@ -31,9 +31,9 @@ import java.io.File;
 public class FileKit {
     /**
      * 创建文件夹，如果存在直接返回此文件夹<br>
-     * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
+     * 此方法不对 File 对象类型做判断，如果 File 不存在，无法判断其类型
      *
-     * @param dirPath 文件夹路径，使用POSIX格式，无论哪个平台
+     * @param dirPath 文件夹路径，使用 POSIX 格式，无论哪个平台
      * @return 创建的目录
      */
     public File mkdir(String dirPath) {
@@ -41,9 +41,9 @@ public class FileKit {
     }
 
     /**
-     * 创建File对象，自动识别相对或绝对路径，相对路径将自动从ClassPath下寻找
+     * 创建 File 对象，自动识别相对或绝对路径，相对路径将自动从 ClassPath 下寻找
      *
-     * @param path 相对ClassPath的目录或者绝对路径目录
+     * @param path 相对 ClassPath 的目录或者绝对路径目录
      * @return File
      */
     public File file(String path) {
@@ -62,20 +62,20 @@ public class FileKit {
     }
 
     /**
-     * 判断是否为目录，如果path为null，则返回false
+     * 判断是否为目录，如果 path 为 null，则返回 false
      *
      * @param path 文件路径
-     * @return 如果为目录true
+     * @return 如果为目录 true
      */
     public boolean isDirectory(String path) {
         return AdapterHuUtils.isDirectory(path);
     }
 
     /**
-     * 判断文件是否存在，如果file为null，则返回false
+     * 判断文件是否存在，如果 file 为 null，则返回 false
      *
      * @param file 文件
-     * @return 如果存在返回true
+     * @return 如果存在返回 true
      */
     public static boolean exist(File file) {
         return AdapterHuUtils.exist(file);

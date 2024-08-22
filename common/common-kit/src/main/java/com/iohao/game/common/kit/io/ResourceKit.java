@@ -18,7 +18,7 @@
  */
 package com.iohao.game.common.kit.io;
 
-import com.iohao.game.common.kit.hutool.AdapterHuUtils;
+import com.iohao.game.common.kit.adapter.AdapterHuUtils;
 import lombok.experimental.UtilityClass;
 
 import java.nio.charset.Charset;
