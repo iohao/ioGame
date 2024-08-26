@@ -1,7 +1,117 @@
 文档与日志
-- [ioGame javadoc api](https://www.yuque.com/iohao/game/nlbkmzn76mxnmhv6)
+- [ioGame javadoc api](https://iohao.github.io/javadoc)
 - [框架版本更新日志 (yuque.com)](https://www.yuque.com/iohao/game/ab15oe)
 - [ioGame 真.轻量级网络编程框架 - 在线文档 ](https://game.iohao.com/)
+
+
+
+### 2024-08
+
+#### 2024-08-26 - v21.15
+
+https://github.com/iohao/ioGame/releases/tag/21.15
+
+
+
+**版本更新汇总**
+
+> - [core] [#351](https://github.com/iohao/ioGame/issues/351)  增加 UserProcessor 线程执行器的选择策略扩展
+> - [core] [#350](https://github.com/iohao/ioGame/issues/350) 修复请求消息在 Broker 环节乱序的问题
+> - [core] [#353](https://github.com/iohao/ioGame/issues/353) 对接文档支持框架内置错误码的生成
+> - [core] [#354](https://github.com/iohao/ioGame/issues/354) 日志打印调整
+> - [core] [#359](https://github.com/iohao/ioGame/issues/359) [逻辑服-监听] 增加打印其他进程逻辑服的上线与下线信息
+> - [core] 优化 ThreadExecutorRegion 相关实现类。
+> - [external] UserSession 接口新增 ofRequestMessage 方法，简化玩家在游戏对外服中创建请求对象。
+
+------
+
+**[external]**
+
+UserSession 接口新增 ofRequestMessage 方法，简化玩家在游戏对外服中创建请求对象。 for example
+
+```java
+var cmdInfo = CmdInfo.of(1, 1);
+RequestMessage request = userSession.ofRequestMessage(cmdInfo);
+```
+
+------
+
+**[core]**
+
+[#359](https://github.com/iohao/ioGame/issues/359) [逻辑服-监听] 增加打印其他进程逻辑服的上线与下线信息
+
+```java
+public class MyLogicServer extends AbstractBrokerClientStartup {
+    ...
+
+    @Override
+    public BrokerClientBuilder createBrokerClientBuilder() {
+        BrokerClientBuilder builder = BrokerClient.newBuilder();
+        ...
+        // 添加监听 - 打印其他进程逻辑服的上线与下线信息
+        builder.addListener(SimplePrintBrokerClientListener.me());
+        return builder;
+    }
+}
+```
+
+------
+
+[#351](https://github.com/iohao/ioGame/issues/351) 增加 UserProcessor 线程执行器的选择策略扩展
+
+> for example，注意事项：当你的 UserProcessor 做了线程执行器的选择策略扩展，需要重写 CustomSerializer 接口的相关方法。
+
+```java
+// 为请求消息开启有序的、多线程处理的优化
+IoGameGlobalConfig.enableUserProcessorExecutorSelector();
+```
+
+
+
+
+
+------
+
+#### 2024-08-08 - v21.14
+
+https://github.com/iohao/ioGame/releases/tag/21.14
+
+
+
+**版本更新汇总**
+
+> - [code quality] 提升代码质量，see [ioGame - Qodana Cloud](https://qodana.cloud/organizations/3k6Pm/teams/zxRGm)
+> - [javadoc] 增强相关模块的 javadoc ：业务框架、压测与模拟客户端请求、领域事件、Room
+> - [core]  [#346](https://github.com/iohao/ioGame/issues/346) 业务框架 InOutManager 提供扩展点
+> - [core]  [#344](https://github.com/iohao/ioGame/issues/344) 登录时，如果 FlowContext 存在 userId 就不请求游戏对外服
+> - [broker] fixed [#342](https://github.com/iohao/ioGame/issues/342)  非集群环境下，Broker 断开重启后，逻辑服没有将其重新加入到 BrokerClientManager 中所引发的 NPE。
+
+------
+
+**[core]**
+
+ [#346](https://github.com/iohao/ioGame/issues/346) **业务框架 InOutManager 提供扩展点**
+
+在构建器中配置 InOutManager 策略，框架内置了两个实现类，分别是
+
+1. ofAbcAbc ：in ABC，out ABC 的顺序，即编排时的顺序。
+2. ofPipeline：in ABC，out CBA 的顺序，类似的 netty Pipeline 。（默认策略，如果不做任何设置，将使用该策略）
+
+
+
+for example 在构建器中配置 InOutManager 策略
+
+```java
+public void config() {
+    BarSkeletonBuilder builder = ...;
+    builder.setInOutManager(InOutManager.ofAbcAbc());
+    builder.setInOutManager(InOutManager.ofPipeline());
+}
+```
+
+
+
+------
 
 
 
