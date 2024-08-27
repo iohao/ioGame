@@ -7,8 +7,6 @@
 ├── light-domain-event 领域事件
 ├── light-jprotobuf 生成 .proto 源文件
 ├── light-profile 多环境切换
-├── light-redis-lock 分布式锁 (基于Redisson的简单实现)
-├── light-redis-lock-spring-boot-starter 分布式锁 (基于Redisson的简单实现)
 └── light-timer-task 任务延时器
 ```
 

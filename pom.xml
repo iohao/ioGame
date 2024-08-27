@@ -40,10 +40,6 @@
         <module>widget/light-profile</module>
         <!-- 小部件 : jprotobuf 增强 -->
         <module>widget/light-jprotobuf</module>
-        <!-- 小部件 ： 基于redis实现的分布式锁 -->
-        <module>widget/light-redis-lock</module>
-        <!-- 小部件 ： 基于redis实现的分布式锁 for springBootStarter -->
-        <module>widget/light-redis-lock-spring-boot-starter</module>
         <!-- 小部件 ： 压测&模拟客户端请求 -->
         <module>widget/light-client</module>
         <!-- 小部件 : 桌游类、房间类游戏的扩展模块，进一步减少开发实践过程中的工作量 -->
@@ -94,9 +90,7 @@
         <jakarta.el.version>4.0.2</jakarta.el.version>
 
         <!-- temp spring boot https://mvnrepository.com/artifact/org.springframework/spring-core -->
-        <spring.version>6.1.2</spring.version>
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
-        <springboot.version>3.2.1</springboot.version>
+        <spring.version>6.1.12</spring.version>
 
         <!-- slf4j https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <slf4j-api.version>2.0.11</slf4j-api.version>
@@ -115,9 +109,6 @@
         <jprotobuf.version>2.4.23</jprotobuf.version>
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
         <protobuf-java.version>3.25.3</protobuf-java.version>
-
-        <!-- 后期整理需要移除的 https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
-        <snakeyaml.version>1.33</snakeyaml.version>
     </properties>
 
     <dependencies>
