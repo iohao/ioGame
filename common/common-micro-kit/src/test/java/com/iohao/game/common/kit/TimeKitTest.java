@@ -1,11 +1,10 @@
 package com.iohao.game.common.kit;
 
+import com.iohao.game.common.kit.time.CacheTimeKit;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDate;
-
-import static org.junit.Assert.*;
 
 /**
  * @author 渔民小镇
@@ -14,10 +13,10 @@ import static org.junit.Assert.*;
 public class TimeKitTest {
     @Test
     public void test() {
-        long millis = TimeKit.currentTimeMillis();
+        long millis = CacheTimeKit.currentTimeMillis();
         Assert.assertTrue(millis > 0);
 
-        LocalDate localDate = TimeKit.nowLocalDate();
+        LocalDate localDate = CacheTimeKit.nowLocalDate();
         Assert.assertTrue(localDate.isEqual(LocalDate.now()));
     }
 }

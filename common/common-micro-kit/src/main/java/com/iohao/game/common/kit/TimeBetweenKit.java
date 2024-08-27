@@ -29,7 +29,9 @@ import java.time.LocalTime;
  *
  * @author 渔民小镇
  * @date 2021-12-20
+ * @deprecated 暂无代替，如有需要请 copy 现有的相关代码
  */
+@Deprecated
 public class TimeBetweenKit implements Serializable {
     /**
      * 一天的分钟总数

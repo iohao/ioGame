@@ -19,7 +19,7 @@
 package com.iohao.game.widget.light.protobuf;
 
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.common.kit.TimeFormatterKit;
+import com.iohao.game.common.kit.time.FormatTimeKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -88,7 +88,7 @@ public class ProtoJavaRegion {
         String firstLine = """
                 // 生成时间 %s
                 // https://github.com/iohao/ioGame
-                """.formatted(TimeFormatterKit.formatter());
+                """.formatted(FormatTimeKit.format());
 
         StringBuilder builder = new StringBuilder();
         builder.append(firstLine);

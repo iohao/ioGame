@@ -19,11 +19,14 @@
 package com.iohao.game.common.kit;
 
 import com.iohao.game.common.kit.concurrent.TaskKit;
+import com.iohao.game.common.kit.time.*;
+
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -32,30 +35,44 @@ import java.util.concurrent.TimeUnit;
  *
  * @author 渔民小镇
  * @date 2023-07-12
+ * @deprecated 请使用 {@link com.iohao.game.common.kit.time} 相关类
  */
+@Deprecated
 @UtilityClass
 public class TimeKit {
-    public ZoneId defaultZoneId = TimeFormatterKit.defaultZoneId;
-    /** 请使用 {@link TimeFormatterKit#defaultFormatter}  代替 */
+    /**
+     * @deprecated 请使用 {@link ConfigTimeKit#getDefaultZoneId()}
+     */
     @Deprecated
-    public DateTimeFormatter defaultFormatter = TimeFormatterKit.defaultFormatter;
-    /** 请使用 {@link TimeFormatterKit#ofPattern(String)}  代替 */
+    public ZoneId defaultZoneId = ConfigTimeKit.getDefaultZoneId();
+    /**
+     * @deprecated 请使用 {@link FormatTimeKit#ofPattern(String)}
+     */
     @Deprecated
-    public final DateTimeFormatter dateFormatterYMD = TimeFormatterKit.ofPattern("yyyy-MM-dd");
-    final DateTimeFormatter dateFormatterYMDShort = TimeFormatterKit.ofPattern("yyyyMMdd");
+    public DateTimeFormatter defaultFormatter = FormatTimeKit.ofPattern("yyyy-MM-dd HH:mm:ss");
+    /**
+     * @deprecated 请使用 {@link FormatTimeKit#ofPattern(String)}
+     */
+    @Deprecated
+    public final DateTimeFormatter dateFormatterYMD = FormatTimeKit.ofPattern("yyyy-MM-dd");
+    @Deprecated
+    final DateTimeFormatter dateFormatterYMDShort = FormatTimeKit.ofPattern("yyyyMMdd");
 
     volatile LocalDate localDate;
     volatile long currentTimeMillis;
 
     /** 时间更新策略 */
     @Setter
+    @Deprecated
     UpdateCurrentTimeMillis updateCurrentTimeMillis;
 
     /**
      * 获取 LocalDate，默认每分钟更新一次，可有效减少 LocalDate 对象的创建。
      *
      * @return LocalDate
+     * @deprecated 请使用 {@link CacheTimeKit#nowLocalDate()}
      */
+    @Deprecated
     public LocalDate nowLocalDate() {
 
         if (Objects.nonNull(localDate)) {
@@ -73,7 +90,9 @@ public class TimeKit {
      * 获取 currentTimeMillis 的时间，默认每秒更新一次，如果对时间要求不需要很精准的，可以考虑使用。
      *
      * @return System.currentTimeMillis()
+     * @deprecated 请使用 {@link CacheTimeKit#currentTimeMillis()} 代替
      */
+    @Deprecated
     public long currentTimeMillis() {
 
         if (currentTimeMillis != 0) {
@@ -91,67 +110,128 @@ public class TimeKit {
         return System.currentTimeMillis();
     }
 
+    /**
+     * toSecond
+     *
+     * @param localDateTime localDateTime
+     * @return toSecond
+     * @deprecated {@link ToTimeKit#toSeconds(LocalDateTime)}
+     */
+    @Deprecated
     public int toSecond(LocalDateTime localDateTime) {
         // 获取毫秒数
-        return (int) toInstant(localDateTime).getEpochSecond();
+        return ToTimeKit.toSeconds(localDateTime);
     }
 
+    /**
+     * toMilli
+     *
+     * @param localDateTime localDateTime
+     * @return timeMillis
+     * @deprecated 请使用 {@link ToTimeKit#toMillis(LocalDateTime)}
+     */
+    @Deprecated
     public long toMilli(LocalDateTime localDateTime) {
         // 获取毫秒数
-        return toInstant(localDateTime).toEpochMilli();
+        return ToTimeKit.toMillis(localDateTime);
     }
 
+    /**
+     * toMilli
+     *
+     * @param localDate localDate
+     * @return toMilli
+     * @deprecated 请使用 {@link ToTimeKit#toMillis(LocalDateTime)}
+     */
+    @Deprecated
     public long toMilli(LocalDate localDate) {
+        var localDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT);
         // 转换为毫秒
-        return localDate.toEpochDay() * 24 * 60 * 60 * 1000;
+        return ToTimeKit.toMillis(localDateTime);
     }
 
+    /**
+     * toInstant
+     *
+     * @param localDateTime localDateTime
+     * @return Instant
+     * @deprecated 请使用 {@link ToTimeKit#toInstant(LocalDateTime)}
+     */
+    @Deprecated
     public Instant toInstant(LocalDateTime localDateTime) {
         return localDateTime
                 .atZone(defaultZoneId)
                 .toInstant();
     }
 
+    /**
+     * toLocalDateTime
+     *
+     * @param milliseconds milliseconds
+     * @return LocalDateTime
+     * @deprecated {@link ToTimeKit#toLocalDateTime(long)}
+     */
+    @Deprecated
     public LocalDateTime toLocalDateTime(long milliseconds) {
-        Instant instant = Instant.ofEpochMilli(milliseconds);
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        return zonedDateTime.toLocalDateTime();
+        return ToTimeKit.toLocalDateTime(milliseconds);
     }
 
+    /**
+     * formatter
+     *
+     * @param localDateTime localDateTime
+     * @return fmt
+     * @deprecated 请使用 {@link FormatTimeKit#format(TemporalAccessor)}
+     */
+    @Deprecated
     public String formatter(LocalDateTime localDateTime) {
-        return localDateTime.format(TimeFormatterKit.defaultFormatter);
+        return FormatTimeKit.format(localDateTime);
     }
 
+    /**
+     * formatter
+     *
+     * @return fmt
+     * @deprecated 请使用 {@link FormatTimeKit#format()}
+     */
+    @Deprecated
     public String formatter() {
         return formatter(currentTimeMillis());
     }
 
+    /**
+     * formatter
+     *
+     * @param milliseconds milliseconds
+     * @return String
+     * @deprecated {@link FormatTimeKit#format(long)}
+     */
+    @Deprecated
     public String formatter(long milliseconds) {
-        LocalDateTime localDateTime = toLocalDateTime(milliseconds);
-        return localDateTime.format(TimeFormatterKit.defaultFormatter);
+        return FormatTimeKit.format(milliseconds);
     }
 
     /**
      * 将 LocalDate 转为 number
      *
      * @param localDate localDate
-     * @return number，格式 yyyyMMdd
+     * @return long
      */
+    @Deprecated
     public long localDateToNumber(LocalDate localDate) {
-        String format = dateFormatterYMDShort.format(localDate);
-        return Long.parseLong(format);
+        return toMilli(localDate);
     }
 
     /**
      * 过期检测
      *
-     * @param localDateNumber 格式 yyyyMMdd
+     * @param epochDay 格式 yyyyMMdd
      * @return true 表示日期已经过期
-     * @see TimeKit#localDateToNumber(LocalDate)
+     * @deprecated {@link ExpireTimeKit#expireLocalDate(long)}
      */
-    public boolean expireLocalDate(long localDateNumber) {
-        long currentLocalDate = localDateToNumber(LocalDate.now());
-        return currentLocalDate > localDateNumber;
+    @Deprecated
+    public boolean expireLocalDate(long epochDay) {
+        return ExpireTimeKit.expireLocalDate(epochDay);
     }
 
     /**
@@ -162,23 +242,28 @@ public class TimeKit {
      *
      * @param milliseconds 需要检测的时间
      * @return true milliseconds 已经过期
+     * @deprecated {@link ExpireTimeKit#expireMillis(long)}
      */
+    @Deprecated
     public boolean expire(long milliseconds) {
         // 时间 - 当前时间
-        return (milliseconds - currentTimeMillis()) <= 0;
+        return ExpireTimeKit.expireMillis(milliseconds);
     }
 
+    @Deprecated
     public interface UpdateCurrentTimeMillis {
         default long getCurrentTimeMillis() {
             return System.currentTimeMillis();
         }
     }
 
+    @Deprecated
     interface TimeUpdatingStrategy {
         default void update() {
         }
     }
 
+    @Deprecated
     private final class LocalDateTimeUpdatingStrategy implements TimeUpdatingStrategy {
 
         private LocalDateTimeUpdatingStrategy() {
@@ -200,6 +285,7 @@ public class TimeKit {
         }
     }
 
+    @Deprecated
     private final class SecondUpdatingStrategy implements TimeUpdatingStrategy {
         private SecondUpdatingStrategy() {
             currentTimeMillis = System.currentTimeMillis();

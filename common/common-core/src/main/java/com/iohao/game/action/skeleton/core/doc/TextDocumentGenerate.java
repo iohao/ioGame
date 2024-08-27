@@ -20,7 +20,7 @@ package com.iohao.game.action.skeleton.core.doc;
 
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
-import com.iohao.game.common.kit.TimeFormatterKit;
+import com.iohao.game.common.kit.time.FormatTimeKit;
 import lombok.Setter;
 
 import java.io.File;
@@ -84,7 +84,7 @@ public final class TextDocumentGenerate implements DocumentGenerate {
                 https://www.yuque.com/iohao/game/irth38#cJLdC
                 """;
 
-        this.docContentJoiner.add("生成时间 %s".formatted(TimeFormatterKit.formatter()));
+        this.docContentJoiner.add("生成时间 %s".formatted(FormatTimeKit.format()));
         this.docContentJoiner.add(gameDocInfo);
     }
 

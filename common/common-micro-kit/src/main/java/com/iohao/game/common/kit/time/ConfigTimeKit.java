@@ -16,41 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.common.kit;
+package com.iohao.game.common.kit.time;
 
-import com.iohao.game.common.kit.time.ConfigTimeKit;
-import com.iohao.game.common.kit.time.FormatTimeKit;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 
 /**
- * 时间格式化相关工具
+ * 时间日期 - 全局配置
  *
  * @author 渔民小镇
- * @date 2024-07-06
- * @since 21.11
- * @deprecated 请使用 {@link com.iohao.game.common.kit.time.FormatTimeKit}
+ * @date 2024-08-27
+ * @since 21.16
  */
-@Deprecated
 @UtilityClass
-public class TimeFormatterKit {
-    /**
-     * @deprecated 请使用 {@link ConfigTimeKit#getDefaultZoneId()}
-     */
-    public ZoneId defaultZoneId = ConfigTimeKit.getDefaultZoneId();
-    @Deprecated
-    public DateTimeFormatter defaultFormatter = FormatTimeKit.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    @Deprecated
-    public DateTimeFormatter ofPattern(String pattern) {
-        return FormatTimeKit.ofPattern(pattern);
-    }
-
-    @Deprecated
-    public String formatter() {
-        return defaultFormatter.format(LocalDateTime.now());
-    }
+public final class ConfigTimeKit {
+    @Getter
+    @Setter
+    ZoneId defaultZoneId = ZoneId.systemDefault();
 }

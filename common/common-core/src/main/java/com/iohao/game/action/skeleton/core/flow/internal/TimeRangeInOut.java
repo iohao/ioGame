@@ -21,9 +21,9 @@ package com.iohao.game.action.skeleton.core.flow.internal;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.common.kit.CollKit;
-import com.iohao.game.common.kit.TimeFormatterKit;
 import com.iohao.game.common.kit.concurrent.IntervalTaskListener;
 import com.iohao.game.common.kit.concurrent.TaskKit;
+import com.iohao.game.common.kit.time.FormatTimeKit;
 import lombok.Getter;
 import org.jctools.maps.NonBlockingHashMap;
 
@@ -222,7 +222,7 @@ public final class TimeRangeInOut implements ActionMethodInOut {
         @Override
         public String toString() {
 
-            String localDateFormat = TimeFormatterKit.ofPattern("yyyy-MM-dd").format(this.localDate);
+            String localDateFormat = FormatTimeKit.ofPattern("yyyy-MM-dd").format(this.localDate);
 
             List<TimeRangeHour> timeRangeHoursList = stream()
                     .filter(timeRangeHour -> timeRangeHour.count.sum() > 0)
