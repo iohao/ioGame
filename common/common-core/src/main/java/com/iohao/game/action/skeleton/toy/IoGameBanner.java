@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.toy;
 import com.iohao.game.action.skeleton.IoGameVersion;
 import com.iohao.game.common.kit.RandomKit;
 import com.iohao.game.common.kit.concurrent.TaskKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * ioGame Banner ， 不提供关闭 Banner 的方法，让开发者含泪看完 Banner
@@ -47,11 +49,17 @@ public final class IoGameBanner {
     /** 特殊字段，开发者不要使用 */
     public static String flag21;
     final AtomicBoolean trigger = new AtomicBoolean(false);
+    /** 特殊字段，开发者不要使用 */
+    AtomicInteger errorCount = new AtomicInteger(0);
     Date startTime = new Date();
 
     CountDownLatch countDownLatch = new CountDownLatch(1);
 
     public static void render() {
+
+        if (me().trigger.get()) {
+            return;
+        }
 
         // 只触发一次
         if (!me().trigger.compareAndSet(false, true)) {
@@ -71,7 +79,26 @@ public final class IoGameBanner {
         }
     }
 
+    private void incErrorCount() {
+        if (Objects.nonNull(errorCount)) {
+            errorCount.getAndIncrement();
+        }
+    }
+
+    private final AtomicBoolean print = new AtomicBoolean(false);
+
+    public void ofRuntimeException(String message) {
+        if (!print.get()) {
+            return;
+        }
+
+        incErrorCount();
+        ThrowKit.ofRuntimeException(message);
+        render();
+    }
+
     private void renderBanner() {
+        print.set(true);
 
         Runnable runnable = () -> {
 
@@ -110,6 +137,8 @@ public final class IoGameBanner {
             // breaking news
             extractedBreakingNews();
 
+            extractedErrorCount();
+
             clean();
 
             System.out.println();
@@ -122,6 +151,7 @@ public final class IoGameBanner {
         this.startTime = null;
         this.countDownLatch = null;
         flag21 = "ioGame21 ";
+        errorCount = null;
     }
 
     private void extractedTime(ToyTable table) {
@@ -159,6 +189,16 @@ public final class IoGameBanner {
         String s = BreakingNews.randomMainNews().toString();
         String builder = "|          | %s%n";
         System.out.printf(builder, s);
+        System.out.println("+----------+--------------------------------------------------------------------------------------");
+    }
+
+    private void extractedErrorCount() {
+        if (Objects.isNull(errorCount) || errorCount.get() == 0) {
+            return;
+        }
+
+        String builder = "| error    | error count : %s%n";
+        System.out.printf(builder, errorCount.get());
         System.out.println("+----------+--------------------------------------------------------------------------------------");
     }
 

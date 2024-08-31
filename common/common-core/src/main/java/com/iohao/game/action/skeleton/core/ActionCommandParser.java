@@ -23,16 +23,16 @@ import com.esotericsoftware.reflectasm.ConstructorAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
+import com.iohao.game.action.skeleton.core.action.parser.ActionParserContext;
+import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
+import com.iohao.game.action.skeleton.core.action.parser.ProtobufActionParserListener;
 import com.iohao.game.action.skeleton.core.action.parser.ProtobufCheckActionParserListener;
 import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDoc;
-import com.iohao.game.action.skeleton.core.doc.ActionDocs;
-import com.iohao.game.action.skeleton.core.action.parser.ProtobufActionParserListener;
-import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
-import com.iohao.game.action.skeleton.core.action.parser.ActionParserContext;
+import com.iohao.game.action.skeleton.core.doc.IoGameDocumentHelper;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -104,6 +104,8 @@ final class ActionCommandParser {
 
             // 遍历所有方法上有 ActionMethod 注解的方法对象
             this.getMethodStream(controllerClazz).forEach(method -> {
+                // 相同的 action 方法名只允许存在一个，建议与路由同名。
+                checkSoleActionName(method, actionCommandRegion, doc);
 
                 // 目标子路由 (方法上的路由)
                 int subCmd = method.getAnnotation(ActionMethod.class).value();
@@ -148,7 +150,7 @@ final class ActionCommandParser {
                 actionCommandRegion.add(command);
 
                 // 文档相关
-                ActionDoc actionDoc = ActionDocs.ofActionDoc(cmd, controllerClazz);
+                ActionDoc actionDoc = IoGameDocumentHelper.ofActionDoc(cmd, controllerClazz);
                 actionDoc.addActionCommand(command);
             });
         });
@@ -256,7 +258,41 @@ final class ActionCommandParser {
                     subCmd,
                     controllerClass);
 
-            ThrowKit.ofRuntimeException(message);
+            IoGameBanner.me().ofRuntimeException(message);
+        }
+    }
+
+    private void checkSoleActionName(Method method,
+                                     ActionCommandRegion actionCommandRegion,
+                                     ActionCommandDocParser doc) {
+
+        for (ActionCommand command : actionCommandRegion.values()) {
+
+            if (Objects.equals(method.getName(), command.actionMethodName)) {
+                int cmd = actionCommandRegion.cmd;
+                // 目标子路由 (方法上的路由)
+                int subCmd = method.getAnnotation(ActionMethod.class).value();
+                ActionCommandDoc actionCommandDoc = doc.getActionCommandDoc(cmd, subCmd);
+
+                String template = """
+                        同一个 ActionController 相同的 action 方法名只允许存在一个，建议与路由同名。
+                        see-1 : %s - %s.%s(%s.java:%d)
+                        see-2 : %s - %s.%s(%s.java:%d)
+                        """;
+
+                Class<?> actionControllerClazz = actionCommandRegion.getActionControllerClazz();
+                String simpleName = actionControllerClazz.getSimpleName();
+
+                var message = template.formatted(
+                        CmdInfo.of(cmd, subCmd), actionControllerClazz, method.getName()
+                        , simpleName, actionCommandDoc.getLineNumber(),
+
+                        command.getCmdInfo(), actionControllerClazz, method.getName()
+                        , simpleName, command.getActionCommandDoc().getLineNumber()
+                );
+
+                IoGameBanner.me().ofRuntimeException(message);
+            }
         }
     }
 

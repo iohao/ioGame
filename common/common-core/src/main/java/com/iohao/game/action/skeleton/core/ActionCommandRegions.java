@@ -18,8 +18,8 @@
  */
 package com.iohao.game.action.skeleton.core;
 
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.MoreKit;
-import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -188,7 +188,7 @@ public final class ActionCommandRegions {
                     , barSkeletonSetting.getCmdMaxLen(), max
             );
 
-            ThrowKit.ofRuntimeException(info);
+            IoGameBanner.me().ofRuntimeException(info);
         }
 
         // subCmd
@@ -201,7 +201,7 @@ public final class ActionCommandRegions {
                         , barSkeletonSetting.getSubCmdMaxLen(), subCmdMax
                 );
 
-                ThrowKit.ofRuntimeException(info);
+                IoGameBanner.me().ofRuntimeException(info);
             }
         }
 
