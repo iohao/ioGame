@@ -197,7 +197,7 @@ public final class IoGameBanner {
             return;
         }
 
-        String builder = "| error    | error count : %s%n";
+        String builder = "| Error    | error count : %s%n";
         System.out.printf(builder, errorCount.get());
         System.out.println("+----------+--------------------------------------------------------------------------------------");
     }

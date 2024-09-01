@@ -275,10 +275,9 @@ final class ActionCommandParser {
                 ActionCommandDoc actionCommandDoc = doc.getActionCommandDoc(cmd, subCmd);
 
                 String template = """
-                        同一个 ActionController 相同的 action 方法名只允许存在一个，建议与路由同名。
-                        see-1 : %s - %s.%s(%s.java:%d)
-                        see-2 : %s - %s.%s(%s.java:%d)
-                        """;
+                        [action 方法重名] 同一个类中相同的 action 方法名只允许存在一个，建议与路由同名。
+                            see-1 : %s - %s.%s(%s.java:%d)
+                            see-2 : %s - %s.%s(%s.java:%d)""";
 
                 Class<?> actionControllerClazz = actionCommandRegion.getActionControllerClazz();
                 String simpleName = actionControllerClazz.getSimpleName();
