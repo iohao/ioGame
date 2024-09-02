@@ -49,6 +49,10 @@ class DocumentAnalyseKit {
             ActionDocument actionDocument = new ActionDocument(actionDoc, typeMappingDocument);
             actionDocument.analyse();
             return actionDocument;
+        }).filter(actionDocument -> {
+            // action 方法列表不为空
+            List<ActionMethodDocument> actionMethodDocumentList = actionDocument.getActionMethodDocumentList();
+            return !actionMethodDocumentList.isEmpty();
         }).toList();
     }
 

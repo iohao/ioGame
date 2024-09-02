@@ -120,8 +120,7 @@ class SimpleDelayTask implements DelayTaskExecutor {
     final TaskListener taskListener;
     final DelayTaskRegionEnhance delayTaskRegion;
     final LongAdder timeMillis = new LongAdder();
-
-    AtomicBoolean active = new AtomicBoolean(true);
+    final AtomicBoolean active = new AtomicBoolean(true);
 
     SimpleDelayTask(TaskListener taskListener, DelayTaskRegionEnhance delayTaskRegion) {
         this(String.valueOf(taskIdCounter.incrementAndGet()), taskListener, delayTaskRegion);

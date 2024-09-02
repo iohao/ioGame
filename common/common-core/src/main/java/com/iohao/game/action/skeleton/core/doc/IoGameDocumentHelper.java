@@ -23,6 +23,8 @@ import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.StrKit;
 import com.thoughtworks.qdox.model.JavaClass;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import org.jctools.maps.NonBlockingHashMap;
 import org.jctools.maps.NonBlockingHashSet;
@@ -65,6 +67,10 @@ public class IoGameDocumentHelper {
     /** true 生成文档 */
     private boolean generateDoc = true;
     private boolean once = true;
+    /** 文档路由访问权限控制 */
+    @Getter
+    @Setter
+    private DocumentAccessAuthentication documentAccessAuthentication = cmdMerge -> false;
 
     /**
      * 只有当 generateDoc 为 true 时，才会执行 set 操作

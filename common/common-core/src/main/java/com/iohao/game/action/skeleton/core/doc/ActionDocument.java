@@ -53,6 +53,14 @@ public final class ActionDocument {
     void analyse() {
         // action 方法
         actionDoc.stream().forEach(actionCommandDoc -> {
+            var cmdInfo = actionCommandDoc.getActionCommand().getCmdInfo();
+            var authentication = IoGameDocumentHelper.getDocumentAccessAuthentication();
+            var cmdMerge = cmdInfo.getCmdMerge();
+            // 路由访问权限控制
+            if (authentication.reject(cmdMerge)) {
+                return;
+            }
+
             // 成员变量
             actionMemberCmdDocumentList.add(generateMemberCmdCode(actionCommandDoc));
             // 方法

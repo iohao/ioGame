@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
 import com.iohao.game.common.kit.time.FormatTimeKit;
@@ -51,17 +52,27 @@ public final class TextDocumentGenerate implements DocumentGenerate {
 
         // 生成文档 - action
         ioGameDocument.getActionDocList().forEach(actionDoc -> {
-            DocInfo docInfo = new DocInfo();
-            docInfo.broadcastDocumentMap = broadcastDocumentMap;
+            var docInfo = new DocInfo();
 
             actionDoc.stream()
                     .map(ActionCommandDoc::getActionCommand)
                     .filter(Objects::nonNull)
-                    .forEach(subBehavior -> {
+                    .filter(actionCommand -> {
+                        var cmdInfo = actionCommand.getCmdInfo();
+                        var authentication = IoGameDocumentHelper.getDocumentAccessAuthentication();
+                        var cmdMerge = cmdInfo.getCmdMerge();
+                        // 路由访问权限控制
+                        return !authentication.reject(cmdMerge);
+                    }).forEach(subBehavior -> {
                         docInfo.setHead(subBehavior);
                         docInfo.add(subBehavior);
                     });
 
+            if (docInfo.getSubBehaviorList().isEmpty()) {
+                return;
+            }
+
+            docInfo.broadcastDocumentMap = broadcastDocumentMap;
             String render = docInfo.render();
             this.docContentJoiner.add(render);
         });
