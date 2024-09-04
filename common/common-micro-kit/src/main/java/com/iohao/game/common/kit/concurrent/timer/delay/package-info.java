@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 工具相关 - 轻量可控的延时任务，任务到达指定时间后会执行、任务可取消、任务可增加或减少延时时间、任务可被覆盖、可设置任务监听回调，相关参考<a href="https://www.yuque.com/iohao/game/nykaacfzg4h1ynii">轻量可控的延时任务</a>。
+ * 工具相关 - <a href="https://www.yuque.com/iohao/game/nykaacfzg4h1ynii">轻量可控的延时任务</a>，任务到达指定时间后会执行、任务可取消、任务可增加或减少延时时间、任务可被覆盖、可设置任务监听回调。
  * <p>
  * 轻量可控的延时任务 - 简介
  * <pre>

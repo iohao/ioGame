@@ -17,6 +17,7 @@
 
     <modules>
         <!-- 网络游戏框架 - 业务框架 -->
+        <module>common/common-micro-kit</module>
         <module>common/common-kit</module>
         <module>common/common-core</module>
         <!--数据校验模块-->
@@ -32,8 +33,6 @@
         <!-- BrokerClient （逻辑服） -->
         <module>net-bolt/bolt-client</module>
 
-        <!-- 小部件 : 任务延时器 -->
-        <module>widget/light-timer-task</module>
         <!-- 小部件 : 领域事件 -->
         <module>widget/light-domain-event</module>
         <!-- 小部件 : 多环境切换 -->
@@ -44,8 +43,6 @@
         <module>widget/light-client</module>
         <!-- 小部件 : 桌游类、房间类游戏的扩展模块，进一步减少开发实践过程中的工作量 -->
         <module>widget/light-game-room</module>
-
-        <module>common/common-micro-kit</module>
         <module>widget/other-tool</module>
     </modules>
 
@@ -69,16 +66,12 @@
         <!-- JCTools 是一款对jdk并发数据结构进行增强的并发工具 see http://jctools.github.io/JCTools/ https://mvnrepository.com/artifact/org.jctools/jctools-core -->
         <jctools-core.version>4.0.5</jctools-core.version>
 
-        <!-- redis internal : https://mvnrepository.com/artifact/org.redisson/redisson -->
-        <redisson.version>3.17.7</redisson.version>
         <!-- json 解析器 : https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
         <fastjson.version>2.0.46</fastjson.version>
 
         <!--  reflectasm 高性能的反射处理 https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm  -->
         <reflectasm.version>1.11.9</reflectasm.version>
 
-        <!--  cache2k https://mvnrepository.com/artifact/org.cache2k -->
-        <cache2k.version>1.2.4.Final</cache2k.version>
         <!--  disruptor https://mvnrepository.com/artifact/com.lmax/disruptor -->
         <disruptor.version>3.4.4</disruptor.version>
 
