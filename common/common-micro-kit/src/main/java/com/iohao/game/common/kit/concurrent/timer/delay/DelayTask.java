@@ -23,7 +23,7 @@ import com.iohao.game.common.kit.concurrent.TaskListener;
 import java.time.Duration;
 
 /**
- * 轻量可控的延时任务，任务到达指定时间后会执行、任务可取消、任务可增加延时时间
+ * <a href="https://www.yuque.com/iohao/game/nykaacfzg4h1ynii">轻量可控的延时任务</a>，任务到达指定时间后会执行、任务可取消、任务可增加延时时间
  *
  * @author 渔民小镇
  * @date 2024-09-01

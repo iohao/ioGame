@@ -37,21 +37,21 @@ public interface DelayTaskRegion {
      * @param taskId taskId
      * @return DelayTask Optional
      */
-    Optional<DelayTask> optionalDelayTask(String taskId);
+    Optional<DelayTask> optional(String taskId);
 
     /**
      * 根据 taskId 取消可控延时任务的执行。
      *
      * @param taskId taskId
      */
-    void cancelDelayTask(String taskId);
+    void cancel(String taskId);
 
     /**
      * 统计当前延时任务的数量
      *
      * @return 当前延时任务数量
      */
-    int countDelayTask();
+    int count();
 
     /**
      * 创建一个可控的延时任务，并设置任务监听回调。

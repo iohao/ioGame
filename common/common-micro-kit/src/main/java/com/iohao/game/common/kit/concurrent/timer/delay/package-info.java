@@ -135,7 +135,7 @@
  *
  *         log.info("0.5 秒后, 因为满足某个业务条件, 不想执行定时任务了");
  *         TimeUnit.MILLISECONDS.sleep(500);
- *         DelayTaskKit.cancelDelayTask(taskId); // 通过 taskId 取消任务
+ *         DelayTaskKit.cancel(taskId); // 通过 taskId 取消任务
  *     }
  *
  *     @Test
@@ -151,14 +151,14 @@
  *                 .task(); // 启动任务
  *
  *         // 在后续的业务中，可以通过 taskId 查找该延时任务
- *         Optional<DelayTask> optionalDelayTask = DelayTaskKit.optionalDelayTask(newTaskId);
+ *         Optional<DelayTask> optionalDelayTask = DelayTaskKit.optional(newTaskId);
  *         if (optionalDelayTask.isPresent()) {
  *             DelayTask delayTask = optionalDelayTask.get();
  *             log.info("{}", delayTask);
  *         }
  *
  *         // 通过 taskId 查找延时任务，存在则执行给定逻辑
- *         DelayTaskKit.ifPresentDelayTask(newTaskId, delayTask -> {
+ *         DelayTaskKit.ifPresent(newTaskId, delayTask -> {
  *             delayTask.plusTimeMillis(500); // 增加 0.5 秒的延时时间
  *         });
  *     }

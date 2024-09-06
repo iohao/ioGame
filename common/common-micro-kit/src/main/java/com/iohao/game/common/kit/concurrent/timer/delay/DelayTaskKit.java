@@ -35,7 +35,7 @@ import java.util.function.Consumer;
  */
 @UtilityClass
 public class DelayTaskKit {
-
+    /** 轻量可控延时任务域接口 */
     @Getter
     DelayTaskRegion delayTaskRegion = new SimpleDelayTaskRegion();
 
@@ -47,7 +47,7 @@ public class DelayTaskKit {
     public void setDelayTaskRegion(DelayTaskRegion delayTaskRegion) {
         Objects.requireNonNull(delayTaskRegion);
 
-        DelayTaskRegion delayTaskRegionOld = DelayTaskKit.delayTaskRegion;
+        var delayTaskRegionOld = DelayTaskKit.delayTaskRegion;
         DelayTaskKit.delayTaskRegion = delayTaskRegion;
 
         if (delayTaskRegionOld instanceof DelayTaskRegionEnhance stop) {
@@ -60,8 +60,8 @@ public class DelayTaskKit {
      *
      * @param taskId taskId
      */
-    public void cancelDelayTask(String taskId) {
-        delayTaskRegion.cancelDelayTask(taskId);
+    public void cancel(String taskId) {
+        delayTaskRegion.cancel(taskId);
     }
 
     /**
@@ -70,8 +70,8 @@ public class DelayTaskKit {
      * @param taskId taskId
      * @return Optional DelayTask
      */
-    public Optional<DelayTask> optionalDelayTask(String taskId) {
-        return delayTaskRegion.optionalDelayTask(taskId);
+    public Optional<DelayTask> optional(String taskId) {
+        return delayTaskRegion.optional(taskId);
     }
 
     /**
@@ -80,8 +80,8 @@ public class DelayTaskKit {
      * @param taskId   taskId
      * @param consumer 给定操作
      */
-    public void ifPresentDelayTask(String taskId, Consumer<DelayTask> consumer) {
-        DelayTaskKit.optionalDelayTask(taskId).ifPresent(consumer);
+    public void ifPresent(String taskId, Consumer<DelayTask> consumer) {
+        DelayTaskKit.optional(taskId).ifPresent(consumer);
     }
 
     /**

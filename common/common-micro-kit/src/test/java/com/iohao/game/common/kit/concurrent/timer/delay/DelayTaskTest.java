@@ -31,7 +31,7 @@ public class DelayTaskTest {
     @After
     public void tearDown() throws Exception {
         TimeUnit.SECONDS.sleep(3);
-        log.info("--------剩余任务数量 {}", delayTaskRegion.countDelayTask());
+        log.info("--------剩余任务数量 {}", delayTaskRegion.count());
     }
 
     @Test
@@ -146,7 +146,7 @@ public class DelayTaskTest {
                 // 启动任务
                 .task();
 
-        Assert.assertEquals(1, delayTaskRegion.countDelayTask());
+        Assert.assertEquals(1, delayTaskRegion.count());
 
         log.info("0.5 秒后, 因为满足某个业务条件, 不想执行定时任务了");
         TimeUnit.MILLISECONDS.sleep(500);
@@ -154,7 +154,7 @@ public class DelayTaskTest {
         delayTask.cancel();
 
         Assert.assertFalse(delayTask.isActive());
-        Assert.assertEquals(0, delayTaskRegion.countDelayTask());
+        Assert.assertEquals(0, delayTaskRegion.count());
 
         // -----------取消 - 延时任务；通过 taskId 来取消-----------
 
@@ -168,14 +168,14 @@ public class DelayTaskTest {
                 // 启动任务
                 .task();
 
-        Assert.assertEquals(1, delayTaskRegion.countDelayTask());
+        Assert.assertEquals(1, delayTaskRegion.count());
 
         log.info("0.5 秒后, 因为满足某个业务条件, 不想执行定时任务了");
         TimeUnit.MILLISECONDS.sleep(500);
         // 通过 taskId 取消任务
-        DelayTaskKit.cancelDelayTask(taskId);
+        DelayTaskKit.cancel(taskId);
 
-        Assert.assertEquals(0, delayTaskRegion.countDelayTask());
+        Assert.assertEquals(0, delayTaskRegion.count());
     }
 
     @Test
@@ -189,14 +189,14 @@ public class DelayTaskTest {
                 .task();
 
         // 在后续的业务中，可以通过 taskId 查找该延时任务
-        Optional<DelayTask> optionalDelayTask = DelayTaskKit.optionalDelayTask(newTaskId);
+        Optional<DelayTask> optionalDelayTask = DelayTaskKit.optional(newTaskId);
         if (optionalDelayTask.isPresent()) {
             DelayTask delayTask = optionalDelayTask.get();
             log.info("{}", delayTask);
         }
 
         // 通过 taskId 查找延时任务，存在则执行给定逻辑
-        DelayTaskKit.ifPresentDelayTask(newTaskId, delayTask -> {
+        DelayTaskKit.ifPresent(newTaskId, delayTask -> {
             delayTask.plusTimeMillis(500); // 增加 0.5 秒的延时时间
         });
     }

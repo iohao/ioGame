@@ -84,8 +84,8 @@ final class DelayIntervalTaskListener implements IntervalTaskListener {
 
     @Override
     public void onUpdate() {
-        delayTaskRegion.forEach(task -> {
-            Executor executor = task.getExecutor();
+        this.delayTaskRegion.forEach(task -> {
+            var executor = task.getExecutor();
 
             if (Objects.nonNull(executor)) {
                 executor.execute(() -> extractedFlowTaskListener(task));
@@ -99,7 +99,7 @@ final class DelayIntervalTaskListener implements IntervalTaskListener {
         try {
             // 移除不活跃的延时任务
             if (!task.isActive()) {
-                delayTaskRegion.cancelDelayTask(task.getTaskId());
+                this.delayTaskRegion.cancel(task.getTaskId());
                 return;
             }
 
@@ -139,15 +139,15 @@ class SimpleDelayTask implements DelayTaskExecutor {
 
     @Override
     public void cancel() {
-        if (isActive()) {
+        if (this.isActive()) {
             this.active.set(false);
-            this.delayTaskRegion.cancelDelayTask(taskId);
+            this.delayTaskRegion.cancel(this.taskId);
         }
     }
 
     @Override
     public long getMillis() {
-        long sum = this.timeMillis.sum();
+        var sum = this.timeMillis.sum();
         return sum < 0 ? 0 : sum;
     }
 
@@ -193,7 +193,7 @@ class SimpleDelayTask implements DelayTaskExecutor {
     @Override
     public DelayTask task() {
         if (this.isActive()) {
-            delayTaskRegion.runDelayTask(this);
+            this.delayTaskRegion.runDelayTask(this);
         }
 
         return this;
@@ -202,8 +202,8 @@ class SimpleDelayTask implements DelayTaskExecutor {
     @Override
     public String toString() {
         return "SimpleDelayTask{" +
-                "taskId='" + taskId + '\'' +
-                ", active=" + active +
+                "taskId='" + this.taskId + '\'' +
+                ", active=" + this.active +
                 ", timeMillis=" + getMillis() +
                 '}';
     }
@@ -222,7 +222,7 @@ class SimpleDelayTaskRegion implements DelayTaskRegion, DelayTaskRegionEnhance {
 
     @Override
     public void forEach(Consumer<DelayTaskExecutor> consumer) {
-        taskMap.values().forEach(consumer);
+        this.taskMap.values().forEach(consumer);
     }
 
     @Override
@@ -231,20 +231,21 @@ class SimpleDelayTaskRegion implements DelayTaskRegion, DelayTaskRegionEnhance {
     }
 
     @Override
-    public Optional<DelayTask> optionalDelayTask(String taskId) {
-        return Optional.ofNullable(this.taskMap.get(taskId));
+    public Optional<DelayTask> optional(String taskId) {
+        var task = this.taskMap.get(taskId);
+        return Optional.ofNullable(task);
     }
 
     @Override
-    public void cancelDelayTask(String taskId) {
-        var task = taskMap.remove(taskId);
+    public void cancel(String taskId) {
+        var task = this.taskMap.remove(taskId);
         if (Objects.nonNull(task) && task.isActive()) {
             task.cancel();
         }
     }
 
     @Override
-    public int countDelayTask() {
+    public int count() {
         return this.taskMap.size();
     }
 
@@ -279,7 +280,7 @@ final class DebugDelayTask extends SimpleDelayTask {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        log.info("剩余任务数量 {}，{}", this.delayTaskRegion.countDelayTask(), this);
+        log.info("剩余任务数量 {}，{}", this.delayTaskRegion.count(), this);
     }
 
     @Override
@@ -293,10 +294,10 @@ final class DebugDelayTask extends SimpleDelayTask {
     @Override
     public String toString() {
         return "DebugDelayTask{" +
-                "taskId='" + taskId + '\'' +
-                ", active=" + active +
-                ", timeMillis=" + timeMillis +
-                ", sumMillis=" + sumMillis +
+                "taskId='" + this.taskId + '\'' +
+                ", active=" + this.active +
+                ", timeMillis=" + this.timeMillis +
+                ", sumMillis=" + this.sumMillis +
                 "} ";
     }
 }
