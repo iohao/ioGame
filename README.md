@@ -1505,10 +1505,8 @@ public class RoomNumMsg {
 <summary>游戏服务器框架内置功能详细--点我展开</summary>
 
 - [领域事件](https://www.yuque.com/iohao/game/gmfy1k) （轻量级单机最快MQ -- disruptor；可为你的系统实现类似 Guava-EventBus、Spring 事件驱动模型 ApplicationEvent、业务解耦、规避并发、不阻塞主线程... 等，各种浪操作。）
-- [任务延时器](https://www.yuque.com/iohao/game/niflk0) （将来某个时间可对任务进行执行、暂停、取消等操作，并不是类似 Quartz 的任务调度）
 - [多环境切换](https://www.yuque.com/iohao/game/ekx6ve) （不同运行环境下的配置支持）
 - [light-jprotobuf ](https://www.yuque.com/iohao/game/vpe2t6) （补足 jprotobuf 不能让多个对象在单个 .proto 源文件中生成的需求，并简化jprotobuf对源文件的注释）
-- [分布式锁](https://www.yuque.com/iohao/game/wz7af5) (基于Redisson的简单实现)
 - [压测&模拟客户端请求](https://www.yuque.com/iohao/game/tc83ud)
 - [room 桌游、房间类](https://www.yuque.com/iohao/game/vtzbih)，该模块是桌游类、房间类游戏的解决方案。比较适合桌游类、房间类的游戏基础搭建，基于该模型可以做一些如，炉石传说、三国杀、斗地主、麻将 ...等类似的桌游。或者说只要是房间类的游戏，该模型都适用。比如，CS、泡泡堂、飞行棋、坦克大战 ...等。
 
@@ -1520,6 +1518,7 @@ public class RoomNumMsg {
 - [UserSession](https://www.yuque.com/iohao/game/wg6lk7) (与 channel 是 1:1 的关系，可取到对应的 userId、channel 等信息。)
 - [登录相关](https://www.yuque.com/iohao/game/tywkqv)（提供重复登录、顶号等相关增强功能）
 - [业务参数自动装箱、拆箱基础类型](https://www.yuque.com/iohao/game/ieimzn) （解决协议碎片）
+- [内置 Kit](https://www.yuque.com/iohao/game/inkbrpnodgs1lvrt) （动态属性、属性监听、超时处理任务、定时器模拟、任务调度、延时任务、轻量可控的延时任务 ...等）
 
 </details>
 
@@ -1547,11 +1546,14 @@ public class RoomNumMsg {
 
 
 
-## 安装与使用ioGame
+## 安装与使用 ioGame
 
 参考 https://www.yuque.com/iohao/game/wsgmba
 
 
 
+## 感谢 JetBrains 对开源项目支持
 
-
+<a href="https://jb.gg/OpenSourceSupport">
+  <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains logo." height="100" width="314">
+</a>
