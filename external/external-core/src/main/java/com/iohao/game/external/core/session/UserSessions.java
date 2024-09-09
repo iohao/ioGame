@@ -18,7 +18,6 @@
  */
 package com.iohao.game.external.core.session;
 
-import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.attr.AttrOptionDynamic;
 import com.iohao.game.external.core.hook.UserHook;
 
@@ -101,7 +100,7 @@ public interface UserSessions<SessionContext, Session extends UserSession> exten
     boolean existUserSession(long userId);
 
     /**
-     * 设置 channel 的 userId
+     * 设置 channel 的 userId，表示已经身份验证了（即登录过了）。
      *
      * @param userChannelId userChannelId
      * @param userId        userId
