@@ -270,45 +270,4 @@ public class DelayTaskTest {
             log.info("向【{}】开炮，造成 {} 伤害", targetEntity, value);
         }
     }
-
-    @Test
-    public void example() {
-        long timeMillis = System.currentTimeMillis();
-
-        DelayTask delayTask = DelayTaskKit.of(() -> {
-                    long value = System.currentTimeMillis() - timeMillis;
-                    log.info("1 - 最终 {} ms 后，执行延时任务", value);
-                })
-                .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时
-                // 启动任务
-                .task();
-
-        delayTask.plusTimeMillis(500); // 增加 0.5 秒的延时
-        delayTask.minusTimeMillis(500);// 减少 0.5 秒的延时时间
-
-        // 因为 taskId 相同，所以会覆盖之前的延时任务
-        String taskId = delayTask.getTaskId();
-        delayTask = DelayTaskKit.of(taskId, () -> {
-                    long value = System.currentTimeMillis() - timeMillis;
-                    log.info("2 - 最终 {} ms 后，执行延时任务", value);
-                })
-                .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时
-                // 启动任务
-                .task();
-
-        // 取消延时任务，下面两个方法是等价的
-        delayTask.cancel();
-        DelayTaskKit.cancel(taskId);
-
-        // 可以通过 taskId 查找该延时任务
-        Optional<DelayTask> optionalDelayTask = DelayTaskKit.optional(taskId);
-        if (optionalDelayTask.isPresent()) {
-            var delayTaskObj = optionalDelayTask.get();
-        }
-
-        // 通过 taskId 查找延时任务，存在则执行给定逻辑
-        DelayTaskKit.ifPresent(taskId, task -> {
-            task.plusTimeMillis(500); // 增加 0.5 秒的延时时间
-        });
-    }
 }

@@ -42,7 +42,7 @@
  *         DelayTaskKit.of(() -> {
  *                     log.info("1 秒后执行的延时任务");
  *                 })
- *                 .plusTime(Duration.ofSeconds(1)) // 1 秒后执行延时任务
+ *                 .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时
  *                 .task(); // 启动任务
  *     }
  *
@@ -56,7 +56,7 @@
  *                     log.info("增加延时时间，最终 {} ms 后，执行延时任务", value);
  *                     // Assert.assertTrue(value > 1490);
  *                 })
- *                 .plusTime(Duration.ofSeconds(1)) // 1 秒后执行延时任务
+ *                 .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时
  *                 .task(); // 启动任务
  *
  *         delayTask.plusTimeMillis(500); // 增加 0.5 秒的延时
@@ -75,11 +75,10 @@
  *                     log.info("减少延时时间，最终 {} ms 后，执行延时任务", value);
  *                     // Assert.assertTrue(value < 510);
  *                 })
- *                 .plusTime(Duration.ofSeconds(1)) // 1 秒后执行延时任务
+ *                 .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时
  *                 .task(); // 启动任务
  *
- *         delayTask.plusTimeMillis(-400); // 减少 0.4 秒的延时时间
- *         delayTask.minusTimeMillis(100); // 减少 0.1 秒的延时时间
+ *         delayTask.minusTimeMillis(500); // 减少 0.5 秒的延时时间
  *
  *         // 最终 0.5 秒后执行延时任务
  *     }
@@ -91,7 +90,7 @@
  *         String taskId = "1";
  *
  *         DelayTaskKit.of(taskId, () -> log.info("执行任务 - 1"))
- *                 .plusTime(Duration.ofSeconds(2)) // 2 秒后执行延时任务
+ *                 .plusTime(Duration.ofSeconds(2)) // 增加 2 秒的延时
  *                 .task(); // 启动任务
  *
  *         TimeUnit.MILLISECONDS.sleep(500);
@@ -104,7 +103,7 @@
  *                     log.info("执行任务 - 2，最终 {} ms 后，执行延时任务", value);
  *                     // Assert.assertTrue(value > 990);
  *                 })
- *                 .plusTime(Duration.ofSeconds(1)) // 1 秒后执行延时任务
+ *                 .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时
  *                 .task(); // 启动任务
  *     }
  *
@@ -115,7 +114,7 @@
  *         DelayTask delayTask = DelayTaskKit.of(() -> {
  *                     log.info("取消 - 延时任务");
  *                 })
- *                 .plusTime(Duration.ofSeconds(2)) // 2 秒后执行延时任务
+ *                 .plusTime(Duration.ofSeconds(2)) // 增加 2 秒的延时
  *                 .task(); // 启动任务
  *
  *         log.info("0.5 秒后, 因为满足某个业务条件, 不想执行定时任务了");
@@ -130,7 +129,7 @@
  *         String taskId = "1";
  *         // 在创建延时任务时，设置 taskId
  *         DelayTaskKit.of(taskId, () -> log.info("通过 taskId 取消 - 延时任务"))
- *                 .plusTime(Duration.ofSeconds(1)) // 1 秒后执行延时任务
+ *                 .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时
  *                 .task(); // 启动任务
  *
  *         log.info("0.5 秒后, 因为满足某个业务条件, 不想执行定时任务了");
@@ -145,9 +144,9 @@
  *         String newTaskId = "1";
  *         DelayTaskKit.of(newTaskId, () -> log.info("hello DelayTask"))
  *                 // 2.5 秒后执行延时任务。（这里演示添加延时时间的两个方法）
- *                 .plusTime(Duration.ofSeconds(1)) // 1 秒后执行延时任务
- *                 .plusTime(Duration.ofMillis(1000)) // 1 秒后执行延时任务
- *                 .plusTimeMillis(500) // 追加延时时间 0.5 秒
+ *                 .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时
+ *                 .plusTime(Duration.ofMillis(1000)) // 增加 1 秒的延时
+ *                 .plusTimeMillis(500) // 增加 0.5 秒的延时
  *                 .task(); // 启动任务
  *
  *         // 在后续的业务中，可以通过 taskId 查找该延时任务

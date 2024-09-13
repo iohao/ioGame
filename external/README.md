@@ -1,9 +1,7 @@
+参考文档 [游戏对外服使用](https://www.yuque.com/iohao/game/ea6geg)
+
 
 ![image](https://github.com/iohao/ioGame/assets/26356013/72ba5121-204b-43a7-85b3-3db051725f02)
-
-【新版游戏对外服】用于取代【旧的游戏对外服】，如果条件允许，请尽可能做迁移，整体工作量很少。旧的游戏对外服将不在做功能上的新增，如果存在 bug 将会继续修复，维护期会持续到下个大版本前。
-
-
 
 **连接方式的支持、切换**
 
@@ -35,6 +33,4 @@ ioGame 已提供了 TCP、WebSocket、UDP 连接方式的支持，并提供了�
 MicroBootstrapFlow 接口的目的是尽可能地细化服务器创建和连接时的每个环节，以方便开发者对游戏对外服进行定制化扩展。通常情况下，开发者只需要关注重写 MicroBootstrapFlow.pipelineCustom 方法，就可以实现很强的扩展了。
 
 
-
-参考文档 [新游戏对外服](https://www.yuque.com/iohao/game/ea6geg)
 

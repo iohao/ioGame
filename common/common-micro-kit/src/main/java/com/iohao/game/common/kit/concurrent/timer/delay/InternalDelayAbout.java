@@ -139,8 +139,7 @@ class SimpleDelayTask implements DelayTaskExecutor {
 
     @Override
     public void cancel() {
-        if (this.isActive()) {
-            this.active.set(false);
+        if (this.isActive() && this.active.compareAndSet(true, false)) {
             this.delayTaskRegion.cancel(this.taskId);
         }
     }
