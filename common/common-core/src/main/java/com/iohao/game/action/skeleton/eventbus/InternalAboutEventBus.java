@@ -133,7 +133,7 @@ final class DefaultSubscribeExecutorStrategy implements SubscribeExecutorStrateg
             return userId;
         }
 
-        return threadIndexNo.incrementAndGet();
+        return threadIndexNo.getAndIncrement();
     }
 
     static DefaultSubscribeExecutorStrategy me() {
@@ -425,7 +425,7 @@ final class SubscriberRegistry {
             var executorSelector = annotation.value();
             int order = Math.abs(annotation.order());
 
-            Subscriber subscriber = new Subscriber(subscriberId.incrementAndGet())
+            Subscriber subscriber = new Subscriber(subscriberId.getAndIncrement())
                     .setMethodAccess(methodAccess)
                     .setConstructorAccess(constructorAccess)
                     .setMethodName(methodName)

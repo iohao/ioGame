@@ -123,7 +123,7 @@ class SimpleDelayTask implements DelayTaskExecutor {
     final AtomicBoolean active = new AtomicBoolean(true);
 
     SimpleDelayTask(TaskListener taskListener, DelayTaskRegionEnhance delayTaskRegion) {
-        this(String.valueOf(taskIdCounter.incrementAndGet()), taskListener, delayTaskRegion);
+        this(String.valueOf(taskIdCounter.getAndIncrement()), taskListener, delayTaskRegion);
     }
 
     SimpleDelayTask(String taskId, TaskListener taskListener, DelayTaskRegionEnhance delayTaskRegion) {
