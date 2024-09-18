@@ -1461,38 +1461,50 @@ interface SimpleExecutor extends SimpleCommon {
      * @return 虚拟线程执行器
      */
     default Executor getVirtualExecutor() {
+        return this.getVirtualThreadExecutor().executor();
+    }
+
+    /**
+     * 玩家对应的虚拟线程执行器 ThreadExecutor
+     *
+     * @return 虚拟线程执行器 ThreadExecutor
+     * @since 21.17
+     */
+    default ThreadExecutor getVirtualThreadExecutor() {
         // 得到用户对应的虚拟线程执行器
         var headMetadata = this.getHeadMetadata();
         var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
 
-        ExecutorRegion executorRegion = this.getExecutorRegion();
-        ThreadExecutor threadExecutor = executorRegion.getUserVirtualThreadExecutor(executorIndex);
-        return threadExecutor.executor();
+        var executorRegion = this.getExecutorRegion();
+        return executorRegion.getUserVirtualThreadExecutor(executorIndex);
     }
 
     /**
-     * 玩家对应的用户线程执行器
-     * <pre>
-     *     该执行器也是消费 action 的执行器
-     * </pre>
+     * 玩家对应的用户线程执行器，该执行器也是消费 action 的执行器
      *
      * @return 用户线程执行器
      */
     default Executor getExecutor() {
+        return getThreadExecutor().executor();
+    }
+
+    /**
+     * 玩家对应的用户线程执行器 ThreadExecutor，该执行器也是消费 action 的执行器
+     *
+     * @return 用户线程执行器 ThreadExecutor
+     * @since 21.17
+     */
+    default ThreadExecutor getThreadExecutor() {
         // 得到用户对应的用户线程执行器
         var headMetadata = this.getHeadMetadata();
         var executorIndex = ExecutorSelectKit.getExecutorIndex(headMetadata);
 
-        ExecutorRegion executorRegion = this.getExecutorRegion();
-        ThreadExecutor threadExecutor = executorRegion.getUserThreadExecutor(executorIndex);
-        return threadExecutor.executor();
+        var executorRegion = this.getExecutorRegion();
+        return executorRegion.getUserThreadExecutor(executorIndex);
     }
 
     /**
-     * 使用用户线程执行任务
-     * <pre>
-     *     该方法具备全链路调用日志跟踪
-     * </pre>
+     * 使用用户线程执行任务，该方法具备全链路调用日志跟踪
      *
      * @param command 任务
      */
@@ -1509,10 +1521,7 @@ interface SimpleExecutor extends SimpleCommon {
     }
 
     /**
-     * 使用虚拟线程执行任务
-     * <pre>
-     *     该方法具备全链路调用日志跟踪
-     * </pre>
+     * 使用虚拟线程执行任务，该方法具备全链路调用日志跟踪
      *
      * @param command 任务
      */
