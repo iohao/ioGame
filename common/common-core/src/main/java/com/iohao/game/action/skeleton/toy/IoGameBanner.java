@@ -37,6 +37,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.System.out;
+
 /**
  * ioGame Banner ， 不提供关闭 Banner 的方法，让开发者含泪看完 Banner
  *
@@ -97,6 +99,26 @@ public final class IoGameBanner {
         render();
     }
 
+    public static void println() {
+        out.println();
+    }
+
+    public static void print(String message) {
+        out.print(message);
+    }
+
+    public static void print(Object message) {
+        out.print(message);
+    }
+
+    public static void println(Object message) {
+        out.println(message);
+    }
+
+    public static void println(String message) {
+        out.println(message);
+    }
+
     private void renderBanner() {
         print.set(true);
 
@@ -106,7 +128,7 @@ public final class IoGameBanner {
                 if (Objects.nonNull(IoGameBanner.me().countDownLatch)) {
                     boolean r = IoGameBanner.me().countDownLatch.await(5, TimeUnit.SECONDS);
                     if (!r) {
-                        System.out.println("countDownLatch await is false");
+                        IoGameBanner.println("countDownLatch await is false");
                     }
                 }
             } catch (InterruptedException e) {
@@ -141,7 +163,7 @@ public final class IoGameBanner {
 
             clean();
 
-            System.out.println();
+            IoGameBanner.println();
         };
 
         TaskKit.execute(runnable);
@@ -175,21 +197,21 @@ public final class IoGameBanner {
             System.out.printf("| News     | %s%n", news);
         }
 
-        System.out.println("+----------+--------------------------------------------------------------------------------------");
+        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedAdv() {
         String s = BreakingNews.randomAdv().toString();
         String builder = "| adv      | %s - %s%n";
         System.out.printf(builder, "启动项广告位招租", s);
-        System.out.println("+----------+--------------------------------------------------------------------------------------");
+        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedIoGameJavadocApi() {
         String s = BreakingNews.randomMainNews().toString();
         String builder = "|          | %s%n";
         System.out.printf(builder, s);
-        System.out.println("+----------+--------------------------------------------------------------------------------------");
+        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedErrorCount() {
@@ -199,7 +221,7 @@ public final class IoGameBanner {
 
         String builder = "| Error    | error count : %s%n";
         System.out.printf(builder, errorCount.get());
-        System.out.println("+----------+--------------------------------------------------------------------------------------");
+        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedMiss() {
@@ -210,7 +232,7 @@ public final class IoGameBanner {
         builder = "|          | (%s)%n";
         System.out.printf(builder, desc);
 
-        System.out.println("+----------+--------------------------------------------------------------------------------------");
+        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedPrint(ToyTable table) {
@@ -222,8 +244,8 @@ public final class IoGameBanner {
         var anyFunction = new BannerColorStrategy().anyColorFun();
         String anyBanner = anyFunction.apply(banner);
 
-        System.out.println();
-        System.out.println(anyBanner);
+        IoGameBanner.println();
+        IoGameBanner.println(anyBanner);
         table.render();
     }
 

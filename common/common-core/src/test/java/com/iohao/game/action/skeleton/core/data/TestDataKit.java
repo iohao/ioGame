@@ -24,6 +24,7 @@ import com.iohao.game.action.skeleton.core.action.BeeAction;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.internal.DebugInOut;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.ClassScanner;
 import lombok.experimental.UtilityClass;
 
@@ -44,7 +45,7 @@ public class TestDataKit {
 
         builder.addInOut(new DebugInOut());
 
-        builder.setActionAfter(flowContext -> System.out.println());
+        builder.setActionAfter(flowContext -> IoGameBanner.println());
 
         List<Class<?>> classList = getClasses(appendPredicateFilter);
 

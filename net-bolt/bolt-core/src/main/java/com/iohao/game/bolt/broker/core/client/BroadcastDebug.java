@@ -22,6 +22,7 @@ import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.commumication.BroadcastContext;
 import com.iohao.game.action.skeleton.kit.RangeBroadcast;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.core.message.BroadcastMessage;
 import com.iohao.game.bolt.broker.core.message.BroadcastOrderMessage;
 import com.iohao.game.common.consts.IoGameLogName;
@@ -163,6 +164,6 @@ class BroadcastDebug {
 
         String format = "className:%s - methodName:%s - line:%d";
         String msg = String.format(format, className, methodName, line);
-        System.out.println(msg);
+        IoGameBanner.println(msg);
     }
 }

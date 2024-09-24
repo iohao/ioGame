@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.action.ExampleActionCmd;
 import com.iohao.game.action.skeleton.core.action.pojo.BeeApple;
 import com.iohao.game.action.skeleton.core.data.TestDataKit;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,11 +51,11 @@ public class BarSkeletonTest {
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
-        System.out.println();
+        IoGameBanner.println();
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
-        System.out.println();
+        IoGameBanner.println();
     }
 
     @Test
@@ -72,6 +73,6 @@ public class BarSkeletonTest {
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
-        System.out.println();
+        IoGameBanner.println();
     }
 }

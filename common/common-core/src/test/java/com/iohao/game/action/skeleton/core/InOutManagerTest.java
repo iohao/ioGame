@@ -3,6 +3,7 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOption;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,17 +29,17 @@ public class InOutManagerTest {
         inOutList.add(new B_ActionMethodInOut());
         inOutList.add(new C_ActionMethodInOut());
 
-        System.out.println("------ 测试多个 inout ------");
+        IoGameBanner.println("------ 测试多个 inout ------");
         extracted(InOutManager.ofAbcAbc(), "Ain Bin Cin Aout Bout Cout", inOutList);
         extracted(InOutManager.ofPipeline(), "Ain Bin Cin Cout Bout Aout", inOutList);
 
         // 测试单个 inout
-        System.out.println("------ 测试 1 个 inout ------");
+        IoGameBanner.println("------ 测试 1 个 inout ------");
         extracted(InOutManager.ofAbcAbc(), "Ain Aout", List.of(new A_ActionMethodInOut()));
         extracted(InOutManager.ofPipeline(), "Ain Aout", List.of(new A_ActionMethodInOut()));
 
         // 测试 0 个 inout
-        System.out.println("------ 测试 0 个 inout ------");
+        IoGameBanner.println("------ 测试 0 个 inout ------");
         extracted(InOutManager.ofAbcAbc(), "", Collections.emptyList());
         extracted(InOutManager.ofPipeline(), "", Collections.emptyList());
     }
@@ -57,7 +58,7 @@ public class InOutManagerTest {
         var line = String.join(" ", resultList);
         Assert.assertEquals(line, result);
 
-        System.out.println();
+        IoGameBanner.println();
     }
 }
 

@@ -4,6 +4,7 @@ import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.RandomKit;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class TimeRangeInOutTest {
 
         print(inOut);
 
-        System.out.println(count);
+        IoGameBanner.println(count);
     }
 
     private static void print(TimeRangeInOut inOut) {
@@ -51,7 +52,7 @@ public class TimeRangeInOutTest {
         // 取指定日期的 TimeRangeDay 对象
         LocalDate localDate = LocalDate.now();
         TimeRangeInOut.TimeRangeDay timeRangeDay = region.getTimeRangeDay(localDate);
-        System.out.println(timeRangeDay);
+        IoGameBanner.println(timeRangeDay);
     }
 
     private void setListener(TimeRangeInOut inOut) {
@@ -59,7 +60,7 @@ public class TimeRangeInOutTest {
             @Override
             public void callbackYesterday(TimeRangeInOut.TimeRangeDay timeRangeYesterday) {
                 // 昨日的全天统计数据对象
-                System.out.println(timeRangeYesterday);
+                IoGameBanner.println(timeRangeYesterday);
 
                 timeRangeYesterday.stream().forEach(timeRangeHour -> {
                     // 几点

@@ -20,6 +20,7 @@ package com.iohao.game.action.skeleton.core.action;
 
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,6 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 public class SimpleWrapperAction {
     @ActionMethod(ExampleActionCmd.SimpleWrapperActionActionCmd.testInt)
     public void testInt(int age) {
-        System.out.println(age);
+        IoGameBanner.println(age);
     }
 }

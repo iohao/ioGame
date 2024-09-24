@@ -21,6 +21,7 @@ package com.iohao.game.bolt.broker.client.processor;
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
@@ -80,7 +81,7 @@ public class BrokerClusterMessageClientProcessor extends AsyncUserProcessor<Brok
         }
 
         if (IoGameGlobalConfig.isBrokerClusterLog()) {
-            System.out.println();
+            IoGameBanner.println();
             log.info("==接收来自网关的集群消息 {} - {} - {}", brokerMessageList.size(), message.getName(), message);
         }
 

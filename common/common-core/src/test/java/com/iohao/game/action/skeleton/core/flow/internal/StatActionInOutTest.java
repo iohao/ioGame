@@ -4,6 +4,7 @@ import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.RandomKit;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class StatActionInOutTest {
         flowContext.setRequest(requestMessage);
         extracted(region, flowContext);
 
-        region.stream().forEach(System.out::println);
+        region.stream().forEach(IoGameBanner::println);
     }
 
     private void setListener(StatActionInOut inOut) {

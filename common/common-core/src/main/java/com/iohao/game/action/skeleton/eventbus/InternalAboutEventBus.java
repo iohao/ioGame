@@ -22,6 +22,7 @@ import com.esotericsoftware.reflectasm.ConstructorAccess;
 import com.esotericsoftware.reflectasm.MethodAccess;
 import com.iohao.game.action.skeleton.core.IoGameCommonCoreConfig;
 import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.collect.ListMultiMap;
@@ -780,7 +781,7 @@ final class DefaultEventBus implements EventBus {
                 log.info("远程逻辑服 : {}", eventBrokerClientMessage.getAppName());
             }
 
-            System.out.println();
+            IoGameBanner.println();
         }
     }
 

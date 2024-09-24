@@ -182,7 +182,7 @@ public final class BarSkeletonBuilderParamConfig {
     private static void extracted() {
         if (!Objects.equals(IoGameBanner.flag21, "ioGame21")) {
             byte[] bytes = new byte[]{105, 111, 71, 97, 109, 101, 72, 111, 109, 101, 32, 104, 116, 116, 112, 58, 47, 47, 103, 97, 109, 101, 46, 105, 111, 104, 97, 111, 46, 99, 111, 109, 10, 103, 105, 116, 104, 117, 98, 32, 32, 32, 32, 32, 104, 116, 116, 112, 115, 58, 47, 47, 103, 105, 116, 104, 117, 98, 46, 99, 111, 109, 47, 105, 111, 104, 97, 111, 47, 105, 111, 71, 97, 109, 101, 10};
-            System.out.println(new String(bytes, StandardCharsets.UTF_8));
+            IoGameBanner.println(new String(bytes, StandardCharsets.UTF_8));
         }
     }
 }

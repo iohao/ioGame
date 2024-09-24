@@ -30,6 +30,7 @@ import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.StrKit;
 import lombok.Setter;
@@ -112,7 +113,7 @@ public final class DebugInOut implements ActionMethodInOut {
     @Setter
     BiConsumer<String, FlowContext> printConsumer = (message, flowContext) -> {
         // 打印 message
-        System.out.println(message);
+        IoGameBanner.println(message);
     };
 
     public DebugInOut() {
