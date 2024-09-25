@@ -1,7 +1,263 @@
 文档与日志
-- [ioGame javadoc api](https://iohao.github.io/javadoc)
+- [ioGame javadoc api](https://iohao.github.io/javadoc/index.html)
 - [框架版本更新日志 (yuque.com)](https://www.yuque.com/iohao/game/ab15oe)
-- [ioGame 真.轻量级网络编程框架 - 在线文档 ](https://game.iohao.com/)
+- [ioGame 真.轻量级网络编程框架 - 在线使用文档 ](https://game.iohao.com/)
+- <a target="_blank" href='https://app.codacy.com/gh/iohao/ioGame/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade'><img src="https://app.codacy.com/project/badge/Grade/4981fff112754686baad7442be998b17" alt="github star"/></a>
+
+
+> ioGame 每月会发 1 ~ 2 个版本，通常在大版本内升级总是兼容的，如 21.1 升级到任意 21.x 的高版本。
+
+------
+
+
+
+### 2024-09
+
+#### 2024-09-25 - v21.17
+
+https://github.com/iohao/ioGame/releases/tag/21.17
+
+**版本更新汇总**
+
+> - [core] 简化 TraceIdSupplier 默认实现
+> - [core] FlowContext 提供用户（玩家）所关联的用户线程执行器信息及虚拟线程执行器信息方法
+
+---
+
+**[core]**
+
+FlowContext 提供用户（玩家）所关联的用户线程执行器信息及虚拟线程执行器信息方法
+
+```java
+void testThreadExecutor(FlowContext flowContext) {
+    // 获取 - 用户（玩家）所关联的用户线程执行器信息及虚拟线程执行器信息
+
+    // 用户虚拟线程执行器信息
+    ThreadExecutor virtualThreadExecutor = flowContext.getVirtualThreadExecutor();
+    // 用户线程执行器信息
+    ThreadExecutor threadExecutor = flowContext.getThreadExecutor();
+
+    threadExecutor.execute(() -> {
+        log.info("execute");
+    });
+
+    threadExecutor.executeTry(() -> {
+        log.info("executeTry");
+    });
+
+    // get Executor
+    Executor executor = threadExecutor.executor();
+}
+```
+
+
+
+#### 2024-09-09 - v21.16
+
+https://github.com/iohao/ioGame/releases/tag/21.16
+
+**版本更新汇总**
+
+> - [kit] [#291](https://github.com/iohao/ioGame/issues/291) 增加轻量可控的延时任务
+> - [kit] 细分时间日期相关工具。
+> - [Archive] [#363](https://github.com/iohao/ioGame/issues/363)  light-redis-lock 相关模块
+> - [Archive] [#364](https://github.com/iohao/ioGame/issues/364) light-timer-task 相关模块
+> - [core] 增加同一个 ActionController 相同的 action 方法名只允许存在一个的检测。
+> - [core] Banner 增加启动时的错误数量提示。
+> - [core] [#365](https://github.com/iohao/ioGame/issues/365) 支持对接文档生成时，可以根据路由访问权限来控制文档的生成
+
+------
+
+**[kit]**
+
+[#291](https://github.com/iohao/ioGame/issues/291) 增加轻量可控的延时任务
+
+ 文档 - [轻量可控的延时任务 (yuque.com)](https://www.yuque.com/iohao/game/nykaacfzg4h1ynii)
+
+ for example 
+
+```java
+@Test
+public void example() {
+    long timeMillis = System.currentTimeMillis();
+
+    DelayTask delayTask = DelayTaskKit.of(() -> {
+                long value = System.currentTimeMillis() - timeMillis;
+                log.info("1 - 最终 {} ms 后，执行延时任务", value);
+            })
+            .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时  
+            .task(); // 启动任务
+
+    delayTask.plusTimeMillis(500); // 增加 0.5 秒的延时
+    delayTask.minusTimeMillis(500);// 减少 0.5 秒的延时时间
+
+    // 因为 taskId 相同，所以会覆盖之前的延时任务
+    String taskId = delayTask.getTaskId();
+    delayTask = DelayTaskKit.of(taskId, () -> {
+                long value = System.currentTimeMillis() - timeMillis;
+                log.info("2 - 最终 {} ms 后，执行延时任务", value);
+            })
+            .plusTime(Duration.ofSeconds(1)) // 增加 1 秒的延时
+            .task(); // 启动任务
+
+    // 取消延时任务，下面两个方法是等价的
+    delayTask.cancel();
+    DelayTaskKit.cancel(taskId);
+
+    // 可以通过 taskId 查找该延时任务
+    Optional<DelayTask> optionalDelayTask = DelayTaskKit.optional(taskId);
+    if (optionalDelayTask.isPresent()) {
+        var delayTask = optionalDelayTask.get();
+    }
+
+    // 通过 taskId 查找延时任务，存在则执行给定逻辑
+    DelayTaskKit.ifPresent(taskId, delayTask -> {
+        delayTask.plusTimeMillis(500); // 增加 0.5 秒的延时时间
+    });
+}
+```
+
+------
+
+细分时间日期相关工具。
+
+see com.iohao.game.common.kit.time
+
+------
+
+**[Archive]**
+
+[#363](https://github.com/iohao/ioGame/issues/363)  light-redis-lock 相关模块
+
+将 light-redis-lock、light-redis-lock-spring-boot-starter 模块做归档。在过去的时间里，由于一直没有改动这些模块的相关内容，现决定将不再上传到 maven 库中，以节约公共资源。如果你使用了该模块的相关内容，请指定最后一个版本即可。如
+
+```xml
+<!-- https://mvnrepository.com/artifact/com.iohao.game/light-redis-lock -->
+<dependency>
+    <groupId>com.iohao.game</groupId>
+    <artifactId>light-redis-lock</artifactId>
+    <version>21.15</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/com.iohao.game/light-redis-lock-spring-boot-starter -->
+<dependency>
+    <groupId>com.iohao.game</groupId>
+    <artifactId>light-redis-lock-spring-boot-starter</artifactId>
+    <version>21.15</version>
+</dependency>
+```
+
+
+
+模块相关文档 - [redis-lock 分布式锁 (yuque.com)](https://www.yuque.com/iohao/game/wz7af5)
+
+------
+
+[#364](https://github.com/iohao/ioGame/issues/364) light-timer-task 相关模块
+
+将 light-timer-task 模块做归档。在过去的时间里，由于一直没有改动这些模块的相关内容；同时，也因为框架内置了类似的功能 #291 。现决定将不再上传到 maven 库中，以节约公共资源。如果你使用了该模块的相关内容，请指定最后一个版本即可。如
+
+```xml
+<!-- https://mvnrepository.com/artifact/com.iohao.game/light-timer-task -->
+<dependency>
+    <groupId>com.iohao.game</groupId>
+    <artifactId>light-timer-task</artifactId>
+    <version>21.15</version>
+</dependency>
+```
+
+模块相关文档 - [timer-task 任务延时器 (yuque.com)](https://www.yuque.com/iohao/game/niflk0)
+
+类似的代替 [轻量可控的延时任务 (yuque.com)](https://www.yuque.com/iohao/game/nykaacfzg4h1ynii)
+
+------
+
+**[core]**
+
+[#365](https://github.com/iohao/ioGame/issues/365) 支持对接文档生成时，可以根据路由访问权限来控制文档的生成
+
+
+
+生成相关代码的使用及相关文档
+
+- `ExternalGlobalConfig.accessAuthenticationHook`，相关文档 - [路由访问权限控制 (yuque.com)](https://www.yuque.com/iohao/game/nap5y8p5fevhv99y)
+- IoGameDocumentHelper，相关文档 - [游戏对接文档生成 (yuque.com)](https://www.yuque.com/iohao/game/irth38)
+
+for example 
+
+```java
+public class MyExternalServer {
+    public static void extractedAccess() {
+        // https://www.yuque.com/iohao/game/nap5y8p5fevhv99y
+        var accessAuthenticationHook = ExternalGlobalConfig.accessAuthenticationHook;
+        ... 省略部分代码
+        // 添加 - 拒绝玩家访问权限的控制
+        accessAuthenticationHook.addRejectionCmd(RankCmd.cmd, RankCmd.internalUpdate);
+    }
+}
+
+public class TestGenerate {
+    ... 省略部分代码
+    public static void main(String[] args) {
+        // 对外服访问权限控制
+        MyExternalServer.extractedAccess();
+        // （复用）设置文档路由访问权限控制
+      IoGameDocumentHelper.setDocumentAccessAuthentication(ExternalGlobalConfig.accessAuthenticationHook::reject);
+        
+        // ====== 生成对接文档、生成 proto ======
+//        generateCsharp();
+//        generateTypeScript();
+        // 生成文档
+        IoGameDocumentHelper.generateDocument();
+        // .proto 文件生成
+//        generateProtoFile();
+    }
+}
+```
+
+
+
+**预览 - 没有做控制前的生成**
+
+```latex
+==================== RankAction  ====================
+路由: 4 - 1  --- 【listRank】 --- 【RankAction:48】【listRank】
+    方法参数: StringValue 排行类型
+    方法返回值: ByteValueList<RankUpdate> 玩家排行名次更新
+ 
+路由: 4 - 10  --- 【玩家排行名次更新】 --- 【RankAction:60】【internalUpdate】
+    方法参数: RankUpdate 玩家排行名次更新
+    方法返回值: void 
+```
+
+**预览 - 加入了访问控制后的生成**
+
+我们可以看见，路由为 4-10 的 action 方法没有生成到对接文档中。
+
+```latex
+==================== RankAction  ====================
+路由: 4 - 1  --- 【listRank】 --- 【RankAction:48】【listRank】
+    方法参数: StringValue 排行类型
+    方法返回值: ByteValueList<RankUpdate> 玩家排行名次更新
+```
+
+
+
+提示：除了文档文档的访问权限控制外，还支持 SDK TypeScript、SDK C# ...等客户端代码生成的访问权限控制。
+
+
+
+SDK 相关请阅读：[SDK&对接文档 (yuque.com)](https://www.yuque.com/iohao/game/mywnvkhemv8wm396)
+
+------
+
+**[其他更新]**
+
+```xml
+<netty.version>4.1.113.Final</netty.version>
+```
+
+------
 
 
 
