@@ -19,7 +19,7 @@ https://github.com/iohao/ioGame/releases/tag/21.17
 
 **版本更新汇总**
 
-> - [core] 简化 TraceIdSupplier 默认实现
+> - [core] 简化 TraceIdSupplier 默认实现（[全链路调用日志跟踪](https://www.yuque.com/iohao/game/zurusq)）
 > - [core] FlowContext 提供用户（玩家）所关联的用户线程执行器信息及虚拟线程执行器信息方法
 
 ---
