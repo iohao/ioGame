@@ -20,12 +20,8 @@ package com.iohao.game.external.core.netty.micro;
 
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.consts.IoGameLogName;
-import com.iohao.game.common.kit.system.OsInfo;
 import com.iohao.game.external.core.micro.MicroBootstrapFlow;
 import com.iohao.game.external.core.netty.micro.auto.GroupChannelOption;
-import com.iohao.game.external.core.netty.micro.auto.GroupChannelOptionForLinux;
-import com.iohao.game.external.core.netty.micro.auto.GroupChannelOptionForMac;
-import com.iohao.game.external.core.netty.micro.auto.GroupChannelOptionForOther;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -48,7 +44,7 @@ public final class SocketMicroBootstrap extends AbstractMicroBootstrap {
     @Override
     public void startup() {
         // 线程组相关
-        GroupChannelOption groupChannelOption = createGroupChannelOption();
+        GroupChannelOption groupChannelOption = this.setting.getGroupChannelOption();
         EventLoopGroup bossGroup = groupChannelOption.bossGroup();
         EventLoopGroup workerGroup = groupChannelOption.workerGroup();
         Class<? extends ServerChannel> channelClass = groupChannelOption.channelClass();
@@ -75,24 +71,5 @@ public final class SocketMicroBootstrap extends AbstractMicroBootstrap {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
-    }
-
-    private GroupChannelOption createGroupChannelOption() {
-        // 根据环境自动选择，开发者也可以重写此方法，做些自定义
-        GroupChannelOption groupChannelOption;
-
-        // 根据系统内核来优化
-        if (OsInfo.isLinux()) {
-            // linux
-            groupChannelOption = new GroupChannelOptionForLinux();
-        } else if (OsInfo.isMac()) {
-            // mac
-            groupChannelOption = new GroupChannelOptionForMac();
-        } else {
-            // other system
-            groupChannelOption = new GroupChannelOptionForOther();
-        }
-
-        return groupChannelOption;
     }
 }

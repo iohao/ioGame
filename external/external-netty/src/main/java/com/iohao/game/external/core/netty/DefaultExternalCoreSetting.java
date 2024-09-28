@@ -21,6 +21,7 @@ package com.iohao.game.external.core.netty;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.common.kit.attr.AttrOptions;
+import com.iohao.game.common.kit.system.OsInfo;
 import com.iohao.game.external.core.ExternalCoreSetting;
 import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
 import com.iohao.game.external.core.aware.ExternalCoreSettingAware;
@@ -32,7 +33,12 @@ import com.iohao.game.external.core.hook.UserHook;
 import com.iohao.game.external.core.hook.internal.IdleProcessSetting;
 import com.iohao.game.external.core.micro.MicroBootstrap;
 import com.iohao.game.external.core.micro.MicroBootstrapFlow;
+import com.iohao.game.external.core.netty.micro.auto.GroupChannelOption;
+import com.iohao.game.external.core.netty.micro.auto.GroupChannelOptionForLinux;
+import com.iohao.game.external.core.netty.micro.auto.GroupChannelOptionForMac;
+import com.iohao.game.external.core.netty.micro.auto.GroupChannelOptionForOther;
 import com.iohao.game.external.core.session.UserSessions;
+import io.netty.channel.epoll.Epoll;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -75,6 +81,9 @@ public final class DefaultExternalCoreSetting implements ExternalCoreSetting {
     /** 与 Broker（游戏网关）通信的 client */
     @Setter
     BrokerClient brokerClient;
+    /** external netty GroupChannelOption */
+    @Setter
+    GroupChannelOption groupChannelOption;
 
     public void inject() {
         this.injectObject.forEach(this::aware);
@@ -132,5 +141,27 @@ public final class DefaultExternalCoreSetting implements ExternalCoreSetting {
     public void setUserHook(UserHook userHook) {
         this.userHook = userHook;
         this.injectObject.add(this.userHook);
+    }
+
+    public GroupChannelOption getGroupChannelOption() {
+        if (Objects.isNull(this.groupChannelOption)) {
+            this.groupChannelOption = createGroupChannelOption();
+        }
+
+        return this.groupChannelOption;
+    }
+
+    private GroupChannelOption createGroupChannelOption() {
+        if (OsInfo.isMac()) {
+            return new GroupChannelOptionForMac();
+        }
+
+        // #375，Lightweight or embedded Linux distributions may not have fulled I/O multiplexing support
+        if (OsInfo.isLinux() && Epoll.isAvailable()) {
+            return new GroupChannelOptionForLinux();
+        }
+
+        // other system nio
+        return new GroupChannelOptionForOther();
     }
 }
