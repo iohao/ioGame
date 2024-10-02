@@ -54,7 +54,8 @@ public final class ExternalBizRegions {
         int bizCode = externalBizRegion.getBizCode();
 
         if (regionMap.containsKey(bizCode)) {
-            ThrowKit.ofRuntimeException("重复添加已经存在的业务码:" + bizCode);
+            // 重复添加已经存在的业务码
+            ThrowKit.ofRuntimeException("Already exists : " + bizCode);
         }
 
         regionMap.put(bizCode, externalBizRegion);

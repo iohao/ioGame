@@ -71,7 +71,8 @@ public class ScannerKit {
      */
     public String nextLine() {
         if (ClientUserConfigs.closeScanner) {
-            ThrowKit.ofRuntimeException("不支持控制台输入");
+            // 不支持控制台输入
+            ThrowKit.ofRuntimeException("No support for console input");
         }
 
         return scanner.nextLine();
@@ -101,7 +102,8 @@ public class ScannerKit {
      */
     public long nextLong() {
         if (ClientUserConfigs.closeScanner) {
-            ThrowKit.ofRuntimeException("不支持控制台输入");
+            // 不支持控制台输入
+            ThrowKit.ofRuntimeException("No support for console input");
         }
 
         String s = ScannerKit.scanner.nextLine();
@@ -132,7 +134,8 @@ public class ScannerKit {
      */
     public int nextInt() {
         if (ClientUserConfigs.closeScanner) {
-            ThrowKit.ofRuntimeException("不支持控制台输入");
+            // 不支持控制台输入
+            ThrowKit.ofRuntimeException("No support for console input");
         }
 
         String s = ScannerKit.scanner.nextLine();

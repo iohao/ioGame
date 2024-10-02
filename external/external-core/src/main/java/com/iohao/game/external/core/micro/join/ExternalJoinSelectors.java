@@ -53,7 +53,8 @@ public final class ExternalJoinSelectors {
      */
     public ExternalJoinSelector getExternalJoinSelector(ExternalJoinEnum joinEnum) {
         if (!map.containsKey(joinEnum)) {
-            ThrowKit.ofRuntimeException(joinEnum + " 还没有对应的连接实现类");
+            // 没有对应的实现类
+            ThrowKit.ofRuntimeException(joinEnum + " has no implementation class");
         }
 
         return map.get(joinEnum);

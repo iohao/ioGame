@@ -96,7 +96,8 @@ public class InputCommandCreate {
             var inputName = ClientKit.toInputName(cmdInfo);
             InputCommand inputCommand = clientUserInputCommands.getInputCommand(inputName);
             if (Objects.nonNull(inputCommand)) {
-                ThrowKit.ofRuntimeException("存在重复的路由命令 : " + cmdInfo);
+                // 存在重复的路由命令
+                ThrowKit.ofRuntimeException("There are duplicate routing commands : " + cmdInfo);
             }
         }
     }

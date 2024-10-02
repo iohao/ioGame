@@ -56,7 +56,8 @@ public final class Runners {
     public void addRunner(Runner runner) {
 
         if (this.onStart.get()) {
-            ThrowKit.ofRuntimeException("运行中，不能添加 Runner 了");
+            // 运行中，不能添加 Runner 了。
+            ThrowKit.ofRuntimeException("Cannot add Runner while running.");
         }
 
         Objects.requireNonNull(runner);

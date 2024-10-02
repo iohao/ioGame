@@ -20,6 +20,8 @@ package com.iohao.game.external.core.netty;
 
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.PresentKit;
@@ -63,8 +65,13 @@ public final class DefaultExternalCore implements ExternalCore {
         final int externalCorePort = this.setting.getExternalCorePort();
 
         if (IoGameGlobalConfig.openLog) {
-            log.info("启动游戏对外服 port: [{}] 连接方式: [{}] "
+            var gameExternalServerTip = Bundle.getMessage(MessageKey.gameExternalServer);
+            var connectionWayTip = Bundle.getMessage(MessageKey.connectionWay);
+
+            log.info("{} port: [{}] - {}: [{}] "
+                    , gameExternalServerTip
                     , externalCorePort
+                    , connectionWayTip
                     , setting.getExternalJoinEnum().getName());
         }
 
@@ -81,11 +88,11 @@ public final class DefaultExternalCore implements ExternalCore {
 
         int externalCorePort = setting.getExternalCorePort();
         if (externalCorePort <= 0) {
-            ThrowKit.ofIllegalArgumentException("游戏对外服端口必须 >0 " + externalCorePort);
+            ThrowKit.ofIllegalArgumentException("The externalServer port must be >0 " + externalCorePort);
         }
 
         Objects.requireNonNull(setting.getExternalJoinEnum()
-                , "需要设置一种连接方式:" + Arrays.toString(ExternalJoinEnum.values()));
+                , "Please set a ExternalJoinEnum:" + Arrays.toString(ExternalJoinEnum.values()));
     }
 
     /**

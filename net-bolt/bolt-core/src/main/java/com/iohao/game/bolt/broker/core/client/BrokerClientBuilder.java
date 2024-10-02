@@ -221,7 +221,7 @@ public class BrokerClientBuilder {
         }
 
         if (Objects.isNull(this.appName)) {
-            ThrowKit.ofRuntimeException("必须设置 appName");
+            ThrowKit.ofRuntimeException("Please set the appName");
         }
 
         if (Objects.isNull(this.tag)) {

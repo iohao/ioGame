@@ -27,6 +27,8 @@ import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
@@ -173,11 +175,33 @@ public final class DebugInOut implements ActionMethodInOut {
 
         ResponseMessage responseMessage = flowContext.getResponse();
 
+        extractedI18n(paramMap);
+
         if (responseMessage.hasError()) {
             this.printValidate(flowContext, paramMap);
         } else {
             this.printNormal(flowContext, paramMap);
         }
+    }
+
+    private static void extractedI18n(Map<String, Object> paramMap) {
+        String debugInOutThreadName = Bundle.getMessage(MessageKey.debugInOutThreadName);
+        paramMap.put(MessageKey.debugInOutThreadName, debugInOutThreadName);
+
+        String debugInOutParamName = Bundle.getMessage(MessageKey.debugInOutParamName);
+        paramMap.put(MessageKey.debugInOutParamName, debugInOutParamName);
+
+        String debugInOutReturnData = Bundle.getMessage(MessageKey.debugInOutReturnData);
+        paramMap.put(MessageKey.debugInOutReturnData, debugInOutReturnData);
+
+        String debugInOutErrorCode = Bundle.getMessage(MessageKey.debugInOutErrorCode);
+        paramMap.put(MessageKey.debugInOutErrorCode, debugInOutErrorCode);
+
+        String debugInOutErrorMsg = Bundle.getMessage(MessageKey.debugInOutErrorMsg);
+        paramMap.put(MessageKey.debugInOutErrorMsg, debugInOutErrorMsg);
+
+        String debugInOutTime = Bundle.getMessage(MessageKey.debugInOutTime);
+        paramMap.put(MessageKey.debugInOutTime, debugInOutTime);
     }
 
     private static void extractedTraceId(FlowContext flowContext, Map<String, Object> paramMap) {
@@ -197,10 +221,12 @@ public final class DebugInOut implements ActionMethodInOut {
         HeadMetadata headMetadata = flowContext.getHeadMetadata();
         int stick = headMetadata.getStick();
 
+        String connectionWay = Bundle.getMessage(MessageKey.connectionWay);
+
         String str = switch (stick) {
-            case 1 -> " [连接方式:TCP] ";
-            case 2 -> " [连接方式:WebSocket] ";
-            case 3 -> " [连接方式:UDP] ";
+            case 1 -> " [%s:TCP] ".formatted(connectionWay);
+            case 2 -> " [%s:WebSocket] ".formatted(connectionWay);
+            case 3 -> " [%s:UDP] ".formatted(connectionWay);
             default -> "";
         };
 
@@ -218,13 +244,13 @@ public final class DebugInOut implements ActionMethodInOut {
         }
 
         String template = """
-                ┏━━错误━━━ Debug. [({className}.java:{lineNumber}).{actionMethodName}] ━━━ {cmdInfo} ━━━ [{logicServerTag}] ━━━ [id:{logicServerId}]
+                ┏━━━━━ Error. [({className}.java:{lineNumber}).{actionMethodName}] ━━━ {cmdInfo} ━━━ [{logicServerTag}] ━━━ [id:{logicServerId}]
                 ┣ userId: {userId}
-                ┣ 参数: {paramName} : {paramData}
-                ┣ 错误码: {errorCode}
-                ┣ 错误信息: {validatorMsg}
-                ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [线程:{threadName}] ━━━━━{joinName}━━━━━{traceId}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                ┣ {debugInOutParamName}: {paramName} : {paramData}
+                ┣ {debugInOutErrorCode}: {errorCode}
+                ┣ {debugInOutErrorMsg}: {validatorMsg}
+                ┣ {debugInOutTime}: {time} ms
+                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [{debugInOutThreadName}:{threadName}] ━━━━━{joinName}━━━━━{traceId}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 """;
 
         String message = StrKit.format(template, paramMap);
@@ -243,10 +269,10 @@ public final class DebugInOut implements ActionMethodInOut {
         String template = """
                 ┏━━━━━ Debug. [({className}.java:{lineNumber}).{actionMethodName}] ━━━━━ {cmdInfo} ━━━━━ [{logicServerTag}] ━━━━━ [id:{logicServerId}]
                 ┣ userId: {userId}
-                ┣ 参数: {paramName} : {paramData}
-                ┣ 响应: {returnData}
-                ┣ 时间: {time} ms (业务方法总耗时)
-                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [线程:{threadName}] ━━━━━{joinName}━━━━━{traceId}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                ┣ {debugInOutParamName}: {paramName} : {paramData}
+                ┣ {debugInOutReturnData}: {returnData}
+                ┣ {debugInOutTime}: {time} ms
+                ┗━━━━━ [ioGame:{ioGameVersion}] ━━━━━ [{debugInOutThreadName}:{threadName}] ━━━━━{joinName}━━━━━{traceId}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 """;
 
         String message = StrKit.format(template, paramMap);

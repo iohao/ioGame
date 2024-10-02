@@ -272,7 +272,8 @@ public class RangeBroadcast implements RangeBroadcaster {
     protected void broadcast() {
         boolean emptyUser = CollKit.isEmpty(this.userIds);
         if (checkEmptyUser && emptyUser) {
-            ThrowKit.ofRuntimeException("没有添加消息推送人");
+            // 请添加消息推送人
+            ThrowKit.ofRuntimeException("Please add a message sender");
         }
 
         // 推送响应（广播消息）给指定的用户列表

@@ -405,7 +405,7 @@ final class SubscriberRegistry {
         Class<?> clazz = eventBusSubscriber.getClass();
 
         if (!eventBusSubscriberSet.add(clazz)) {
-            ThrowKit.ofRuntimeException("已经存在 " + clazz);
+            ThrowKit.ofRuntimeException("Already exists : " + clazz);
         }
 
         // 方法访问器: 获取类中自己定义的方法
@@ -528,7 +528,8 @@ final class DefaultEventBus implements EventBus {
     public void register(Object eventBusSubscriber) {
 
         if (status != EventBusStatus.register) {
-            ThrowKit.ofRuntimeException("运行中不允许注册订阅者，请在 EventRunner.registerEventBus 方法中注册。 ");
+            // 运行中不允许注册订阅者，请在 EventRunner.registerEventBus 方法中注册。
+            ThrowKit.ofRuntimeException("Subscriber registration is not allowed during running. Please register in EventRunner.registerEventBus method.");
         }
 
         // 注册

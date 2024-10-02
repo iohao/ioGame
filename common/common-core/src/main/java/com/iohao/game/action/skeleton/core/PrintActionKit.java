@@ -22,6 +22,8 @@ import com.iohao.game.action.skeleton.IoGameVersion;
 import com.iohao.game.action.skeleton.core.codec.DataCodec;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.runner.Runners;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
+import com.iohao.game.action.skeleton.i18n.Bundle;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.StrKit;
@@ -78,7 +80,9 @@ class PrintActionKit {
         List<String> nameList = runners.listRunnerName();
         String title = "@|CYAN ======================== Runners ========================= |@";
         IoGameBanner.println(Ansi.ansi().render(title));
-        IoGameBanner.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printRunners");
+
+        var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
+        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printRunners");
 
         for (String name : nameList) {
             String info = String.format("@|BLUE %s |@", name);
@@ -94,7 +98,9 @@ class PrintActionKit {
     void printInout(List<ActionMethodInOut> inOuts) {
         String title = "@|CYAN ======================== InOut ========================= |@";
         IoGameBanner.println(Ansi.ansi().render(title));
-        IoGameBanner.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printInout");
+
+        var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
+        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printInout");
 
         for (ActionMethodInOut inOut : inOuts) {
             String info = String.format("@|BLUE %s |@", inOut.getClass());
@@ -103,7 +109,7 @@ class PrintActionKit {
     }
 
     void printHandler(List<Handler> handlers) {
-        String iohaoTitle = "@|CYAN ======================== 业务框架 iohao ========================= |@";
+        String iohaoTitle = "@|CYAN ======================== iohao ========================= |@";
         IoGameBanner.println(Ansi.ansi().render(iohaoTitle));
         IoGameBanner.println(IoGameVersion.VERSION);
         String colorStr = "@|BLACK BLACK|@ @|RED RED|@ @|GREEN GREEN|@ @|YELLOW YELLOW|@ @|BLUE BLUE|@ @|MAGENTA MAGENTA|@ @|CYAN CYAN|@ @|WHITE WHITE|@ @|DEFAULT DEFAULT|@";
@@ -111,7 +117,9 @@ class PrintActionKit {
 
         String title = "@|CYAN ======================== Handler ========================= |@";
         IoGameBanner.println(Ansi.ansi().render(title));
-        IoGameBanner.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printHandler");
+
+        var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
+        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printHandler");
 
         for (Handler handler : handlers) {
             String info = String.format("@|BLUE %s |@", handler.getClass());
@@ -123,11 +131,13 @@ class PrintActionKit {
         String title = "@|CYAN ======================== action ========================= |@";
         IoGameBanner.println(Ansi.ansi().render(title));
 
-        String tip = """
-                如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printAction;
-                如需要打印（class method params return）完整的包名, 查看 BarSkeletonBuilder#setting#printActionShort;
-                """;
-        IoGameBanner.print(tip);
+        var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
+        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printAction");
+
+        var printActionKitPrintFull = Bundle.getMessage(MessageKey.printActionKitPrintFull);
+        IoGameBanner.println(printActionKitPrintFull + " BarSkeletonBuilder.setting.printActionShort");
+
+        String cmdName = Bundle.getMessage(MessageKey.cmdName);
 
         for (int cmd = 0; cmd < behaviors.length; cmd++) {
             ActionCommand[] subBehaviors = behaviors[cmd];
@@ -179,7 +189,7 @@ class PrintActionKit {
                 params.put("actionSimpleName", subBehavior.getActionControllerClazz().getSimpleName());
                 params.put("lineNumber", subBehavior.actionCommandDoc.getLineNumber());
 
-                String routeCell = Color.red.format("路由: {cmd} - {subCmd}", params);
+                String routeCell = Color.red.format(cmdName + ": {cmd} - {subCmd}", params);
                 String actionCell = Color.white.wrap("--- action :");
                 String actionNameCell = Color.blue.format("{actionName}", params);
                 String methodNameCell = Color.blue.format("{methodName}", params);
@@ -206,12 +216,14 @@ class PrintActionKit {
     }
 
     void printDataCodec() {
-        DataCodec dataCodec = DataCodecKit.dataCodec;
-
-        String title = "@|CYAN ======================== 当前使用的编解码器 ========================= |@";
+        var printActionKitDataCodec = Bundle.getMessage(MessageKey.printActionKitDataCodec);
+        String title = "@|CYAN ======================== %s ========================= |@".formatted(printActionKitDataCodec);
         IoGameBanner.println(Ansi.ansi().render(title));
-        IoGameBanner.println("如果需要关闭打印, 查看 BarSkeletonBuilder#setting#printDataCodec");
 
+        var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
+        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printDataCodec");
+
+        DataCodec dataCodec = DataCodecKit.dataCodec;
         String info = String.format("@|BLUE %s - %s |@", dataCodec.codecName(), dataCodec.getClass().getName());
         IoGameBanner.println(Ansi.ansi().render(info));
 
@@ -232,7 +244,9 @@ class PrintActionKit {
     private void checkReturnType(final Class<?> returnTypeClazz) {
         if (Set.class.isAssignableFrom(returnTypeClazz) || Map.class.isAssignableFrom(returnTypeClazz)) {
             // 参数的不支持不写逻辑了，这里告诉一下就行了。看之后的需要在考虑是否支持吧
-            ThrowKit.ofRuntimeException("action 返回值和参数不支持 set、map 和 基础类型!");
+            // Action return values and parameters do not support set, map and basic types!
+            var printActionKitCheckReturnType = Bundle.getMessage(MessageKey.printActionKitCheckReturnType);
+            ThrowKit.ofRuntimeException(printActionKitCheckReturnType);
         }
     }
 
