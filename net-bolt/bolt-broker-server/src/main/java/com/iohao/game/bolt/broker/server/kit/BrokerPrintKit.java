@@ -18,6 +18,8 @@
  */
 package com.iohao.game.bolt.broker.server.kit;
 
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.bolt.broker.server.balanced.BalancedManager;
@@ -57,7 +59,9 @@ public class BrokerPrintKit {
 
         // 对外服信息
         int externalCount = balancedManager.getExternalLoadBalanced().count();
-        BrokerClientNodeInfo externalNodeInfo = new BrokerClientNodeInfo("游戏对外服", externalCount);
+        var gameExternalServer = Bundle.getMessage(MessageKey.gameExternalServer);
+
+        BrokerClientNodeInfo externalNodeInfo = new BrokerClientNodeInfo("external", externalCount);
         collect.add(externalNodeInfo);
 
         String info = collect.stream()
@@ -66,16 +70,19 @@ public class BrokerPrintKit {
 
         int port = brokerServer.getPort();
 
-        log.info("当前网关【{}】与逻辑服相关信息: {}", port, info);
+        var gameBrokerServer = Bundle.getMessage(MessageKey.gameBrokerServer);
+        log.info("{}:{} --- gameLogicServerList: {}", gameBrokerServer, port, info);
     }
 
     private record BrokerClientNodeInfo(String tag, int count) {
         @Override
         public String toString() {
+            var gameServerAmount = Bundle.getMessage(MessageKey.gameServerAmount);
+
             return "{" +
-                    "服务器数量:" + count +
-                    ", tag:'" + tag + '\'' +
-                    '}';
+                   gameServerAmount + ":" + count +
+                   ", tag:'" + tag + '\'' +
+                   '}';
         }
     }
 }

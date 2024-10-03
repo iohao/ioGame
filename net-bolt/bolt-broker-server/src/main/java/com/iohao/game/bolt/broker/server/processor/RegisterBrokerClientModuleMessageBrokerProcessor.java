@@ -22,6 +22,8 @@ import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.rpc.protocol.AsyncUserProcessor;
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.bolt.broker.cluster.BrokerClusterManager;
 import com.iohao.game.bolt.broker.cluster.BrokerRunModeEnum;
 import com.iohao.game.bolt.broker.core.aware.CmdRegionsAware;
@@ -119,9 +121,15 @@ public final class RegisterBrokerClientModuleMessageBrokerProcessor extends Asyn
 
     private void print(BrokerClientModuleMessage brokerClientModuleMessage) {
 
-        int port = this.brokerServer.getPort();
         if (IoGameGlobalConfig.openLog) {
-            log.info("模块注册信息 --- 网关port: [{}] --- {}", port, brokerClientModuleMessage);
+            var port = this.brokerServer.getPort();
+            var brokerClientRegistrationMessage = Bundle.getMessage(MessageKey.brokerClientRegistrationMessage);
+            var gameBrokerServer = Bundle.getMessage(MessageKey.gameBrokerServer);
+
+            log.info("{} --- {} port: [{}] --- {}",
+                    brokerClientRegistrationMessage,
+                    gameBrokerServer, port,
+                    brokerClientModuleMessage);
         }
 
         // print

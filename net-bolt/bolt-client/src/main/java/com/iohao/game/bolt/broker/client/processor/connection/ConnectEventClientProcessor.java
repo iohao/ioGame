@@ -21,6 +21,8 @@ package com.iohao.game.bolt.broker.client.processor.connection;
 import com.alipay.remoting.Connection;
 import com.alipay.remoting.ConnectionEventProcessor;
 import com.alipay.remoting.ConnectionEventType;
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.bolt.broker.core.aware.BrokerClientItemAware;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientItem;
@@ -79,9 +81,12 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
         brokerClientManager.register(brokerClientItem);
 
         if (IoGameGlobalConfig.openLog) {
-            log.info("ConnectionEventType:【{}】 remoteAddress:【{}】，网关连接数量:【{}】，registerActive:【{}】",
+            String gameBrokerServerConnectionAmount = Bundle.getMessage(MessageKey.gameBrokerServerConnectionAmount);
+
+            log.info("ConnectionEventType:【{}】 remoteAddress:【{}】，{}:【{}】，registerActive:【{}】",
                     ConnectionEventType.CONNECT,
                     remoteAddress,
+                    gameBrokerServerConnectionAmount,
                     brokerClientManager.countItem(),
                     brokerClientManager.countActiveItem()
             );

@@ -26,8 +26,17 @@ package com.iohao.game.action.skeleton.i18n;
 public interface MessageKey {
     String cmdName = "cmdName";
     String gameExternalServer = "gameExternalServer";
+    String gameServerAmount = "gameServerAmount";
     /** ExternalJoinEnum */
     String connectionWay = "connectionWay";
+
+    /*  about brokerServer */
+    String gameBrokerServer = "gameBrokerServer";
+    String gameBrokerServerStartupMode = "gameBrokerServerStartupMode";
+    String gameBrokerServerStartupModeCluster = "gameBrokerServerStartupModeCluster";
+    String gameBrokerServerStartupModeStandalone = "gameBrokerServerStartupModeStandalone";
+    String gameBrokerServerConnectionAmount = "gameBrokerServerConnectionAmount";
+    String brokerClientRegistrationMessage = "brokerClientRegistrationMessage";
 
     /* see PrintActionKit.java */
     String printActionKitPrintClose = "printActionKitPrintClose";

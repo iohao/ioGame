@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -18,6 +18,9 @@
  */
 package com.iohao.game.bolt.broker.cluster;
 
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
+
 /**
  * broker （游戏网关）的启动模式
  *
@@ -26,9 +29,9 @@ package com.iohao.game.bolt.broker.cluster;
  */
 public enum BrokerRunModeEnum {
     /** 单机启动模式 */
-    STANDALONE("单机启动模式 standalone"),
+    STANDALONE(Bundle.getMessage(MessageKey.gameBrokerServerStartupModeStandalone)),
     /** 集群启动模式 */
-    CLUSTER("集群启动模式 cluster");
+    CLUSTER(Bundle.getMessage(MessageKey.gameBrokerServerStartupModeCluster));
 
     final String name;
 

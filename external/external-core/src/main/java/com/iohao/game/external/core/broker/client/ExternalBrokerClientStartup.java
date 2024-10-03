@@ -20,6 +20,8 @@ package com.iohao.game.external.core.broker.client;
 
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.client.processor.BrokerClusterMessageClientProcessor;
 import com.iohao.game.bolt.broker.client.processor.RequestBrokerClientModuleMessageClientProcessor;
@@ -58,9 +60,11 @@ public class ExternalBrokerClientStartup extends AbstractBrokerClientStartup {
 
     @Override
     public BrokerClientBuilder createBrokerClientBuilder() {
+        String gameExternalServer = Bundle.getMessage(MessageKey.gameExternalServer);
+
         return BrokerClient.newBuilder()
                 .id(this.id)
-                .appName("新游戏对外服")
+                .appName(gameExternalServer)
                 // 逻辑服标签 （tag 相当于归类）
                 .tag("external")
                 // 逻辑服设置为对外服类型
