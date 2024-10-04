@@ -108,7 +108,7 @@ public class BrokerServer implements GroupWith {
     }
 
     private void extractedLog() {
-        String gameBrokerServer = Bundle.getMessage(MessageKey.gameBrokerServerConnectionAmount);
+        String gameBrokerServer = Bundle.getMessage(MessageKey.gameBrokerServer);
         String gameBrokerServerStartupMode = Bundle.getMessage(MessageKey.gameBrokerServerStartupMode);
         log.info("{} port:[{}] - {}:[{}] ",
                 gameBrokerServer, this.port,

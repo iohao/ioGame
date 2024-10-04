@@ -39,6 +39,8 @@ public interface MessageKey {
     String brokerClientRegistrationMessage = "brokerClientRegistrationMessage";
 
     /* see PrintActionKit.java */
+    String businessFramework = "businessFramework";
+    String businessFrameworkPlugin = "businessFrameworkPlugin";
     String printActionKitPrintClose = "printActionKitPrintClose";
     String printActionKitPrintFull = "printActionKitPrintFull";
     String printActionKitDataCodec = "printActionKitDataCodec";

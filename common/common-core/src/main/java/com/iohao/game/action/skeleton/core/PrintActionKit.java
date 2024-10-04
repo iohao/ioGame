@@ -96,8 +96,8 @@ class PrintActionKit {
      * @param inOuts inOuts
      */
     void printInout(List<ActionMethodInOut> inOuts) {
-        String title = "@|CYAN ======================== InOut ========================= |@";
-        IoGameBanner.println(Ansi.ansi().render(title));
+        var businessFrameworkPlugin = Bundle.getMessage(MessageKey.businessFrameworkPlugin);
+        printTitle(businessFrameworkPlugin);
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
         IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printInout");
@@ -108,15 +108,22 @@ class PrintActionKit {
         }
     }
 
+    private void printTitle(String title) {
+        String formatted = "@|CYAN ======================== %s ========================= |@".formatted(title);
+        IoGameBanner.println(Ansi.ansi().render(formatted));
+    }
+
     void printHandler(List<Handler> handlers) {
-        String iohaoTitle = "@|CYAN ======================== iohao ========================= |@";
-        IoGameBanner.println(Ansi.ansi().render(iohaoTitle));
+
+        var businessFramework = Bundle.getMessage(MessageKey.businessFramework);
+
+        printTitle(businessFramework);
         IoGameBanner.println(IoGameVersion.VERSION);
+
         String colorStr = "@|BLACK BLACK|@ @|RED RED|@ @|GREEN GREEN|@ @|YELLOW YELLOW|@ @|BLUE BLUE|@ @|MAGENTA MAGENTA|@ @|CYAN CYAN|@ @|WHITE WHITE|@ @|DEFAULT DEFAULT|@";
         IoGameBanner.println(Ansi.ansi().render(colorStr));
 
-        String title = "@|CYAN ======================== Handler ========================= |@";
-        IoGameBanner.println(Ansi.ansi().render(title));
+        printTitle("Handler");
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
         IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printHandler");
@@ -128,8 +135,7 @@ class PrintActionKit {
     }
 
     void printActionCommand(ActionCommand[][] behaviors, boolean shortName) {
-        String title = "@|CYAN ======================== action ========================= |@";
-        IoGameBanner.println(Ansi.ansi().render(title));
+        printTitle("action");
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
         IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printAction");
@@ -217,8 +223,7 @@ class PrintActionKit {
 
     void printDataCodec() {
         var printActionKitDataCodec = Bundle.getMessage(MessageKey.printActionKitDataCodec);
-        String title = "@|CYAN ======================== %s ========================= |@".formatted(printActionKitDataCodec);
-        IoGameBanner.println(Ansi.ansi().render(title));
+        printTitle(printActionKitDataCodec);
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
         IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printDataCodec");
@@ -238,7 +243,6 @@ class PrintActionKit {
         params.put("actionName", params.get("actionNameShort"));
         params.put("returnTypeClazz", params.get("returnTypeClazzShort"));
         params.put("actualTypeArgumentClazz", params.get("actualTypeArgumentClazzShort"));
-
     }
 
     private void checkReturnType(final Class<?> returnTypeClazz) {

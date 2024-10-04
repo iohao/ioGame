@@ -192,8 +192,8 @@ public final class IoGameBanner {
 
     private void extractedBreakingNews() {
         // 每次展示 N 条小报
-        var newsList = BreakingNews.randomNewsList();
-        for (BreakingNews.News news : newsList) {
+        var newsList = BreakingNewsKit.randomNewsList();
+        for (News news : newsList) {
             System.out.printf("| News     | %s%n", news);
         }
 
@@ -201,14 +201,14 @@ public final class IoGameBanner {
     }
 
     private void extractedAdv() {
-        String s = BreakingNews.randomAdv().toString();
-        String builder = "| adv      | %s - %s%n";
-        System.out.printf(builder, "启动项广告位招租", s);
+        String s = BreakingNewsKit.randomAdv().toString();
+        String builder = "| adv      | %s%n";
+        System.out.printf(builder, s);
         IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedIoGameJavadocApi() {
-        String s = BreakingNews.randomMainNews().toString();
+        String s = BreakingNewsKit.randomMainNews().toString();
         String builder = "|          | %s%n";
         System.out.printf(builder, s);
         IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
@@ -221,17 +221,6 @@ public final class IoGameBanner {
 
         String builder = "| Error    | error count : %s%n";
         System.out.printf(builder, errorCount.get());
-        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
-    }
-
-    private void extractedMiss() {
-        String desc = "大家可以来登记，有需要展示或记念的宠物、动漫人物等各种事物";
-
-        String builder = "| miss     | %s%n";
-        System.out.printf(builder, "女娲:中国神话中的造物主，据说创造了人类和世界。", desc);
-        builder = "|          | (%s)%n";
-        System.out.printf(builder, desc);
-
         IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
     }
 
@@ -250,7 +239,6 @@ public final class IoGameBanner {
     }
 
     private static String getPid() {
-        //获取进程的PID
         RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
         String name = runtime.getName();
 
