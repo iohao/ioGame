@@ -19,6 +19,8 @@
 package com.iohao.game.action.skeleton.i18n;
 
 /**
+ * i18n message key, see iohao.properties
+ *
  * @author 渔民小镇
  * @date 2024-10-02
  * @since 21.18
@@ -53,4 +55,8 @@ public interface MessageKey {
     String debugInOutErrorCode = "debugInOutErrorCode";
     String debugInOutErrorMsg = "debugInOutErrorMsg";
     String debugInOutTime = "debugInOutTime";
+
+    /* see StatActionInOut.java */
+    String statActionInOutTimeRange = "statActionInOutTimeRange";
+    String statActionInOutStatAction = "statActionInOutStatAction";
 }

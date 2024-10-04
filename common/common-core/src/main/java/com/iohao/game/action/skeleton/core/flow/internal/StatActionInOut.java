@@ -22,6 +22,8 @@ import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.exception.ThrowKit;
@@ -142,7 +144,6 @@ public final class StatActionInOut implements ActionMethodInOut {
             return map.values().stream()
                     .map(StatAction::toString)
                     .collect(Collectors.joining("\n"));
-
         }
     }
 
@@ -225,6 +226,9 @@ public final class StatActionInOut implements ActionMethodInOut {
             return this.totalTime.sum() / this.executeCount.sum();
         }
 
+        /** %s, 执行[%s]次, 异常[%s]次, 平均耗时[%d], 最大耗时[%s], 总耗时[%s] %s */
+        private final String statActionInOutToString = Bundle.getMessage(MessageKey.statActionInOutStatAction);
+
         @Override
         public String toString() {
             String rangeStr = "";
@@ -241,7 +245,7 @@ public final class StatActionInOut implements ActionMethodInOut {
                 rangeStr = builder.toString();
             }
 
-            return String.format("%s, 执行[%s]次, 异常[%s]次, 平均耗时[%d], 最大耗时[%s], 总耗时[%s] %s"
+            return String.format(statActionInOutToString
                     , CmdKit.toString(this.cmdInfo.getCmdMerge())
                     , this.executeCount
                     , this.errorCount
@@ -382,9 +386,12 @@ public final class StatActionInOut implements ActionMethodInOut {
             this.count.increment();
         }
 
+        /** %s ms 的请求共 [%d] 个 */
+        private static final String statActionInOutTimeRange = Bundle.getMessage(MessageKey.statActionInOutTimeRange);
+
         @Override
         public String toString() {
-            return String.format("%s ms 的请求共 [%d] 个", this.name, this.count.sum());
+            return String.format(statActionInOutTimeRange, this.name, this.count.sum());
         }
     }
 }
