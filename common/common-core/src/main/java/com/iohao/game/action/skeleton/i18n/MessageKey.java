@@ -59,4 +59,7 @@ public interface MessageKey {
     /* see StatActionInOut.java */
     String statActionInOutTimeRange = "statActionInOutTimeRange";
     String statActionInOutStatAction = "statActionInOutStatAction";
+
+    /* see ThreadMonitorInOut.java */
+    String threadMonitorInOutThreadMonitor = "threadMonitorInOutThreadMonitor";
 }

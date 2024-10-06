@@ -45,7 +45,7 @@ class ResourcePatternResolverProfile {
     private static String suffix = ".props";
 
     /** 需要加载的目录列表 */
-    private LinkedList<String> dirNameList = new LinkedList<>();
+    private final LinkedList<String> dirNameList = new LinkedList<>();
 
     /**
      * 添加需要加载的目录

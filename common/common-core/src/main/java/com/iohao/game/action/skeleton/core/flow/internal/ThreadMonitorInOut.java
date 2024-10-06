@@ -21,6 +21,8 @@ package com.iohao.game.action.skeleton.core.flow.internal;
 import com.iohao.game.action.skeleton.core.flow.ActionMethodInOut;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import lombok.Getter;
@@ -161,11 +163,14 @@ public final class ThreadMonitorInOut implements ActionMethodInOut {
                     .orElse(0);
         }
 
+        /** 业务线程[%s] 共执行了 %s 次业务，平均耗时 %d ms, 剩余 %d 个任务未执行 */
+        private static final String threadMonitorInOutThreadMonitor = Bundle.getMessage(MessageKey.threadMonitorInOutThreadMonitor);
+
         @Override
         public String toString() {
-            return String.format("业务线程[%s] 共执行了 %s 次业务，平均耗时 %d ms, 剩余 %d 个任务未执行"
+            return String.format(threadMonitorInOutThreadMonitor
                     , this.name
-                    , this.executeCount
+                    , this.executeCount.sum()
                     , this.getAvgTime()
                     , this.countRemaining()
             );

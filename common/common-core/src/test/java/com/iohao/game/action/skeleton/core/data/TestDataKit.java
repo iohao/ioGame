@@ -22,6 +22,7 @@ import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.core.*;
 import com.iohao.game.action.skeleton.core.action.BeeAction;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.internal.DebugInOut;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
@@ -92,6 +93,24 @@ public class TestDataKit {
 
         FlowContext flowContext = new FlowContext();
         flowContext.setRequest(requestMessage);
+
+        return flowContext;
+    }
+
+    public FlowContext ofFlowContext() {
+        FlowContext flowContext = new FlowContext();
+
+        var builder = new BarSkeletonBuilderParamConfig().createBuilder();
+        var setting = builder.getSetting();
+        setting.setPrint(false);
+        var skeleton = builder.build();
+        flowContext.setBarSkeleton(skeleton);
+
+        RequestMessage requestMessage = BarMessageKit.createRequestMessage(CmdInfo.of(1, 1));
+        flowContext.setRequest(requestMessage);
+
+        var threadExecutor = flowContext.getThreadExecutor();
+        flowContext.option(FlowAttr.threadExecutor, threadExecutor);
 
         return flowContext;
     }
