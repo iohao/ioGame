@@ -47,7 +47,7 @@ public final class Bundle {
         return getBundle().getString(key);
     }
 
-    public String getMessage(String key, Object... args) {
+    String getMessage(String key, Object... args) {
         var keyPattern = getBundle().getString(key);
         return MessageFormat.format(keyPattern, args);
     }

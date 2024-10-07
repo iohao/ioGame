@@ -1,11 +1,11 @@
 package com.iohao.game.action.skeleton.core.flow.internal;
 
-import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.core.data.TestDataKit;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.RandomKit;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -21,12 +21,10 @@ public class TimeRangeInOutTest {
 
     @Test
     public void fuckOut() {
+        FlowContext flowContext = TestDataKit.ofFlowContext(CmdInfo.of(1, 1));
+
         TimeRangeInOut inOut = new TimeRangeInOut();
         setListener(inOut);
-
-        RequestMessage requestMessage = BarMessageKit.createRequestMessage(CmdInfo.of(1, 1));
-        FlowContext flowContext = new FlowContext();
-        flowContext.setRequest(requestMessage);
 
         TimeRangeInOut.TimeRangeDayRegion region = inOut.region;
 
@@ -41,9 +39,10 @@ public class TimeRangeInOutTest {
             count.increment();
         }
 
-        print(inOut);
+        var timeRangeDay = region.getTimeRangeDay(localDate);
+        Assert.assertEquals(timeRangeDay.count().sum(), count.sum());
 
-        IoGameBanner.println(count);
+        print(inOut);
     }
 
     private static void print(TimeRangeInOut inOut) {

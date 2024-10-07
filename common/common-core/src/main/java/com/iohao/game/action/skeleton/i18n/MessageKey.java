@@ -62,4 +62,8 @@ public interface MessageKey {
 
     /* see ThreadMonitorInOut.java */
     String threadMonitorInOutThreadMonitor = "threadMonitorInOutThreadMonitor";
+    /* see TimeRangeInOut.java */
+    String timeRangeInOutDayTitle = "timeRangeInOutDayTitle";
+    String timeRangeInOutHourTitle = "timeRangeInOutHourTitle";
+    String timeRangeInOutMinuteTitle = "timeRangeInOutMinuteTitle";
 }

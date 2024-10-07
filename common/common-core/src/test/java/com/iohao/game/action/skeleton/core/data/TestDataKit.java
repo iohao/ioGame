@@ -88,6 +88,10 @@ public class TestDataKit {
         return createBuilder(null);
     }
 
+    public FlowContext ofFlowContext(CmdInfo cmdInfo) {
+        return ofFlowContext(cmdInfo, null);
+    }
+
     public FlowContext ofFlowContext(CmdInfo cmdInfo, Object data) {
         RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo, data);
 

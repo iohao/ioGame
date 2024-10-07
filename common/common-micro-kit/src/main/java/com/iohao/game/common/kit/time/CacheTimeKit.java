@@ -19,10 +19,12 @@
 package com.iohao.game.common.kit.time;
 
 import com.iohao.game.common.kit.concurrent.TaskKit;
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,11 +56,13 @@ import java.util.concurrent.TimeUnit;
  */
 @UtilityClass
 public final class CacheTimeKit {
-    private boolean cache;
+    private volatile LocalTime localTime = LocalTime.now();
+    private volatile LocalDate localDate = LocalDate.now();
+    private volatile LocalDateTime localDateTime = LocalDateTime.now();
+    private volatile long currentTimeMillis = System.currentTimeMillis();
 
-    private volatile LocalDate localDate;
-    private volatile LocalDateTime localDateTime;
-    private volatile long currentTimeMillis;
+    @Getter
+    private boolean cache;
 
     /**
      * get LocalDate
@@ -79,6 +83,15 @@ public final class CacheTimeKit {
     }
 
     /**
+     * get LocalTime
+     *
+     * @return LocalTime
+     */
+    public LocalTime nowLocalTime() {
+        return cache ? localTime : LocalTime.now();
+    }
+
+    /**
      * get currentTimeMillis
      *
      * @return System.currentTimeMillis()
@@ -92,10 +105,6 @@ public final class CacheTimeKit {
      */
     public void enableCache() {
         if (!cache) {
-            localDate = LocalDate.now();
-            localDateTime = LocalDateTime.now();
-            currentTimeMillis = System.currentTimeMillis();
-
             cache = true;
 
             TaskKit.runInterval(() -> {
@@ -107,8 +116,8 @@ public final class CacheTimeKit {
             TaskKit.runInterval(() -> {
                 // 每分钟更新一次当前时间
                 localDate = LocalDate.now();
+                localTime = LocalTime.now();
             }, 1, TimeUnit.MINUTES);
-
         }
     }
 }
