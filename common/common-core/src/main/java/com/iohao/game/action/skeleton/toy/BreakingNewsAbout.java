@@ -92,7 +92,8 @@ final class DefaultBreakingNews implements BreakingNews {
         return List.of(
                 new News("ioGame javadoc", "https://iohao.github.io/javadoc"),
                 new News("ioGame issues", "https://github.com/iohao/ioGame/issues"),
-                new News("ioGame 框架各版本更新日志", "https://www.yuque.com/iohao/game/ab15oe")
+                new News("ioGame 框架各版本更新日志", "https://www.yuque.com/iohao/game/ab15oe"),
+                new News("ioGame 发版本的频率：每月会发 1 ~ 2 个版本，通常在大版本内的升级总是兼容的", "")
         );
     }
 
@@ -197,7 +198,8 @@ final class EnglishBreakingNews implements BreakingNews {
         return List.of(
                 new News("ioGame javadoc", "https://iohao.github.io/javadoc"),
                 new News("ioGame issues", "https://github.com/iohao/ioGame/issues"),
-                new News("ioGame version update log", "https://www.yuque.com/iohao/game/ab15oe")
+                new News("ioGame version log", "https://www.yuque.com/iohao/game/ab15oe"),
+                new News("Releases: 1 to 2 versions are released every month, and upgrades within a major version are always compatible, such as 21.1 is upgraded to any higher version 21.x", "")
         );
     }
 

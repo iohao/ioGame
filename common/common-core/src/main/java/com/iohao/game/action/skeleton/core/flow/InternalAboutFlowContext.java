@@ -1542,6 +1542,14 @@ interface SimpleExecutor extends SimpleCommon {
  * 帮助 FlowContext 得到创建 barMessage 消息的能力
  */
 interface SimpleBarMessageCreator extends SimpleCommon {
+    /**
+     * Create a RequestMessage object and use some of the properties of the current FlowContext HeadMetadata.
+     * see {@link HeadMetadata#cloneHeadMetadata()}
+     *
+     * @param cmdInfo cmdInfo
+     * @return request
+     * @since 21.18
+     */
     default RequestMessage createRequestMessage(CmdInfo cmdInfo) {
         return createRequestMessage(cmdInfo, null);
     }
