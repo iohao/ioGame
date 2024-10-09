@@ -11,6 +11,50 @@
 
 
 
+### 2024-10
+
+#### 2024-10-09 - v21.18
+
+https://github.com/iohao/ioGame/releases/tag/21.18
+
+
+
+**版本更新汇总**
+
+> - [external] [#375](https://github.com/iohao/ioGame/issues/375) Support for lightweight or embedded Linux distributions. 支持轻量级或嵌入式 Linux 发行版。
+> - [core] [#376](https://github.com/iohao/ioGame/issues/376) Support i18n, such as logs and internal messages. 框架内的日志、内部消息支持 i18n。
+
+
+------
+
+**[core]**
+
+ [#376](https://github.com/iohao/ioGame/issues/376) Support i18n, such as logs and internal messages. 框架内的日志、内部消息支持 i18n。
+
+```java
+public class DemoApplication {
+    public static void main(String[] args) {
+        // setting defaultLocale, such as US or CHINA
+        Locale.setDefault(Locale.US);
+        Locale.setDefault(Locale.CHINA);
+
+        ... start ioGame
+    }
+}
+```
+
+------
+
+**[其他更新]**
+
+```
+<scalecube.version>2.6.17</scalecube.version>
+```
+
+------
+
+
+
 ### 2024-09
 
 #### 2024-09-25 - v21.17
@@ -49,6 +93,8 @@ void testThreadExecutor(FlowContext flowContext) {
     Executor executor = threadExecutor.executor();
 }
 ```
+
+------
 
 
 

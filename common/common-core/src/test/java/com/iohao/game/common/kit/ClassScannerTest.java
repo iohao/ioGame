@@ -22,7 +22,6 @@ import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
 import org.junit.Test;
 
 import java.util.List;

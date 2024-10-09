@@ -1548,7 +1548,6 @@ interface SimpleBarMessageCreator extends SimpleCommon {
      *
      * @param cmdInfo cmdInfo
      * @return request
-     * @since 21.18
      */
     default RequestMessage createRequestMessage(CmdInfo cmdInfo) {
         return createRequestMessage(cmdInfo, null);
