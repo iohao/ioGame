@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 游戏对外服 - core - micro - <a href="https://www.yuque.com/iohao/game/wotnhl">游戏对外服设计</a>，连接方式 TCP、UDP、WS 的支持
+ * 游戏对外服 - core micro <a href="https://www.yuque.com/iohao/game/wotnhl">设计</a>，连接方式 TCP、UDP、WS 的支持
  *
  * <pre>
  *     目前，ioGame 框架已经提供了 TCP、WebSocket、UDP 的实现，其支持了连接方式的灵活切换。

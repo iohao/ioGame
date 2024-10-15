@@ -17,8 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 游戏对外服 - core - micro - <a href="https://www.yuque.com/iohao/game/wotnhl">游戏对外服设计</a>，负责与外部通信，与真实用户（玩家）建立连接
- *
+ * 游戏对外服 - core micro <a href="https://www.yuque.com/iohao/game/wotnhl">设计</a>，负责与外部通信，与真实用户（玩家）建立连接
  *
  * <pre>
  *     MicroBootstrap 接口
@@ -28,7 +27,6 @@
  *     MicroBootstrapFlow 接口
  *     描述：与真实玩家连接【真实】服务器的启动流程，专为 MicroBootstrap 服务。开发者可通过此接口对服务器做编排，编排分为：构建时、新建连接时两种。框架提供了 TCP、WebSocket、UDP 的实现；开发者可以选择性的重写流程方法，来定制符合自身项目的业务。
  *     职责：业务编排，也是开发者在扩展时接触最多的一个接口。
- *
  * </pre>
  *
  * @author 渔民小镇
