@@ -16,29 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.message;
+package com.iohao.game.action.skeleton.protocol.login;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
-
-import java.io.Serial;
-import java.io.Serializable;
+import com.iohao.game.common.kit.exception.CommonRuntimeException;
 
 /**
- * 设置 userId 的响应
+ * SettingUserIdResult
  *
+ * @param success   true: login successful
+ * @param exception If success is true, the exception is null.
  * @author 渔民小镇
- * @date 2022-01-19
+ * @date 2024-10-18
+ * @since 21.19
  */
-@Data
-@Accessors(chain = true)
-public class SettingUserIdMessageResponse implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -3776596417948970990L;
-    /** true: userId 设置成功 */
-    boolean success;
-    /** 变更后的 userId */
-    long userId;
+public record SettingUserIdResult(boolean success, Exception exception) {
 
-    long endTime;
+    public static final SettingUserIdResult SUCCESS = new SettingUserIdResult(true, null);
+
+    public static SettingUserIdResult ofError(Exception exception) {
+        return new SettingUserIdResult(false, exception);
+    }
+
+    public static SettingUserIdResult ofError(String message) {
+        return ofError(new CommonRuntimeException(message));
+    }
 }

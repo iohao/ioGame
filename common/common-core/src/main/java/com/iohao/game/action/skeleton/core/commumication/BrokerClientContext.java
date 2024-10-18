@@ -47,6 +47,17 @@ public interface BrokerClientContext extends ChannelContext, SimpleServer {
     void oneway(final Object request) throws Exception;
 
     /**
+     * Synchronous invocation
+     *
+     * @param request request
+     * @param <T>     t
+     * @return response object
+     * @throws Exception e
+     * @since 21.19
+     */
+    <T> T invokeSync(final Object request) throws Exception;
+
+    /**
      * 框架网络通讯聚合接口
      *
      * @return 框架网络通信聚合接口

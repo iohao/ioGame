@@ -16,32 +16,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.bolt.broker.core.message;
+package com.iohao.game.action.skeleton.protocol.login;
 
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 设置用户id
+ * Set the userId to the gameExternalServer
  *
  * @author 渔民小镇
  * @date 2022-01-18
  */
-@Data
-@Accessors(chain = true)
-public class SettingUserIdMessage implements Serializable {
+@Getter
+@FieldDefaults(makeFinal = true)
+public final class SettingUserIdMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = -7385687951893601229L;
     /** userId */
     long userId;
-    /** 一般指用户的 channelId （来源于对外服的 user channel） */
-    String userChannelId;
 
     HeadMetadata headMetadata;
 
-    long startTime;
+    private SettingUserIdMessage(long userId, HeadMetadata headMetadata) {
+        this.userId = userId;
+        this.headMetadata = headMetadata;
+    }
+
+    public static SettingUserIdMessage of(long userId, HeadMetadata headMetadata) {
+        return new SettingUserIdMessage(userId, headMetadata);
+    }
 }

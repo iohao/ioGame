@@ -18,19 +18,9 @@
  */
 package com.iohao.game.bolt.broker.client.kit;
 
-import com.alipay.remoting.exception.RemotingException;
-import com.iohao.game.action.skeleton.core.commumication.BrokerClientContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
-import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
-import com.iohao.game.bolt.broker.core.client.BrokerClient;
-import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
-import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
-import com.iohao.game.common.kit.time.CacheTimeKit;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Objects;
 
 /**
  * 变更用户 id
@@ -53,60 +43,17 @@ public class UserIdSettingKit {
      * @param flowContext 业务框架 flow上下文
      * @param userId      一般从数据库中获取
      * @return true 变更成功
+     * @deprecated Please use {@link FlowContext#setUserId(long)} or {@link FlowContext#setUserIdAndGetResult(long)}
      */
+    @Deprecated
     public boolean settingUserId(FlowContext flowContext, long userId) {
+        var result = flowContext.setUserIdAndGetResult(userId);
 
-        if (userId <= 0) {
-            log.error("The userId must be greater than 0");
-            return false;
+        if (!result.success()) {
+            Exception exception = result.exception();
+            log.error(exception.getMessage(), exception);
         }
-
-        HeadMetadata headMetadata = flowContext.getHeadMetadata();
-        //  FlowContext 存在 userId 表示已经登录过了，返回 false
-        if (headMetadata.getUserId() != 0) {
-            log.error("玩家[{}] 已经登录", headMetadata.getUserId());
-            return false;
-        }
-
-        // 一般指用户的 channelId （来源于对外服的 channel 长连接）
-        String userChannelId = headMetadata.getChannelId();
-        SettingUserIdMessage userIdMessage = new SettingUserIdMessage()
-                .setUserId(userId)
-                .setUserChannelId(userChannelId)
-                .setHeadMetadata(headMetadata)
-                .setStartTime(CacheTimeKit.currentTimeMillis());
-
-        if (log.isDebugEnabled()) {
-            log.debug("1 逻辑服 {}", userIdMessage);
-        }
-
-        try {
-            BrokerClientContext brokerClientContext = flowContext.option(FlowAttr.brokerClientContext);
-            BrokerClient brokerClient = (BrokerClient) brokerClientContext;
-            // 请求网关 （实际上是请求对外服，让对外服保存 userId）
-            SettingUserIdMessageResponse settingUserIdMessageResponse = (SettingUserIdMessageResponse) brokerClient
-                    .invokeSync(userIdMessage);
-
-            if (log.isDebugEnabled()) {
-                log.debug("5 逻辑服 {}", settingUserIdMessageResponse);
-            }
-
-            if (Objects.isNull(settingUserIdMessageResponse) || !settingUserIdMessageResponse.isSuccess()) {
-                return false;
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("~~~~~ consumer time ~~~~~ {}"
-                        , settingUserIdMessageResponse.getEndTime() - userIdMessage.getStartTime());
-            }
-
-        } catch (RemotingException | InterruptedException e) {
-            log.error(e.getMessage(), e);
-            return false;
-        }
-
-        headMetadata.setUserId(userId);
-
-        return true;
+        
+        return result.success();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -18,18 +18,15 @@
  */
 package com.iohao.game.external.core.hook;
 
-import com.iohao.game.bolt.broker.client.kit.UserIdSettingKit;
 import com.iohao.game.external.core.session.UserSession;
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
 
 /**
- * UserHook 钩子接口，上线时、下线时会触发
- * <pre>
- *     参考 <a href="https://www.yuque.com/iohao/game/hv5qqh">用户上线、下线的钩子-文档</a>
- * </pre>
+ * UserHook 钩子接口，上线时、下线时会触发; <a href="https://www.yuque.com/iohao/game/hv5qqh">用户上线、下线的钩子-文档</a>
  *
  * <pre>
- *     实际上需要真正登录过，才会触发 ：into和quit 方法
- *     see {@link UserIdSettingKit#settingUserId}
+ *     实际上需要真正登录过，才会触发 ：into 和 quit 方法
+ *     see {@link FlowContext#setUserId(long)}
  *
  *     这里是改变用户的验证状态
  *

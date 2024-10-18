@@ -64,8 +64,9 @@ import java.util.function.Supplier;
  */
 @Slf4j
 @Getter
-@Setter(value = AccessLevel.PROTECTED)
 @Accessors(chain = true)
+@SuppressWarnings("unchecked")
+@Setter(value = AccessLevel.PROTECTED)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BrokerClient implements BrokerClientContext, GroupWith, AttrOptionDynamic {
     final AttrOptions options = new AttrOptions();
@@ -168,12 +169,13 @@ public class BrokerClient implements BrokerClientContext, GroupWith, AttrOptionD
         return this.brokerClientManager.next();
     }
 
-    public Object invokeSync(final Object request, final int timeoutMillis) throws RemotingException, InterruptedException {
+    public <T> T invokeSync(final Object request, final int timeoutMillis) throws RemotingException, InterruptedException {
         BrokerClientItem nextClient = next();
-        return nextClient.invokeSync(request, timeoutMillis);
+        return (T) nextClient.invokeSync(request, timeoutMillis);
     }
 
-    public Object invokeSync(final Object request) throws RemotingException, InterruptedException {
+    @Override
+    public <T> T invokeSync(final Object request) throws RemotingException, InterruptedException {
         return invokeSync(request, timeoutMillis);
     }
 

@@ -20,17 +20,13 @@ package com.iohao.game.external.core.broker.client.processor;
 
 import com.alipay.remoting.AsyncContext;
 import com.alipay.remoting.BizContext;
-import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.action.skeleton.protocol.login.SettingUserIdMessage;
+import com.iohao.game.action.skeleton.protocol.login.SettingUserIdMessageResponse;
 import com.iohao.game.bolt.broker.core.common.AbstractAsyncUserProcessor;
-import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
-import com.iohao.game.bolt.broker.core.message.SettingUserIdMessage;
-import com.iohao.game.bolt.broker.core.message.SettingUserIdMessageResponse;
-import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.common.kit.trace.TraceKit;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.session.UserChannelId;
 import com.iohao.game.external.core.session.UserSessions;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
 import java.util.Objects;
@@ -41,24 +37,22 @@ import java.util.Objects;
  * @author 渔民小镇
  * @date 2023-02-21
  */
-@Slf4j(topic = IoGameLogName.MsgTransferTopic)
 public final class SettingUserIdMessageExternalProcessor extends AbstractAsyncUserProcessor<SettingUserIdMessage>
         implements UserSessionsAware {
     UserSessions<?, ?> userSessions;
 
     @Override
     public void handleRequest(BizContext bizCtx, AsyncContext asyncCtx, SettingUserIdMessage request) {
+        var headMetadata = request.getHeadMetadata();
+
+        String channelId = headMetadata.getChannelId();
+        var userChannelId = new UserChannelId(channelId);
 
         long userId = request.getUserId();
-        String channelId = request.getUserChannelId();
-        UserChannelId userChannelId = new UserChannelId(channelId);
-
-        SettingUserIdMessageResponse response = new SettingUserIdMessageResponse();
+        var response = new SettingUserIdMessageResponse();
         response.setUserId(userId);
 
-        HeadMetadata headMetadata = request.getHeadMetadata();
         String traceId = headMetadata.getTraceId();
-
         if (Objects.nonNull(traceId)) {
             try {
                 MDC.put(TraceKit.traceName, traceId);
@@ -75,10 +69,6 @@ public final class SettingUserIdMessageExternalProcessor extends AbstractAsyncUs
         }
 
         asyncCtx.sendResponse(response);
-
-        if (IoGameGlobalConfig.isExternalLog()) {
-            log.info("3 对外服设置用户id, userChannelId:{}, 真实userId:{}", userChannelId, userId);
-        }
     }
 
     @Override

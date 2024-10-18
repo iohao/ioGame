@@ -31,6 +31,9 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.action.skeleton.protocol.external.RequestCollectExternalMessage;
 import com.iohao.game.action.skeleton.protocol.external.ResponseCollectExternalMessage;
+import com.iohao.game.action.skeleton.protocol.login.SettingUserIdMessage;
+import com.iohao.game.action.skeleton.protocol.login.SettingUserIdMessageResponse;
+import com.iohao.game.action.skeleton.protocol.login.SettingUserIdResult;
 import com.iohao.game.common.kit.concurrent.executor.ExecutorRegion;
 import com.iohao.game.common.kit.concurrent.executor.ThreadExecutor;
 import com.iohao.game.common.kit.exception.ThrowKit;
@@ -76,6 +79,8 @@ import java.util.function.Supplier;
  * @date 2023-12-27
  */
 interface SimpleContext extends SimpleAttachment
+        // Login（setting userId）
+        , UserIdSetting
         // 分布式事件总线相关通信
         , SimpleCommunicationEventBus
         // 广播相关通信
@@ -1649,6 +1654,55 @@ interface SimpleCommon extends FlowOptionDynamic {
      */
     default long getUserId() {
         return this.getHeadMetadata().getUserId();
+    }
+}
+
+interface UserIdSetting extends SimpleCommunication {
+    /**
+     * After setting the userId, it means the login is successful
+     *
+     * @param userId userId
+     * @return true:login success
+     * @since 21.19
+     */
+    default boolean setUserId(long userId) {
+        return this.setUserIdAndGetResult(userId).success();
+    }
+
+    /**
+     * After setting the userId, it means the login is successful
+     *
+     * @param userId userId
+     * @return result
+     * @since 21.19
+     */
+    default SettingUserIdResult setUserIdAndGetResult(final long userId) {
+
+        if (userId <= 0) {
+            return SettingUserIdResult.ofError("The userId must be greater than 0");
+        }
+
+        var headMetadata = getHeadMetadata();
+        if (headMetadata.getUserId() != 0) {
+            String message = "The setting of the parameter userId failed because the userId already exists. [parameterUserId:%d userId:%d]"
+                    .formatted(userId, headMetadata.getUserId());
+
+            return SettingUserIdResult.ofError(message);
+        }
+
+        try {
+            var settingUserIdMessage = SettingUserIdMessage.of(userId, headMetadata);
+            SettingUserIdMessageResponse settingUserIdMessageResponse = this.getBrokerClientContext().invokeSync(settingUserIdMessage);
+
+            if (Objects.isNull(settingUserIdMessageResponse) || !settingUserIdMessageResponse.isSuccess()) {
+                return SettingUserIdResult.ofError("Login Failed");
+            }
+        } catch (Exception e) {
+            return SettingUserIdResult.ofError(e);
+        }
+
+        headMetadata.setUserId(userId);
+        return SettingUserIdResult.SUCCESS;
     }
 }
 
