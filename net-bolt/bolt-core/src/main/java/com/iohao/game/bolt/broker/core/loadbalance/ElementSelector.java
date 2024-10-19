@@ -18,6 +18,7 @@
  */
 package com.iohao.game.bolt.broker.core.loadbalance;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -33,4 +34,16 @@ public interface ElementSelector<T> extends Supplier<T> {
      * @return t
      */
     T next();
+
+    /**
+     * create default ElementSelectorImpl
+     *
+     * @param elements elements
+     * @param <T>      t
+     * @return ElementSelector
+     * @since 21.19
+     */
+    static <T> ElementSelector<T> of(List<T> elements) {
+        return new RingElementSelector<>(elements);
+    }
 }

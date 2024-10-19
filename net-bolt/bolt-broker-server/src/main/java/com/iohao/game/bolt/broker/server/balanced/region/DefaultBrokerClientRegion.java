@@ -20,7 +20,6 @@ package com.iohao.game.bolt.broker.server.balanced.region;
 
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelector;
-import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -118,6 +117,6 @@ public class DefaultBrokerClientRegion implements BrokerClientRegion {
     private void resetSelector() {
         // 随机选择器
         List<BrokerClientProxy> list = new ArrayList<>(brokerClientProxyMap.values());
-        this.elementSelector = new RandomElementSelector<>(list);
+        this.elementSelector = ElementSelector.of(list);
     }
 }

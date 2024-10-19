@@ -25,7 +25,6 @@ import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelector;
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelectorFactory;
-import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -68,7 +67,7 @@ public final class BrokerClientManager {
     /** 业务框架 */
     BarSkeleton barSkeleton;
     /** 元素选择器生产工厂 */
-    ElementSelectorFactory<BrokerClientItem> elementSelectorFactory = RandomElementSelector::new;
+    ElementSelectorFactory<BrokerClientItem> elementSelectorFactory = ElementSelector::of;
     /** BrokerClientItem 元素选择器 */
     ElementSelector<BrokerClientItem> elementSelector;
     /** 消息发送超时时间 */

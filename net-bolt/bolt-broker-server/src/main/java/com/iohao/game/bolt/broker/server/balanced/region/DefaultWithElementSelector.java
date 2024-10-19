@@ -19,10 +19,10 @@
 package com.iohao.game.bolt.broker.server.balanced.region;
 
 import com.iohao.game.bolt.broker.core.loadbalance.ElementSelector;
-import com.iohao.game.bolt.broker.core.loadbalance.RandomElementSelector;
-import com.iohao.game.common.kit.RandomKit;
+import com.iohao.game.common.kit.CollKit;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author 渔民小镇
@@ -40,6 +40,7 @@ final class DefaultWithElementSelector implements WithElementSelector<BrokerClie
      */
     Map<Integer, List<BrokerClientProxy>> map;
     ElementSelector<BrokerClientProxy> elementSelector;
+    final AtomicLong counter = new AtomicLong();
 
     public DefaultWithElementSelector(Map<Integer, BrokerClientProxy> proxyMap) {
         List<BrokerClientProxy> list = proxyMap.values().stream().filter(Objects::nonNull).toList();
@@ -47,7 +48,7 @@ final class DefaultWithElementSelector implements WithElementSelector<BrokerClie
             return;
         }
 
-        elementSelector = new RandomElementSelector<>(list);
+        elementSelector = ElementSelector.of(list);
         this.map = new HashMap<>();
 
         for (BrokerClientProxy brokerClientProxy : list) {
@@ -79,10 +80,12 @@ final class DefaultWithElementSelector implements WithElementSelector<BrokerClie
             return this.elementSelector.get();
         }
 
-        var list = this.map.get(withNo);
-        var brokerClientProxy = RandomKit.randomEle(list);
-        if (Objects.nonNull(brokerClientProxy)) {
-            return brokerClientProxy;
+        var withList = this.map.get(withNo);
+        if (CollKit.isEmpty(withList)) {
+            var brokerClientProxy = withList.get((int) (counter.getAndIncrement() % withList.size()));
+            if (Objects.nonNull(brokerClientProxy)) {
+                return brokerClientProxy;
+            }
         }
 
         // 随机选一个逻辑服
