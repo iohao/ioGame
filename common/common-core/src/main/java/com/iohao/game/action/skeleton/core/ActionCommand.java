@@ -67,8 +67,7 @@ import java.util.stream.Stream;
 public final class ActionCommand {
     /** cmdInfo */
     final CmdInfo cmdInfo;
-    /** 构造方法访问器 */
-    final ConstructorAccess<?> actionControllerConstructorAccess;
+
     /** 一个single控制器对象 */
     final Object actionController;
     /** 方法所在 class */
@@ -98,6 +97,8 @@ public final class ActionCommand {
 
     /** true 表示交付给容器来管理 如 spring 等 */
     boolean deliveryContainer;
+    /** 构造方法访问器 */
+    ConstructorAccess<?> actionControllerConstructorAccess;
 
     private ActionCommand(Builder builder) {
         // -------------- 路由相关 --------------
@@ -105,7 +106,6 @@ public final class ActionCommand {
 
         // -------------- 控制器相关 --------------
         this.actionControllerClazz = builder.actionControllerClazz;
-        this.actionControllerConstructorAccess = builder.actionControllerConstructorAccess;
         this.actionController = builder.actionController;
         this.createSingleActionCommandController = builder.createSingleActionCommandController;
 
@@ -154,6 +154,20 @@ public final class ActionCommand {
     }
 
     /**
+     * get class ConstructorAccess
+     *
+     * @return ConstructorAccess
+     * @since 21.19
+     */
+    public ConstructorAccess<?> getActionControllerConstructorAccess() {
+        if (Objects.isNull(this.actionControllerConstructorAccess)) {
+            this.actionControllerConstructorAccess = ConstructorAccess.get(this.actionControllerClazz);
+        }
+
+        return actionControllerConstructorAccess;
+    }
+
+    /**
      * {@link ActionCommand} 命令的构建器
      * <p>
      * 因为 {@link ActionCommand} 的参数较复杂, 所以这里考虑用构建器。
@@ -168,8 +182,6 @@ public final class ActionCommand {
         int subCmd;
         /** 方法访问器 */
         MethodAccess actionMethodAccess;
-        /** 类访问器 */
-        ConstructorAccess<?> actionControllerConstructorAccess;
         /** 方法名 */
         String actionMethodName;
         /** tcp controller类 */

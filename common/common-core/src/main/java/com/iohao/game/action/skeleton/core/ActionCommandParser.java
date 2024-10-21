@@ -89,7 +89,6 @@ final class ActionCommandParser {
         this.getActionControllerStream(controllerList).forEach(controllerClazz -> {
             // 方法访问器: 获取类中自己定义的方法
             var methodAccess = MethodAccess.get(controllerClazz);
-            var constructorAccess = ConstructorAccess.get(controllerClazz);
 
             // 主路由 (类上的路由)
             int cmd = controllerClazz.getAnnotation(ActionController.class).value();
@@ -123,7 +122,6 @@ final class ActionCommandParser {
                         .setCmd(cmd)
                         .setSubCmd(subCmd)
                         .setActionControllerClazz(controllerClazz)
-                        .setActionControllerConstructorAccess(constructorAccess)
                         .setActionMethod(method)
                         .setActionMethodName(methodName)
                         .setActionMethodIndex(methodIndex)
