@@ -154,20 +154,6 @@ public final class ActionCommand {
     }
 
     /**
-     * get class ConstructorAccess
-     *
-     * @return ConstructorAccess
-     * @since 21.19
-     */
-    public ConstructorAccess<?> getActionControllerConstructorAccess() {
-        if (Objects.isNull(this.actionControllerConstructorAccess)) {
-            this.actionControllerConstructorAccess = ConstructorAccess.get(this.actionControllerClazz);
-        }
-
-        return actionControllerConstructorAccess;
-    }
-
-    /**
      * {@link ActionCommand} 命令的构建器
      * <p>
      * 因为 {@link ActionCommand} 的参数较复杂, 所以这里考虑用构建器。

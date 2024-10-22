@@ -25,8 +25,6 @@ import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.core.action.parser.ActionParserContext;
 import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
-import com.iohao.game.action.skeleton.core.action.parser.ProtobufActionParserListener;
-import com.iohao.game.action.skeleton.core.action.parser.ProtobufCheckActionParserListener;
 import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import com.iohao.game.action.skeleton.core.doc.ActionCommandDoc;
 import com.iohao.game.action.skeleton.core.doc.ActionDoc;
@@ -38,12 +36,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+import org.jctools.maps.NonBlockingHashMap;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 /**
@@ -312,7 +310,7 @@ final class ActionCommandParser {
             // action command, actionMethod
             actionCommandRegion.getSubActionCommandMap().forEach((subCmd, command) -> {
                 // action 构建时的上下文
-                ActionParserContext context = new ActionParserContext()
+                var context = new ActionParserContext()
                         .setBarSkeleton(barSkeleton)
                         .setActionCommand(command);
 
@@ -327,29 +325,34 @@ final class ActionCommandParser {
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 final class ActionParserListeners {
-    final List<ActionParserListener> listeners = new CopyOnWriteArrayList<>();
+    final Map<Class<?>, ActionParserListener> map = new NonBlockingHashMap<>();
 
     void addActionParserListener(ActionParserListener listener) {
-        this.listeners.add(listener);
+        Objects.requireNonNull(listener);
+        this.map.putIfAbsent(listener.getClass(), listener);
     }
 
     void onActionCommand(ActionParserContext context) {
-        this.listeners.forEach(listener -> listener.onActionCommand(context));
+        this.map.forEach((clazz, listener) -> listener.onActionCommand(context));
     }
 
     void onAfter(BarSkeleton barSkeleton) {
-        this.listeners.forEach(listener -> listener.onAfter(barSkeleton));
+        this.map.forEach((clazz, listener) -> listener.onAfter(barSkeleton));
     }
 
-    public boolean isEmpty() {
-        return this.listeners.isEmpty();
-    }
-
-    public ActionParserListeners() {
+    ActionParserListeners() {
         // 监听器 - 预先创建协议代理类
         if (DataCodecKit.getDataCodec() instanceof ProtoDataCodec) {
-            this.addActionParserListener(ProtobufActionParserListener.me());
-            this.addActionParserListener(ProtobufCheckActionParserListener.me());
+            this.addActionParserListener(new ProtobufActionParserListener());
+            this.addActionParserListener(new ProtobufCheckActionParserListener());
         }
+
+        // prepared actionControllerConstructorAccess
+        this.addActionParserListener(context -> {
+            var actionCommand = context.getActionCommand();
+            if (!actionCommand.isDeliveryContainer()) {
+                actionCommand.actionControllerConstructorAccess = ConstructorAccess.get(actionCommand.actionControllerClazz);
+            }
+        });
     }
 }

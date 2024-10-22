@@ -26,6 +26,7 @@ import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
 import com.iohao.game.action.skeleton.core.runner.Runner;
 import com.iohao.game.action.skeleton.core.runner.Runners;
 import com.iohao.game.common.kit.concurrent.executor.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -55,8 +56,10 @@ public final class BarSkeletonBuilder {
     /** action class */
     final List<Class<?>> actionControllerClazzList = new LinkedList<>();
     /** 错误码 */
+    @Deprecated
     final List<MsgExceptionInfo> msgExceptionInfoList = new ArrayList<>();
     /** action 构建时的钩子方法 */
+    @Setter(AccessLevel.PRIVATE)
     ActionParserListeners actionParserListeners = new ActionParserListeners();
     /** action工厂 */
     ActionFactoryBean<Object> actionFactoryBean = new DefaultActionFactoryBean<>();

@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.action.skeleton.core.action.parser;
+package com.iohao.game.action.skeleton.core;
 
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
-import com.iohao.game.action.skeleton.core.ActionCommand;
-import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.action.parser.ActionParserContext;
+import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
 import com.iohao.game.action.skeleton.protocol.wrapper.*;
 import com.iohao.game.common.kit.ProtoKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.jctools.maps.NonBlockingHashSet;
 
 import java.util.Objects;
@@ -33,21 +34,38 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * 预先生成 proto 协议代理类
+ * Prepared action proto
  *
  * @author 渔民小镇
  * @date 2024-05-01
  * @since 21.7
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public final class ProtobufActionParserListener implements ActionParserListener {
-    final Set<Class<?>> protoSet = new NonBlockingHashSet<>();
+final class ProtobufActionParserListener implements ActionParserListener {
+    static final Set<Class<?>> protoSet = new NonBlockingHashSet<>();
+
+    static {
+        // create a protobuf proxy class
+        ProtoKit.create(ByteValueList.class);
+
+        ProtoKit.create(IntValue.class);
+        ProtoKit.create(IntValueList.class);
+
+        ProtoKit.create(BoolValue.class);
+        ProtoKit.create(BoolValueList.class);
+
+        ProtoKit.create(LongValue.class);
+        ProtoKit.create(LongValueList.class);
+
+        ProtoKit.create(StringValue.class);
+        ProtoKit.create(StringValueList.class);
+    }
 
     @Override
     public void onActionCommand(ActionParserContext context) {
         // 添加了 ProtobufClass 注解的类
         Predicate<Class<?>> protobufClassPredicate = c -> Objects.nonNull(c.getAnnotation(ProtobufClass.class));
-        collect(context, protobufClassPredicate, this.protoSet);
+        collect(context, protobufClassPredicate, protoSet);
     }
 
     static void collect(ActionParserContext context, Predicate<Class<?>> protobufClassPredicate, Set<Class<?>> protoSet) {
@@ -80,32 +98,38 @@ public final class ProtobufActionParserListener implements ActionParserListener 
 
     @Override
     public void onAfter(BarSkeleton barSkeleton) {
-        this.protoSet.forEach(ProtoKit::create);
+        protoSet.forEach(ProtoKit::create);
+    }
+}
+
+
+/**
+ * proto 协议类型添检测
+ *
+ * @author 渔民小镇
+ * @date 2024-05-02
+ * @since 21.7
+ */
+@Slf4j
+final class ProtobufCheckActionParserListener implements ActionParserListener {
+    static final Set<Class<?>> protoSet = new NonBlockingHashSet<>();
+
+    @Override
+    public void onActionCommand(ActionParserContext context) {
+        // 添加了 ProtobufClass 注解的类
+        Predicate<Class<?>> protobufClassPredicate = c -> c.getAnnotation(ProtobufClass.class) == null;
+        ProtobufActionParserListener.collect(context, protobufClassPredicate, protoSet);
     }
 
-    private ProtobufActionParserListener() {
-        // create a protobuf proxy class
-        ProtoKit.create(ByteValueList.class);
+    @Override
+    public void onAfter(BarSkeleton barSkeleton) {
+        if (protoSet.isEmpty()) {
+            return;
+        }
 
-        ProtoKit.create(IntValue.class);
-        ProtoKit.create(IntValueList.class);
-
-        ProtoKit.create(BoolValue.class);
-        ProtoKit.create(BoolValueList.class);
-
-        ProtoKit.create(LongValue.class);
-        ProtoKit.create(LongValueList.class);
-
-        ProtoKit.create(StringValue.class);
-        ProtoKit.create(StringValueList.class);
-    }
-
-    public static ProtobufActionParserListener me() {
-        return Holder.ME;
-    }
-
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
-    private static class Holder {
-        static final ProtobufActionParserListener ME = new ProtobufActionParserListener();
+        log.error("======== 注意，协议类没有添加 ProtobufClass 注解 ========");
+        for (Class<?> protoClass : protoSet) {
+            log.error(protoClass.toString());
+        }
     }
 }
