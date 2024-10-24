@@ -20,7 +20,6 @@ package com.iohao.game.action.skeleton.i18n;
 
 import lombok.experimental.UtilityClass;
 
-import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -45,10 +44,5 @@ public final class Bundle {
 
     public String getMessage(String key) {
         return getBundle().getString(key);
-    }
-
-    String getMessage(String key, Object... args) {
-        var keyPattern = getBundle().getString(key);
-        return MessageFormat.format(keyPattern, args);
     }
 }

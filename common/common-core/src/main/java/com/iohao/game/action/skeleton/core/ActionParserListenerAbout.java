@@ -21,6 +21,8 @@ package com.iohao.game.action.skeleton.core;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.action.skeleton.core.action.parser.ActionParserContext;
 import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.action.skeleton.protocol.wrapper.*;
 import com.iohao.game.common.kit.ProtoKit;
 import lombok.AccessLevel;
@@ -127,7 +129,7 @@ final class ProtobufCheckActionParserListener implements ActionParserListener {
             return;
         }
 
-        log.error("======== 注意，协议类没有添加 ProtobufClass 注解 ========");
+        log.error(Bundle.getMessage(MessageKey.protobufAnnotationCheck));
         for (Class<?> protoClass : protoSet) {
             log.error(protoClass.toString());
         }

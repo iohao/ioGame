@@ -66,4 +66,8 @@ public interface MessageKey {
     String timeRangeInOutDayTitle = "timeRangeInOutDayTitle";
     String timeRangeInOutHourTitle = "timeRangeInOutHourTitle";
     String timeRangeInOutMinuteTitle = "timeRangeInOutMinuteTitle";
+    /* see ActionCommandRegions.java */
+    String cmdMergeLimit = "cmdMergeLimit";
+    /* see ProtobufCheckActionParserListener.java */
+    String protobufAnnotationCheck = "protobufAnnotationCheck";
 }

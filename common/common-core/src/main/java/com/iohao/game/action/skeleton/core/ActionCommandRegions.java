@@ -18,6 +18,8 @@
  */
 package com.iohao.game.action.skeleton.core;
 
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.MoreKit;
 import lombok.AccessLevel;
@@ -177,15 +179,19 @@ public final class ActionCommandRegions {
     private int getMaxCmd(BarSkeletonSetting barSkeletonSetting) {
         // 获取最大的路由数字 并且+1
         int max = this.regionMap
-                .keySet()
-                .stream()
-                .max(Integer::compareTo)
-                .orElse(0) + 1;
+                          .keySet()
+                          .stream()
+                          .max(Integer::compareTo)
+                          .orElse(0) + 1;
 
         if (max > barSkeletonSetting.getCmdMaxLen()) {
-
-            String info = String.format("cmd 超过最大默认值! 如果有需要, 请手动设置容量!  默认最大容量 %s. 当前容量 %s"
-                    , barSkeletonSetting.getCmdMaxLen(), max
+            /*
+             * %s exceeds the maximum default value.
+             * Please set the capacity manually if necessary.
+             * Default maximum capacity %d, current capacity %d
+             */
+            var info = Bundle.getMessage(MessageKey.cmdMergeLimit).formatted(
+                    "cmd", barSkeletonSetting.getCmdMaxLen(), max
             );
 
             IoGameBanner.me().ofRuntimeException(info);
@@ -193,12 +199,12 @@ public final class ActionCommandRegions {
 
         // subCmd
         for (ActionCommandRegion actionCommandRegion : this.regionMap.values()) {
+
             int subCmdMax = actionCommandRegion.getMaxSubCmd() + 1;
 
             if (subCmdMax > barSkeletonSetting.getSubCmdMaxLen()) {
-
-                String info = String.format("subCmd 超过最大默认值! 如果有需要, 请手动设置容量!  默认最大容量 %s. 当前容量 %s"
-                        , barSkeletonSetting.getSubCmdMaxLen(), subCmdMax
+                var info = Bundle.getMessage(MessageKey.cmdMergeLimit).formatted(
+                        "subCmd", barSkeletonSetting.getSubCmdMaxLen(), subCmdMax
                 );
 
                 IoGameBanner.me().ofRuntimeException(info);
