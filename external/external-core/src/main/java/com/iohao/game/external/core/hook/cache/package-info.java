@@ -42,6 +42,46 @@
  *     6. 支持条件缓存，同一 action 支持不同的请求参数。
  *     7. 支持路由范围缓存配置
  * </pre>
+ * for example
+ * <pre>{@code
+ *     // 创建框架内置的缓存实现类
+ *     var externalCmdCache = ExternalCmdCache.of();
+ *     // 添加全局配置中
+ *     ExternalGlobalConfig.externalCmdCache = externalCmdCache;
+ *
+ *     // 即使不设置，框架默认也是这个配置，这里只是展示如何设置默认的缓存配置。
+ *     CmdCacheOption defaultOption = CmdCacheOption.newBuilder()
+ *             // 缓存过期时间，1 小时
+ *             .setExpireTime(Duration.ofHours(1))
+ *             // 缓存过期检测时间间隔 5 分钟
+ *             .setExpireCheckTime(Duration.ofMinutes(5))
+ *             // 同一个 action 的缓存数量上限设置为 256 条
+ *             .setCacheLimit(256)
+ *             // 构建缓存配置
+ *             .build();
+ *
+ *     // 设置为默认的缓存配置，之后添加的路由缓存都将使用这个缓存配置
+ *     externalCmdCache.setCmdCacheOption(defaultOption);
+ *
+ *     // 添加路由缓存 22-1，使用默认的缓存配置
+ *     externalCmdCache.addCmd(CacheCmd.cmd, CacheCmd.cacheHere);
+ *
+ *     // 新增一个缓存配置对象，对业务做更精细的控制。
+ *     CmdCacheOption optionCustom = CmdCacheOption.newBuilder()
+ *             // 缓存过期时间 30 秒
+ *             .setExpireTime(Duration.ofSeconds(30))
+ *             // 缓存过期检测时间间隔 5 秒
+ *             .setExpireCheckTime(Duration.ofSeconds(5))
+ *             // 构建缓存配置
+ *             .build();
+ *
+ *     // 添加路由缓存，使用自定义缓存配置
+ *     externalCmdCache.addCmd(CacheCmd.cmd, CacheCmd.cacheCustom, optionCustom);
+ *     externalCmdCache.addCmd(CacheCmd.cmd, CacheCmd.cacheList, optionCustom);
+ *
+ *     // 添加路由范围缓存，使用默认的缓存配置
+ *     externalCmdCache.addCmd(2);
+ * }</pre>
  *
  * @author 渔民小镇
  * @date 2023-07-02

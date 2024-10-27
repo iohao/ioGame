@@ -27,7 +27,7 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
  * @author 渔民小镇
  * @date 2023-07-02
  */
-public interface ExternalCmdCache {
+public interface ExternalCmdCache extends ExternalCmdCacheSetting {
 
     /**
      * 查询：从缓存中取数据
@@ -47,4 +47,14 @@ public interface ExternalCmdCache {
      * @param responseMessage responseMessage
      */
     void addCacheData(ResponseMessage responseMessage);
+
+    /**
+     * 创建 ExternalCmdCache 默认实现类
+     *
+     * @return ExternalCmdCache
+     * @since 21.17
+     */
+    static ExternalCmdCache of() {
+        return new SimpleExternalCmdCache();
+    }
 }
