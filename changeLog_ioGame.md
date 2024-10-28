@@ -13,6 +13,86 @@
 
 ### 2024-10
 
+#### 2024-10-28 - v21.19
+
+https://github.com/iohao/ioGame/releases/tag/21.19
+
+
+
+**版本更新汇总**
+
+> 1. [core] FlowContext provides the setUserId method to simplify the login operation.
+> 2. [broker] Added RingElementSelector load balancing implementation and set it as default to replace RandomElementSelector
+> 3. [core] [#386](https://github.com/iohao/ioGame/issues/386) Action supports constructor injection with parameters in Spring
+> 4. Simplify the implementation class of ActionParserListener related to ProtoDataCodec. and #386
+> 5. perf(i18n): 🐳 [#376](https://github.com/iohao/ioGame/issues/376) cmd check tips
+> 6. refactor(external): simplify and improve externalCache
+
+
+------
+
+**[core]** FlowContext provides the setUserId method to simplify the login operation.
+> FlowContext 提供登录方法以简化登录的使用
+
+```java
+@ActionController(LoginCmd.cmd)
+public class TheLoginAction {
+    ... ...
+	@ActionMethod(LoginCmd.login)
+    public UserInfo loginVerify(LoginVerify loginVerify, FlowContext flowContext) {
+        long userId = ...;
+        
+        // Deprecated
+		boolean success = UserIdSettingKit.settingUserId(flowContext, userId);
+        // now
+        boolean success = flowContext.setUserId(userId);
+
+        return ...;
+    }
+}
+```
+
+---
+
+**[core]** [#386](https://github.com/iohao/ioGame/issues/386) Action supports constructor injection with parameters in Spring
+> 在 Spring 中，Action 支持构造函数注入
+
+```java
+// Action supports constructor injection in Spring.
+@Component
+@AllArgsConstructor
+@ActionController(PersonCmd.cmd)
+public class PersonAction {    
+    final PersonService personService;
+    ...
+}
+```
+
+---
+
+refactor(external): simplify and improve externalCache
+> 简化与提升游戏对外服缓存
+
+```java
+// create externalCache
+private static void extractedExternalCache() {
+    // Deprecated
+    DefaultExternalCmdCache externalCmdCache = new DefaultExternalCmdCache();
+    // now
+    var externalCmdCache = ExternalCmdCache.of();
+}
+```
+
+------
+
+**[其他更新]**
+
+```xml
+<netty.version>4.1.114.Final</netty.version>
+```
+
+------
+
 #### 2024-10-09 - v21.18
 
 https://github.com/iohao/ioGame/releases/tag/21.18
