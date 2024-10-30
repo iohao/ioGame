@@ -19,6 +19,7 @@
 package com.iohao.game.widget.light.protobuf;
 
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.widget.light.protobuf.kit.GenerateFileKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,8 +65,12 @@ public class ProtoJavaField {
         messageMap.put("comment", this.comment);
         messageMap.put("repeated", "");
         messageMap.put("fieldProtoType", this.fieldProtoType);
-        messageMap.put("fieldName", this.fieldName);
         messageMap.put("order", String.valueOf(this.order));
+
+        FieldNameGenerate fieldNameGenerate = new FieldNameGenerate();
+        fieldNameGenerate.setEnumType(this.protoJavaParent.getClazz().isEnum());
+        fieldNameGenerate.setFieldName(this.fieldName);
+        messageMap.put("fieldName", GenerateFileKit.getFieldNameFunction().apply(fieldNameGenerate));
 
         if (this.repeated) {
             messageMap.put("repeated", "repeated ");

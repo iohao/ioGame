@@ -19,10 +19,14 @@
 package com.iohao.game.widget.light.protobuf.kit;
 
 import com.iohao.game.common.kit.ArrayKit;
+import com.iohao.game.widget.light.protobuf.FieldNameGenerate;
 import com.iohao.game.widget.light.protobuf.ProtoGenerateFile;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
+import java.util.function.Function;
 
 /**
  * proto 文件生成工具
@@ -78,4 +82,31 @@ public class GenerateFileKit {
 
         generate(protoPackagePath, generateFolder);
     }
+
+    @Setter
+    @Getter
+    Function<FieldNameGenerate, String> fieldNameFunction = fieldNameGenerate -> {
+        if (fieldNameGenerate.isEnum()) {
+            return fieldNameGenerate.getFieldName();
+        }
+
+        // default UnderScoreCase
+        StringBuilder result = new StringBuilder();
+        String fieldName = fieldNameGenerate.getFieldName();
+
+        for (int i = 0; i < fieldName.length(); i++) {
+            char c = fieldName.charAt(i);
+            if (Character.isUpperCase(c)) {
+                if (i > 0) {
+                    result.append('_');
+                }
+
+                result.append(Character.toLowerCase(c));
+            } else {
+                result.append(c);
+            }
+        }
+
+        return result.toString();
+    };
 }

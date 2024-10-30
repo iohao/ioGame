@@ -86,7 +86,7 @@ public class ProtoJavaRegion {
         String protoHead = this.regionHead.toProtoHead();
 
         String firstLine = """
-                // 生成时间 %s
+                // generate %s
                 // https://github.com/iohao/ioGame
                 """.formatted(FormatTimeKit.format());
 
