@@ -36,8 +36,12 @@ import lombok.experimental.FieldDefaults;
 public final class TypeMappingRecord {
     @Getter
     String paramTypeName;
+    @Getter
+    String paramTypeNameSimple;
+
     /** list 参数类型名 */
     String listParamTypeName;
+    String listParamTypeNameSimple;
 
     /** sdk 方法名 */
     String ofMethodTypeName;
@@ -57,6 +61,10 @@ public final class TypeMappingRecord {
 
     public String getParamTypeName(boolean isList) {
         return isList ? listParamTypeName : paramTypeName;
+    }
+
+    public String getParamTypeNameSimple(boolean isList) {
+        return isList ? listParamTypeNameSimple : paramTypeNameSimple;
     }
 
     public String getOfMethodTypeName(boolean isList) {

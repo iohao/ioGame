@@ -26,7 +26,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 /**
- * long 包装类
+ * long value
  *
  * @author 渔民小镇
  * @date 2023-02-10

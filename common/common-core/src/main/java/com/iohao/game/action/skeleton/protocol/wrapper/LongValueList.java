@@ -28,7 +28,7 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 
 /**
- * long list 包装类
+ * long list
  *
  * @author 渔民小镇
  * @date 2023-02-10

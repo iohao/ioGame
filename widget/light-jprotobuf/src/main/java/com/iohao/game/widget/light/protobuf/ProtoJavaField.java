@@ -70,7 +70,7 @@ public class ProtoJavaField {
         FieldNameGenerate fieldNameGenerate = new FieldNameGenerate();
         fieldNameGenerate.setEnumType(this.protoJavaParent.getClazz().isEnum());
         fieldNameGenerate.setFieldName(this.fieldName);
-        messageMap.put("fieldName", GenerateFileKit.getFieldNameFunction().apply(fieldNameGenerate));
+        messageMap.put("fieldName", ProtoGenerateSetting.getFieldNameFunction().apply(fieldNameGenerate));
 
         if (this.repeated) {
             messageMap.put("repeated", "repeated ");

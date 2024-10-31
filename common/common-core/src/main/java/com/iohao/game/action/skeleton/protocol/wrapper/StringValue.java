@@ -24,7 +24,7 @@ import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import lombok.ToString;
 
 /**
- * string 包装类
+ * string value
  *
  * @author 渔民小镇
  * @date 2023-02-05

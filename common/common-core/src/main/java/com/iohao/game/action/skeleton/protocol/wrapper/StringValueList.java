@@ -26,7 +26,7 @@ import lombok.ToString;
 import java.util.List;
 
 /**
- * string list 包装类
+ * string list
  *
  * @author 渔民小镇
  * @date 2023-02-05

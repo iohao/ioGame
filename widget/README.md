@@ -1,20 +1,8 @@
 ### 小部件
 
-每个小部件解决业务中的一类问题；
-
-```text
-├── light-all
-├── light-domain-event 领域事件
-├── light-jprotobuf 生成 .proto 源文件
-├── light-profile 多环境切换
-└── light-timer-task 任务延时器
-```
-
-
 **内置多种可选模块，可按需选择，以方便应用开发：**
 
 - [领域事件](https://www.yuque.com/iohao/game/gmfy1k) （[disruptor](https://www.yuque.com/iohao/game/gmfy1k) 实现类似Spring事件驱动模型 ApplicationEvent）
-- [任务延时器](https://www.yuque.com/iohao/game/niflk0) （将来某个时间可对任务进行执行、暂停、取消等操作，并不是类似 Quartz 的任务调度）
 - [多环境切换](https://www.yuque.com/iohao/game/ekx6ve) （不同运行环境下的配置支持）
 - [light-jprotobuf ](https://www.yuque.com/iohao/game/vpe2t6) （补足 jprotobuf 不能让多个对象在单个 .proto 源文件中生成的需求，并简化jprotobuf对源文件的注释）
 

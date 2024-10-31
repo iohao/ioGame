@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 对象类型的包装类
+ * object
  *
  * @author 渔民小镇
  * @date 2023-04-17
