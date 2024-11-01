@@ -21,6 +21,7 @@ package com.iohao.game.action.skeleton.core.doc;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
 import com.iohao.game.action.skeleton.protocol.wrapper.WrapperKit;
+import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -72,13 +73,21 @@ public class BroadcastDocumentBuilder {
     }
 
     public BroadcastDocumentBuilder setDataClassList(Class<?> dataClass, String dataDescription) {
-        String simpleName = ByteValueList.class.getSimpleName();
-        String simpleNameActualClazz = dataClass.getSimpleName();
-
-        this.dataClassName = String.format("%s<%s>", simpleName, simpleNameActualClazz);
         this.list = true;
         this.dataClass = dataClass;
         this.dataDescription = dataDescription;
+
+        WrapperKit.optionalValueRecord(dataClass).ifPresentOrElse(valueRecord -> {
+            this.dataClassName = valueRecord.getValueListClazz().getSimpleName();
+
+            if (StrKit.isEmpty(dataDescription)) {
+                this.dataDescription = this.dataClassName;
+            }
+        }, () -> {
+            String simpleName = ByteValueList.class.getSimpleName();
+            String simpleNameActualClazz = dataClass.getSimpleName();
+            this.dataClassName = String.format("%s<%s>", simpleName, simpleNameActualClazz);
+        });
 
         return this;
     }
@@ -102,13 +111,16 @@ public class BroadcastDocumentBuilder {
      */
     public BroadcastDocumentBuilder setDataClass(Class<?> dataClass, String dataDescription) {
 
+        this.dataClass = dataClass;
         this.dataDescription = dataDescription;
 
-        this.dataClassName = WrapperKit.optionalRefType(dataClass)
-                .map(Class::getSimpleName)
-                .orElse(dataClass.getSimpleName());
+        WrapperKit.optionalValueRecord(dataClass).ifPresentOrElse(valueRecord -> {
+            this.dataClassName = valueRecord.getValueClazz().getSimpleName();
 
-        this.dataClass = dataClass;
+            if (StrKit.isEmpty(dataDescription)) {
+                this.dataDescription = this.dataClassName;
+            }
+        }, () -> this.dataClassName = dataClass.getSimpleName());
 
         return this;
     }

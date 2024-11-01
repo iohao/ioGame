@@ -18,7 +18,6 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
 import com.iohao.game.common.kit.time.FormatTimeKit;

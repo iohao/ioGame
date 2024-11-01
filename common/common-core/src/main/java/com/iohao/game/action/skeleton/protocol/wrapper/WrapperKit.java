@@ -104,26 +104,36 @@ public class WrapperKit {
         return wrapperTypeSet.contains(clazz);
     }
 
-    final Map<Class<?>, Class<?>> refTypeMap = new HashMap<>();
+    final Map<Class<?>, ValueRecord> refTypeMap = new HashMap<>();
 
     static {
-        refTypeMap.put(int.class, IntValue.class);
-        refTypeMap.put(Integer.class, IntValue.class);
-        refTypeMap.put(IntValue.class, IntValue.class);
+        var intRecord = new ValueRecord(IntValue.class, IntValueList.class);
+        refTypeMap.put(int.class, intRecord);
+        refTypeMap.put(Integer.class, intRecord);
+        refTypeMap.put(IntValue.class, intRecord);
 
-        refTypeMap.put(long.class, LongValue.class);
-        refTypeMap.put(Long.class, LongValue.class);
-        refTypeMap.put(LongValue.class, LongValue.class);
+        var longRecord = new ValueRecord(LongValue.class, LongValueList.class);
+        refTypeMap.put(long.class, longRecord);
+        refTypeMap.put(Long.class, longRecord);
+        refTypeMap.put(LongValue.class, longRecord);
 
-        refTypeMap.put(boolean.class, BoolValue.class);
-        refTypeMap.put(Boolean.class, BoolValue.class);
-        refTypeMap.put(BoolValue.class, BoolValue.class);
+        var boolRecord = new ValueRecord(BoolValue.class, BoolValueList.class);
+        refTypeMap.put(boolean.class, boolRecord);
+        refTypeMap.put(Boolean.class, boolRecord);
+        refTypeMap.put(BoolValue.class, boolRecord);
 
-        refTypeMap.put(String.class, StringValue.class);
-        refTypeMap.put(StringValue.class, StringValue.class);
+        var stringRecord = new ValueRecord(StringValue.class, StringValueList.class);
+        refTypeMap.put(String.class, stringRecord);
+        refTypeMap.put(StringValue.class, stringRecord);
     }
 
+    @Deprecated
     public Optional<Class<?>> optionalRefType(Class<?> clazz) {
+        return Optional.ofNullable(refTypeMap.get(clazz)).map(ValueRecord::getClass);
+    }
+
+    public Optional<ValueRecord> optionalValueRecord(Class<?> clazz) {
         return Optional.ofNullable(refTypeMap.get(clazz));
     }
+
 }
