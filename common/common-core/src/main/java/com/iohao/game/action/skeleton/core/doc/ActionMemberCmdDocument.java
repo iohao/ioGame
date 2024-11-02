@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.iohao.game.action.skeleton.core.CmdKit;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,14 +32,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public final class ActionMemberCmdDocument {
-    int cmd;
-    int subCmd;
+    final int cmd;
+    final int subCmd;
+    final int cmdMerge;
     String comment;
     String memberName;
 
     ActionMemberCmdDocument(int cmd, int subCmd, String memberName, String comment) {
         this.cmd = cmd;
         this.subCmd = subCmd;
+        this.cmdMerge = CmdKit.merge(cmd, subCmd);
         this.comment = comment;
         this.memberName = memberName;
     }

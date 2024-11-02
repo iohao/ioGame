@@ -70,4 +70,11 @@ public interface MessageKey {
     String cmdMergeLimit = "cmdMergeLimit";
     /* see ProtobufCheckActionParserListener.java */
     String protobufAnnotationCheck = "protobufAnnotationCheck";
+
+    /* see TextDocumentGenerate.java */
+    String textDocumentTitle = "textDocumentTitle";
+    String textDocumentBroadcastTitle = "textDocumentBroadcastTitle";
+    String textDocumentCmd = "textDocumentCmd";
+    String textDocumentBroadcast = "textDocumentBroadcast";
+    String textDocumentErrorCodeTitle = "textDocumentErrorCodeTitle";
 }

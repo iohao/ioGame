@@ -18,6 +18,8 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
 import com.iohao.game.common.kit.time.FormatTimeKit;
@@ -89,10 +91,12 @@ public final class TextDocumentGenerate implements DocumentGenerate {
 
     private void gameDocURLDescription() {
         // 加上游戏文档格式说明
+        String title = Bundle.getMessage(MessageKey.textDocumentTitle);
+
         String gameDocInfo = """
-                ==================== 游戏文档格式说明 ====================
+                ==================== %s ====================
                 https://www.yuque.com/iohao/game/irth38#cJLdC
-                """;
+                """.formatted(title);
 
         this.docContentJoiner.add("generate %s".formatted(FormatTimeKit.format()));
         this.docContentJoiner.add(gameDocInfo);
@@ -105,33 +109,47 @@ public final class TextDocumentGenerate implements DocumentGenerate {
             return;
         }
 
-        this.docContentJoiner.add("==================== 其它广播推送 ====================");
+        String title = Bundle.getMessage(MessageKey.textDocumentBroadcastTitle);
+        this.docContentJoiner.add("==================== %s ====================".formatted(title));
+
 
         for (BroadcastDocument broadcastDocument : broadcastDocumentList) {
 
-            String template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}";
+            String template = "{textDocumentCmd}: {cmd} - {subCmd}  --- {textDocumentBroadcast}: {dataClass} {dataDescription}";
 
             if (StrKit.isNotEmpty(broadcastDocument.getMethodDescription())) {
-                template = "路由: {cmd} - {subCmd}  --- 广播推送: {dataClass} {dataDescription}，({description})";
+                template = "{textDocumentCmd}: {cmd} - {subCmd}  --- {textDocumentBroadcast}: {dataClass} {dataDescription}，({description})";
             }
 
-            var stringObjectMap = new HashMap<>();
-            stringObjectMap.put("cmd", broadcastDocument.getCmd());
-            stringObjectMap.put("subCmd", broadcastDocument.getSubCmd());
-            stringObjectMap.put("dataClass", broadcastDocument.getDataClassName());
-            stringObjectMap.put("description", broadcastDocument.getMethodDescription());
-            stringObjectMap.put("dataDescription", broadcastDocument.getDataDescription());
+            var paramMap = toMap(broadcastDocument);
 
-            String format = StrKit.format(template, stringObjectMap);
+            String format = StrKit.format(template, paramMap);
             this.docContentJoiner.add(format);
         }
 
         this.docContentJoiner.add("");
     }
 
-    private void extractedErrorCode(IoGameDocument ioGameDocument) {
+    private HashMap<Object, Object> toMap(BroadcastDocument broadcastDocument) {
+        String textDocumentCmd = Bundle.getMessage(MessageKey.textDocumentCmd);
+        String textDocumentBroadcast = Bundle.getMessage(MessageKey.textDocumentBroadcast);
 
-        this.docContentJoiner.add("==================== 错误码 ====================");
+        var map = new HashMap<>();
+        map.put("cmd", broadcastDocument.getCmd());
+        map.put("subCmd", broadcastDocument.getSubCmd());
+        map.put("dataClass", broadcastDocument.getDataClassName());
+        map.put("description", broadcastDocument.getMethodDescription());
+        map.put("dataDescription", broadcastDocument.getDataDescription());
+        map.put("textDocumentCmd", textDocumentCmd);
+        map.put("textDocumentBroadcast", textDocumentBroadcast);
+
+        return map;
+    }
+
+    private void extractedErrorCode(IoGameDocument ioGameDocument) {
+        String title = Bundle.getMessage(MessageKey.textDocumentErrorCodeTitle);
+
+        this.docContentJoiner.add("==================== %s ====================".formatted(title));
 
         for (ErrorCodeDocument errorCodeDocument : ioGameDocument.getErrorCodeDocumentList()) {
             String format = "%s : %s : %s".formatted(errorCodeDocument.getValue(),

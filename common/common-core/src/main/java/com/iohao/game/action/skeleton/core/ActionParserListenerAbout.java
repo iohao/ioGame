@@ -104,7 +104,6 @@ final class ProtobufActionParserListener implements ActionParserListener {
     }
 }
 
-
 /**
  * proto 协议类型添检测
  *

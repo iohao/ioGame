@@ -144,6 +144,7 @@ public class BroadcastDocumentBuilder {
                 // 方法相关
                 .setMethodDescription(this.methodDescription)
                 .setMethodName(theMethodName)
+                .setCmdMethodName(StrKit.firstCharToLowerCase(theMethodName))
                 // 业务参数相关
                 .setDataClass(this.dataClass)
                 .setDataClassName(this.dataClassName)

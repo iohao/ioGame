@@ -22,6 +22,8 @@ import com.iohao.game.common.kit.adapter.AdapterHuUtils;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
+import java.sql.SQLOutput;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -42,6 +44,17 @@ public class StrKit {
         if (firstChar >= 'a' && firstChar <= 'z') {
             char[] arr = value.toCharArray();
             arr[0] -= 32;
+            return String.valueOf(arr);
+        }
+
+        return value;
+    }
+
+    public String firstCharToLowerCase(String value) {
+        char firstChar = value.charAt(0);
+        if (firstChar >= 'A' && firstChar <= 'Z') {
+            char[] arr = value.toCharArray();
+            arr[0] += 32;
             return String.valueOf(arr);
         }
 

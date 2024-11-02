@@ -29,10 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -78,6 +75,12 @@ class DocumentAnalyseKit {
             errorCodeDocument.setName(code.name());
             errorCodeDocument.setValue(code.getCode());
             errorCodeDocument.setDescription(code.getMsg());
+
+            // i18n
+            if (Locale.getDefault() == Locale.US) {
+                errorCodeDocument.setDescription(code.name());
+            }
+
             return errorCodeDocument;
         }).toList();
     }

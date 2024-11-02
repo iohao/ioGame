@@ -21,7 +21,9 @@ package com.iohao.game.action.skeleton.core.doc;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.common.kit.MoreKit;
+import com.iohao.game.common.kit.RuntimeKit;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.thoughtworks.qdox.model.JavaClass;
 import lombok.Getter;
 import lombok.Setter;
@@ -167,6 +169,11 @@ public class IoGameDocumentHelper {
      */
     public void addDocumentGenerate(DocumentGenerate documentGenerate) {
         var key = documentGenerate.getClass();
+
+        if (documentGenerateMap.containsKey(key)) {
+            ThrowKit.ofRuntimeException("%s exist".formatted(key));
+        }
+
         IoGameDocumentHelper.documentGenerateMap.putIfAbsent(key, documentGenerate);
     }
 
