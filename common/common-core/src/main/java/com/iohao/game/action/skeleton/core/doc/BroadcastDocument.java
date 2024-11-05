@@ -57,7 +57,6 @@ public final class BroadcastDocument {
     boolean dataIsList;
 
     String bizDataType;
-    String bizDataTypeSimple;
 
     /** sdk result get 方法名 */
     String resultMethodTypeName;
@@ -65,7 +64,6 @@ public final class BroadcastDocument {
     String resultMethodListTypeName;
 
     String dataActualTypeName;
-    String dataActualTypeNameSimple;
 
     String exampleCode;
     String exampleCodeAction;

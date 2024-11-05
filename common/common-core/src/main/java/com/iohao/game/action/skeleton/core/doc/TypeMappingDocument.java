@@ -30,19 +30,7 @@ import java.util.Map;
 public interface TypeMappingDocument {
     Map<Class<?>, TypeMappingRecord> getMap();
 
-    default TypeMappingRecord getTypeMappingRecord(Class<?> protoTypeClazz) {
-        var map = getMap();
-        if (map.containsKey(protoTypeClazz)) {
-            return map.get(protoTypeClazz);
-        }
-
-        String simpleName = protoTypeClazz.getSimpleName();
-
-        return new TypeMappingRecord()
-                .setInternalType(false)
-                .setParamTypeName(simpleName).setListParamTypeName("List<%s>".formatted(simpleName))
-                .setOfMethodTypeName("").setOfMethodListTypeName("ValueList");
-    }
+    TypeMappingRecord getTypeMappingRecord(Class<?> protoTypeClazz);
 
     default void mapping(TypeMappingRecord record, List<Class<?>> clazzList) {
         for (Class<?> clazz : clazzList) {
