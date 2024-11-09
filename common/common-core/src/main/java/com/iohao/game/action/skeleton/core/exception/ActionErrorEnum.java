@@ -22,6 +22,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Locale;
+
 /**
  * action 错误码
  * <pre>
@@ -73,5 +75,9 @@ public enum ActionErrorEnum implements MsgExceptionInfo {
     ActionErrorEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
+    }
+
+    public String getMsg() {
+        return Locale.getDefault() == Locale.CHINA ? msg : name();
     }
 }

@@ -233,23 +233,18 @@ final class CmdCacheRegion {
      */
     CmdActionCache getCmdCache(int cmdMerge) {
 
-        CmdActionCache cmdActionCache = this.cmdCacheMap.get(cmdMerge);
-
+        var cmdActionCache = this.cmdCacheMap.get(cmdMerge);
         if (Objects.nonNull(cmdActionCache)) {
             return cmdActionCache;
         }
 
         // 如果开启了范围缓存，即使没有显示的配置，也会生成缓存对象
-        if (range) {
-            cmdActionCache = addCmdCache(cmdMerge, this.cmdCacheOption);
-        }
-
-        return cmdActionCache;
+        return range ? addCmdCache(cmdMerge, this.cmdCacheOption) : null;
     }
 
     CmdActionCache addCmdCache(int cmdMerge, CmdCacheOption cmdCacheOption) {
 
-        CmdActionCache cmdActionCache = this.cmdCacheMap.get(cmdMerge);
+        var cmdActionCache = this.cmdCacheMap.get(cmdMerge);
         if (Objects.nonNull(cmdActionCache)) {
             return cmdActionCache;
         }

@@ -60,6 +60,9 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
     public void pipelineIdle(PipelineContext context) {
         IdleProcessSetting idleProcessSetting = this.setting.getIdleProcessSetting();
         if (Objects.isNull(idleProcessSetting)) {
+            // 如果服务器没有配置心跳相关的内容，则排除心跳数据（不做任何处理）
+            // If the server is not configured with heartbeat processing, exclude heartbeat data
+            context.addLast("SocketIdleExcludeHandler", SocketIdleExcludeHandler.me());
             return;
         }
 
@@ -71,9 +74,8 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
                 idleProcessSetting.getTimeUnit())
         );
 
-        SocketIdleHandler socketIdleHandler = setting.option(SettingOption.socketIdleHandler);
-
         // 心跳响应、心跳钩子 Handler
+        SocketIdleHandler socketIdleHandler = setting.option(SettingOption.socketIdleHandler);
         context.addLast("idleHandler", socketIdleHandler);
     }
 
