@@ -34,7 +34,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 @ChannelHandler.Sharable
 public final class SocketIdleExcludeHandler extends ChannelInboundHandlerAdapter {
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         BarMessage message = (BarMessage) msg;
 
         int cmdCode = message.getHeadMetadata().getCmdCode();

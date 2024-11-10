@@ -21,9 +21,7 @@ package com.iohao.game.action.skeleton.core.doc;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.common.kit.MoreKit;
-import com.iohao.game.common.kit.RuntimeKit;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.common.kit.exception.ThrowKit;
 import com.thoughtworks.qdox.model.JavaClass;
 import lombok.Getter;
 import lombok.Setter;
@@ -60,11 +58,11 @@ public class IoGameDocumentHelper {
      *      value : action 文档
      *  </pre>
      */
-    private Map<Class<?>, ActionDoc> actionDocMap = new NonBlockingHashMap<>();
+    private final Map<Class<?>, ActionDoc> actionDocMap = new NonBlockingHashMap<>();
     /** 错误码枚举类信息，用于生成错误码相关信息 */
-    private Set<Class<? extends MsgExceptionInfo>> errorCodeClassSet = new NonBlockingHashSet<>();
-    private Map<Class<? extends DocumentGenerate>, DocumentGenerate> documentGenerateMap = new HashMap<>();
-    private List<BroadcastDocument> broadcastDocumentList = new CopyOnWriteArrayList<>();
+    private final Set<Class<? extends MsgExceptionInfo>> errorCodeClassSet = new NonBlockingHashSet<>();
+    private final Set<DocumentGenerate> documentGenerateSet = new NonBlockingHashSet<>();
+    private final List<BroadcastDocument> broadcastDocumentList = new CopyOnWriteArrayList<>();
 
     /** true 生成文档 */
     private boolean generateDoc = true;
@@ -101,19 +99,7 @@ public class IoGameDocumentHelper {
         IoGameDocument ioGameDocument = analyse();
 
         // 文档生成
-        IoGameDocumentHelper.documentGenerateMap
-                .values()
-                .forEach(documentGenerate -> documentGenerate.generate(ioGameDocument));
-
-        clear();
-    }
-
-    private void clear() {
-        // 生成文档后，移除静态数据
-        actionDocMap = null;
-        errorCodeClassSet = null;
-        documentGenerateMap = null;
-        broadcastDocumentList = null;
+        documentGenerateSet.forEach(documentGenerate -> documentGenerate.generate(ioGameDocument));
     }
 
     private IoGameDocument analyse() {
@@ -168,13 +154,7 @@ public class IoGameDocumentHelper {
      * @param documentGenerate 文档生成接口
      */
     public void addDocumentGenerate(DocumentGenerate documentGenerate) {
-        var key = documentGenerate.getClass();
-
-        if (documentGenerateMap.containsKey(key)) {
-            ThrowKit.ofRuntimeException("%s exist".formatted(key));
-        }
-
-        IoGameDocumentHelper.documentGenerateMap.putIfAbsent(key, documentGenerate);
+        documentGenerateSet.add(documentGenerate);
     }
 
     /**
