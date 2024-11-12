@@ -152,6 +152,10 @@ class BroadcastDebug {
             if (RangeBroadcast.class.getName().equals(name)) {
                 return index + 1;
             }
+
+            if ("com.iohao.game.action.skeleton.core.flow.SimpleCommunicationBroadcast".equals(name)) {
+                return index + 1;
+            }
         }
 
         return 2;

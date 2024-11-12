@@ -88,7 +88,13 @@ public final class ActionMethodDocument {
         this.actionSimpleName = actionCommand.getActionControllerClazz().getSimpleName();
 
         // 方法名
-        this.actionMethodName = StrKit.firstCharToUpperCase(actionCommand.getActionMethodName());
+        var documentMethod = actionCommand.getAnnotation(DocumentMethod.class);
+        if (Objects.nonNull(documentMethod)) {
+            this.actionMethodName = StrKit.firstCharToUpperCase(documentMethod.value());
+        } else {
+            this.actionMethodName = StrKit.firstCharToUpperCase(actionCommand.getActionMethodName());
+        }
+
         // 方法注释
         this.methodComment = this.actionCommandDoc.getComment();
 
