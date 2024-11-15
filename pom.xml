@@ -44,6 +44,7 @@
         <!-- 小部件 : 桌游类、房间类游戏的扩展模块，进一步减少开发实践过程中的工作量 -->
         <module>widget/light-game-room</module>
         <module>widget/other-tool</module>
+        <module>widget/generate-code</module>
     </modules>
 
     <!--统一管理版本 的一个父 pom-->
@@ -101,7 +102,7 @@
         -->
         <jprotobuf.version>2.4.23</jprotobuf.version>
         <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
-        <protobuf-java.version>3.25.3</protobuf-java.version>
+        <protobuf-java.version>3.25.5</protobuf-java.version>
     </properties>
 
     <dependencies>

@@ -1,0 +1,49 @@
+    /// <summary>
+    /// ${methodComment}
+    /// </summary>
+    /// <param name="${bizDataName}">${bizDataComment}</param>
+    /// <param name="callback">${returnDataIsList?"list of "}<see cref="${returnDataName}"/> ${returnComment}</param>
+    /// <returns>RequestCommand</returns>
+    /// <code>
+    /// // ${bizDataComment}
+    /// ${codeEscape(bizDataType)} ${bizDataName} = ...;
+    /// ${actionSimpleName}.of${actionMethodName}(${bizDataName}, result => {
+    ///     // ioGame: your biz code.
+    ///     // ${returnComment}
+    ///     ${exampleCode!}
+    ///     result.Log(value);
+    /// });
+    /// </code>
+    public static RequestCommand Of${actionMethodName}(${bizDataType} ${bizDataName}, CallbackDelegate callback)
+    {
+    <%if (bizDataTypeIsList && !internalBizDataType) {%>
+        var dataList = ${bizDataName}.Cast<IMessage>().ToList();
+        return RequestCommand.Of${sdkMethodName}(${memberCmdName}, dataList).OnCallback(callback).Execute();
+    <%} else {%>
+        return RequestCommand.Of${sdkMethodName!}(${memberCmdName}, ${bizDataName}).OnCallback(callback).Execute();
+    <%}%>
+    }
+
+    /// <summary>
+    /// ${methodComment}
+    /// </summary>
+    /// <param name="${bizDataName}">${bizDataComment}</param>
+    /// <returns>ResponseResult，${returnDataIsList?"list of "}<see cref="${returnDataName}"/> ${returnComment}</returns>
+    /// <code>
+    /// // ${bizDataComment}
+    /// ${codeEscape(bizDataType)} ${bizDataName} = ...;
+    /// var result = await ${actionSimpleName}.ofAwait${actionMethodName}(${bizDataName});
+    /// // ioGame: your biz code.
+    /// // ${returnComment}
+    /// ${exampleCode!}
+    /// result.Log(value);
+    /// </code>
+    public static async Task<ResponseResult> OfAwait${actionMethodName}(${bizDataType} ${bizDataName})
+    {
+    <%if (bizDataTypeIsList && !internalBizDataType) {%>
+        var dataList = ${bizDataName}.Cast<IMessage>().ToList();
+        return await RequestCommand.OfAwait${sdkMethodName}(${memberCmdName}, dataList);
+    <%} else {%>
+        return await RequestCommand.OfAwait${sdkMethodName}(${memberCmdName}, ${bizDataName});
+    <%}%>
+    }

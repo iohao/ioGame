@@ -1,0 +1,22 @@
+<%
+var resultMethodName;
+if (returnDataTypeIsInternal) {
+    // see CSharpDocumentGenerate.extractedInitTypeMapping, TypeMappingRecord
+    if (returnDataIsList) {
+        resultMethodName = resultMethodListTypeName;
+    } else {
+        resultMethodName = resultMethodTypeName;
+    }
+%>
+var value = result.${resultMethodName};
+<%
+} else {
+    // see CSharpTypeMappingDocument.getTypeMappingRecord, ActionMethodDocument.extractedReturnInfo
+    if (returnDataIsList) {
+        resultMethodName = resultMethodListTypeName;
+    } else {
+        resultMethodName = resultMethodTypeName;
+    }
+%>
+var value = result.${codeEscape(resultMethodName)};
+<%}%>

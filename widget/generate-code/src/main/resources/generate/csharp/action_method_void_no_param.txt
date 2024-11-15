@@ -1,0 +1,11 @@
+    /// <summary>
+    /// ${methodComment}
+    /// </summary>
+    /// <returns>RequestCommand void</returns>
+    /// <code>
+    /// ${actionSimpleName}.of${actionMethodName}();
+    /// </code>
+    public static RequestCommand Of${actionMethodName}()
+    {
+        return RequestCommand.Of(${memberCmdName}).Execute();
+    }

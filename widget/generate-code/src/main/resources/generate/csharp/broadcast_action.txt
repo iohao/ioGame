@@ -1,0 +1,50 @@
+${generateTime}
+${ioGameHome}
+${using}
+using IoGame.Sdk;
+
+namespace ${namespace}
+{
+  /// <summary>
+  /// Broadcast Listener；广播监听；
+  /// </summary>
+  /// <remarks>Author: https://github.com/iohao/ioGame</remarks>
+  public static class Listener
+  {
+  <%for(o in broadcastDocumentList) {%>
+    private static readonly int ${o.cmdMethodName}_${o.cmd}_${o.subCmd} = CmdKit.MappingBroadcast(${o.cmdMerge},"${o.methodDescription!}");
+  <%}%>
+  <%for(o in broadcastDocumentList) {%>
+
+    /// <summary>
+    /// ${o.methodDescription}
+    /// </summary>
+    /// <param name="callback">${o.dataIsList?"list of "}<see cref="${o.bizDataType}"/> ${o.dataDescription}</param>
+    /// <code>
+    /// Listener.listen${o.methodName}(result => {
+    ///     // ${o.dataDescription!"broadcast notification"}
+    ///     ${o.exampleCode!}
+    /// });
+    /// </code>
+    public static void Listen${o.methodName}(CallbackDelegate callback)
+    {
+      ListenCommand.Of(${o.cmdMethodName}_${o.cmd}_${o.subCmd}, callback);
+    }
+  <%}%>
+
+    public static void Listener_ioGame()
+    {
+      // all listener
+    <%for(o in broadcastDocumentList) {%>
+
+      Listen${o.methodName}(result =>
+      {
+        var mergeTitle = CmdKit.ToString(result.GetCmdMerge());
+        var title = CmdKit.GetBroadcastTitle(result.GetCmdMerge());
+        ${o.exampleCodeAction!}
+        IoGameSetting.GameGameConsole.Log($"{mergeTitle}, {title}, {value}");
+      });
+   <%}%>
+    }
+  }
+}

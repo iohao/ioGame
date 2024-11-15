@@ -1,0 +1,19 @@
+    /// <summary>
+    /// ${methodComment}
+    /// </summary>
+    /// <param name="${bizDataName}">${bizDataComment}</param>
+    /// <returns>RequestCommand void</returns>
+    /// <code>
+    /// // ${bizDataComment}
+    /// ${codeEscape(bizDataType)} ${bizDataName} = ...;
+    /// ${actionSimpleName}.of${actionMethodName}(${bizDataName});
+    /// </code>
+    public static RequestCommand Of${actionMethodName}(${bizDataType} ${bizDataName})
+    {
+    <%if (bizDataTypeIsList && !internalBizDataType) {%>
+        var dataList = ${bizDataName}.Cast<IMessage>().ToList();
+        return RequestCommand.Of${sdkMethodName}(${memberCmdName}, dataList).Execute();
+    <%} else {%>
+        return RequestCommand.Of${sdkMethodName!}(${memberCmdName}, ${bizDataName}).Execute();
+    <%}%>
+    }

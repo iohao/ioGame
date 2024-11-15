@@ -1,0 +1,33 @@
+    /// <summary>
+    /// ${methodComment}
+    /// </summary>
+    /// <param name="callback">${returnDataIsList?"list of "}<see cref="${returnDataName}"/> ${returnComment}</param>
+    /// <returns>RequestCommand</returns>
+    /// <code>
+    /// ${actionSimpleName}.of${actionMethodName}(result => {
+    ///     // ioGame: your biz code.
+    ///     // ${returnComment}
+    ///     ${exampleCode!}
+    ///     result.Log(value);
+    /// });
+    /// </code>
+    public static RequestCommand Of${actionMethodName}(CallbackDelegate callback)
+    {
+        return RequestCommand.Of${sdkMethodName}(${memberCmdName}).OnCallback(callback).Execute();
+    }
+
+    /// <summary>
+    /// ${methodComment}
+    /// </summary>
+    /// <returns>ResponseResult，${returnDataIsList?"list of "}<see cref="${returnDataName}"/> ${returnComment}</returns>
+    /// <code>
+    /// var result = await ${actionSimpleName}.ofAwait${actionMethodName}();
+    /// // ioGame: your biz code.
+    /// // ${returnComment}
+    /// ${exampleCode!}
+    /// result.Log(value);
+    /// </code>
+    public static async Task<ResponseResult> OfAwait${actionMethodName}()
+    {
+        return await RequestCommand.OfAwait${sdkMethodName}(${memberCmdName});
+    }

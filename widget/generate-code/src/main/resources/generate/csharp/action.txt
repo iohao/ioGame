@@ -1,0 +1,26 @@
+${generateTime}
+${ioGameHome}
+${using}
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Google.Protobuf;
+using IoGame.Sdk;
+
+namespace ${namespace}
+{
+  /// <summary>
+  /// ${ActionComment}
+  /// </summary>
+  /// <remarks>Author: https://github.com/iohao/ioGame</remarks>
+  public static class ${ActionName}
+  {
+  <%for(o in actionMemberCmdDocumentList) {%>
+    private static readonly int ${o.memberName} = CmdKit.MappingRequest(${o.cmdMerge}, "${o.comment}");
+  <%}%>
+
+  <%for(o in methodCodeList) {%>
+${o}
+  <%}%>
+  }
+}

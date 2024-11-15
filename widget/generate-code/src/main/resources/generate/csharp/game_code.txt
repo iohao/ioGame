@@ -1,0 +1,33 @@
+${generateTime}
+${ioGameHome}
+${using}
+using System.Collections.Generic;
+using IoGame.Sdk;
+
+namespace ${namespace}
+{
+    /// <summary>
+    /// GameCode、ErrorCode. 游戏错误码
+    /// </summary>
+    /// <remarks>Author: https://github.com/iohao/ioGame</remarks>
+    public static class GameCode
+    {
+    <%for(o in errorCodeDocumentList) {%>
+        /// <summary>
+        /// ${o.description}
+        /// </summary>
+        public static readonly int ${o.name} = CmdKit.MappingErrorCode(${o.value}, "${o.description!}");
+
+    <%}%>
+        public static void Init() {
+            // trigger errorCodeMapping init.
+            // 调用一次方法，触发错误码的初始化操作。
+            var ints = new List<int>
+            {
+            <%for(o in errorCodeDocumentList) {%>
+                ${o.name},
+            <%}%>0
+            };
+        }
+    }
+}
