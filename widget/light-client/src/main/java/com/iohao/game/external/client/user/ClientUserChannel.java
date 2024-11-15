@@ -123,7 +123,7 @@ public class ClientUserChannel {
 
         if (ClientUserConfigs.openLogRequestCommand) {
             long userId = clientUser.getUserId();
-            log.info("玩家[{}] 发起【{}】请求 - [msgId:{}] {} {}"
+            log.info("User[{}] Request【{}】- [msgId:{}] {} {}"
                     , userId
                     , requestCommand.getTitle()
                     , msgId
@@ -171,7 +171,7 @@ public class ClientUserChannel {
 
             // 表示有异常消息，统一异常处理
             if (responseStatus != 0) {
-                log.error("[错误码:{}] - [消息:{}] - {}", responseStatus, message.getValidatorMsg(), headMetadata.getCmdInfo());
+                log.error("[ErrorCode:{}] - [ErrorMsg:{}] - {}", responseStatus, message.getValidatorMsg(), headMetadata.getCmdInfo());
                 return;
             }
 
@@ -205,13 +205,13 @@ public class ClientUserChannel {
 
         private void printLog(BarMessage message) {
             if (ClientUserConfigs.openLogIdle) {
-                log.info("接收服务器心跳回调 : {}", message);
+                log.info("Receive Idle: {}", message);
             }
         }
 
         private void printLog(ListenCommand listenCommand, int cmdMerge) {
             if (ClientUserConfigs.openLogListenBroadcast) {
-                log.info("广播监听回调 [{}] 通知 {}"
+                log.info("Listen Callback [{}] - {}"
                         , listenCommand.getTitle()
                         , CmdKit.mergeToShort(cmdMerge)
                 );
@@ -224,7 +224,7 @@ public class ClientUserChannel {
                 long userId = clientUser.getUserId();
                 int cmdMerge = headMetadata.getCmdMerge();
 
-                log.info("玩家[{}] 接收【{}】回调 - [msgId:{}] {}"
+                log.info("User[{}] Receive【{}】- [msgId:{}] {}"
                         , userId
                         , requestCommand.getTitle()
                         , headMetadata.getMsgId()
