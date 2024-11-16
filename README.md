@@ -174,6 +174,22 @@ ioGame 在内存占用、启动速度、打包等方面也是优秀的。
 
 **示例**
 
+Sdk + [代码生成](https://www.yuque.com/iohao/game/irth38)的示例
+
+> ioGame 具备一次编写到处对接的能力，你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue 等 C#、TypeScript 类型的项目生成交互接口，帮助客户端开发者减少巨大的工作量。
+
+| Github                                                       | 描述                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [ioGameSdkC#ExampleGodot](https://github.com/iohao/ioGameSdkCsharpExampleGodot) | 与 [Godot](https://godotengine.org/) 互通的一个示例。 Godot、Protobuf、Netty、ioGame、C#、Csharp、WebSocket |
+| [ioGameSdkC#ExampleUnity](https://github.com/iohao/ioGameSdkCsharpExampleUnity) | 与 [Unity](https://unity.com/) 互通的一个示例。 Unity、Protobuf、Netty、ioGame、C#、Csharp、WebSocket |
+| [ioGameSdkTsExampleCocos](https://github.com/iohao/ioGameSdkTsExampleCocos) | 与 [Cocos Creator](https://www.cocos.com/) 互通的一个示例。 CocosCreator、Protobuf、Netty、ioGame、TypeScript、WebSocket |
+| [ioGameSdkTsExampleVue](https://github.com/iohao/ioGameSdkTsExampleVue) | 与 [Vue](https://github.com/vuejs/) 互通的一个示例。 Vue、Protobuf、Netty、ioGame、TypeScript、WebSocket |
+| [ioGameSdkTsExampleHtml](https://github.com/iohao/ioGameSdkTsExampleHtml) | 与 [webpack](https://github.com/webpack/webpack) 互通的一个示例。 （webpack: html + ts）、Protobuf、Netty、ioGame、TypeScript、WebSocket |
+
+
+
+非 Sdk 示例集合，由热心市民提供
+
 | 示例                                                         | 描述                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、k8s）等介绍        |
@@ -190,12 +206,9 @@ ioGame 在内存占用、启动速度、打包等方面也是优秀的。
 
 **效率**
 
-| **效率**                                                     |                                                              |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [ioGame 快速理解篇](https://www.yuque.com/iohao/game/le48p1go9gkdqgih) | 快速掌握 ioGame 的概念                                       |
-| [技术栈推荐与其它参考文档](https://www.yuque.com/iohao/game/swt3ls) | 游戏开发的技术栈建议，大家可以参考一下。                     |
-| [更多游戏服务器框架推荐](https://www.yuque.com/iohao/game/ytrfic) | 如果 ioGame 不能很好的满足你的需要，请别担心，这里还有更多的 java 游戏服务器框架推荐给你。 |
-| [ioGame java SDK](https://www.yuque.com/iohao/game/ot4o45f8u9566wu0) | ioGame java SDK 主要作用是与 ioGame 服务器进行通信，为开发者简化交互过程。 |
+| **效率**                                                     |                        |
+| ------------------------------------------------------------ | ---------------------- |
+| [ioGame 快速理解篇](https://www.yuque.com/iohao/game/le48p1go9gkdqgih) | 快速掌握 ioGame 的概念 |
 
 
 
@@ -207,7 +220,7 @@ ioGame 已经上传到中央仓库，如果无法下载最新的框架源码，�
 
 
 
-ioGame最新版本查看 https://www.yuque.com/iohao/game/ab15oe
+ioGame 最新版本查看 https://www.yuque.com/iohao/game/ab15oe
 
 
 
@@ -1519,21 +1532,22 @@ public class RoomNumMsg {
 <details>
 <summary>游戏服务器框架内置功能详细--点我展开</summary>
 
-- [领域事件](https://www.yuque.com/iohao/game/gmfy1k) （轻量级单机最快MQ -- disruptor；可为你的系统实现类似 Guava-EventBus、Spring 事件驱动模型 ApplicationEvent、业务解耦、规避并发、不阻塞主线程... 等，各种浪操作。）
-- [多环境切换](https://www.yuque.com/iohao/game/ekx6ve) （不同运行环境下的配置支持）
-- [light-jprotobuf ](https://www.yuque.com/iohao/game/vpe2t6) （补足 jprotobuf 不能让多个对象在单个 .proto 源文件中生成的需求，并简化jprotobuf对源文件的注释）
-- [压测&模拟客户端请求](https://www.yuque.com/iohao/game/tc83ud)
-- [room 桌游、房间类](https://www.yuque.com/iohao/game/vtzbih)，该模块是桌游类、房间类游戏的解决方案。比较适合桌游类、房间类的游戏基础搭建，基于该模型可以做一些如，炉石传说、三国杀、斗地主、麻将 ...等类似的桌游。或者说只要是房间类的游戏，该模型都适用。比如，CS、泡泡堂、飞行棋、坦克大战 ...等。
+1. [领域事件](https://www.yuque.com/iohao/game/gmfy1k) （轻量级单机最快MQ -- disruptor；可为你的系统实现类似 Guava-EventBus、Spring 事件驱动模型 ApplicationEvent、业务解耦、规避并发、不阻塞主线程... 等，各种浪操作。）
+2. [多环境切换](https://www.yuque.com/iohao/game/ekx6ve) （不同运行环境下的配置支持）
+3. [light-jprotobuf ](https://www.yuque.com/iohao/game/vpe2t6) （补足 jprotobuf 不能让多个对象在单个 .proto 源文件中生成的需求，并简化jprotobuf对源文件的注释）
+4. [压测&模拟客户端请求](https://www.yuque.com/iohao/game/tc83ud)
+5. [room 桌游、房间类](https://www.yuque.com/iohao/game/vtzbih)，该模块是桌游类、房间类游戏的解决方案。比较适合桌游类、房间类的游戏基础搭建，基于该模型可以做一些如，炉石传说、三国杀、斗地主、麻将 ...等类似的桌游。或者说只要是房间类的游戏，该模型都适用。比如，CS、泡泡堂、飞行棋、坦克大战 ...等。
+6. [代码生成](https://www.yuque.com/iohao/game/tufktv)（可为不同的客户端生成代码，如 Unity、Godot、CocosCreator、Vue）
 
 **内置的其他功能：**
 
-- [心跳相关](https://www.yuque.com/iohao/game/uueq3i)
-- [用户上线、离线相关的钩子方法](https://www.yuque.com/iohao/game/hv5qqh)
-- [UserSessions](https://www.yuque.com/iohao/game/wg6lk7) （对所有用户UserSession的管理，统计在线用户等）
-- [UserSession](https://www.yuque.com/iohao/game/wg6lk7) (与 channel 是 1:1 的关系，可取到对应的 userId、channel 等信息。)
-- [登录相关](https://www.yuque.com/iohao/game/tywkqv)（提供重复登录、顶号等相关增强功能）
-- [业务参数自动装箱、拆箱基础类型](https://www.yuque.com/iohao/game/ieimzn) （解决协议碎片）
-- [内置 Kit](https://www.yuque.com/iohao/game/inkbrpnodgs1lvrt) （动态属性、属性监听、超时处理任务、定时器模拟、任务调度、延时任务、轻量可控的延时任务 ...等）
+1. [心跳相关](https://www.yuque.com/iohao/game/uueq3i)
+2. [用户上线、离线相关的钩子方法](https://www.yuque.com/iohao/game/hv5qqh)
+3. [UserSessions](https://www.yuque.com/iohao/game/wg6lk7) （对所有用户UserSession的管理，统计在线用户等）
+4. [UserSession](https://www.yuque.com/iohao/game/wg6lk7) (与 channel 是 1:1 的关系，可取到对应的 userId、channel 等信息。)
+5. [登录相关](https://www.yuque.com/iohao/game/tywkqv)（提供重复登录、顶号等相关增强功能）
+6. [业务参数自动装箱、拆箱基础类型](https://www.yuque.com/iohao/game/ieimzn) （解决协议碎片）
+7. [内置 Kit](https://www.yuque.com/iohao/game/inkbrpnodgs1lvrt) （动态属性、属性监听、超时处理任务、定时器模拟、任务调度、延时任务、轻量可控的延时任务 ...等）
 
 </details>
 
