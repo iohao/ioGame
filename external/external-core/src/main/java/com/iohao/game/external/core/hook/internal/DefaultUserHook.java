@@ -18,6 +18,8 @@
  */
 package com.iohao.game.external.core.hook.internal;
 
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.common.consts.IoGameLogName;
 import com.iohao.game.external.core.aware.UserSessionsAware;
 import com.iohao.game.external.core.hook.UserHook;
@@ -43,16 +45,19 @@ public class DefaultUserHook implements UserHook, UserSessionsAware {
     @Override
     public void into(UserSession userSession) {
         long userId = userSession.getUserId();
-        log.info("[玩家上线] 在线数量:{}  userId:{} -- {}"
+        log.info("{}:{}  userId:{} -- {}, into"
+                , Bundle.getMessage(MessageKey.userHookInto)
                 , userSessions.countOnline()
                 , userId, userSession.getUserChannelId());
     }
 
     @Override
     public void quit(UserSession userSession) {
+
         long userId = userSession.getUserId();
-        log.info("[玩家下线] 在线数量:{}  userId:{} -- {}",
-                userSessions.countOnline()
+        log.info("{}:{}  userId:{} -- {}, quit"
+                , Bundle.getMessage(MessageKey.userHookQuit)
+                , userSessions.countOnline()
                 , userId, userSession.getUserChannelId());
     }
 }

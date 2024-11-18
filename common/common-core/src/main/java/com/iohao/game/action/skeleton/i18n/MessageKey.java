@@ -77,4 +77,8 @@ public interface MessageKey {
     String textDocumentCmd = "textDocumentCmd";
     String textDocumentBroadcast = "textDocumentBroadcast";
     String textDocumentErrorCodeTitle = "textDocumentErrorCodeTitle";
+
+    /* see DefaultUserHook.java */
+    String userHookInto = "userHookInto";
+    String userHookQuit = "userHookQuit";
 }
