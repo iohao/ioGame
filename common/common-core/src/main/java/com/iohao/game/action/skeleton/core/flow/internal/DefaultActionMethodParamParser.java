@@ -25,7 +25,6 @@ import com.iohao.game.action.skeleton.core.flow.ActionMethodParamParser;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.parser.MethodParsers;
-import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 
 import java.util.Objects;
 
@@ -61,7 +60,7 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
             // 业务参数
             var data = flowContext.getRequest().getData();
             // 得到方法参数解析器，把字节解析成 action 业务参数
-            Class<?> paramClazz = paramInfo.getActualTypeArgumentClazz();
+            var paramClazz = paramInfo.getActualTypeArgumentClazz();
             var methodParser = MethodParsers.getMethodParser(paramClazz);
             var param = methodParser.parseParam(data, paramInfo);
             params[i] = param;
@@ -70,21 +69,21 @@ public final class DefaultActionMethodParamParser implements ActionMethodParamPa
 
             // 如果开启了验证
             if (paramInfo.isValidator()) {
-                var response = flowContext.getResponse();
-                extractedValidator(response, paramInfo, param);
+                extractedValidator(flowContext, paramInfo, param);
             }
         }
 
         return params;
     }
 
-    private static void extractedValidator(ResponseMessage response, ActionCommand.ParamInfo paramInfo, Object param) {
+    private void extractedValidator(FlowContext flowContext, ActionCommand.ParamInfo paramInfo, Object param) {
         // 获取分组信息
         Class<?>[] groups = paramInfo.getValidatorGroups();
         // 进行 JSR380 相关的验证
         String validateMsg = ValidatorKit.validate(param, groups);
         // 有错误消息，表示验证不通过
         if (Objects.nonNull(validateMsg)) {
+            var response = flowContext.getResponse();
             response.setValidatorMsg(validateMsg);
             response.setResponseStatus(ActionErrorEnum.validateErrCode.getCode());
         }
