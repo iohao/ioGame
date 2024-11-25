@@ -20,7 +20,7 @@
   <br>
   <strong>架构部署灵活性与多样性：既可相互独立，又可相互融合</strong>
   <br>
-  <strong>可同时与同类型的多个游戏逻辑服通信并得到数据</strong>
+  <strong>一次编写到处对接，能为客户端生成可交互的代码</strong>
   <br>
   <strong>逻辑服之间可相互跨进程、跨机器进行通信</strong>
   <br>
@@ -165,18 +165,21 @@ ioGame 在内存占用、启动速度、打包等方面也是优秀的。
 ### 源码、示例、效率
 
 
-| github                                                     | gitee                                                     |
-| ---------------------------------------------------------- | --------------------------------------------------------- |
-| [ioGame - 源码](https://github.com/iohao/ioGame)           | [ioGame - 源码](https://gitee.com/iohao/ioGame)           |
-| [ioGame 示例集合](https://github.com/iohao/ioGameExamples) | [ioGame 示例集合](https://gitee.com/iohao/ioGameExamples) |
+| github                                           | gitee                                           |
+| ------------------------------------------------ | ----------------------------------------------- |
+| [ioGame - 源码](https://github.com/iohao/ioGame) | [ioGame - 源码](https://gitee.com/iohao/ioGame) |
+
+---
 
 
 
-**示例**
+**Sdk、客户端示例集合**
 
-Sdk + [代码生成](https://www.yuque.com/iohao/game/irth38)的示例
-
-> ioGame 具备一次编写到处对接的能力，你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue 等 C#、TypeScript 类型的项目生成交互接口，帮助客户端开发者减少巨大的工作量。
+> Sdk + [代码生成](https://www.yuque.com/iohao/game/irth38)的示例。
+>
+> 
+>
+> ioGame 具备一次编写到处对接的能力，你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue、Angular 等 C#、TypeScript 类型的项目生成交互接口，帮助客户端开发者减少巨大的工作量。
 
 | Github                                                       | 描述                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -184,15 +187,17 @@ Sdk + [代码生成](https://www.yuque.com/iohao/game/irth38)的示例
 | [ioGameSdkC#ExampleUnity](https://github.com/iohao/ioGameSdkCsharpExampleUnity) | 与 [Unity](https://unity.com/) 互通的一个示例。 Unity、Protobuf、Netty、ioGame、C#、Csharp、WebSocket |
 | [ioGameSdkTsExampleCocos](https://github.com/iohao/ioGameSdkTsExampleCocos) | 与 [Cocos Creator](https://www.cocos.com/) 互通的一个示例。 CocosCreator、Protobuf、Netty、ioGame、TypeScript、WebSocket |
 | [ioGameSdkTsExampleVue](https://github.com/iohao/ioGameSdkTsExampleVue) | 与 [Vue](https://github.com/vuejs/) 互通的一个示例。 Vue、Protobuf、Netty、ioGame、TypeScript、WebSocket |
+| [ioGameSdkTsExampleAngular](https://github.com/iohao/ioGameSdkTsExampleAngular) | 与 [Angular](https://github.com/angular/angular) 互通的一个示例。 Angular、Protobuf、Netty、ioGame、TypeScript、WebSocket |
 | [ioGameSdkTsExampleHtml](https://github.com/iohao/ioGameSdkTsExampleHtml) | 与 [webpack](https://github.com/webpack/webpack) 互通的一个示例。 （webpack: html + ts）、Protobuf、Netty、ioGame、TypeScript、WebSocket |
 
+---
 
 
-非 Sdk 示例集合，由热心市民提供
+
+**非 Sdk 的客户端示例集合，由热心市民提供**
 
 | 示例                                                         | 描述                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [ioGame 综合示例介绍](https://www.yuque.com/iohao/game/ruaqza) | 示例中有功能特性的实践、打包部署（docker、k8s）等介绍        |
 | [[示例] FXGL 连接示例；Protobuf、java、Netty](https://www.yuque.com/iohao/game/bolt) | FXGL + ioGame 网络游戏中的多人移动演示                       |
 | [[示例] Unity 连接示例 - 1；Protobuf、C#、Netty](https://www.yuque.com/iohao/game/syv5mm) | unity3d 连接示例 websocket + protobuf（已经与综合示例调通）  |
 | [[示例] Unity 连接示例 - 2；Protobuf、C#、Netty](https://www.yuque.com/iohao/game/kswsfk13ocg069uf) | 提供了 unity 与 ioGame 的【多人】移动同步演示                |
@@ -201,6 +206,27 @@ Sdk + [代码生成](https://www.yuque.com/iohao/game/irth38)的示例
 | [[示例] UE5 连接示例；Protobuf、C++、Netty](https://www.yuque.com/iohao/game/rus213) | UE5 连接示例 websocket + protobuf（已经与综合示例调通）      |
 | [[示例] JavaScript 连接示例；json、JavaScript、Netty](https://www.yuque.com/iohao/game/knqxehz2pl1sal5s) | 使用 websocket.js 来连接 ioGame 的一个示例，使用 json 协议来传输交互。 |
 | [[示例] TypeScript 连接示例；json、TypeScript、Netty](https://www.yuque.com/iohao/game/wbsnir210c4xtpyp) | 使用 json 协议来传输交互。                                   |
+
+---
+
+
+
+**ioGame 服务器示例集合**
+
+此仓库包含 ioGame 文档中所有示例的集合，每个目录都是一个独立的示例项目。
+
+| gitee                                                     | github                                                     |
+| --------------------------------------------------------- | ---------------------------------------------------------- |
+| [ioGame 示例集合](https://gitee.com/iohao/ioGameExamples) | [ioGame 示例集合](https://github.com/iohao/ioGameExamples) |
+
+| **目录、源码**    | **描述、文档**                                               |
+| ----------------- | ------------------------------------------------------------ |
+| RoomExample       | [桌游、房间类 (yuque.com)](https://www.yuque.com/iohao/game/vtzbih) 相关示例，游戏客户端使用 FXGL 制作，有大厅、房间。 |
+| SimpleExample     | 文档中所有功能点的示例                                       |
+| SpringBootExample | [ioGame 综合示例 (yuque.com)](https://www.yuque.com/iohao/game/ruaqza) ，示例中有功能特性的实践、打包部署（docker、k8s）等介绍 |
+| ioGameWeb2Game    | [web 转游戏 - 示例理解篇 (yuque.com)](https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z) |
+| fxglSimpleGame    | [fxgl-ioGame-移动同步 (yuque.com)](https://www.yuque.com/iohao/game/bolt) |
+| SdkExample        | [代码生成(yuque.com)](https://www.yuque.com/iohao/game/irth38)，该项目是与 ioGame SDK（C# Sdk、Ts Sdk） 相关的联调演示，服务器提供了 `action、广播、错误码` 等相关内容用于交互演示。 |
 
 
 
@@ -496,26 +522,34 @@ ioGame 是一个轻量级的网络编程框架，适用于**网络游戏服务�
 
 > ioGame 有以下特点：
 >
-> - 无锁异步化、事件驱动的架构设计
-> - 同时支持 TCP、WebSocket、UDP 多种连接方式，并且可扩展
-> - 支持 protobuf、json 等不同的通信协议
-> - 集群无中心节点、集群自动化、分布式的设计
-> - 真轻量级，不依赖任何第三方中间件或数据库就能支持集群、分布式
-> - 提供多种通讯方式，且逻辑服之间可以相互跨机器通信
-> - 分布式事件总线支持
-> - 框架为开发者提供了同步、异步、异步回调的方法，用于逻辑服之间的相互访问
-> - ioGame 是纯 javaSE 的，使得 ioGame 能与其他框架方便的进行集成、融合；如 spring ...等
-> - 学习成本低，开发体验好
-> - 支持多服单进程、多服多进程的启动和部署方式
-> - 提供游戏文档生成的辅助功能
-> - 包体小、启动快、内存占用少
-> - 提供优雅的路由访问权限控制
-> - 提供了灵活的线程扩展、设置
-> - 具备智能的同进程亲和性
-> - 具备全链路调用日志跟踪特性
-> - 业务框架提供了插件机制，插件是可插拨、可扩展的
-> - JSR380验证、断言 + 异常机制 = 更少的维护成本
-> - action 支持自动装箱、拆箱基础类型，用于解决[协议碎片](https://www.yuque.com/iohao/game/ieimzn)的问题
+> 1. 真轻量级、无锁异步化、事件驱动的架构设计。
+> 2. 包体小、内存占用少、启动速度快。
+> 3. ioGame 是纯 javaSE 的，使得 ioGame 能与其他框架方便的进行集成、融合，如 Spring ...等。
+> 4. 在学习成本方面，ioGame 的学习成本非常低，可以说是**零学习成本**，即使没有游戏编程经验，也能轻松上手。开发者只需掌握普通的 java 方法或 webMVC 相关知识，就能用框架开发业务。
+> 5. ioGame 在架构上解决了传统框架所产生的 **N\*N 问题**。
+> 6. 在轻量级方面，ioGame **不依赖任何第三方**中间件或数据库**就能支持集群、分布式**，只需要 java 环境就可以运行。
+> 7. 在架构灵活性方面，ioGame 的架构由三部分组成：1.游戏对外服、2.Broker（游戏网关）、3.游戏逻辑服；三者既可相互独立，又可相互融合，这意味着使用 ioGame 可以**适应任何类型的游戏**。
+> 8. 架构是可以动态扩缩的，游戏对外服、游戏逻辑服、Broker（游戏网关）都**支持动态增加和减少**。
+> 9. 在分布式开发体验方面，ioGame 支持多服单进程的启动方式，这使得开发者在开发和调试分布式系统时更加简单。
+> 10. 在生态规划方面，游戏逻辑服是支持独立运行，**从而实现功能模块化的可能性**。
+> 11. 具备全链路调用日志跟踪特性。
+> 12. 在通讯方式方面，提供多种通讯方式，且逻辑服之间可以相互跨机器通信。
+> 13. 在编码风格上，提供了类 MVC 的编码风格（无入侵的 Java Bean ），这种设计方式很好的**避免了类爆炸**。
+> 14. 在线程安全方面，框架为开发者解决了单个玩家的**并发问题**。
+> 15. 在连接方式方面，允许开发者**使用一套业务代码**，同时支持 TCP、WebSocket、UDP 等多种连接方式，无需进行任何修改，并且可扩展。
+> 16. 在通信协议方面，ioGame 让开发者**用一套业务代码**，就能轻松切换不同的通信协议，如 Protobuf、JSON 等，并且可扩展。
+> 17. 在增减协议方面，ioGame 可以让你在**新增或减少协议**时，**无需重启**游戏对外服与 Broker（游戏网关）；这样既能避免玩家断线，又能避免因新增、减少协议而重启所有机器的痛点。
+> 18. action 支持自动装箱、拆箱基础类型，用于解决[协议碎片](https://www.yuque.com/iohao/game/ieimzn)的问题。
+> 19. 业务框架提供了插件机制，插件是可插拨、可扩展的。
+> 20. 在部署方面，ioGame 支持**多服单进程**的方式部署，也支持**多服多进程**多机器的方式部署；在部署方式上可以随意的切换而不需要更改代码。
+> 21. 在安全方面，所有的游戏逻辑服不需要开放端口，**天然地避免了扫描攻击**。
+> 22. 在模拟客户端测试方面，ioGame 提供了压测&模拟客户端请求模块。该模块**可以模拟真实的网络环境**，并且在模拟测试的过程中与服务器的交互是可持续的、可互动的，同时也是支持自动化的。
+> 23. 框架为开发者提供了同步、异步、异步回调的方法，用于逻辑服之间的相互访问。
+> 24. 分布式事件总线支持（类似 MQ、Redis 发布订阅机制；可跨多个机器通信、可跨多个进程通信）。
+> 25. 提供优雅的路由访问权限控制。
+> 26. 具备智能的同进程亲和性。
+> 27. JSR380 验证、断言 + 异常机制 = 更少的维护成本。
+> 28. 一次编写到处对接，提升巨大的生产力，能为各客户端生成可交互的代码；你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue、Angular 等 C#、TypeScript 类型的项目生成交互接口。
 >
 
 
@@ -679,7 +713,7 @@ ioGame 具备一次编写到处对接的能力，从而做到了你们团队提�
 
 
 
-1. 与前端对接联调方面，ioGame 提供了[前端代码生成](https://www.yuque.com/iohao/game/irth38)的辅助功能，你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue 等 C#、TypeScript 类型的项目生成交互接口。
+1. 与前端对接联调方面，ioGame 提供了[前端代码生成](https://www.yuque.com/iohao/game/irth38)的辅助功能，你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue、Angular 等 C#、TypeScript 类型的项目生成交互接口。
 2. ioGame 是非常注重开发体验的，代码注释即文档、方法即交互接口的原则。
 3. ioGame 能为各种前端项目生成 `action、广播、错误码` 相关接口代码。这将意味着，你只需要编写一次业务代码，就可以同时与这些游戏引擎或现代化的前端框架交互。
 
