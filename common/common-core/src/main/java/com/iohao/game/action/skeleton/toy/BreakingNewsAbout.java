@@ -110,8 +110,6 @@ final class DefaultBreakingNews implements BreakingNews {
         List<News> list = new ArrayList<>();
 
         list.add(new News("支持者名单", "https://www.yuque.com/iohao/game/backers"));
-        list.add(new News("28行代码，做个网页聊天室", "https://www.yuque.com/iohao/game/we9eppym4yno9hq2"));
-        list.add(new News("web 转游戏 - 示例理解篇", "https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z"));
         list.add(new News("学习指南", "https://www.yuque.com/iohao/game/oybe5gmz5uk4ldzb"));
         list.add(new News("ioGame 文档阅读指南", "https://www.yuque.com/iohao/game/giqg6r"));
 
@@ -167,10 +165,11 @@ final class DefaultBreakingNews implements BreakingNews {
         list.add(new News("内置 Kit - 动态属性", "https://www.yuque.com/iohao/game/vfnqpum6hrt23mnf"));
         list.add(new News("内置 Kit - 轻量可控的延时任务", "https://www.yuque.com/iohao/game/nykaacfzg4h1ynii"));
 
-        // 小部件
-        list.add(new News("小部件 - 领域事件可解决多人同一业务的并发问题", "https://www.yuque.com/iohao/game/gmfy1k"));
-        list.add(new News("小部件 - 压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
-        list.add(new News("小部件 - room 桌游、房间类的扩展模块", "https://www.yuque.com/iohao/game/vtzbih"));
+        // 扩展模块
+        list.add(new News("扩展模块 - 领域事件可解决多人同一业务的并发问题", "https://www.yuque.com/iohao/game/gmfy1k"));
+        list.add(new News("扩展模块 - 压测&模拟客户端请求", "https://www.yuque.com/iohao/game/tc83ud"));
+        list.add(new News("扩展模块 - room 桌游、房间类的扩展模块", "https://www.yuque.com/iohao/game/vtzbih"));
+        list.add(new News("扩展模块 - sdk-generate-code", "https://www.yuque.com/iohao/game/tufktv"));
 
         // 插件相关
         list.add(new News("业务框架 - 插件介绍", "https://www.yuque.com/iohao/game/bsgvzglvlr5tenao"));
@@ -216,8 +215,6 @@ final class EnglishBreakingNews implements BreakingNews {
         List<News> list = new ArrayList<>();
 
         list.add(new News("Supporters List", "https://www.yuque.com/iohao/game/backers"));
-        list.add(new News("28 lines of code to make a web chat room", "https://www.yuque.com/iohao/game/we9eppym4yno9hq2"));
-        list.add(new News("Web to Game - Example Understanding", "https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z"));
         list.add(new News("ioGame Study Guide", "https://www.yuque.com/iohao/game/oybe5gmz5uk4ldzb"));
         list.add(new News("ioGame Document Reading Guide", "https://www.yuque.com/iohao/game/giqg6r"));
 
@@ -269,10 +266,11 @@ final class EnglishBreakingNews implements BreakingNews {
         list.add(new News("Built-in Kit - Dynamic properties", "https://www.yuque.com/iohao/game/vfnqpum6hrt23mnf"));
         list.add(new News("Built-in Kit - Lightweight and controllable delayed tasks", "https://www.yuque.com/iohao/game/nykaacfzg4h1ynii"));
 
-        // 小部件
-        list.add(new News("Widgets - Domain Events - Can solve the concurrency problem of multiple people doing the same business", "https://www.yuque.com/iohao/game/gmfy1k"));
-        list.add(new News("Widgets - Stress testing & simulating client requests", "https://www.yuque.com/iohao/game/tc83ud"));
-        list.add(new News("Widgets - Room - Extension modules for board games and rooms", "https://www.yuque.com/iohao/game/vtzbih"));
+        // 扩展模块
+        list.add(new News("ExtendedModule - Domain Events - Can solve the concurrency problem of multiple people doing the same business", "https://www.yuque.com/iohao/game/gmfy1k"));
+        list.add(new News("ExtendedModule - Stress testing & simulating client requests", "https://www.yuque.com/iohao/game/tc83ud"));
+        list.add(new News("ExtendedModule - Room - Extension modules for board games and rooms", "https://www.yuque.com/iohao/game/vtzbih"));
+        list.add(new News("ExtendedModule - sdk-generate-code", "https://www.yuque.com/iohao/game/vtzbih"));
 
         // 插件相关
         list.add(new News("Business Framework - Plugin Introduction", "https://www.yuque.com/iohao/game/bsgvzglvlr5tenao"));

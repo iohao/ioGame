@@ -76,7 +76,7 @@ public class EventBusTest {
         this.eventBus.fireAnySync(message);
         Assert.assertEquals(3, CustomEvent.myMessageLong.sum());
 
-        IoGameBanner.println();
+        IoGameBanner.printLine();
         this.eventBus.fireAny(message);
 
         sleep();
@@ -93,7 +93,7 @@ public class EventBusTest {
 
         this.eventBus.fire(eventBusMessage);
 //        this.eventBus.fire(message);
-        IoGameBanner.println();
+        IoGameBanner.printLine();
 //        this.eventBus.fire(message);
 
     }

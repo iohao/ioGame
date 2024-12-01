@@ -57,7 +57,7 @@ public class InOutManagerTest {
         var line = String.join(" ", resultList);
         Assert.assertEquals(line, result);
 
-        IoGameBanner.println();
+        IoGameBanner.printLine();
     }
 }
 

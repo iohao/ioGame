@@ -1,0 +1,26 @@
+
+    /**
+     * ${methodComment}
+     * @param ${bizDataName} ${bizDataComment}。
+     * @returns RequestCommand void
+     * @example
+     * // ${bizDataComment}
+     * const ${bizDataName}: ${bizDataType} = ...;
+     * ${actionSimpleName}.of${actionMethodName}(${bizDataName});
+     */
+    static of${actionMethodName}(${bizDataName}: ${bizDataType}): RequestCommand {
+    <% if (internalBizDataType) { %>
+        return RequestCommand.of${sdkMethodName!}(this.${memberCmdName}, ${bizDataName}).execute();
+    <% } else if (bizDataTypeIsList) { %>
+        const dataList = ${bizDataName}.map(o => {
+            return toBinary(${actualTypeName}Schema, o);
+        });
+
+        return RequestCommand.of${sdkMethodName}(this.${memberCmdName}, dataList).execute();
+    <% } else { %>
+        const data = toBinary(${bizDataType}Schema, ${bizDataName});
+        const requestCommand = RequestCommand.of(this.${memberCmdName}, data);
+        requestCommand.dataSource = ${bizDataName};
+        return requestCommand.execute();
+    <% } %>
+    }

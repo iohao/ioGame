@@ -25,6 +25,7 @@ import com.iohao.game.action.skeleton.core.flow.internal.*;
 import com.iohao.game.action.skeleton.core.action.parser.ActionParserListener;
 import com.iohao.game.action.skeleton.core.runner.Runner;
 import com.iohao.game.action.skeleton.core.runner.Runners;
+import com.iohao.game.action.skeleton.toy.IoGameBanner;
 import com.iohao.game.common.kit.concurrent.executor.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -134,6 +135,10 @@ public final class BarSkeletonBuilder {
         this.runners.setBarSkeleton(barSkeleton);
 
         this.actionParserListeners = null;
+
+        if (IoGameBanner.troublemaker) {
+            IoGameBanner.troubleCounter++;
+        }
 
         return barSkeleton;
     }

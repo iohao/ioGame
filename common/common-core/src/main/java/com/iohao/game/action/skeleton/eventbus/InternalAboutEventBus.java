@@ -782,7 +782,7 @@ final class DefaultEventBus implements EventBus {
                 log.info("远程逻辑服 : {}", eventBrokerClientMessage.getAppName());
             }
 
-            IoGameBanner.println();
+            IoGameBanner.printLine();
         }
     }
 

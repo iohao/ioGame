@@ -1,0 +1,20 @@
+${generateTime}
+${ioGameHome}
+${imports}
+import {CmdKit} from "iohao-sdk";
+
+/**
+ * GameCode、ErrorCode. 游戏错误码
+ * @author https://github.com/iohao/ioGame
+ */
+export class GameCode {
+<%for(o in errorCodeDocumentList) {%>
+    /** ${o.description} */
+    static ${o.name}: number = CmdKit.mappingErrorCode(${o.value}, "${o.description!}");
+<%}%>
+
+    static init() {
+        // trigger errorCodeMapping init.
+        // 调用一次方法，触发错误码的初始化操作。
+    }
+}

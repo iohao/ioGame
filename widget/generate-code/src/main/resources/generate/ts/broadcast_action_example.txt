@@ -1,0 +1,20 @@
+<%
+var resultMethodName;
+if (dataTypeIsInternal) {
+    if (dataIsList) {
+        resultMethodName = resultMethodListTypeName;
+    } else {
+        resultMethodName = resultMethodTypeName;
+    }
+%>
+const value = result.${resultMethodName}();
+<%
+} else {
+    if (dataIsList) {
+        resultMethodName = resultMethodListTypeName;
+    } else {
+        resultMethodName = resultMethodTypeName;
+    }
+%>
+const value = result.${resultMethodName}(${dataActualTypeName}Schema);
+<%}%>

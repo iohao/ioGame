@@ -1,0 +1,44 @@
+${generateTime}
+${ioGameHome}
+${imports}
+import {CmdKit, ListenCommand, ResponseResult} from "iohao-sdk";
+
+/**
+ * Broadcast Listener；广播监听；
+ * @author https://github.com/iohao/ioGame
+ */
+export class Listener {
+<%for(o in broadcastDocumentList) {%>
+    private static readonly ${o.cmdMethodName}_${o.cmd}_${o.subCmd}: number = CmdKit.mappingBroadcast(${o.cmdMerge},'${o.methodDescription!}');
+<%}%>
+<%for(o in broadcastDocumentList) {%>
+
+    /**
+     * ${o.methodDescription}
+     * @param callback ${o.dataDescription}, ${o.dataIsList?"list of "}{@link ${o.bizDataType}}
+     * @example
+     * Listener.listen${o.methodName}(result => {
+     *     // ${o.dataDescription!"broadcast notification"}
+     *     ${o.exampleCode!}
+     * });
+     */
+    static listen${o.methodName}(callback: (result: ResponseResult) => void) {
+        // ${o.dataDescription!}
+        ListenCommand.of(this.${o.cmdMethodName}_${o.cmd}_${o.subCmd}, callback);
+    }
+<%}%>
+
+    static listener_ioGame() {
+        // all listener
+    <%for(o in broadcastDocumentList) {%>
+
+        Listener.listen${o.methodName}(result => {
+            const mergeTitle = CmdKit.toString(result.getCmdMerge());
+            const title = CmdKit.getBroadcastTitle(result.getCmdMerge());
+            ${o.exampleCodeAction!}
+            console.log(mergeTitle, title, value);
+        });
+    <%}%>
+    }
+}
+

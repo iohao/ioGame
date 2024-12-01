@@ -1,0 +1,22 @@
+<%
+var resultMethodName;
+if (returnDataTypeIsInternal) {
+    // see TypeScriptMappingDocument.extractedInitTypeMapping, TypeMappingRecord
+    if (returnDataIsList) {
+        resultMethodName = resultMethodListTypeName;
+    } else {
+        resultMethodName = resultMethodTypeName;
+    }
+%>
+const value = result.${resultMethodName}();
+<%
+} else {
+    // see TypeScriptMappingDocument.getTypeMappingRecord, ActionMethodDocument.extractedReturnInfo
+    if (returnDataIsList) {
+        resultMethodName = resultMethodListTypeName;
+    } else {
+        resultMethodName = resultMethodTypeName;
+    }
+%>
+const value = result.${resultMethodName}(${returnDataActualTypeName}Schema);
+<%}%>

@@ -1,0 +1,66 @@
+
+    /**
+     * ${methodComment}
+     * @param ${bizDataName} ${bizDataComment}
+     * @param callback ${returnComment} (returnType: ${returnDataIsList?"list of "}{@link ${returnDataName}})
+     * @returns {@link RequestCommand} request command
+     * @example
+     * // ${bizDataComment}
+     * const ${bizDataName}: ${bizDataType} = ...;
+     * ${actionSimpleName}.of${actionMethodName}(${bizDataName}, result => {
+     *     // ioGame: your biz code.
+     *     // ${returnComment}
+     *     ${exampleCode}
+     *     result.log(value);
+     * });
+     */
+    static of${actionMethodName}(${bizDataName}: ${protoPrefix}${bizDataType}, callback: (result: ResponseResult) => void): RequestCommand {
+    <% if (internalBizDataType) { %>
+        return RequestCommand.of${sdkMethodName!}(this.${memberCmdName}, ${bizDataName}).onCallback(callback).execute();
+    <% } else if (bizDataTypeIsList) { %>
+        const dataList = ${bizDataName}.map(o => {
+            return toBinary(${protoPrefix}${actualTypeName}Schema, o);
+        });
+        const requestCommand = RequestCommand.of${sdkMethodName}(this.${memberCmdName}, dataList).onCallback(callback);
+        requestCommand.dataSource = ${bizDataName};
+        return requestCommand.execute();
+    <% } else { %>
+        const data = toBinary(${protoPrefix}${bizDataType}Schema, ${bizDataName});
+        const requestCommand = RequestCommand.of(this.${memberCmdName}, data).onCallback(callback);
+        requestCommand.dataSource = ${bizDataName};
+        return requestCommand.execute();
+    <% } %>
+    }
+
+    /**
+     * ${methodComment}
+     * @param ${bizDataName} ${bizDataComment}
+     * @returns {@link ResponseResult} ${returnComment} (returnType: ${returnDataIsList?"list of "}{@link ${returnDataName}})
+     * @example
+     * // ${bizDataComment}
+     * const ${bizDataName}: ${bizDataType} = ...;
+     * const result = await ${actionSimpleName}.ofAwait${actionMethodName}(${bizDataName});
+     * // ioGame: your biz code.
+     * // ${returnComment}
+     * ${exampleCode}
+     * result.log(value);
+     */
+    static async ofAwait${actionMethodName}(${bizDataName}: ${protoPrefix}${bizDataType}): Promise<ResponseResult> {
+    <% if (internalBizDataType) { %>
+        return await RequestCommand.ofAwait${sdkMethodName!}(this.${memberCmdName}, ${bizDataName});
+    <% } else if (bizDataTypeIsList) { %>
+        const dataList = ${bizDataName}.map(o => {
+            return toBinary(${protoPrefix}${actualTypeName}Schema, o);
+        });
+
+        const requestCommand = RequestCommand.of${sdkMethodName}(this.${memberCmdName}, dataList);
+        requestCommand.dataSource = ${bizDataName};
+
+        return await RequestCommand.ofAwaitRequestCommand(requestCommand);
+    <% } else { %>
+        const data = toBinary(${protoPrefix}${bizDataType}Schema, ${bizDataName});
+        const requestCommand = RequestCommand.of(this.${memberCmdName}, data);
+        requestCommand.dataSource = ${bizDataName};
+        return await RequestCommand.ofAwaitRequestCommand(requestCommand);
+    <% } %>
+    }

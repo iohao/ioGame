@@ -51,11 +51,11 @@ public class BarSkeletonTest {
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
-        IoGameBanner.println();
+        IoGameBanner.printLine();
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
-        IoGameBanner.println();
+        IoGameBanner.printLine();
     }
 
     @Test
@@ -73,6 +73,6 @@ public class BarSkeletonTest {
 
         // 业务框架处理用户请求
         barSkeleton.handle(flowContext);
-        IoGameBanner.println();
+        IoGameBanner.printLine();
     }
 }

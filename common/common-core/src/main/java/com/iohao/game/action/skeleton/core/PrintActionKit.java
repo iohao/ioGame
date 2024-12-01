@@ -72,7 +72,7 @@ class PrintActionKit {
             PrintActionKit.printActionCommand(barSkeleton.actionCommandRegions.actionCommands, setting.printActionShort);
         }
 
-        IoGameBanner.println();
+        IoGameBanner.printLine();
     }
 
     private static void extractedRunners(BarSkeleton barSkeleton) {

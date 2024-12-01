@@ -81,7 +81,7 @@ public class BrokerClusterMessageClientProcessor extends AsyncUserProcessor<Brok
         }
 
         if (IoGameGlobalConfig.isBrokerClusterLog()) {
-            IoGameBanner.println();
+            IoGameBanner.printLine();
             log.info("==接收来自网关的集群消息 {} - {} - {}", brokerMessageList.size(), message.getName(), message);
         }
 

@@ -1,0 +1,10 @@
+
+    /**
+     * ${methodComment}
+     * @returns RequestCommand void
+     * @example
+     * ${actionSimpleName}.of${actionMethodName}();
+     */
+    static of${actionMethodName}(): RequestCommand {
+        return RequestCommand.of${sdkMethodName!}(this.${memberCmdName}).execute();
+    }

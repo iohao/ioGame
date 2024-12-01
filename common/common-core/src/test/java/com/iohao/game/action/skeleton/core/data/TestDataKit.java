@@ -46,7 +46,7 @@ public class TestDataKit {
 
         builder.addInOut(new DebugInOut());
 
-        builder.setActionAfter(flowContext -> IoGameBanner.println());
+        builder.setActionAfter(flowContext -> IoGameBanner.printLine());
 
         List<Class<?>> classList = getClasses(appendPredicateFilter);
 

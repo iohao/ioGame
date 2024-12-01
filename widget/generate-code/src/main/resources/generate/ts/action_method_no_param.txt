@@ -1,0 +1,32 @@
+
+    /**
+     * ${methodComment}
+     * @param callback ${returnComment} (returnType: ${returnDataIsList?"list of "}{@link ${returnDataName}})
+     * @returns {@link RequestCommand} request command
+     * @example
+     * ${actionSimpleName}.of${actionMethodName}(result => {
+     *     // ioGame: your biz code.
+     *     result.log("hello ioGame!");
+     *     // ${returnComment}
+     *     ${exampleCode}
+     *     result.log(value);
+     * });
+     */
+    static of${actionMethodName}(callback: (result: ResponseResult) => void): RequestCommand {
+        return RequestCommand.of${sdkMethodName!}(this.${memberCmdName}).onCallback(callback).execute();
+    }
+
+    /**
+     * ${methodComment}
+     * @returns {@link ResponseResult} [${returnComment} : ${returnDataIsList?"list of "}{@link ${returnDataName}}]
+     * @example
+     * const result = await ${actionSimpleName}.ofAwait${actionMethodName}();
+     * // ioGame: your biz code.
+     * result.log("hello ioGame!");
+     * // ${returnComment}
+     * ${exampleCode}
+     * result.log(value);
+     */
+    static async ofAwait${actionMethodName}(): Promise<ResponseResult> {
+        return await RequestCommand.ofAwait${sdkMethodName!}(this.${memberCmdName});
+    }

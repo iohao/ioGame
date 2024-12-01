@@ -50,6 +50,9 @@ import static java.lang.System.out;
 public final class IoGameBanner {
     /** 特殊字段，开发者不要使用 */
     public static String flag21;
+    public static boolean troublemaker;
+    public static int troubleCounter;
+
     final AtomicBoolean trigger = new AtomicBoolean(false);
     /** 特殊字段，开发者不要使用 */
     AtomicInteger errorCount = new AtomicInteger(0);
@@ -68,7 +71,7 @@ public final class IoGameBanner {
             return;
         }
 
-        me().renderBanner();
+        me().renderBanner1();
     }
 
     public void initCountDownLatch(int num) {
@@ -99,7 +102,7 @@ public final class IoGameBanner {
         render();
     }
 
-    public static void println() {
+    public static void printLine() {
         out.println();
     }
 
@@ -119,7 +122,7 @@ public final class IoGameBanner {
         out.println(message);
     }
 
-    private void renderBanner() {
+    private void renderBanner1() {
         print.set(true);
 
         Runnable runnable = () -> {
@@ -163,7 +166,7 @@ public final class IoGameBanner {
 
             clean();
 
-            IoGameBanner.println();
+            IoGameBanner.printLine();
         };
 
         TaskKit.execute(runnable);
@@ -233,7 +236,7 @@ public final class IoGameBanner {
         var anyFunction = new BannerColorStrategy().anyColorFun();
         String anyBanner = anyFunction.apply(banner);
 
-        IoGameBanner.println();
+        IoGameBanner.printLine();
         IoGameBanner.println(anyBanner);
         table.render();
     }
