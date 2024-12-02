@@ -11,9 +11,250 @@
 
 
 
-### 2024-10
+### 2024-12-02- v21.22
 
-#### 2024-10-28 - v21.19
+https://github.com/iohao/ioGame/releases/tag/21.22
+
+**Version update summary**
+
+> 1. perf(core): DefaultActionMethodParamParser
+> 1. fix(kit): #407 ClassRefInfoKit invokeSetter
+> 1. #376 i18n DefaultUserHook
+> 1. feat(GenerateCode): #329 Added TypeScript code generation TypeScriptDocumentGenerate, which can generate interactive code for CocosCreator、Vue、Angular.
+
+
+------
+
+
+
+**feat(GenerateCode)**: #329 Added TypeScript code generation TypeScriptDocumentGenerate, which can generate interactive code for CocosCreator、Vue、Angular.
+
+
+
+About examples
+
+1. ioGameServerExample https://github.com/iohao/ioGameExamples/SdkExample
+2. CocosCreatorExample: https://github.com/iohao/ioGameSdkTsExampleCocos
+3. VueExample: https://github.com/iohao/ioGameSdkTsExampleVue
+4. HtmlExample: https://github.com/iohao/ioGameSdkTsExampleHtml
+5. AngularExample: https://github.com/iohao/ioGameSdkTsExampleAngular
+
+```java
+public final class GenerateTest {
+    // setting root path
+    static String rootPath = "/Users/join/gitme/ioGame-sdk/";
+
+    public static void main(String[] args) {
+        // CHINA or US
+        Locale.setDefault(Locale.CHINA);
+
+        // Load the business framework of each gameLogicServer
+        // 加载游戏逻辑服的业务框架
+        yourListLogic().forEach(BrokerClientStartup::createBarSkeleton);
+
+        /*
+         * Generate actions, broadcasts, and error codes.
+         * cn: 生成 action、广播、错误码
+         */
+        
+         // About generating TypeScript code
+//        generateCodeVue();
+//        generateCodeAngular();
+//        generateCodeHtml();
+        generateCocosCreator();
+
+        // Added an enumeration error code class to generate error code related information
+        IoGameDocumentHelper.addErrorCodeClass(YourGameCodeEnum.class);
+        // Generate document
+        IoGameDocumentHelper.generateDocument();
+    }
+
+    private static void generateCodeVue() {
+        var documentGenerate = new TypeScriptDocumentGenerate();
+
+        // 设置代码生成所存放的路径，如果不做任何设置，将会生成在 target/code 目录中
+        // By default, it will be generated in the target/code directory
+        String path = rootPath + "ioGameSdkTsExampleVue/src/assets/gen/code";
+        documentGenerate.setPath(path);
+
+        // Your .proto path: Set the import path of common_pb in Vue.
+        documentGenerate.setProtoImportPath("../common_pb");
+
+        IoGameDocumentHelper.addDocumentGenerate(documentGenerate);
+    }
+
+    private static void generateCodeHtml() {
+        var documentGenerate = new TypeScriptDocumentGenerate();
+
+        // 设置代码生成所存放的路径，如果不做任何设置，将会生成在 target/code 目录中
+        // By default, it will be generated in the target/code directory
+        String path = rootPath + "ioGameSdkTsExampleHtml/src/assets/gen/code";
+        documentGenerate.setPath(path);
+
+        // Your .proto path: Set the import path of common_pb in Vue.
+        documentGenerate.setProtoImportPath("../common_pb");
+
+        IoGameDocumentHelper.addDocumentGenerate(documentGenerate);
+    }
+
+    private static void generateCocosCreator() {
+        var documentGenerate = new TypeScriptDocumentGenerate();
+
+        // 设置代码生成所存放的路径，如果不做任何设置，将会生成在 target/code 目录中
+        // By default, it will be generated in the target/code directory
+        String path = rootPath + "ioGameSdkTsExampleCocos/assets/scripts/gen/code";
+        documentGenerate.setPath(path);
+
+        // Your .proto path: Set the import path of common_pb in CocosCreator
+        documentGenerate.setProtoImportPath("db://assets/scripts/gen/common_pb");
+
+        IoGameDocumentHelper.addDocumentGenerate(documentGenerate);
+    }
+
+    private static void generateCodeAngular() {
+        var documentGenerate = new TypeScriptDocumentGenerate();
+
+        // 设置代码生成所存放的路径，如果不做任何设置，将会生成在 target/code 目录中
+        // By default, it will be generated in the target/code directory
+        String path = rootPath + "ioGameSdkTsExampleAngular/src/assets/gen/code";
+        documentGenerate.setPath(path);
+
+        // Your .proto path: Set the import path of common_pb in Vue.
+        documentGenerate.setProtoImportPath("../common_pb");
+
+        IoGameDocumentHelper.addDocumentGenerate(documentGenerate);
+    }
+}
+```
+
+
+
+Advantages of SDK Code Generation
+1. Helps client-side developers reduce significant workload by eliminating the need to write a large amount of template code.
+2. Clear and semantically precise. The generated interaction code clearly defines parameter types and return types.
+3. Ensures parameter type safety and clarity in interface methods, effectively avoiding security risks and reducing basic errors during integration.
+4. Reduces communication costs between the server and client during integration; the code serves as documentation. The generated integration code includes documentation and usage examples, and the examples on the methods will guide you on how to use them, making it zero-learning-cost even for beginners.
+5. Helps client-side developers abstract away the interaction with the server, allowing them to focus more on the core business logic.
+6. Reduces the cognitive load during integration. The code is simple to use, similar to local method calls.
+7. Abandons the traditional protocol-based approach in favor of an interface-method-based integration approach.
+
+------
+
+
+
+
+### 2024-11-15 - v21.20
+
+https://github.com/iohao/ioGame/releases/tag/21.20
+
+**Version update summary**
+> 1. feat(GenerateDoc): Add DocumentMethod annotation : Action supports generating documentation method names through annotations.
+> 1. BroadcastDebug enhancements.
+> 1. feat(GenerateCode): #328 Added C# code generation CsharpDocumentGenerate, which can generate interactive code for Unity and Godot.
+
+
+------
+
+**feat(GenerateDoc):** Add DocumentMethod annotation : Action supports generating documentation method names through annotations.
+
+By default, the method names in the generated action interaction code use the method names from the Java action. The action can add the `DocumentMethod` annotation to fix the method name, and when generating the integration code, ioGame will prioritize using the value of the `DocumentMethod` annotation.
+
+```java
+@ActionController(SdkCmd.cmd)
+public final class SdkAction {    
+    @ActionMethod(SdkCmd.noReturn)
+    @DocumentMethod("noReturnMethod")
+    public void noReturn(String name) {
+        ... ...
+    }
+}
+```
+
+---
+
+**feat(GenerateCode):** #328 Added C# code generation CsharpDocumentGenerate, which can generate interactive code for Unity and Godot.
+
+
+
+About examples
+
+1. see https://github.com/iohao/ioGameExamples/tree/main/SdkExample
+2. UnityExample: https://github.com/iohao/ioGameSdkCsharpExampleUnity
+3. GodotExample: https://github.com/iohao/ioGameSdkCsharpExampleGodot
+
+```java
+public final class GenerateTest {
+    // setting root path
+    static String rootPath = "/Users/join/gitme/ioGame-sdk/";
+
+    public static void main(String[] args) {
+        // CHINA or US
+        Locale.setDefault(Locale.CHINA);
+
+        // Load the business framework of each gameLogicServer
+        // 加载游戏逻辑服的业务框架
+        yourListLogic().forEach(BrokerClientStartup::createBarSkeleton);
+
+        /*
+         * Generate actions, broadcasts, and error codes.
+         * cn: 生成 action、广播、错误码
+         */
+        // About generating C# code
+        generateCodeCsharpGodot();
+        generateCodeCsharpUnity();
+
+        // Added an enumeration error code class to generate error code related information
+        IoGameDocumentHelper.addErrorCodeClass(YourGameCodeEnum.class);
+        // Generate document
+        IoGameDocumentHelper.generateDocument();
+    }
+
+    private static void generateCodeCsharpUnity() {
+        var documentGenerate = new CsharpDocumentGenerate();
+        // 设置代码生成所存放的路径，如果不做任何设置，将会生成在 target/code 目录中
+        // By default, it will be generated in the target/code directory
+        String path = rootPath + "ioGameSdkCsharpExampleUnity/Assets/Scripts/Gen/Code";
+        documentGenerate.setPath(path);
+
+        IoGameDocumentHelper.addDocumentGenerate(documentGenerate);
+    }
+
+    private static void generateCodeCsharpGodot() {
+        var documentGenerate = new CsharpDocumentGenerate();
+        // 设置代码生成所存放的路径，如果不做任何设置，将会生成在 target/code 目录中
+        // By default, it will be generated in the target/code directory
+        String path = rootPath + "ioGameSdkCsharpExampleGodot/script/gen/code";
+        documentGenerate.setPath(path);
+
+        IoGameDocumentHelper.addDocumentGenerate(documentGenerate);
+    }
+}
+```
+
+
+
+Advantages of SDK Code Generation
+1. Helps client-side developers reduce significant workload by eliminating the need to write a large amount of template code.
+2. Clear and semantically precise. The generated interaction code clearly defines parameter types and return types.
+3. Ensures parameter type safety and clarity in interface methods, effectively avoiding security risks and reducing basic errors during integration.
+4. Reduces communication costs between the server and client during integration; the code serves as documentation. The generated integration code includes documentation and usage examples, and the examples on the methods will guide you on how to use them, making it zero-learning-cost even for beginners.
+5. Helps client-side developers abstract away the interaction with the server, allowing them to focus more on the core business logic.
+6. Reduces the cognitive load during integration. The code is simple to use, similar to local method calls.
+7. Abandons the traditional protocol-based approach in favor of an interface-method-based integration approach.
+
+------
+
+**[other updates]**
+
+```xml
+<protobuf-java.version>3.25.5</protobuf-java.version>
+```
+
+---
+
+
+
+### 2024-10-28 - v21.19
 
 https://github.com/iohao/ioGame/releases/tag/21.19
 
@@ -93,7 +334,7 @@ private static void extractedExternalCache() {
 
 ------
 
-#### 2024-10-09 - v21.18
+### 2024-10-09 - v21.18
 
 https://github.com/iohao/ioGame/releases/tag/21.18
 
@@ -135,9 +376,7 @@ public class DemoApplication {
 
 
 
-### 2024-09
-
-#### 2024-09-25 - v21.17
+### 2024-09-25 - v21.17
 
 https://github.com/iohao/ioGame/releases/tag/21.17
 
@@ -178,7 +417,7 @@ void testThreadExecutor(FlowContext flowContext) {
 
 
 
-#### 2024-09-09 - v21.16
+### 2024-09-09 - v21.16
 
 https://github.com/iohao/ioGame/releases/tag/21.16
 
@@ -387,9 +626,7 @@ SDK 相关请阅读：[SDK&对接文档 (yuque.com)](https://www.yuque.com/iohao
 
 
 
-### 2024-08
-
-#### 2024-08-26 - v21.15
+### 2024-08-26 - v21.15
 
 https://github.com/iohao/ioGame/releases/tag/21.15
 
@@ -450,11 +687,9 @@ IoGameGlobalConfig.enableUserProcessorExecutorSelector();
 
 
 
-
-
 ------
 
-#### 2024-08-08 - v21.14
+### 2024-08-08 - v21.14
 
 https://github.com/iohao/ioGame/releases/tag/21.14
 
@@ -497,9 +732,7 @@ public void config() {
 
 
 
-### 2024-07
-
-#### 2024-07-24 - v21.13
+### 2024-07-24 - v21.13
 
 https://github.com/iohao/ioGame/releases/tag/21.13
 
@@ -551,7 +784,7 @@ public List<Long> listOnlineUserAll(FlowContext flowContext) {
 
 
 
-#### 2024-07-08 - v21.12
+### 2024-07-08 - v21.12
 
 https://github.com/iohao/ioGame/releases/tag/21.12
 
@@ -706,9 +939,9 @@ public static void main(String[] args) {
 
 
 
-### 2024-06
+### 2024-06-21 - v21.10
 
-#### 2024-06-21 - v21.10（问题版本）
+（问题版本）
 
 https://github.com/iohao/ioGame/releases/tag/21.10
 
@@ -928,11 +1161,13 @@ public class AttrOptionDynamicTest {
 
 <jprotobuf.version>2.4.23</jprotobuf.version>
 
+---
 
 
-<br>
 
-#### 2024-06-03 - v21.9（问题版本）
+### 2024-06-03 - v21.9
+
+（问题版本）
 
 https://github.com/iohao/ioGame/releases/tag/21.9
 
@@ -1133,12 +1368,11 @@ TaskListener 任务监听回调，使用场景有：一次性延时任务、任�
 
 更多介绍与使用，请阅读 [TaskKit (yuque.com)](https://www.yuque.com/iohao/game/gzsl8pg0si1l4bu3)
 
-<br>
-
-### 2024-05
+---
 
 
-#### 2024-05-19 - v21.8
+
+### 2024-05-19 - v21.8
 
 https://github.com/iohao/ioGame/releases/tag/21.8
 
@@ -1382,11 +1616,11 @@ light-game-room 房间，是 ioGame 提供的一个轻量小部件 - 可按需�
 | ---------------------------------------------------------- | --------------------------------------------------------- |
 | [ioGame 示例集合](https://github.com/iohao/ioGameExamples) | [ioGame 示例集合](https://gitee.com/iohao/ioGameExamples) |
 
+---
 
 
-<br>
 
-#### 2024-05-11 - v21.7
+### 2024-05-11 - v21.7
 
 https://github.com/iohao/ioGame/releases/tag/21.7
 
@@ -1494,11 +1728,11 @@ class com.iohao.game.action.skeleton.core.action.Bird
 
 优化 action 参数解析
 
-<br>
+---
 
-### 2024-04
 
-#### 2024-04-23 - v21.6
+
+### 2024-04-23 - v21.6
 
 https://github.com/iohao/ioGame/releases/tag/21.6
 
@@ -1892,9 +2126,11 @@ room.ifPlayerExist(userId, (FightPlayerEntity playerEntity) -> {
 });
 ```
 
-<br>
+---
 
-#### 2024-04-16 - v21.5
+
+
+### 2024-04-16 - v21.5
 
 https://github.com/iohao/ioGame/releases/tag/21.5
 
@@ -1939,11 +2175,11 @@ message Animal {
 }
 ```
 
-<br>
+---
 
-### 2024-03
 
-#### 2024-03-28 - v21.4
+
+### 2024-03-28 - v21.4
 
 https://github.com/iohao/ioGame/releases/tag/21.4
 
@@ -1986,9 +2222,11 @@ public void removeUserSession(SocketUserSession userSession) {
 }
 ```
 
-<br>
+---
 
-#### 2024-03-11 - v21.3
+
+
+### 2024-03-11 - v21.3
 
 https://github.com/game-town/ioGame/releases/tag/21.3
 
@@ -2056,17 +2294,17 @@ public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
 
 IoGameGlobalConfig brokerClusterLog 集群相关日志不开启。
 
-<br>
+---
 
-### 2024-02
 
-#### 2024-02-22 - v21.2
+
+### 2024-02-22 - v21.2
 
 修复版本号显示错误问题（该版本没有功能上的更新与修改，不升级也不影响）
 
-<br>
 
-####  2024-02-21 - v21.1
+
+###  2024-02-21 - v21.1
 
 https://github.com/game-town/ioGame/releases/tag/21.1
 
