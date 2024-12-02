@@ -143,7 +143,7 @@ public final class ClassRefInfo implements Serializable {
     public ClassRefInfo invokeSetter(Object object, String filedName, Object value) {
         FieldRefInfo filedRefInfo = filedRefInfoMap.get(filedName);
 
-        String methodName = filedRefInfo.getMethodGetName();
+        String methodName = filedRefInfo.getMethodSetName();
         MethodRefInfo methodRefInfo = getMethodRefInfo(methodName);
 
         methodRefInfo.invokeMethod(object, value);
