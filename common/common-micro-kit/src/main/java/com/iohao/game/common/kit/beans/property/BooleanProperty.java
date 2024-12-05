@@ -20,6 +20,8 @@ package com.iohao.game.common.kit.beans.property;
 
 import lombok.ToString;
 
+import java.util.Objects;
+
 /**
  * bool - 属性具备监听特性。当值发生变更时，会触发监听事件。
  * <pre>{@code
@@ -57,11 +59,7 @@ public final class BooleanProperty extends AbstractPropertyValueObservable<Boole
 
     @Override
     public void setValue(Boolean value) {
-        if (value == null) {
-            this.set(false);
-        } else {
-            this.set(value);
-        }
+        this.set(Objects.requireNonNullElse(value, false));
     }
 
     /**

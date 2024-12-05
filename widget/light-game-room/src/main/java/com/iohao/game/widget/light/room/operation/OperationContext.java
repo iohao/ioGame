@@ -67,8 +67,10 @@ public class OperationContext implements PlayerOperationContext {
      */
     public void execute() {
         // 玩法操作业务类，将验证与操作分离
-        this.operationHandler.verify(this);
-        this.operationHandler.process(this);
+        if (this.operationHandler.processVerify(this)) {
+            this.operationHandler.verify(this);
+            this.operationHandler.process(this);
+        }
     }
 
     /**

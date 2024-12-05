@@ -48,7 +48,23 @@ public interface OperationHandler {
      *
      * @param context 操作上下文
      */
-    void verify(PlayerOperationContext context);
+    default void verify(PlayerOperationContext context) {
+    }
+
+    /**
+     * 检测验证，验证用户操作步骤是否合法，通过返回值来决定是否执行 {@link OperationHandler#process(PlayerOperationContext)} 方法。
+     * <p>
+     * 当返回 false 时，不会执行 process 方法，相当于丢弃该请求的处理。
+     * 该方法与 {@link OperationHandler#verify(PlayerOperationContext)} 类似，
+     * 只不过多了一个返回值来决定是否执行 process 方法。
+     *
+     * @param context 操作上下文
+     * @return 当返回 true 时，会执行 {@link OperationHandler#process(PlayerOperationContext)} 方法
+     * @since 21.23
+     */
+    default boolean processVerify(PlayerOperationContext context) {
+        return true;
+    }
 
     /**
      * 验证通过后, 执行处理

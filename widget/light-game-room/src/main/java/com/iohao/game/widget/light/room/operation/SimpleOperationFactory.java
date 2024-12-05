@@ -64,7 +64,7 @@ final class SimpleOperationFactory implements OperationFactory {
     }
 
     public void mappingUser(int operation, OperationHandler operationHandler) {
-        this.operationMap.put(operation, operationHandler);
+        this.mapping(operation, operationHandler);
         this.userOperationMap.put(operation, operationHandler);
     }
 

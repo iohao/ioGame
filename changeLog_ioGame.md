@@ -33,7 +33,7 @@ https://github.com/iohao/ioGame/releases/tag/21.22
 
 About examples
 
-1. ioGameServerExample https://github.com/iohao/ioGameExamples/SdkExample
+1. ioGameServerExample: https://github.com/iohao/ioGameExamples/tree/main/SdkExample
 2. CocosCreatorExample: https://github.com/iohao/ioGameSdkTsExampleCocos
 3. VueExample: https://github.com/iohao/ioGameSdkTsExampleVue
 4. HtmlExample: https://github.com/iohao/ioGameSdkTsExampleHtml
