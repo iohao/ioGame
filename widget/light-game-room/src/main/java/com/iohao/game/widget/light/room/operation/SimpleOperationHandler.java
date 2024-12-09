@@ -16,38 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-
-import java.io.Serial;
+package com.iohao.game.widget.light.room.operation;
 
 /**
- * 玩家（内置实现）
+ * 执行任务{@link Runnable}，任务必须放到 {@link OperationContext#setCommand(Object)} 中。
  *
  * @author 渔民小镇
- * @date 2024-05-12
- * @since 21.8
+ * @date 2024-12-09
+ * @since 21.23
  */
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PROTECTED)
-public class SimplePlayer implements Player {
-    @Serial
-    private static final long serialVersionUID = -26338708253909097L;
-    /** userId 玩家 id */
-    long userId;
-    /** 房间 id */
-    long roomId;
-    /** 用户所在位置 */
-    int seat;
-    /** true - 已准备 */
-    boolean ready;
-    /** true robot */
-    boolean robot;
-    /** true 模仿 robot 机制，但并不是真正的 robot，类似于 robot 托管 */
-    boolean maybeRobot;
+public final class SimpleOperationHandler implements OperationHandler {
+    @Override
+    public void process(PlayerOperationContext context) {
+        if (context.getCommand() instanceof Runnable runnable) {
+            runnable.run();
+        }
+    }
+
+    private SimpleOperationHandler() {
+    }
+
+    public static SimpleOperationHandler me() {
+        return Holder.ME;
+    }
+
+    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
+    private static class Holder {
+        static final SimpleOperationHandler ME = new SimpleOperationHandler();
+    }
 }

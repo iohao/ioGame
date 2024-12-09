@@ -115,7 +115,7 @@ public interface GameFlowContext {
      * @return GameFlowContext
      */
     static GameFlowContext of(Room room, FlowContext flowContext) {
-        return new SimpleGameFlowContext(room, flowContext);
+        return new SimpleGameFlowContext(room, flowContext, flowContext.getUserId());
     }
 
     /**
@@ -125,6 +125,17 @@ public interface GameFlowContext {
      * @return GameFlowContext
      */
     static GameFlowContext of(Room room) {
-        return of(room, null);
+        return of(room, 0);
+    }
+
+    /**
+     * 创建 GameFlowContext（框架内置的默认实现）
+     *
+     * @param room   房间
+     * @param userId userId
+     * @return GameFlowContext
+     */
+    static GameFlowContext of(Room room, long userId) {
+        return new SimpleGameFlowContext(room, null, userId);
     }
 }

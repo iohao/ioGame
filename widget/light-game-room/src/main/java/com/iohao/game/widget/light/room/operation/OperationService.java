@@ -50,5 +50,4 @@ public interface OperationService {
     default OperationHandler getUserOperationHandler(int operation) {
         return this.getOperationFactory().getUserOperationHandler(operation);
     }
-
 }

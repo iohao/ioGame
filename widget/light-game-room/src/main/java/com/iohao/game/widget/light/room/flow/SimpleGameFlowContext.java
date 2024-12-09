@@ -39,8 +39,15 @@ import java.util.Objects;
 final class SimpleGameFlowContext implements GameFlowContext {
     final Room room;
     final FlowContext flowContext;
+    final long userId;
 
     AttrOptions options;
+
+    SimpleGameFlowContext(Room room, FlowContext flowContext, long userId) {
+        this.room = room;
+        this.flowContext = flowContext;
+        this.userId = userId;
+    }
 
     public AttrOptions getOptions() {
         if (Objects.isNull(options)) {
@@ -50,8 +57,8 @@ final class SimpleGameFlowContext implements GameFlowContext {
         return options;
     }
 
-    SimpleGameFlowContext(Room room, FlowContext flowContext) {
-        this.room = room;
-        this.flowContext = flowContext;
+    @Override
+    public long getUserId() {
+        return userId;
     }
 }

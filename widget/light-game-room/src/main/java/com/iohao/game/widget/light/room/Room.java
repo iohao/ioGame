@@ -19,10 +19,16 @@
 package com.iohao.game.widget.light.room;
 
 import com.iohao.game.common.kit.PresentKit;
+import com.iohao.game.common.kit.concurrent.timer.delay.DelayTaskKit;
 import com.iohao.game.widget.light.room.flow.RoomCreateContext;
+import com.iohao.game.widget.light.room.operation.OperationContext;
+import com.iohao.game.widget.light.room.operation.OperationHandler;
+import com.iohao.game.widget.light.room.operation.SimpleOperationHandler;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -148,8 +154,8 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      *
      * @return player Stream
      */
-    default Stream<Player> streamPlayer() {
-        return this.listPlayer().stream();
+    default <T extends Player> Stream<T> streamPlayer() {
+        return (Stream<T>) this.listPlayer().stream();
     }
 
     /**
@@ -286,5 +292,37 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      */
     default void forEach(BiConsumer<Long, Player> action) {
         this.getPlayerMap().forEach(action);
+    }
+
+    /**
+     * create OperationContext
+     *
+     * @param operationHandler 玩法操作业务接口
+     * @return OperationContext 玩法操作上下文
+     * @since 21.23
+     */
+    default OperationContext ofOperationContext(OperationHandler operationHandler) {
+        return OperationContext.of(this, operationHandler);
+    }
+
+    /**
+     * Executed in domain events, this method is thread-safe
+     *
+     * @param task task
+     * @since 21.23
+     */
+    default void executeTask(Runnable task) {
+        OperationContext.of(this, SimpleOperationHandler.me()).setCommand(task).send();
+    }
+
+    /**
+     * Delayed execution of tasks, this method is thread-safe
+     *
+     * @param task   task
+     * @param millis millis
+     * @since 21.23
+     */
+    default void executeDelayTask(Runnable task, long millis) {
+        DelayTaskKit.of(() -> this.executeTask(task)).plusTimeMillis(millis).task();
     }
 }
