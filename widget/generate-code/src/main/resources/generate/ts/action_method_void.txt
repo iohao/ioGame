@@ -8,17 +8,17 @@
      * const ${bizDataName}: ${bizDataType} = ...;
      * ${actionSimpleName}.of${actionMethodName}(${bizDataName});
      */
-    static of${actionMethodName}(${bizDataName}: ${bizDataType}): RequestCommand {
+    static of${actionMethodName}(${bizDataName}: ${protoPrefix}${bizDataType}): RequestCommand {
     <% if (internalBizDataType) { %>
         return RequestCommand.of${sdkMethodName!}(this.${memberCmdName}, ${bizDataName}).execute();
     <% } else if (bizDataTypeIsList) { %>
         const dataList = ${bizDataName}.map(o => {
-            return toBinary(${actualTypeName}Schema, o);
+            return toBinary(${protoPrefix}${actualTypeName}Schema, o);
         });
 
         return RequestCommand.of${sdkMethodName}(this.${memberCmdName}, dataList).execute();
     <% } else { %>
-        const data = toBinary(${bizDataType}Schema, ${bizDataName});
+        const data = toBinary(${protoPrefix}${bizDataType}Schema, ${bizDataName});
         const requestCommand = RequestCommand.of(this.${memberCmdName}, data);
         requestCommand.dataSource = ${bizDataName};
         return requestCommand.execute();
