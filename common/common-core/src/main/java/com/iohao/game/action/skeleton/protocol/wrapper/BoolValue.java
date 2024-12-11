@@ -19,9 +19,14 @@
 package com.iohao.game.action.skeleton.protocol.wrapper;
 
 import com.baidu.bjf.remoting.protobuf.FieldType;
+import com.baidu.bjf.remoting.protobuf.annotation.Ignore;
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
+import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.core.codec.DataSelfEncode;
 import lombok.ToString;
+
+import java.util.Objects;
 
 /**
  * boolean value
@@ -31,14 +36,31 @@ import lombok.ToString;
  */
 @ToString
 @ProtobufClass
-public final class BoolValue {
+public final class BoolValue implements DataSelfEncode {
     /** bool 值 */
     @Protobuf(fieldType = FieldType.BOOL, order = 1)
     public boolean value;
 
+    transient byte[] data;
+
+    @Ignore
+    private static final BoolValue trueValue = create(true);
+    @Ignore
+    private static final BoolValue falseValue = create(false);
+
     public static BoolValue of(boolean value) {
+        return value ? trueValue : falseValue;
+    }
+
+    private static BoolValue create(Boolean value) {
         var theValue = new BoolValue();
         theValue.value = value;
+        theValue.data = DataCodecKit.encode(theValue);
         return theValue;
+    }
+
+    @Override
+    public byte[] getEncodeData() {
+        return Objects.nonNull(data) ? data : DataCodecKit.encode(this);
     }
 }

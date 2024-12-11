@@ -102,7 +102,7 @@ public final class ActionCommand {
 
     private ActionCommand(Builder builder) {
         // -------------- 路由相关 --------------
-        this.cmdInfo = CmdInfoFlyweightFactory.of(builder.cmd, builder.subCmd);
+        this.cmdInfo = CmdInfo.of(builder.cmd, builder.subCmd);
 
         // -------------- 控制器相关 --------------
         this.actionControllerClazz = builder.actionControllerClazz;

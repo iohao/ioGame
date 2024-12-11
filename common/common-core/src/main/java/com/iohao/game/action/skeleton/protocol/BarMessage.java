@@ -19,6 +19,7 @@
 package com.iohao.game.action.skeleton.protocol;
 
 import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.core.codec.DataSelfEncode;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.common.consts.CommonConst;
 import lombok.AccessLevel;
@@ -72,6 +73,11 @@ public abstract sealed class BarMessage implements Serializable permits RequestM
 
         // 保存一下业务数据的 class
         this.dataClass = data.getClass().getName();
+
+        if (data instanceof DataSelfEncode dataSelfEncode) {
+            return this.setData(dataSelfEncode.getEncodeData());
+        }
+
         byte[] bytes = DataCodecKit.encode(data);
         return this.setData(bytes);
     }

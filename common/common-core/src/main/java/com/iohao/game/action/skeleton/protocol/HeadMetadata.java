@@ -20,7 +20,6 @@ package com.iohao.game.action.skeleton.protocol;
 
 import com.baidu.bjf.remoting.protobuf.annotation.Ignore;
 import com.iohao.game.action.skeleton.core.CmdInfo;
-import com.iohao.game.action.skeleton.core.CmdInfoFlyweightFactory;
 import com.iohao.game.action.skeleton.core.flow.internal.DefaultActionAfter;
 import com.iohao.game.action.skeleton.kit.ExecutorSelectEnum;
 import lombok.AccessLevel;
@@ -190,7 +189,7 @@ public final class HeadMetadata implements Serializable {
      * @return cmdInfo
      */
     public CmdInfo getCmdInfo() {
-        return CmdInfoFlyweightFactory.of(this.cmdMerge);
+        return CmdInfo.of(this.cmdMerge);
     }
 
     public HeadMetadata setCmdMerge(int cmdMerge) {

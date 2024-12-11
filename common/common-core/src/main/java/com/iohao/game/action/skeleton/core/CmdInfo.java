@@ -105,7 +105,7 @@ public final class CmdInfo {
      * @return 路由信息
      */
     public static CmdInfo of(int cmd, int subCmd) {
-        return CmdInfoFlyweightFactory.of(cmd, subCmd);
+        return of(CmdKit.merge(cmd, subCmd));
     }
 
     /**
