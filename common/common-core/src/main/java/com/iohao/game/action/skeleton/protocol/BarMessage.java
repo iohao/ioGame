@@ -113,4 +113,8 @@ public abstract sealed class BarMessage implements Serializable permits RequestM
     public boolean hasError() {
         return this.responseStatus != 0;
     }
+
+    public boolean success() {
+        return !this.hasError();
+    }
 }

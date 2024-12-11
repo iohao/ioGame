@@ -28,6 +28,7 @@ import com.alipay.remoting.rpc.protocol.UserProcessor;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.SkeletonAttr;
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
+import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.action.skeleton.protocol.collect.RequestCollectMessage;
@@ -53,8 +54,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -161,18 +162,17 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
 
     @Override
     public ResponseMessage invokeModuleMessage(RequestMessage requestMessage) {
-
-        ResponseMessage o = null;
-
         try {
             InnerModuleMessage moduleMessage = new InnerModuleMessage();
             moduleMessage.setRequestMessage(requestMessage);
-            o = (ResponseMessage) this.invokeSync(moduleMessage);
+            return (ResponseMessage) this.invokeSync(moduleMessage);
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);
+            var responseMessage = requestMessage.createResponseMessage();
+            responseMessage.setResponseStatus(ActionErrorEnum.systemOtherErrCode.getCode());
+            responseMessage.setValidatorMsg(e.getMessage());
+            return responseMessage;
         }
-
-        return o;
     }
 
     @Override
@@ -196,9 +196,13 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
             return (ResponseCollectMessage) this.invokeSync(requestCollectMessage);
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);
-        }
+            ResponseCollectMessage responseCollectMessage = new ResponseCollectMessage();
+            responseCollectMessage.setStatusCode(ActionErrorEnum.systemOtherErrCode.getCode());
+            responseCollectMessage.setStatusMes(e.getMessage());
+            responseCollectMessage.setMessageList(Collections.emptyList());
 
-        return null;
+            return responseCollectMessage;
+        }
     }
 
     @Override
