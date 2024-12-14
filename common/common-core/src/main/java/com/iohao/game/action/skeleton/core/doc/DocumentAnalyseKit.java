@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 /**
@@ -122,19 +123,28 @@ class DocumentAnalyseKit {
                 : path.replace("build/classes", "src/main/java");
     };
 
+    private final AtomicInteger gameCodeOrdinal = new AtomicInteger(0);
+
     private List<ErrorCodeDocument> analyseErrorCodeDocument(JavaClass javaClass) {
         return javaClass.getFields().stream().map(field -> {
-            String name = field.getName();
             List<Expression> enumConstantArguments = field.getEnumConstantArguments();
-            if (CollKit.isEmpty(enumConstantArguments) || enumConstantArguments.size() != 2) {
+            if (CollKit.isEmpty(enumConstantArguments)) {
                 return null;
             }
 
+            int gameCode = 0;
+            if (enumConstantArguments.size() == 1) {
+                gameCode = gameCodeOrdinal.getAndIncrement();
+            } else if (enumConstantArguments.size() == 2) {
+                Object enumValue = enumConstantArguments.getFirst().getParameterValue();
+                gameCode = Integer.parseInt(enumValue.toString());
+            }
+
+            String name = field.getName();
+
             ErrorCodeDocument errorCodeDocument = new ErrorCodeDocument();
             errorCodeDocument.setName(name);
-
-            Object enumValue = enumConstantArguments.getFirst().getParameterValue();
-            errorCodeDocument.setValue(Integer.parseInt(enumValue.toString()));
+            errorCodeDocument.setValue(gameCode);
 
             String description = enumConstantArguments.getLast().getParameterValue().toString();
             description = description.substring(1, description.length() - 1);

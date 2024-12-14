@@ -179,6 +179,15 @@ public class IoGameDocumentHelper {
     }
 
     /**
+     * 添加广播文档
+     *
+     * @param broadcastDocumentBuilder broadcastDocumentBuilder
+     */
+    public void addBroadcastDocument(BroadcastDocumentBuilder broadcastDocumentBuilder) {
+        addBroadcastDocument(broadcastDocumentBuilder.build());
+    }
+
+    /**
      * 获取 ActionDoc，如果 ActionDoc 不存在则创建
      *
      * @param cmd             主路由
