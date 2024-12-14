@@ -171,7 +171,7 @@ class ClassRefInfoBuilder {
             for (Method method : declaredMethods) {
                 int modifiers = method.getModifiers();
                 // 静态的字段不需要
-                if (Modifier.isStatic(modifiers)) {
+                if (Modifier.isStatic(modifiers) || method.isBridge()) {
                     continue;
                 }
                 methodList.add(method);
