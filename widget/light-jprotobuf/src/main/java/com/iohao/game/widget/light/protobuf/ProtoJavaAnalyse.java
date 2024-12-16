@@ -18,9 +18,11 @@
  */
 package com.iohao.game.widget.light.protobuf;
 
+import com.baidu.bjf.remoting.protobuf.EnumReadable;
 import com.baidu.bjf.remoting.protobuf.annotation.Ignore;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.esotericsoftware.reflectasm.FieldAccess;
+import com.iohao.game.common.consts.CommonConst;
 import com.iohao.game.common.kit.ClassScanner;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
@@ -31,7 +33,6 @@ import com.thoughtworks.qdox.model.JavaField;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -93,7 +94,7 @@ public class ProtoJavaAnalyse {
             long count = annotations.stream().filter(annotation -> {
                 String string = annotation.getType().toString();
                 return string.contains(ProtobufClass.class.getName())
-                        || string.contains(ProtoFileMerge.class.getName());
+                       || string.contains(ProtoFileMerge.class.getName());
             }).count();
 
             if (count < 2) {
@@ -133,48 +134,27 @@ public class ProtoJavaAnalyse {
 
     private void analyseField(ProtoJava protoJava) {
         Class<?> clazz = protoJava.getClazz();
-        Field[] fields;
-
-        if (clazz.isEnum()) {
-            // 如果是枚举类型，需要单独处理，因为FieldAccess.get(clazz)方法中的Modifier.isStatic(modifiers)判断会过滤枚举内的属性
-            Field[] enumFields = clazz.getDeclaredFields();
-            List<Field> fieldList = new ArrayList<>(enumFields.length);
-
-            for (Field enumField : enumFields) {
-                if (Modifier.isPrivate(enumField.getModifiers())) {
-                    // java的Enum有一个隐藏的$VALUES(private)，需要过滤掉---枚举其他属性默认public static
-                    continue;
-                }
-
-                fieldList.add(enumField);
-            }
-
-            fields = new Field[fieldList.size()];
-            for (int i = 0; i < fieldList.size(); i++) {
-                fields[i] = fieldList.get(i);
-            }
-        } else {
-            fields = FieldAccess.get(clazz).getFields();
-        }
+        Field[] fields = clazz.isEnum()
+                ? Arrays.stream(clazz.getDeclaredFields()).filter(field -> field.getType().isEnum()).toArray(Field[]::new)
+                : FieldAccess.get(clazz).getFields();
 
         JavaClass javaClass = protoJava.getJavaClass();
         // 枚举 enum 的下标从 0 开始，message 的下标从 1 开始
         int order = clazz.isEnum() ? 0 : 1;
+        var enumConstants = clazz.isEnum() ? clazz.getEnumConstants() : CommonConst.emptyObjects;
 
-        for (Field field : fields) {
-
+        for (int i = 0; i < fields.length; i++) {
+            var field = fields[i];
             if (Objects.nonNull(field.getAnnotation(Ignore.class))) {
                 continue;
             }
 
             Class<?> fieldTypeClass = field.getType();
-            boolean repeated = List.class.equals(fieldTypeClass);
-
             String fieldName = field.getName();
             JavaField javaField = javaClass.getFieldByName(fieldName);
 
             ProtoJavaField protoJavaField = new ProtoJavaField()
-                    .setRepeated(repeated)
+                    .setRepeated(List.class.equals(fieldTypeClass))
                     .setFieldName(fieldName)
                     .setComment(javaField.getComment())
                     .setOrder(order++)
@@ -182,10 +162,16 @@ public class ProtoJavaAnalyse {
                     .setField(field)
                     .setProtoJavaParent(protoJava);
 
+            // 自定义枚举值
+            if (clazz.isEnum() && EnumReadable.class.isAssignableFrom(clazz)) {
+                if (enumConstants[i] instanceof EnumReadable r) {
+                    protoJavaField.setOrder(r.value());
+                }
+            }
+
             protoJava.addProtoJavaFiled(protoJavaField);
 
             String fieldProtoType = ProtoFieldTypeHolder.me().getProtoType(fieldTypeClass);
-
             if (Objects.nonNull(fieldProtoType)) {
                 protoJavaField.setFieldProtoType(fieldProtoType);
                 continue;
@@ -198,7 +184,6 @@ public class ProtoJavaAnalyse {
             } else {
                 processFieldProtoJava(protoJavaField);
             }
-
         }
     }
 

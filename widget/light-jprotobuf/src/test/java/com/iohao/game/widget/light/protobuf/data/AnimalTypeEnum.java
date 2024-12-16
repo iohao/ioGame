@@ -21,9 +21,7 @@ package com.iohao.game.widget.light.protobuf.data;
 import com.baidu.bjf.remoting.protobuf.EnumReadable;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
-import lombok.AccessLevel;
 import lombok.ToString;
-import lombok.experimental.FieldDefaults;
 
 /**
  * TestAnimalTypeEnum
@@ -36,7 +34,9 @@ import lombok.experimental.FieldDefaults;
 @ProtobufClass
 @ProtoFileMerge(fileName = TempProtoFile.fileName, filePackage = TempProtoFile.filePackage)
 public enum AnimalTypeEnum implements EnumReadable {
+    /** the cat */
     cat(0),
+    /** the tiger */
     tiger(10),
     ;
 
