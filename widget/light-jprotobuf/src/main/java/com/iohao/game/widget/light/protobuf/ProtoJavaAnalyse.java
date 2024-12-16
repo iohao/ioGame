@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.protobuf;
 
+import com.baidu.bjf.remoting.protobuf.EnumReadable;
 import com.baidu.bjf.remoting.protobuf.annotation.Ignore;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.esotericsoftware.reflectasm.FieldAccess;
@@ -31,6 +32,7 @@ import com.thoughtworks.qdox.model.JavaField;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -99,6 +101,8 @@ public class ProtoJavaAnalyse {
             if (count < 2) {
                 continue;
             }
+
+            this.checkCustomEnumOrder(javaClass);
 
             protoJavaSourceFileMap.put(javaClass.toString(), javaClass);
             log.info("javaClass: {}", javaClass);
@@ -347,5 +351,43 @@ public class ProtoJavaAnalyse {
         }
 
         return protoJavaRegion;
+    }
+
+
+    private void checkCustomEnumOrder(JavaClass javaClass){
+        if(!javaClass.isEnum()){
+            return;
+        }
+
+        String enumClsName = javaClass.getBinaryName();
+        Class cls = null;
+        try {
+            cls = Class.forName(enumClsName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(EnumReadable.class.isAssignableFrom(cls)){
+            try {
+                Enum[] enumConstants = (Enum[])cls.getEnumConstants();
+
+                Method getValueMethod = cls.getMethod("value");
+                Set<Integer> values = new HashSet<>(enumConstants.length);
+                for (Enum constant : enumConstants) {
+                    int value = (int) getValueMethod.invoke(constant);
+                    if(values.contains(value)){
+                        log.error("{} is custom enum,but value:{} repeated.",enumClsName,value);
+                        System.exit(0);
+                    }
+                    values.add(value);
+                }
+                if(!values.contains(0)){
+                    log.error("{} is custom enum,but not found zero.proto3 enum must have.",enumClsName);
+                    System.exit(0);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

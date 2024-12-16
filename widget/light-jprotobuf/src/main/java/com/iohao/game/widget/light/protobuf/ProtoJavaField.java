@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.protobuf;
 
+import com.baidu.bjf.remoting.protobuf.EnumReadable;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.widget.light.protobuf.kit.GenerateFileKit;
 import lombok.AccessLevel;
@@ -27,6 +28,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +82,11 @@ public class ProtoJavaField {
     }
 
     public String toProtoFieldLine() {
+        boolean isEnum = this.protoJavaParent.getClazz().isEnum();
+        if(isEnum){
+            this.resetEnumOrder();
+        }
+
         Map<String, String> messageMap = this.createParam();
 
         String templateFiled = getTemplateFiled(this.protoJavaParent.getClazz().isEnum());
@@ -109,5 +116,26 @@ public class ProtoJavaField {
         }
 
         return templateFiled.toString();
+    }
+
+
+    private void resetEnumOrder(){
+        if(EnumReadable.class.isAssignableFrom(fieldTypeClass)){
+            try {
+                Enum[] enumConstants = (Enum[])fieldTypeClass.getEnumConstants();
+
+                Method getValueMethod = fieldTypeClass.getMethod("value");
+
+                for (Enum constant : enumConstants) {
+                    String constantName = constant.name();
+                    if (constantName.equals(fieldName)) {
+                        this.order = (int) getValueMethod.invoke(constant);
+                        return ;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
