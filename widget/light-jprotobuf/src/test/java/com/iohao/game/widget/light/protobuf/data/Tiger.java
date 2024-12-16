@@ -16,16 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.protobuf.pojo;
+package com.iohao.game.widget.light.protobuf.data;
+
+import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
+import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
+import lombok.AccessLevel;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 /**
+ * 老虎
+ *
  * @author 渔民小镇
  * @date 2022-01-25
  */
-public interface TempProtoFile {
-    String oneFileName = "one.proto";
-    String oneFilePackage = "pb.one";
-
-    String commonFileName = "common.proto";
-    String commonFilePackage = "pb.common";
+@ToString
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+@ProtoFileMerge(fileName = TempProtoFile.fileName, filePackage = TempProtoFile.filePackage)
+public class Tiger {
+    /** id */
+    int id;
+    /** 老虎的食物 */
+    Food food;
 }

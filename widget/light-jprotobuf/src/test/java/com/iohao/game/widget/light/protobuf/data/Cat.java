@@ -16,30 +16,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.protobuf;
+package com.iohao.game.widget.light.protobuf.data;
 
-import com.iohao.game.widget.light.protobuf.kit.GenerateFileKit;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
+import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
+import lombok.AccessLevel;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+
+import java.util.List;
+import java.util.Map;
 
 /**
+ * 猫
+ *
  * @author 渔民小镇
- * @date 2022-01-24
+ * @date 2022-01-25
  */
-@Slf4j
-public class ProtoJavaTest {
-    @Test
-    public void generate() {
-        /*
-         * .proto 文件生成
-         * 相关文档 https://www.yuque.com/iohao/game/vpe2t6
-         *
-         * 运行该类，会在当前项目 target/proto 目录下生成 .proto 文件
-         */
-
-        // 需要扫描的包名
-        String packagePath = ProtoJavaTest.class.getPackageName();
-        // .proto 文件生成
-        GenerateFileKit.generate(packagePath);
-    }
+@ToString
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+@ProtoFileMerge(fileName = TempProtoFile.fileName, filePackage = TempProtoFile.filePackage)
+public class Cat {
+    /** id */
+    int id;
+    /** 猫的名字 */
+    String catName;
+    /** 食物 map */
+    Map<Integer, Integer> foodMap;
+    /** 道具 id 列表 */
+    List<Long> propIdList;
 }

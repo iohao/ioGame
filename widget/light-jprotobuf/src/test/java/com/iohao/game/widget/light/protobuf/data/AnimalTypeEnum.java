@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.protobuf.pojo;
+package com.iohao.game.widget.light.protobuf.data;
 
+import com.baidu.bjf.remoting.protobuf.EnumReadable;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
 import lombok.AccessLevel;
@@ -25,26 +26,28 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 /**
- * teacher
+ * TestAnimalTypeEnum
  *
  * @author 渔民小镇
- * @date 2022-01-07
+ * @date 2024-12-16
+ * @since 21.23
  */
 @ToString
 @ProtobufClass
-@FieldDefaults(level = AccessLevel.PUBLIC)
-@ProtoFileMerge(fileName = TempProtoFile.commonFileName, filePackage = TempProtoFile.commonFilePackage)
-public class ProtoTeacher {
-    /** 姓名 */
-    String name;
-    int id;
-    long age;
-    /** 邮箱 */
-    String email;
+@ProtoFileMerge(fileName = TempProtoFile.fileName, filePackage = TempProtoFile.filePackage)
+public enum AnimalTypeEnum implements EnumReadable {
+    cat(0),
+    tiger(10),
+    ;
 
-    Double doubleF;
-    Float floatF;
-    byte[] bytesF;
+    final int value;
 
-    Boolean boolF;
+    AnimalTypeEnum(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public int value() {
+        return this.value;
+    }
 }

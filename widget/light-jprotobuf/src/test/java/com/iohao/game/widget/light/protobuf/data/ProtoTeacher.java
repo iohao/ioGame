@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.protobuf.pojo.animal;
+package com.iohao.game.widget.light.protobuf.data;
 
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
@@ -25,18 +25,26 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 /**
- * 老虎
+ * teacher
  *
  * @author 渔民小镇
- * @date 2022-01-25
+ * @date 2022-01-07
  */
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
-@ProtoFileMerge(fileName = "one.proto", filePackage = "pb.one")
-public class Tiger {
-    /** id */
+@ProtoFileMerge(fileName = TempProtoFile.fileName, filePackage = TempProtoFile.filePackage)
+public class ProtoTeacher {
+    /** 姓名 */
+    String name;
     int id;
-    /** 老虎的食物 */
-    Food food;
+    long age;
+    /** 邮箱 */
+    String email;
+
+    Double doubleF;
+    Float floatF;
+    byte[] bytesF;
+
+    Boolean boolF;
 }

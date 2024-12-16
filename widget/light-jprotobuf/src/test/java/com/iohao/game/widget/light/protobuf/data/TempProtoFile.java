@@ -16,34 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.protobuf.pojo.animal;
-
-import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
-import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
-import lombok.AccessLevel;
-import lombok.ToString;
-import lombok.experimental.FieldDefaults;
-
-import java.util.List;
-import java.util.Map;
+package com.iohao.game.widget.light.protobuf.data;
 
 /**
- * 猫
- *
  * @author 渔民小镇
  * @date 2022-01-25
  */
-@ToString
-@ProtobufClass
-@FieldDefaults(level = AccessLevel.PUBLIC)
-@ProtoFileMerge(fileName = "one.proto", filePackage = "pb.one")
-public class Cat {
-    /** id */
-    int id;
-    /** 猫的名字 */
-    String catName;
-    /** 食物 map */
-    Map<Integer, Integer> foodMap;
-    /** 道具 id 列表 */
-    List<Long> propIdList;
+public interface TempProtoFile {
+    String fileName = "common.proto";
+    String filePackage = "pb.common";
 }
