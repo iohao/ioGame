@@ -26,9 +26,7 @@ import com.iohao.game.widget.light.room.operation.OperationHandler;
 import com.iohao.game.widget.light.room.operation.SimpleOperationHandler;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -43,7 +41,7 @@ import java.util.stream.Stream;
 @SuppressWarnings("unchecked")
 public interface Room extends Serializable, RoomBroadcastEnhance {
     /**
-     * 玩家
+     * 玩家，包含 Robot
      * <pre>
      *     key : userId
      *     value : player
@@ -52,6 +50,34 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      * @return 玩家
      */
     Map<Long, Player> getPlayerMap();
+
+    /**
+     * 所有真实的玩家
+     * <pre>
+     *     key : userId
+     *     value : player
+     * </pre>
+     *
+     * @return 真实的玩家
+     * @since 21.23
+     */
+    default Map<Long, Player> getRealPlayerMap() {
+        return Collections.emptyMap();
+    }
+
+    /**
+     * 所有 Robot
+     * <pre>
+     *     key : userId
+     *     value : player
+     * </pre>
+     *
+     * @return Robot Map
+     * @since 21.23
+     */
+    default Map<Long, Player> getRobotMap() {
+        return Collections.emptyMap();
+    }
 
     /**
      * 玩家位置
@@ -140,7 +166,7 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     }
 
     /**
-     * 玩家列表: 所有玩家
+     * 玩家列表: 所有玩家，包含 Robot
      *
      * @param <T> 玩家
      * @return 所有玩家
@@ -158,6 +184,45 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
         return (Stream<T>) this.listPlayer().stream();
     }
 
+
+    /**
+     * 真实玩家列表: 所有的真实玩家（不包含 Robot）
+     *
+     * @param <T> 玩家
+     * @return 所有玩家
+     */
+    default <T extends Player> Collection<T> listRealPlayer() {
+        return (Collection<T>) this.getRealPlayerMap().values();
+    }
+
+    /**
+     * steam real players （真实的玩家）
+     *
+     * @return player Stream
+     */
+    default <T extends Player> Stream<T> streamRealPlayer() {
+        return (Stream<T>) listRealPlayer().stream();
+    }
+
+    /**
+     * RobotList
+     *
+     * @param <T> Robot
+     * @return RobotList
+     */
+    default <T extends Player> Collection<T> listRobot() {
+        return (Collection<T>) this.getRobotMap().values();
+    }
+
+    /**
+     * steam players
+     *
+     * @return player Stream
+     */
+    default <T extends Player> Stream<T> streamRobot() {
+        return (Stream<T>) this.listRobot().stream();
+    }
+
     /**
      * userId Collection
      *
@@ -165,6 +230,24 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      */
     default Collection<Long> listPlayerId() {
         return this.getPlayerMap().keySet();
+    }
+
+    /**
+     * Robot UserId Collection
+     *
+     * @return userId
+     */
+    default Collection<Long> listRealPlayerId() {
+        return this.getRealPlayerMap().keySet();
+    }
+
+    /**
+     * Robot UserId Collection
+     *
+     * @return userId
+     */
+    default Collection<Long> listRobotPlayerId() {
+        return this.getRobotMap().keySet();
     }
 
     /**
@@ -195,9 +278,32 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      */
     default void addPlayer(Player player) {
         player.setRoomId(this.getRoomId());
-        long userId = player.getUserId();
+        var userId = player.getUserId();
         this.getPlayerMap().put(userId, player);
         this.getPlayerSeatMap().put(player.getSeat(), userId);
+
+        if (notOverrideRealAndRobotMap()) {
+            return;
+        }
+
+        if (player.isRobot()) {
+            this.getRobotMap().put(userId, player);
+        } else {
+            this.getRealPlayerMap().put(userId, player);
+        }
+    }
+
+    /**
+     * 是否重写了 {@link #getRealPlayerMap()} 和 {@link #getRobotMap()} 方法
+     *
+     * @return true 表示其中一个方法没有重写
+     * @since 21.23
+     */
+    private boolean notOverrideRealAndRobotMap() {
+        Object realPlayerMap = this.getRealPlayerMap();
+        Object robotMap = this.getRobotMap();
+        Object emptyMap = Collections.emptyMap();
+        return realPlayerMap == emptyMap || robotMap == emptyMap;
     }
 
     /**
@@ -209,6 +315,16 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
         long userId = player.getUserId();
         this.getPlayerMap().remove(userId);
         this.getPlayerSeatMap().remove(player.getSeat());
+
+        if (notOverrideRealAndRobotMap()) {
+            return;
+        }
+
+        if (player.isRobot()) {
+            this.getRobotMap().remove(userId);
+        } else {
+            this.getRealPlayerMap().remove(userId);
+        }
     }
 
     /**
@@ -245,7 +361,7 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     }
 
     /**
-     * 统计房间内的玩家数量
+     * 统计房间内的玩家数量，包含机器人
      *
      * @return 玩家数量
      */
@@ -254,12 +370,60 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     }
 
     /**
-     * 房间内的是否没有玩家
+     * 统计房间内真实玩家的数量
      *
-     * @return true 房间内没有玩家了
+     * @return 真实玩家的数量
+     */
+    default int countRealPlayer() {
+        return this.getRealPlayerMap().size();
+    }
+
+    /**
+     * 统计房间内 Robot 的数量
+     *
+     * @return Robot 数量
+     */
+    default int countRobot() {
+        return this.getRobotMap().size();
+    }
+
+    /**
+     * 房间内是否没有玩家，包含 Robot
+     *
+     * @return true 房间内没有任何玩家
      */
     default boolean isEmptyPlayer() {
         return this.getPlayerMap().isEmpty();
+    }
+
+    /**
+     * 房间内是否没有真实的玩家
+     *
+     * @return true 房间内没有真实玩家
+     */
+    default boolean isEmptyRealPlayer() {
+        return this.getRealPlayerMap().isEmpty();
+    }
+
+    /**
+     * 房间内是否没有 Robot
+     *
+     * @return true 房间内没有 Robot
+     */
+    default boolean isEmptyRobot() {
+        return this.getRealPlayerMap().isEmpty();
+    }
+
+    /**
+     * 是否 Robot
+     *
+     * @param userId userId
+     * @return true: Robot
+     * @since 21.23
+     */
+    default boolean isRobot(long userId) {
+        Player player = this.getPlayerById(userId);
+        return Objects.nonNull(player) && player.isRobot();
     }
 
     /**

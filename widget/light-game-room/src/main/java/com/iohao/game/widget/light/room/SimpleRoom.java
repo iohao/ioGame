@@ -52,6 +52,8 @@ public class SimpleRoom implements Room {
      * </pre>
      */
     final Map<Long, Player> playerMap = new NonBlockingHashMap<>();
+    final Map<Long, Player> realPlayerMap = new NonBlockingHashMap<>();
+    final Map<Long, Player> robotMap = new NonBlockingHashMap<>();
     /**
      * 玩家位置
      * <pre>

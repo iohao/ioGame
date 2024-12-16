@@ -83,4 +83,14 @@ public interface Player extends Serializable {
      * @param ready true - 已准备
      */
     void setReady(boolean ready);
+
+    /**
+     * 是否 Robot
+     *
+     * @return true 该玩家是 Robot
+     * @since 21.23
+     */
+    default boolean isRobot() {
+        return false;
+    }
 }
