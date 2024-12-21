@@ -436,6 +436,16 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     }
 
     /**
+     * 是否还有空位
+     *
+     * @return true 还有空的位置
+     * @since 21.23
+     */
+    default boolean hasSeat() {
+        return this.getSpaceSize() > this.countPlayer();
+    }
+
+    /**
      * 玩家是否都准备了
      *
      * @return true 所有玩家都准备了

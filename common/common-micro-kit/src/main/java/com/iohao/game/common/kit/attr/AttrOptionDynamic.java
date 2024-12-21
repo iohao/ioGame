@@ -61,9 +61,7 @@ public interface AttrOptionDynamic {
     AttrOptions getOptions();
 
     /**
-     * 获取选项值。
-     * <p>
-     * 如果选项不存在，返回默认值。
+     * 获取选项值，如果选项不存在，返回默认值。
      *
      * @param option 选项值
      * @return 如果 option 不存在，则使用默认的 option 值。
@@ -73,13 +71,11 @@ public interface AttrOptionDynamic {
     }
 
     /**
-     * 获取选项值。
-     * <p>
-     * 如果选项不存在，返回设定值。
+     * 获取选项值，如果选项不存在则返回设定值。
      *
      * @param option 选项值
      * @param value  设定值
-     * @return 如果option不存在，则默认的设定值。
+     * @return 如果 option 不存在，则使用设定值。
      */
     default <T> T optionValue(AttrOption<T> option, T value) {
         T data = this.option(option);

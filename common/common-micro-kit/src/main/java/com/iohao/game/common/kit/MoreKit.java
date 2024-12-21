@@ -21,6 +21,7 @@ package com.iohao.game.common.kit;
 import lombok.experimental.UtilityClass;
 
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * @author 渔民小镇
@@ -45,5 +46,13 @@ public class MoreKit {
         var first = map.putIfAbsent(key, value);
 
         return firstNonNull(first, value);
+    }
+
+    public void execute(Executor executor, Runnable runnable) {
+        if (executor == null) {
+            runnable.run();
+        } else {
+            executor.execute(runnable);
+        }
     }
 }
