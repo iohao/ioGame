@@ -1658,25 +1658,26 @@ interface SimpleCommon extends FlowOptionDynamic {
 }
 
 interface UserIdSetting extends SimpleCommunication {
+
     /**
-     * After setting the userId, it means the login is successful
+     * After binding the userId, it means the login is successful
      *
      * @param userId userId
      * @return true:login success
-     * @since 21.19
+     * @since 21.23
      */
-    default boolean setUserId(long userId) {
-        return this.setUserIdAndGetResult(userId).success();
+    default boolean bindingUserId(long userId) {
+        return this.bindingUserIdAndGetResult(userId).success();
     }
 
     /**
-     * After setting the userId, it means the login is successful
+     * After binding the userId, it means the login is successful
      *
      * @param userId userId
      * @return result
-     * @since 21.19
+     * @since 21.23
      */
-    default SettingUserIdResult setUserIdAndGetResult(final long userId) {
+    default SettingUserIdResult bindingUserIdAndGetResult(final long userId) {
 
         if (userId <= 0) {
             return SettingUserIdResult.ofError("The userId must be greater than 0");
@@ -1703,6 +1704,32 @@ interface UserIdSetting extends SimpleCommunication {
 
         headMetadata.setUserId(userId);
         return SettingUserIdResult.SUCCESS;
+    }
+
+    /**
+     * After setting the userId, it means the login is successful
+     *
+     * @param userId userId
+     * @return true:login success
+     * @since 21.19
+     * @deprecated see {@link this#bindingUserId(long)}
+     */
+    @Deprecated
+    default boolean setUserId(long userId) {
+        return this.bindingUserId(userId);
+    }
+
+    /**
+     * After setting the userId, it means the login is successful
+     *
+     * @param userId userId
+     * @return result
+     * @since 21.19
+     * @deprecated see {@link this#bindingUserIdAndGetResult(long)}
+     */
+    @Deprecated
+    default SettingUserIdResult setUserIdAndGetResult(final long userId) {
+        return this.bindingUserIdAndGetResult(userId);
     }
 }
 
