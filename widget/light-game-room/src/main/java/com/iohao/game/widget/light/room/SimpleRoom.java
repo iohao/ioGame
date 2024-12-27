@@ -29,6 +29,7 @@ import org.jctools.maps.NonBlockingHashMap;
 
 import java.io.Serial;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 /**
@@ -74,6 +75,8 @@ public class SimpleRoom implements Room {
 
     public SimpleRoom() {
         // 为房间设置通讯接口
-        aggregationContext = BrokerClientHelper.getBrokerClient().getCommunicationAggregationContext();
+        if (Objects.nonNull(BrokerClientHelper.getBrokerClient())) {
+            aggregationContext = BrokerClientHelper.getBrokerClient().getCommunicationAggregationContext();
+        }
     }
 }

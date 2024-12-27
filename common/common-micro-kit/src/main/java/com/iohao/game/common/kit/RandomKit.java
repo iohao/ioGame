@@ -22,7 +22,6 @@ import lombok.experimental.UtilityClass;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.random.RandomGenerator;
 
 /**
@@ -38,7 +37,6 @@ public class RandomKit {
      *
      * @param limit 限制随机数的范围，不包括这个数
      * @return 随机数
-     * @see Random#nextInt(int)
      */
     public int randomInt(int limit) {
         return generator.nextInt(limit);
@@ -53,6 +51,29 @@ public class RandomKit {
      */
     public int randomInt(int min, int max) {
         return generator.nextInt(min, max);
+    }
+
+    /**
+     * 获得指定范围内的随机数 [0,limit)
+     *
+     * @param limit 限制随机数的范围，不包括这个数
+     * @return 随机数
+     * @since 21.23
+     */
+    public long randomLong(long limit) {
+        return generator.nextLong(limit);
+    }
+
+    /**
+     * 获得指定范围内的随机数
+     *
+     * @param min 最小数（包含）
+     * @param max 最大数（不包含）
+     * @return 随机数
+     * @since 21.23
+     */
+    public long randomLong(long min, long max) {
+        return generator.nextLong(min, max);
     }
 
     /**
@@ -74,6 +95,29 @@ public class RandomKit {
      */
     public int random(int end) {
         return generator.nextInt(end + 1);
+    }
+
+    /**
+     * 获得指定范围内的随机数
+     *
+     * @param start 开始值（包含）
+     * @param end   结束值（包含）
+     * @return 随机数
+     * @since 21.23
+     */
+    public long random(long start, long end) {
+        return start + generator.nextLong(end - start + 1);
+    }
+
+    /**
+     * 获得指定范围内的随机数 (0 ~ end)
+     *
+     * @param end 结束值（包含）
+     * @return 随机数
+     * @since 21.23
+     */
+    public long random(long end) {
+        return generator.nextLong(end + 1);
     }
 
     /**

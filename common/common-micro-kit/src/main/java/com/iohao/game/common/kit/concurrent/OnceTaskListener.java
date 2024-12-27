@@ -18,10 +18,10 @@
  */
 package com.iohao.game.common.kit.concurrent;
 
+import com.iohao.game.common.kit.MoreKit;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
 
-import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /**
@@ -66,14 +66,8 @@ import java.util.concurrent.Executor;
 public interface OnceTaskListener extends TimerTask, TaskListener {
     @Override
     default void run(Timeout timeout) throws Exception {
-
         Executor executor = this.getExecutor();
-
-        if (Objects.nonNull(executor)) {
-            executor.execute(this::executeFlow);
-        } else {
-            this.executeFlow();
-        }
+        MoreKit.execute(executor, this::executeFlow);
     }
 
     private void executeFlow() {

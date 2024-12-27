@@ -22,7 +22,6 @@ import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregatio
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.ResponseMessage;
-import com.iohao.game.common.kit.CollKit;
 import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -270,7 +269,7 @@ public class RangeBroadcast implements RangeBroadcaster {
      * 广播数据
      */
     protected void broadcast() {
-        boolean emptyUser = CollKit.isEmpty(this.userIds);
+        boolean emptyUser = this.userIds.isEmpty();
         if (checkEmptyUser && emptyUser) {
             // 请添加消息推送人
             ThrowKit.ofRuntimeException("Please add a message sender");

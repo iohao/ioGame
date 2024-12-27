@@ -19,7 +19,7 @@
 package com.iohao.game.widget.light.room;
 
 import com.iohao.game.common.kit.PresentKit;
-import com.iohao.game.common.kit.concurrent.timer.delay.DelayTaskKit;
+import com.iohao.game.common.kit.concurrent.TaskKit;
 import com.iohao.game.widget.light.room.flow.RoomCreateContext;
 import com.iohao.game.widget.light.room.operation.OperationContext;
 import com.iohao.game.widget.light.room.operation.OperationHandler;
@@ -492,11 +492,11 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     /**
      * Delayed execution of tasks, this method is thread-safe
      *
-     * @param task   task
-     * @param millis millis
+     * @param task              task
+     * @param delayMilliseconds delayMilliseconds
      * @since 21.23
      */
-    default void executeDelayTask(Runnable task, long millis) {
-        DelayTaskKit.of(() -> this.executeTask(task)).plusTimeMillis(millis).task();
+    default void executeDelayTask(Runnable task, long delayMilliseconds) {
+        TaskKit.runOnceMillis(() -> this.executeTask(task), delayMilliseconds);
     }
 }
