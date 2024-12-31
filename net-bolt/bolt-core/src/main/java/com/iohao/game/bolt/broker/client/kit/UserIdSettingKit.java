@@ -43,17 +43,17 @@ public class UserIdSettingKit {
      * @param flowContext 业务框架 flow上下文
      * @param userId      一般从数据库中获取
      * @return true 变更成功
-     * @deprecated Please use {@link FlowContext#setUserId(long)} or {@link FlowContext#setUserIdAndGetResult(long)}
+     * @deprecated see {@link FlowContext#bindingUserId(long)}
      */
     @Deprecated
     public boolean settingUserId(FlowContext flowContext, long userId) {
-        var result = flowContext.setUserIdAndGetResult(userId);
+        var result = flowContext.bindingUserIdAndGetResult(userId);
 
         if (!result.success()) {
             Exception exception = result.exception();
             log.error(exception.getMessage(), exception);
         }
-        
+
         return result.success();
     }
 }

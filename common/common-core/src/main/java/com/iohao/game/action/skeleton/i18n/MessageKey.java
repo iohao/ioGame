@@ -81,4 +81,7 @@ public interface MessageKey {
     /* see DefaultUserHook.java */
     String userHookInto = "userHookInto";
     String userHookQuit = "userHookQuit";
+
+    /* see InternalAboutFlowContext.java */
+    String bindingUserId = "bindingUserId";
 }

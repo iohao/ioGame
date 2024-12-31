@@ -49,5 +49,4 @@ public class BroadcastMessage implements Serializable {
     Collection<Long> userIdList;
     /** true 给全体广播 */
     boolean broadcastAll;
-
 }

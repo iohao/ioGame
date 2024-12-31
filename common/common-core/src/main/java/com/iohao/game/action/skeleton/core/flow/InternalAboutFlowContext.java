@@ -24,6 +24,8 @@ import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowOptionDynamic;
 import com.iohao.game.action.skeleton.eventbus.EventBus;
 import com.iohao.game.action.skeleton.eventbus.EventBusMessage;
+import com.iohao.game.action.skeleton.i18n.Bundle;
+import com.iohao.game.action.skeleton.i18n.MessageKey;
 import com.iohao.game.action.skeleton.kit.ExecutorSelectKit;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
 import com.iohao.game.action.skeleton.protocol.RequestMessage;
@@ -598,6 +600,10 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
      */
     default void broadcastMe(ResponseMessage responseMessage) {
         var userId = this.getUserId();
+        if (userId == 0) {
+            ThrowKit.ofRuntimeException(Bundle.getMessage(MessageKey.bindingUserId));
+        }
+
         this.broadcast(responseMessage, userId);
     }
 
@@ -1712,7 +1718,7 @@ interface UserIdSetting extends SimpleCommunication {
      * @param userId userId
      * @return true:login success
      * @since 21.19
-     * @deprecated see {@link this#bindingUserId(long)}
+     * @deprecated see {@link #bindingUserId(long)}
      */
     @Deprecated
     default boolean setUserId(long userId) {
@@ -1725,7 +1731,7 @@ interface UserIdSetting extends SimpleCommunication {
      * @param userId userId
      * @return result
      * @since 21.19
-     * @deprecated see {@link this#bindingUserIdAndGetResult(long)}
+     * @deprecated see {@link #bindingUserIdAndGetResult(long)}
      */
     @Deprecated
     default SettingUserIdResult setUserIdAndGetResult(final long userId) {
