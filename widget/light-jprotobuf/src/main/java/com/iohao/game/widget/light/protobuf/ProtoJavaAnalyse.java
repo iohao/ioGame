@@ -24,14 +24,16 @@ import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.esotericsoftware.reflectasm.FieldAccess;
 import com.iohao.game.common.consts.CommonConst;
 import com.iohao.game.common.kit.ClassScanner;
+import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.StrKit;
-import com.iohao.game.common.kit.io.FileKit;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import lombok.extern.slf4j.Slf4j;
+import org.jctools.maps.NonBlockingHashMap;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -46,23 +48,42 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class ProtoJavaAnalyse {
-
-    final Map<ProtoJavaRegionKey, ProtoJavaRegion> protoJavaRegionMap = new HashMap<>();
-
-    final Map<Class<?>, ProtoJava> protoJavaMap = new HashMap<>();
-
-    final Map<String, JavaClass> protoJavaSourceFileMap = new HashMap<>();
+    static final Map<String, JavaProjectBuilder> javaProjectBuilderMap = new NonBlockingHashMap<>();
+    final Map<ProtoJavaRegionKey, ProtoJavaRegion> protoJavaRegionMap = new NonBlockingHashMap<>();
+    final Map<Class<?>, ProtoJava> protoJavaMap = new NonBlockingHashMap<>();
+    final Map<String, JavaClass> protoJavaSourceFileMap = new NonBlockingHashMap<>();
 
     public Map<ProtoJavaRegionKey, ProtoJavaRegion> analyse(String protoPackagePath, String protoSourcePath) {
         return this.analyse(protoPackagePath, protoSourcePath, this.predicateFilter);
     }
 
     public Map<ProtoJavaRegionKey, ProtoJavaRegion> analyse(String protoPackagePath, String protoSourcePath, Predicate<Class<?>> predicateFilter) {
+        var javaProjectBuilder = getJavaProjectBuilder(protoSourcePath);
+        Collection<JavaClass> javaClassCollection = javaProjectBuilder.getClasses();
 
-        javaProjectBuilder(protoSourcePath);
+        javaClassCollection.parallelStream().filter(javaClass -> {
+
+            List<JavaAnnotation> annotations = javaClass.getAnnotations();
+            if (annotations.size() < 2) {
+                return false;
+            }
+
+            long count = annotations.parallelStream().filter(annotation -> {
+                String string = annotation.getType().toString();
+                return string.contains(ProtobufClass.class.getName())
+                       || string.contains(ProtoFileMerge.class.getName());
+            }).count();
+
+            return count >= 2;
+        }).forEach(javaClass -> {
+            protoJavaSourceFileMap.put(javaClass.toString(), javaClass);
+
+            if (ProtoGenerateSetting.enableLog) {
+                log.info("javaClass: {}", javaClass);
+            }
+        });
 
         ClassScanner classScanner = new ClassScanner(protoPackagePath, predicateFilter);
-
         List<Class<?>> classList = classScanner.listScan();
 
         if (classList.isEmpty()) {
@@ -70,7 +91,6 @@ public class ProtoJavaAnalyse {
         }
 
         List<ProtoJava> protoJavaList = this.convert(classList);
-
         for (ProtoJava protoJava : protoJavaList) {
             this.analyseField(protoJava);
         }
@@ -78,32 +98,16 @@ public class ProtoJavaAnalyse {
         return protoJavaRegionMap;
     }
 
-    private void javaProjectBuilder(String protoSourcePath) {
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        javaProjectBuilder.setEncoding(StandardCharsets.UTF_8.name());
-        javaProjectBuilder.addSourceTree(FileKit.file(protoSourcePath));
-
-        Collection<JavaClass> javaClassCollection = javaProjectBuilder.getClasses();
-        for (JavaClass javaClass : javaClassCollection) {
-            List<JavaAnnotation> annotations = javaClass.getAnnotations();
-
-            if (annotations.size() < 2) {
-                continue;
-            }
-
-            long count = annotations.stream().filter(annotation -> {
-                String string = annotation.getType().toString();
-                return string.contains(ProtobufClass.class.getName())
-                       || string.contains(ProtoFileMerge.class.getName());
-            }).count();
-
-            if (count < 2) {
-                continue;
-            }
-
-            protoJavaSourceFileMap.put(javaClass.toString(), javaClass);
-            log.info("javaClass: {}", javaClass);
+    static JavaProjectBuilder getJavaProjectBuilder(String protoSourcePath) {
+        JavaProjectBuilder javaProjectBuilder = javaProjectBuilderMap.get(protoSourcePath);
+        if (javaProjectBuilder == null) {
+            var builder = new JavaProjectBuilder();
+            builder.setEncoding(StandardCharsets.UTF_8.name());
+            builder.addSourceTree(new File(protoSourcePath));
+            return MoreKit.putIfAbsent(javaProjectBuilderMap, protoSourcePath, builder);
         }
+
+        return javaProjectBuilder;
     }
 
     private List<ProtoJava> convert(List<Class<?>> classList) {

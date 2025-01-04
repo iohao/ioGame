@@ -25,8 +25,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+import org.jctools.maps.NonBlockingHashMap;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author 渔民小镇
@@ -40,8 +42,8 @@ public class ProtoJavaRegion {
     String fileName;
     String filePackage;
 
-    final Map<Class<?>, ProtoJava> protoJavaMap = new HashMap<>();
-    final List<ProtoJava> protoJavaList = new ArrayList<>();
+    final Map<Class<?>, ProtoJava> protoJavaMap = new NonBlockingHashMap<>();
+    final List<ProtoJava> protoJavaList = new CopyOnWriteArrayList<>();
     final ProtoJavaRegionHead regionHead = new ProtoJavaRegionHead();
 
     public void addProtoJava(ProtoJava protoJava) {

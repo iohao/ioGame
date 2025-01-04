@@ -31,6 +31,9 @@ import java.util.function.Function;
  */
 @UtilityClass
 public final class ProtoGenerateSetting {
+
+    public boolean enableLog = false;
+
     @Setter
     @Getter
     Function<FieldNameGenerate, String> fieldNameFunction = fieldNameGenerate -> {
