@@ -231,13 +231,9 @@ public class ProtoJavaAnalyse {
         protoJavaField.setFieldProtoType(fieldProtoType);
     }
 
-
     private void processListFieldProtoJava(ProtoJavaField protoJavaField) {
-        // map 类型
-        Field field = protoJavaField.getField();
-
         // 获取 map 的 <k,v> 类型
-        ParameterizedType genericType = (ParameterizedType) field.getGenericType();
+        ParameterizedType genericType = (ParameterizedType) protoJavaField.getField().getGenericType();
         Type[] actualTypeArguments = genericType.getActualTypeArguments();
 
         Class<?> firstClass = (Class<?>) actualTypeArguments[0];
@@ -251,7 +247,6 @@ public class ProtoJavaAnalyse {
                 .setRepeated(true)
                 .setFieldProtoType(fieldProtoType)
         ;
-
     }
 
     private void processMapFieldProtoJava(ProtoJavaField protoJavaField) {

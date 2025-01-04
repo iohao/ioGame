@@ -48,14 +48,13 @@ public class GenerateFileKit {
 
         String currentDir = System.getProperty("user.dir");
 
-        ProtoGenerateFile protoGenerateFile = ProtoGenerateFile.builder()
+        ProtoGenerateFile protoGenerateFile = new ProtoGenerateFile()
                 // 源码目录
-                .protoSourcePath(currentDir)
-                // 需要扫描的包名
-                .protoPackagePath(protoPackagePath)
+                .setProtoSourcePath(currentDir)
                 // 生成 .proto 文件存放的目录
-                .generateFolder(generateFolder)
-                .build();
+                .setGenerateFolder(generateFolder)
+                // 需要扫描的包名
+                .addProtoPackage(protoPackagePath);
 
         // 生成 .proto 文件
         protoGenerateFile.generate();

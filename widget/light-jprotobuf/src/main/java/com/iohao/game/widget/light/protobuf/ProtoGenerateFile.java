@@ -19,14 +19,17 @@
 package com.iohao.game.widget.light.protobuf;
 
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.common.kit.io.FileKit;
-import lombok.Builder;
+import lombok.AccessLevel;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.jctools.maps.NonBlockingHashMap;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -36,39 +39,65 @@ import java.util.function.Consumer;
  * @date 2022-01-25
  */
 @Slf4j
-@Builder
+@Setter
+@Accessors(chain = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProtoGenerateFile {
+    /** proto package path */
+    final Set<String> protoPackageSet = new HashSet<>();
     /** pb 源码目录 */
     String protoSourcePath;
-    /** pb class 目录 */
-    String protoPackagePath;
     /** 生成 proto file 目录 */
     String generateFolder;
 
-    private void checked() {
-        Objects.requireNonNull(protoSourcePath);
-        Objects.requireNonNull(protoPackagePath);
-        Objects.requireNonNull(generateFolder);
+    public ProtoGenerateFile addProtoPackage(Collection<String> protoPackageList) {
+        this.protoPackageSet.addAll(protoPackageList);
+        return this;
+    }
 
+    public ProtoGenerateFile addProtoPackage(String packageName) {
+        protoPackageSet.add(packageName);
+        return this;
+    }
+
+    private void checked() {
+        Objects.requireNonNull(generateFolder);
         FileKit.mkdir(this.generateFolder);
+
+        if (Objects.isNull(this.protoSourcePath)) {
+            this.protoSourcePath = System.getProperty("user.dir");
+        }
+
+        if (protoPackageSet.isEmpty()) {
+            ThrowKit.ofRuntimeException("protoPackageSet is empty");
+        }
     }
 
     public void generate() {
         checked();
 
+        ProtoJavaAnalyse.getJavaProjectBuilder(protoSourcePath);
+
         ProtoJavaAnalyse analyse = new ProtoJavaAnalyse();
-        Map<ProtoJavaRegionKey, ProtoJavaRegion> regionMap = analyse.analyse(protoPackagePath, protoSourcePath);
+        Map<ProtoJavaRegionKey, ProtoJavaRegion> regionMap = new NonBlockingHashMap<>();
+
+        protoPackageSet.parallelStream().forEach(protoPackage -> {
+            // analyse protoPackage
+            regionMap.putAll(analyse.analyse(protoPackage, protoSourcePath));
+        });
 
         Consumer<ProtoJavaRegion> javaRegionConsumer = javaRegion -> {
-            String fileName = javaRegion.getFileName();
-
-            List<ProtoJava> protoJavaList = javaRegion.getProtoJavaList();
-
-            log.info("fileName: {} - {}", fileName, protoJavaList.size());
+            var fileName = javaRegion.getFileName();
+            var protoJavaList = javaRegion.getProtoJavaList();
 
             String protoString = javaRegion.toProtoFile();
-            log.info("-------------{}---------------------", fileName);
-            log.info("{}", protoString);
+
+            if (ProtoGenerateSetting.enableLog) {
+                log.info("""
+                        ########## {} ########## protoSize:{}
+                        {}
+                        """, fileName, protoJavaList.size(), protoString);
+            }
 
             String protoFilePath = StrKit.format("{}{}{}"
                     , this.generateFolder
@@ -77,9 +106,55 @@ public class ProtoGenerateFile {
             );
 
             FileKit.writeUtf8String(protoString, protoFilePath);
-            log.info("\nprotoFilePath {}", protoFilePath);
+            log.info("\nprotoFilePath: {}", protoFilePath);
         };
 
         regionMap.values().forEach(javaRegionConsumer);
+    }
+
+    @Deprecated
+    public static ProtoGenerateFileBuilder builder() {
+        return new ProtoGenerateFileBuilder();
+    }
+
+    @Deprecated
+    public static class ProtoGenerateFileBuilder {
+        private final ProtoGenerateFile generateFile = new ProtoGenerateFile();
+        /** pb 源码目录 */
+        String protoSourcePath;
+        /** 生成 proto file 目录 */
+        String generateFolder;
+
+        public ProtoGenerateFileBuilder protoSourcePath(String protoSourcePath) {
+            this.protoSourcePath = protoSourcePath;
+            return this;
+        }
+
+        public ProtoGenerateFileBuilder generateFolder(String generateFolder) {
+            this.generateFolder = generateFolder;
+            return this;
+        }
+
+        @Deprecated
+        public ProtoGenerateFileBuilder protoPackagePath(String protoPackagePath) {
+            return this.addProtoPackage(protoPackagePath);
+        }
+
+        public ProtoGenerateFileBuilder addProtoPackage(String packageName) {
+            generateFile.protoPackageSet.add(packageName);
+            return this;
+        }
+
+        public ProtoGenerateFileBuilder addProtoPackage(Collection<String> protoPackageList) {
+            generateFile.protoPackageSet.addAll(protoPackageList);
+            return this;
+        }
+
+        public ProtoGenerateFile build() {
+            generateFile.generateFolder = this.generateFolder;
+            generateFile.protoSourcePath = this.protoSourcePath;
+
+            return generateFile;
+        }
     }
 }

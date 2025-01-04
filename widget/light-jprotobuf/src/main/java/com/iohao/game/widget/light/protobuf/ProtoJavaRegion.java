@@ -88,9 +88,9 @@ public class ProtoJavaRegion {
         String protoHead = this.regionHead.toProtoHead();
 
         String firstLine = """
-                // generate %s
+                // generate %s , protoSize: %s
                 // https://github.com/iohao/ioGame
-                """.formatted(FormatTimeKit.format());
+                """.formatted(FormatTimeKit.format(), protoJavaList.size());
 
         StringBuilder builder = new StringBuilder();
         builder.append(firstLine);
