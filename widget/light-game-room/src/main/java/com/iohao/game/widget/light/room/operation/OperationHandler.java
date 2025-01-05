@@ -47,7 +47,9 @@ public interface OperationHandler {
      * 检测验证, 验证用户操作步骤是否合法
      *
      * @param context 操作上下文
+     * @deprecated see {@link #processVerify(PlayerOperationContext)}
      */
+    @Deprecated
     default void verify(PlayerOperationContext context) {
     }
 
