@@ -52,6 +52,14 @@ public final class BoolValue implements DataSelfEncode {
         return value ? trueValue : falseValue;
     }
 
+    public static BoolValue ofTrue() {
+        return trueValue;
+    }
+
+    public static BoolValue ofFalse() {
+        return falseValue;
+    }
+
     private static BoolValue create(Boolean value) {
         var theValue = new BoolValue();
         theValue.value = value;

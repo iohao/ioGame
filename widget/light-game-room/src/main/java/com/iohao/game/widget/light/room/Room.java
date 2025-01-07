@@ -427,6 +427,18 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     }
 
     /**
+     * 是否真实玩家
+     *
+     * @param userId userId
+     * @return true: real player
+     * @since 21.23
+     */
+    default boolean isRealPlayer(long userId) {
+        var player = this.getPlayerById(userId);
+        return Objects.nonNull(player) && !player.isRobot();
+    }
+
+    /**
      * 得到一个空位置
      *
      * @return >=0 表示有位置
