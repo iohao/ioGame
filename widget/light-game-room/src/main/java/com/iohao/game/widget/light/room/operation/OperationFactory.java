@@ -18,6 +18,8 @@
  */
 package com.iohao.game.widget.light.room.operation;
 
+import com.iohao.game.common.kit.OperationCode;
+
 import java.util.Optional;
 
 /**
@@ -59,6 +61,28 @@ public interface OperationFactory {
      * @param operationHandler 玩法操作业务类
      */
     void mappingUser(int operation, OperationHandler operationHandler);
+
+    /**
+     * 玩家可操作的 OperationHandler。将操作码与 OperationHandler（玩法操作业务类）关联
+     *
+     * @param operationCode    操作码
+     * @param operationHandler 玩法操作业务类
+     * @since 21.23
+     */
+    default void mappingUser(OperationCode operationCode, OperationHandler operationHandler) {
+        this.mappingUser(operationCode.getOperationCode(), operationHandler);
+    }
+
+    /**
+     * 将操作码与 OperationHandler（玩法操作业务类）关联
+     *
+     * @param operationCode    操作码
+     * @param operationHandler 玩法操作业务类
+     * @since 21.23
+     */
+    default void mapping(OperationCode operationCode, OperationHandler operationHandler) {
+        this.mapping(operationCode.getOperationCode(), operationHandler);
+    }
 
     /**
      * 通过操作码得到 OperationHandler Optional

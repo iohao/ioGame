@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.room.operation;
 
+import com.iohao.game.common.kit.exception.ThrowKit;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.jctools.maps.NonBlockingHashMap;
@@ -60,11 +61,20 @@ final class SimpleOperationFactory implements OperationFactory {
     }
 
     public void mapping(int operation, OperationHandler operationHandler) {
+        if (this.operationMap.containsKey(operation)) {
+            ThrowKit.ofRuntimeException("operation already exists : " + operation);
+        }
+
         this.operationMap.put(operation, operationHandler);
     }
 
     public void mappingUser(int operation, OperationHandler operationHandler) {
         this.mapping(operation, operationHandler);
+
+        if (this.userOperationMap.containsKey(operation)) {
+            ThrowKit.ofRuntimeException("operation already exists : " + operation);
+        }
+
         this.userOperationMap.put(operation, operationHandler);
     }
 

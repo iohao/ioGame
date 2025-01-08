@@ -16,31 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.domain.event.exception;
+package com.iohao.game.common.kit;
 
-import com.lmax.disruptor.ExceptionHandler;
-import lombok.extern.slf4j.Slf4j;
+import lombok.experimental.UtilityClass;
 
-/**
- * 默认领域事件 异常处理类
- *
- * @author 渔民小镇
- * @date 2022-01-14
- */
-@Slf4j
-public class DefaultDomainEventExceptionHandler implements ExceptionHandler<Object> {
-    @Override
-    public void handleEventException(Throwable ex, long sequence, Object event) {
-        log.error(ex.getMessage(), ex);
-    }
+import java.util.concurrent.atomic.AtomicInteger;
 
-    @Override
-    public void handleOnStartException(Throwable ex) {
-        log.error(ex.getMessage(), ex);
-    }
-
-    @Override
-    public void handleOnShutdownException(Throwable ex) {
-        log.error(ex.getMessage(), ex);
-    }
+@UtilityClass
+class OperationCodeKit {
+    final AtomicInteger codeAtomic = new AtomicInteger(1);
 }

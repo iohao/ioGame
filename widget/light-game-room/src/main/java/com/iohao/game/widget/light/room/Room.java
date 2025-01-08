@@ -184,7 +184,6 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
         return (Stream<T>) this.listPlayer().stream();
     }
 
-
     /**
      * 真实玩家列表: 所有的真实玩家（不包含 Robot）
      *
