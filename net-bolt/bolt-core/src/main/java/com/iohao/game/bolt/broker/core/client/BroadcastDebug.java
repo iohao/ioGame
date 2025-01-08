@@ -168,6 +168,6 @@ class BroadcastDebug {
 
         String format = "className:%s - methodName:%s - line:%d";
         String msg = String.format(format, className, methodName, line);
-        IoGameBanner.println(msg);
+        IoGameBanner.printlnMsg(msg);
     }
 }

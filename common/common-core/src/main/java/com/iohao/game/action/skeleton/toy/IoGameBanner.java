@@ -106,11 +106,11 @@ public final class IoGameBanner {
         out.println();
     }
 
-    public static void print(String message) {
+    public static void printMessage(String message) {
         out.print(message);
     }
 
-    public static void print(Object message) {
+    public static void printMessage(Object message) {
         out.print(message);
     }
 
@@ -118,7 +118,7 @@ public final class IoGameBanner {
         out.println(message);
     }
 
-    public static void println(String message) {
+    public static void printlnMsg(String message) {
         out.println(message);
     }
 
@@ -131,7 +131,7 @@ public final class IoGameBanner {
                 if (Objects.nonNull(IoGameBanner.me().countDownLatch)) {
                     boolean r = IoGameBanner.me().countDownLatch.await(5, TimeUnit.SECONDS);
                     if (!r) {
-                        IoGameBanner.println("countDownLatch await is false");
+                        IoGameBanner.printlnMsg("countDownLatch await is false");
                     }
                 }
             } catch (InterruptedException e) {
@@ -200,21 +200,21 @@ public final class IoGameBanner {
             System.out.printf("| News     | %s%n", news);
         }
 
-        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
+        IoGameBanner.printlnMsg("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedAdv() {
         String s = BreakingNewsKit.randomAdv().toString();
         String builder = "| adv      | %s%n";
         System.out.printf(builder, s);
-        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
+        IoGameBanner.printlnMsg("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedIoGameJavadocApi() {
         String s = BreakingNewsKit.randomMainNews().toString();
         String builder = "|          | %s%n";
         System.out.printf(builder, s);
-        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
+        IoGameBanner.printlnMsg("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedErrorCount() {
@@ -224,7 +224,7 @@ public final class IoGameBanner {
 
         String builder = "| Error    | error count : %s%n";
         System.out.printf(builder, errorCount.get());
-        IoGameBanner.println("+----------+--------------------------------------------------------------------------------------");
+        IoGameBanner.printlnMsg("+----------+--------------------------------------------------------------------------------------");
     }
 
     private void extractedPrint(ToyTable table) {
@@ -237,7 +237,7 @@ public final class IoGameBanner {
         String anyBanner = anyFunction.apply(banner);
 
         IoGameBanner.printLine();
-        IoGameBanner.println(anyBanner);
+        IoGameBanner.printlnMsg(anyBanner);
         table.render();
     }
 

@@ -28,17 +28,17 @@ public class InOutManagerTest {
         inOutList.add(new B_ActionMethodInOut());
         inOutList.add(new C_ActionMethodInOut());
 
-        IoGameBanner.println("------ 测试多个 inout ------");
+        IoGameBanner.printlnMsg("------ 测试多个 inout ------");
         extracted(InOutManager.ofAbcAbc(), "Ain Bin Cin Aout Bout Cout", inOutList);
         extracted(InOutManager.ofPipeline(), "Ain Bin Cin Cout Bout Aout", inOutList);
 
         // 测试单个 inout
-        IoGameBanner.println("------ 测试 1 个 inout ------");
+        IoGameBanner.printlnMsg("------ 测试 1 个 inout ------");
         extracted(InOutManager.ofAbcAbc(), "Ain Aout", List.of(new A_ActionMethodInOut()));
         extracted(InOutManager.ofPipeline(), "Ain Aout", List.of(new A_ActionMethodInOut()));
 
         // 测试 0 个 inout
-        IoGameBanner.println("------ 测试 0 个 inout ------");
+        IoGameBanner.printlnMsg("------ 测试 0 个 inout ------");
         extracted(InOutManager.ofAbcAbc(), "", Collections.emptyList());
         extracted(InOutManager.ofPipeline(), "", Collections.emptyList());
     }

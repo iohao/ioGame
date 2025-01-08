@@ -82,7 +82,7 @@ class PrintActionKit {
         IoGameBanner.println(Ansi.ansi().render(title));
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
-        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printRunners");
+        IoGameBanner.printlnMsg(printActionKitClose + " BarSkeletonBuilder.setting.printRunners");
 
         for (String name : nameList) {
             String info = String.format("@|BLUE %s |@", name);
@@ -100,7 +100,7 @@ class PrintActionKit {
         printTitle(businessFrameworkPlugin);
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
-        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printInout");
+        IoGameBanner.printlnMsg(printActionKitClose + " BarSkeletonBuilder.setting.printInout");
 
         for (ActionMethodInOut inOut : inOuts) {
             String info = String.format("@|BLUE %s |@", inOut.getClass());
@@ -118,7 +118,7 @@ class PrintActionKit {
         var businessFramework = Bundle.getMessage(MessageKey.businessFramework);
 
         printTitle(businessFramework);
-        IoGameBanner.println(IoGameVersion.VERSION);
+        IoGameBanner.printlnMsg(IoGameVersion.VERSION);
 
         String colorStr = "@|BLACK BLACK|@ @|RED RED|@ @|GREEN GREEN|@ @|YELLOW YELLOW|@ @|BLUE BLUE|@ @|MAGENTA MAGENTA|@ @|CYAN CYAN|@ @|WHITE WHITE|@ @|DEFAULT DEFAULT|@";
         IoGameBanner.println(Ansi.ansi().render(colorStr));
@@ -126,7 +126,7 @@ class PrintActionKit {
         printTitle("Handler");
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
-        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printHandler");
+        IoGameBanner.printlnMsg(printActionKitClose + " BarSkeletonBuilder.setting.printHandler");
 
         for (Handler handler : handlers) {
             String info = String.format("@|BLUE %s |@", handler.getClass());
@@ -138,10 +138,10 @@ class PrintActionKit {
         printTitle("action");
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
-        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printAction");
+        IoGameBanner.printlnMsg(printActionKitClose + " BarSkeletonBuilder.setting.printAction");
 
         var printActionKitPrintFull = Bundle.getMessage(MessageKey.printActionKitPrintFull);
-        IoGameBanner.println(printActionKitPrintFull + " BarSkeletonBuilder.setting.printActionShort");
+        IoGameBanner.printlnMsg(printActionKitPrintFull + " BarSkeletonBuilder.setting.printActionShort");
 
         String cmdName = Bundle.getMessage(MessageKey.cmdName);
 
@@ -226,7 +226,7 @@ class PrintActionKit {
         printTitle(printActionKitDataCodec);
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
-        IoGameBanner.println(printActionKitClose + " BarSkeletonBuilder.setting.printDataCodec");
+        IoGameBanner.printlnMsg(printActionKitClose + " BarSkeletonBuilder.setting.printDataCodec");
 
         DataCodec dataCodec = DataCodecKit.dataCodec;
         String info = String.format("@|BLUE %s - %s |@", dataCodec.codecName(), dataCodec.getClass().getName());

@@ -53,7 +53,7 @@ public class ClassScannerTest {
         log.info("hello ioGame {}", "miss");
         String title = "!~ @|CYAN ======================== action ========================= |@ ~!";
 //        AnsiConsole.systemInstall();
-        IoGameBanner.println("Hello World");
+        IoGameBanner.printlnMsg("Hello World");
 
         IoGameBanner.println(Ansi.ansi().eraseScreen().render(title));
 

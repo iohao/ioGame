@@ -121,15 +121,15 @@ public class ClientUserInputCommands {
     }
 
     public void help() {
-        IoGameBanner.println("---------- cmd help ----------");
-        inputCommandMap.forEach((s, inputCommand) -> IoGameBanner.println(inputCommand.toString()));
-        IoGameBanner.println("------------------------------");
+        IoGameBanner.printlnMsg("---------- cmd help ----------");
+        inputCommandMap.forEach((s, inputCommand) -> IoGameBanner.printlnMsg(inputCommand.toString()));
+        IoGameBanner.printlnMsg("------------------------------");
     }
 
     public void listenHelp() {
-        IoGameBanner.println("---------- 广播监听 help ----------");
+        IoGameBanner.printlnMsg("---------- 广播监听 help ----------");
         clientUserChannel.getListenMap().values().forEach(IoGameBanner::println);
-        IoGameBanner.println("------------------------------");
+        IoGameBanner.printlnMsg("------------------------------");
     }
 
     public void start() {
@@ -156,7 +156,7 @@ public class ClientUserInputCommands {
 
         while (!input.equalsIgnoreCase("q")) {
 
-            IoGameBanner.println("提示：[命令执行 : cmd-subCmd] [退出 : q] [帮助 : help]");
+            IoGameBanner.printlnMsg("提示：[命令执行 : cmd-subCmd] [退出 : q] [帮助 : help]");
 
             try {
                 input = ScannerKit.nextLine();
@@ -188,7 +188,7 @@ public class ClientUserInputCommands {
             }
 
             if (Objects.equals(input, "q")) {
-                IoGameBanner.println("88，老哥！顺便帮忙关注一下组织 https://github.com/game-town");
+                IoGameBanner.printlnMsg("88，老哥！顺便帮忙关注一下组织 https://github.com/game-town");
                 System.exit(-1);
                 continue;
             }

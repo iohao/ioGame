@@ -115,7 +115,7 @@ public final class DebugInOut implements ActionMethodInOut {
     @Setter
     BiConsumer<String, FlowContext> printConsumer = (message, flowContext) -> {
         // 打印 message
-        IoGameBanner.println(message);
+        IoGameBanner.printlnMsg(message);
     };
 
     public DebugInOut() {

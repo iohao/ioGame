@@ -35,7 +35,7 @@ public class BundleTest {
         System.out.println(Locale.getDefault().toString());
 
         String value = Bundle.getMessage(MessageKey.printActionKitPrintClose);
-        IoGameBanner.println(value + " BarSkeletonBuilder.setting.printRunners");
+        IoGameBanner.printlnMsg(value + " BarSkeletonBuilder.setting.printRunners");
         Assert.assertNotNull(value);
     }
 }
