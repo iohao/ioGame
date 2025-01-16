@@ -11,7 +11,212 @@
 
 
 
-### 2024-12-02- v21.22
+### 2025-01-08 - v21.23
+
+https://github.com/iohao/ioGame/releases/tag/21.23
+
+
+**Version update summary**
+
+> 1. perf(room): OperationHandler adds the processVerify method to control whether the process method is executed, and deprecates the verify method, which is replaced by processVerify.
+> 2. perf(core): Optimize BoolValue and reduce the creation of objects
+> 3. perf(net-core): Enhance the invokeModuleMessage and invokeModuleCollectMessage methods of the BrokerClientItem. The return value must not be null, and error information is added.
+> 4. fix(generate-code): action_method_void.txt
+> 5. perf(doc): GameCode Support single parameter construction method
+> 6. perf(kit): [#412](https://github.com/iohao/ioGame/issues/412)
+> 7. perf(room): Player adds isRobot method. Room adds methods to distinguish between real players and robot players.
+> 8. refactor(proto): [#414](https://github.com/iohao/ioGame/issues/414) Enumeration supports custom value
+> 9. perf(room): room add hasSeat、isRealPlayer method
+> 10. refactor(kit): RandomKit add randomLong method
+> 11. refactor(core): Because the FlowContext method name setUserId is ambiguous, the method name is deprecated.
+>
+>     1. Deprecated FlowContext setUserId method; see bindingUserId.
+>     2. Deprecated FlowContext setUserIdAndGetResult method; see bindingUserIdAndGetResult.
+> 12. refactor(core): broadcastMe Added Tip: Please bind UserId before using this method, see FlowContext.bindingUserId.
+> 13. perf(proto): Generate .proto files in parallel
+> 14. refactor(proto): ProtoGenerateFile supports adding multiple proto packages
+> 15. refactor(kit): TaskKit supports setting Timer
+> 16. refactor(room): Deprecated OperationHandler verify, see processVerify
+> 17. refactor(room): Add OperationCode and enhance Operation
+
+
+------
+
+
+
+About **[core]** 
+
+The name of the FlowContext setUserId method is ambiguous. This method is deprecated and replaced by the bindingUserId method.
+
+```java
+flowContext.setUserId(userId); // Deprecated
+flowContext.bindingUserId(userId); // now
+```
+
+
+
+About **[kit]** 
+
+TaskKit supports setting Timer
+
+```java
+TaskKit.setTimer(new HashedWheelTimer(17, TimeUnit.MILLISECONDS));
+```
+
+
+
+About **[room]** 
+
+1. Add hasSeat method to room to check whether there are any empty seats in the room.
+2. Room add isRealPlayer method.
+3. Add isRobot method to Player, and add method to distinguish real players from robot players to Room.
+4. Add OperationCode and enhance Operation
+5. Add processVerify method to OperationHandler to control whether to execute process method, and deprecate verify method, replaced by processVerify.
+
+When processVerify returns false, process method will not be executed. There is an assertion mechanism in processVerify, and when there is no seat, an error code will be sent to the client to prompt the player.
+
+```java
+public final class EnterRoomOperationHandler implements OperationHandler {
+    @Override
+    public boolean processVerify(PlayerOperationContext context) {
+        
+        // assert room spaceSize
+        Room room = context.getRoom();
+        GameCode.roomSpaceSizeNotEnough.assertTrue(room.hasSeat());
+
+        long userId = context.getUserId();
+        long score = AccountKit.getScore(userId);
+        
+        return score > 500;
+    }
+
+    @Override
+    public void process(PlayerOperationContext context) {
+        Room room = context.getRoom();
+        ... enterRoom
+    }
+}
+```
+
+
+
+Example of combining OperationCode with enumeration
+
+```java
+@ProtobufClass
+@ProtoFileMerge(fileName = FileMerge.fileName, filePackage = FileMerge.filePackage)
+public enum MyOperation implements OperationCode {
+    /** quitRoom */
+    quitRoom,
+    /** inRoom */
+    inRoom
+    ;
+
+    final int operationCode;
+
+    FairOperation() {
+        this.operationCode = OperationCode.getAndIncrementCode();
+    }
+
+    @Override
+    public int getOperationCode() {
+        return operationCode;
+    }
+}
+
+// config
+public void configOperation() {
+    RoomService roomService = ...
+    OperationFactory factory = roomService.getOperationFactory();
+
+    // mappingUser operation
+    factory.mappingUser(MyOperation.inRoom, new InRoomOperationHandler());
+    factory.mappingUser(MyOperation.quitRoom, new QuitRoomOperationHandler());
+}
+```
+
+
+
+About **[proto]** 
+
+1. Optimize .proto generation and process file generation in parallel.
+
+2. ProtoGenerateFile supports adding multiple proto packages
+
+Supports adding multiple proto packages to better support modularization
+
+```java
+    private static void generateProtoFile() {
+
+        String generateFolder = "/Users/join/gitme/game/MyGames/proto";
+        List<String> protoPackageList = List.of("com.iohao.happy.robot"
+                                                ,"com.iohao.happy.email");
+
+        var protoGenerateFile = new ProtoGenerateFile()
+                // Generate the directory where the .proto file is stored
+                .setGenerateFolder(generateFolder)
+                // The package name to be scanned
+                .addProtoPackage(protoPackageList)
+                .addProtoPackage("com.iohao.happy.common.provide.proto");
+
+        // generate .proto 
+        protoGenerateFile.generate();
+    }
+```
+
+
+
+3. Enumeration supports custom values, java code and generated .proto
+
+```java
+@ProtobufClass
+@ProtoFileMerge(fileName = TempProtoFile.fileName, filePackage = TempProtoFile.filePackage)
+public enum AnimalTypeEnum implements EnumReadable {
+    /** the cat */
+    cat(0),
+    /** the tiger */
+    tiger(10),
+    ;
+
+    final int value;
+
+    AnimalTypeEnum(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public int value() {
+        return this.value;
+    }
+}
+```
+
+.proto
+
+```protobuf
+// TestAnimalTypeEnum
+enum AnimalTypeEnum {
+  // the cat
+  cat = 0;
+  // the tiger
+  tiger = 10;
+}
+```
+
+
+------
+
+**[other updates]**
+
+```xml
+<netty.version>4.1.116.Final</netty.version>
+```
+
+------
+
+
+
+### 2024-12-02 - v21.22
 
 https://github.com/iohao/ioGame/releases/tag/21.22
 
