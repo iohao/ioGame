@@ -59,7 +59,6 @@ public class BrokerPrintKit {
 
         // 对外服信息
         int externalCount = balancedManager.getExternalLoadBalanced().count();
-        var gameExternalServer = Bundle.getMessage(MessageKey.gameExternalServer);
 
         BrokerClientNodeInfo externalNodeInfo = new BrokerClientNodeInfo("external", externalCount);
         collect.add(externalNodeInfo);

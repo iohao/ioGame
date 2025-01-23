@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -62,10 +62,10 @@ final class LongValueMethodParser implements MethodParser {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
-        if (actionMethodReturnInfo.isList()) {
+    public Object parseData(boolean isList, Object data) {
+        if (isList) {
             var valueList = new LongValueList();
-            valueList.values = (List<Long>) methodResult;
+            valueList.values = (List<Long>) data;
             return valueList;
         }
 
@@ -75,7 +75,7 @@ final class LongValueMethodParser implements MethodParser {
          * 可以使用 long，而不是使用 Long
          */
         var longValue = new LongValue();
-        longValue.value = (long) methodResult;
+        longValue.value = (long) data;
         return longValue;
     }
 

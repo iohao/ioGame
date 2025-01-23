@@ -1,5 +1,5 @@
 /*
- * ioGame 
+ * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
  *
@@ -79,7 +79,9 @@ public interface MethodParser {
      * @param methodResult           当前的返回值
      * @return 处理后的返回值
      */
-    Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult);
+    default Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
+        return parseData(actionMethodReturnInfo.isList(), methodResult);
+    }
 
     /**
      * 是否自定义的方法解析器
@@ -88,5 +90,17 @@ public interface MethodParser {
      */
     default boolean isCustomMethodParser() {
         return true;
+    }
+
+    /**
+     * 解析 data 参数
+     *
+     * @param isList true: the data is list
+     * @param data   参数
+     * @return 处理后的返回值
+     * @since 21.24
+     */
+    default Object parseData(boolean isList, Object data) {
+        return data;
     }
 }

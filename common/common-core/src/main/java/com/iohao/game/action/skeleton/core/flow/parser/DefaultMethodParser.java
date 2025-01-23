@@ -72,12 +72,16 @@ class DefaultMethodParser implements MethodParser {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
+        return parseData(actionMethodReturnInfo.isList(), methodResult);
+    }
 
-        if (actionMethodReturnInfo.isList()) {
+    @Override
+    @SuppressWarnings("unchecked")
+    public Object parseData(boolean isList, Object data) {
+        if (isList) {
 
-            List<Object> list = (List<Object>) methodResult;
+            List<Object> list = (List<Object>) data;
 
             ByteValueList byteValueList = new ByteValueList();
             byteValueList.values = list.stream()
@@ -87,7 +91,7 @@ class DefaultMethodParser implements MethodParser {
             return byteValueList;
         }
 
-        return methodResult;
+        return data;
     }
 
     @Override

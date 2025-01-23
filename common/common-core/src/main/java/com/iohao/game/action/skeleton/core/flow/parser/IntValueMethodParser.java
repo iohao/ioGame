@@ -63,11 +63,10 @@ final class IntValueMethodParser implements MethodParser {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
-
-        if (actionMethodReturnInfo.isList()) {
+    public Object parseData(boolean isList, Object data) {
+        if (isList) {
             var valueList = new IntValueList();
-            valueList.values = (List<Integer>) methodResult;
+            valueList.values = (List<Integer>) data;
             return valueList;
         }
 
@@ -77,7 +76,7 @@ final class IntValueMethodParser implements MethodParser {
          * 可以使用 int，而不是使用 Integer
          */
         var intValue = new IntValue();
-        intValue.value = (int) methodResult;
+        intValue.value = (int) data;
         return intValue;
     }
 

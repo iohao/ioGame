@@ -58,18 +58,16 @@ final class StringValueMethodParser implements MethodParser {
         return stringValue.value;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public Object parseResult(ActionCommand.ActionMethodReturnInfo actionMethodReturnInfo, Object methodResult) {
-
-        if (actionMethodReturnInfo.isList()) {
+    public Object parseData(boolean isList, Object data) {
+        if (isList) {
             StringValueList valueList = new StringValueList();
-            valueList.values = (List<String>) methodResult;
+            valueList.values = (List<String>) data;
             return valueList;
         }
 
         StringValue stringValue = new StringValue();
-        stringValue.value = String.valueOf(methodResult);
+        stringValue.value = String.valueOf(data);
         return stringValue;
     }
 
