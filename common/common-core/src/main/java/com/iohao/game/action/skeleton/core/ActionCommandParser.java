@@ -109,7 +109,8 @@ final class ActionCommandParser {
                 // 方法名
                 String methodName = method.getName();
                 // 方法下标
-                int methodIndex = methodAccess.getIndex(methodName);
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                int methodIndex = methodAccess.getIndex(methodName, parameterTypes);
                 // 方法返回值类型
                 Class<?> returnType = methodAccess.getReturnTypes()[methodIndex];
                 // source doc
