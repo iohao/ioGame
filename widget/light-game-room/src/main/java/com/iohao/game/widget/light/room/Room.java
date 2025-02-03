@@ -271,6 +271,24 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
     }
 
     /**
+     * 通过 seat 查找玩家
+     *
+     * @param seat seat
+     * @param <T>  Player
+     * @return 玩家
+     */
+    default <T extends Player> T getPlayerBySeat(int seat) {
+
+        var seatMap = this.getPlayerSeatMap();
+        if (seatMap.containsKey(seat)) {
+            long userId = seatMap.get(seat);
+            return this.getPlayerById(userId);
+        }
+
+        return null;
+    }
+
+    /**
      * 添加玩家到房间内
      *
      * @param player 玩家
