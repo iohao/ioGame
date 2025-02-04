@@ -18,7 +18,9 @@
  */
 package com.iohao.game.action.skeleton.core.flow;
 
+import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
+import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.commumication.ChannelContext;
 import com.iohao.game.action.skeleton.core.flow.attr.FlowAttr;
 import com.iohao.game.action.skeleton.protocol.HeadMetadata;
@@ -85,5 +87,17 @@ public class FlowContextKit {
         } else {
             return flowContext.option(FlowAttr.channelContext);
         }
+    }
+
+    public FlowContext ofFlowContext(long userId) {
+        var cmdInfo = CmdInfo.of(0);
+        var requestMessage = BarMessageKit.createRequestMessage(cmdInfo);
+        var headMetadata = requestMessage.getHeadMetadata();
+        headMetadata.setUserId(userId);
+
+        var flowContext = new FlowContext();
+        flowContext.setRequest(requestMessage);
+
+        return flowContext;
     }
 }
