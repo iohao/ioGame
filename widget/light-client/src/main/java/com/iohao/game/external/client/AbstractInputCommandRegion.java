@@ -123,8 +123,7 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
      */
     public RequestCommand ofRequestCommand(int subCmd) {
         CmdInfo cmdInfo = this.inputCommandCreate.ofCmdInfo(subCmd);
-        ClientUserInputCommands clientUserInputCommands = this.inputCommandCreate.clientUserInputCommands;
-        return clientUserInputCommands.ofRequestCommand(cmdInfo);
+        return this.ofRequestCommand(cmdInfo);
     }
 
     /**
@@ -136,5 +135,9 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
     public RequestCommand ofRequestCommand(CmdInfo cmdInfo) {
         ClientUserInputCommands clientUserInputCommands = this.inputCommandCreate.clientUserInputCommands;
         return clientUserInputCommands.ofRequestCommand(cmdInfo);
+    }
+
+    public void executeCommand(int subCmd) {
+        this.ofRequestCommand(subCmd).execute();
     }
 }

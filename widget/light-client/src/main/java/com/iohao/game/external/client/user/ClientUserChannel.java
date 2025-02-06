@@ -117,6 +117,8 @@ public class ClientUserChannel {
         Object data = "";
         if (Objects.nonNull(requestData)) {
             data = requestData.createRequestData();
+            data = ParseClientRequestDataKit.parse(data);
+
             byte[] encode = DataCodecKit.encode(data);
             requestMessage.setData(encode);
         }
