@@ -11,6 +11,78 @@
 
 
 
+
+
+### 2025-02-12 - v21.24
+
+https://github.com/iohao/ioGame/releases/tag/21.24
+
+**Version update summary**
+
+> 1. refactor(client): Client support boxing and unboxing
+> 2. refactor(core): FlowContextKit add ofFlowContext method
+> 3. refactor(room): room add getPlayerBySeat method
+> 4. fix(core): [#425](https://github.com/iohao/ioGame/issues/425) When there is a method with the same name as the action, the `actionMethodIndex` is not obtained correctly.
+> 5. refactor(core): MethodParser add parseData method
+
+
+------
+
+
+
+**[client]** Client support boxing and unboxing.
+
+```java
+// my client，support：int、long、boolean、String、List
+public final class MyInputCommandRegion extends AbstractInputCommandRegion {
+    @Override
+    public void initInputCommand() {
+        this.inputCommandCreate.cmd = 1;
+		// Client support boxing and unboxing
+        ofCommand(2).setTitle("enterRoom").setRequestData(() -> {
+            // enterRoom
+            long roomId = 2;
+            return roomId;
+        });
+        
+        // or 
+        ofCommand(2).setTitle("enterRoom").setRequestData(() -> {
+           // enterRoom
+           return LongValue.of(2);
+        });
+    }
+}
+
+// my action
+@ActionController(1)
+public final class MyAction {
+    /**
+     * enterRoom
+     *
+     * @param roomId roomId
+     */
+    @ActionMethod(2)
+    public void enterRoom(long roomId) {
+    }
+}
+```
+
+
+
+------
+
+**[other updates]**
+
+```xml
+<netty.version>4.1.117.Final</netty.version>
+```
+
+------
+
+
+
+
+
 ### 2025-01-08 - v21.23
 
 https://github.com/iohao/ioGame/releases/tag/21.23

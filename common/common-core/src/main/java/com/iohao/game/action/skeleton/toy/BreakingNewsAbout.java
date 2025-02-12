@@ -100,6 +100,7 @@ final class DefaultBreakingNews implements BreakingNews {
     @Override
     public List<News> listAdv() {
         return List.of(
+                new News("在线体验 demo", "https://a.iohao.com"),
                 new News("MMO", "https://www.yuque.com/iohao/game/sw08q89x3x7kiuhx"),
                 new News("桌游类、房间类的实战", "https://www.yuque.com/iohao/game/lul9a9t989s0q2t3")
         );
@@ -205,6 +206,7 @@ final class EnglishBreakingNews implements BreakingNews {
     @Override
     public List<News> listAdv() {
         return List.of(
+                new News("online demo", "https://a.iohao.com"),
                 new News("MMO", "https://www.yuque.com/iohao/game/sw08q89x3x7kiuhx"),
                 new News("Room games in action", "https://www.yuque.com/iohao/game/lul9a9t989s0q2t3")
         );

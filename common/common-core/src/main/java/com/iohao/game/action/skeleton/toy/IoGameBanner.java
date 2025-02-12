@@ -122,6 +122,10 @@ public final class IoGameBanner {
         out.println(message);
     }
 
+    public static void printlnMsg2(String message) {
+        printlnMsg(message);
+    }
+
     private void renderBanner1() {
         print.set(true);
 
@@ -253,7 +257,7 @@ public final class IoGameBanner {
     }
 
     private IoGameBanner() {
-        flag21 = "ioGame21";
+        flag21 = "ioGame..21..";
     }
 
     public static IoGameBanner me() {
