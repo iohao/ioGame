@@ -26,6 +26,7 @@ import com.iohao.game.common.consts.CommonConst;
 import com.iohao.game.common.kit.ClassScanner;
 import com.iohao.game.common.kit.MoreKit;
 import com.iohao.game.common.kit.StrKit;
+import com.iohao.game.widget.light.protobuf.kit.ClassFieldKit;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -146,6 +147,7 @@ public class ProtoJavaAnalyse {
         // 枚举 enum 的下标从 0 开始，message 的下标从 1 开始
         int order = clazz.isEnum() ? 0 : 1;
         var enumConstants = clazz.isEnum() ? clazz.getEnumConstants() : CommonConst.emptyObjects;
+        Map<String, JavaField> allFieldMap = ClassFieldKit.getAllFieldMap(javaClass);
 
         for (int i = 0; i < fields.length; i++) {
             var field = fields[i];
@@ -155,7 +157,7 @@ public class ProtoJavaAnalyse {
 
             Class<?> fieldTypeClass = field.getType();
             String fieldName = field.getName();
-            JavaField javaField = javaClass.getFieldByName(fieldName);
+            JavaField javaField = allFieldMap.get(fieldName);
 
             ProtoJavaField protoJavaField = new ProtoJavaField()
                     .setRepeated(List.class.equals(fieldTypeClass))
