@@ -81,7 +81,7 @@ final class DefaultWithElementSelector implements WithElementSelector<BrokerClie
         }
 
         var withList = this.map.get(withNo);
-        if (CollKit.isEmpty(withList)) {
+        if (CollKit.notEmpty(withList)) {
             var brokerClientProxy = withList.get((int) (counter.getAndIncrement() % withList.size()));
             if (Objects.nonNull(brokerClientProxy)) {
                 return brokerClientProxy;
