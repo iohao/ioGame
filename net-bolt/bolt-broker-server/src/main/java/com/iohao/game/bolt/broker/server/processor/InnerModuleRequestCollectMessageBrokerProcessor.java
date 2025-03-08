@@ -143,18 +143,16 @@ public final class InnerModuleRequestCollectMessageBrokerProcessor extends Abstr
             byte[] data;
             // 有错误或没有数据的，就不做处理了，意义不大
             if (responseMessage == null
-                    || responseMessage.hasError()
-                    || (data = responseMessage.getData()) == null
-                    || data.length == 0) {
+                || responseMessage.hasError()
+                || (data = responseMessage.getData()) == null
+                || data.length == 0) {
                 return null;
             }
 
             // 逻辑服 id
             String logicServerId = brokerClientProxy.getId();
             // 得到一个逻辑服的结果
-            return new ResponseCollectItemMessage()
-                    .setResponseMessage(responseMessage)
-                    .setLogicServerId(logicServerId);
+            return new ResponseCollectItemMessage(logicServerId, responseMessage);
         }, NetCommonKit.getVirtualExecutor())).toList();
     }
 
