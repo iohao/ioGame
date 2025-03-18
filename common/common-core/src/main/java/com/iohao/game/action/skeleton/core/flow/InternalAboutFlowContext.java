@@ -1605,8 +1605,22 @@ interface SimpleBarMessageCreator extends SimpleCommon {
      * @return 响应对象
      */
     default ResponseMessage createResponseMessage(CmdInfo cmdInfo, Object data) {
-        Objects.requireNonNull(data);
+        ResponseMessage responseMessage = this.createResponseMessage(cmdInfo);
+        responseMessage.setData(data);
+        return responseMessage;
+    }
 
+    /**
+     * 创建响应对象，通常用于广播
+     * <pre>
+     *     响应对象中的 HeadMetadata 对象，会复用当前用户的一些信息；
+     * </pre>
+     *
+     * @param cmdInfo 路由
+     * @return 响应对象
+     * @since 21.25
+     */
+    default ResponseMessage createResponseMessage(CmdInfo cmdInfo) {
         /*
          * 创建一个 HeadMetadata，并使用原有的一些信息；
          * 在广播时，只会给 HeadMetadata 中指定的游戏对外服广播。
@@ -1622,7 +1636,6 @@ interface SimpleBarMessageCreator extends SimpleCommon {
         // 创建一个响应对象
         var responseMessage = new ResponseMessage();
         responseMessage.setHeadMetadata(headMetadataClone);
-        responseMessage.setData(data);
 
         return responseMessage;
     }
