@@ -66,7 +66,7 @@ final class ToyTableRender {
 
         // table last
         builder.append("+").append(this.lastLine);
-        IoGameBanner.println(builder);
+        IoGameBanner.println1(builder);
     }
 
     void line(int keyMaxLen, int valueMaxLen) {

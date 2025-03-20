@@ -51,7 +51,7 @@ public class TimeRangeInOutTest {
         // 取指定日期的 TimeRangeDay 对象
         LocalDate localDate = LocalDate.now();
         TimeRangeInOut.TimeRangeDay timeRangeDay = region.getTimeRangeDay(localDate);
-        IoGameBanner.println(timeRangeDay);
+        IoGameBanner.println1(timeRangeDay);
     }
 
     private void setListener(TimeRangeInOut inOut) {
@@ -59,7 +59,7 @@ public class TimeRangeInOutTest {
             @Override
             public void callbackYesterday(TimeRangeInOut.TimeRangeDay timeRangeYesterday) {
                 // 昨日的全天统计数据对象
-                IoGameBanner.println(timeRangeYesterday);
+                IoGameBanner.println1(timeRangeYesterday);
 
                 timeRangeYesterday.stream().forEach(timeRangeHour -> {
                     // 几点

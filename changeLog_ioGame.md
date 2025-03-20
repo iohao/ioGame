@@ -11,7 +11,25 @@
 
 
 
+### 2025-03-20 - v21.25
 
+https://github.com/iohao/ioGame/releases/tag/21.25
+
+**版本更新汇总**
+
+> 1. fix(broker): DefaultWithElementSelector
+> 2. refactor(net): enhance ResponseCollectItemMessage
+> 3. refactor(core): FlowContext add the createResponseMessage method
+
+------
+
+**[other updates]**
+
+```xml
+<netty.version>4.1.119.Final</netty.version>
+```
+
+ 
 
 ### 2025-02-12 - v21.24
 

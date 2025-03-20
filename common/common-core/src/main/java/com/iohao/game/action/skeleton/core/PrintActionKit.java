@@ -79,14 +79,14 @@ class PrintActionKit {
         Runners runners = barSkeleton.runners;
         List<String> nameList = runners.listRunnerName();
         String title = "@|CYAN ======================== Runners ========================= |@";
-        IoGameBanner.println(Ansi.ansi().render(title));
+        IoGameBanner.println1(Ansi.ansi().render(title));
 
         var printActionKitClose = Bundle.getMessage(MessageKey.printActionKitPrintClose);
         IoGameBanner.printlnMsg(printActionKitClose + " BarSkeletonBuilder.setting.printRunners");
 
         for (String name : nameList) {
             String info = String.format("@|BLUE %s |@", name);
-            IoGameBanner.println(Ansi.ansi().render(info));
+            IoGameBanner.println1(Ansi.ansi().render(info));
         }
     }
 
@@ -104,13 +104,13 @@ class PrintActionKit {
 
         for (ActionMethodInOut inOut : inOuts) {
             String info = String.format("@|BLUE %s |@", inOut.getClass());
-            IoGameBanner.println(Ansi.ansi().render(info));
+            IoGameBanner.println1(Ansi.ansi().render(info));
         }
     }
 
     private void printTitle(String title) {
         String formatted = "@|CYAN ======================== %s ========================= |@".formatted(title);
-        IoGameBanner.println(Ansi.ansi().render(formatted));
+        IoGameBanner.println1(Ansi.ansi().render(formatted));
     }
 
     void printHandler(List<Handler> handlers) {
@@ -121,7 +121,7 @@ class PrintActionKit {
         IoGameBanner.printlnMsg(IoGameVersion.VERSION);
 
         String colorStr = "@|BLACK BLACK|@ @|RED RED|@ @|GREEN GREEN|@ @|YELLOW YELLOW|@ @|BLUE BLUE|@ @|MAGENTA MAGENTA|@ @|CYAN CYAN|@ @|WHITE WHITE|@ @|DEFAULT DEFAULT|@";
-        IoGameBanner.println(Ansi.ansi().render(colorStr));
+        IoGameBanner.println1(Ansi.ansi().render(colorStr));
 
         printTitle("Handler");
 
@@ -130,7 +130,7 @@ class PrintActionKit {
 
         for (Handler handler : handlers) {
             String info = String.format("@|BLUE %s |@", handler.getClass());
-            IoGameBanner.println(Ansi.ansi().render(info));
+            IoGameBanner.println1(Ansi.ansi().render(info));
         }
     }
 
@@ -216,7 +216,7 @@ class PrintActionKit {
 
                 String lineTemplate = "{routeCell} {actionCell} {actionNameCell}.{methodNameCell}({paramInfoCell}) {throwCell} --- return {returnValueCell}  ~~~ see.({actionSimpleName}.java:{lineNumber})";
                 String text = StrKit.format(lineTemplate, params);
-                IoGameBanner.println(Ansi.ansi().render(text));
+                IoGameBanner.println1(Ansi.ansi().render(text));
             }
         }
     }
@@ -230,7 +230,7 @@ class PrintActionKit {
 
         DataCodec dataCodec = DataCodecKit.dataCodec;
         String info = String.format("@|BLUE %s - %s |@", dataCodec.codecName(), dataCodec.getClass().getName());
-        IoGameBanner.println(Ansi.ansi().render(info));
+        IoGameBanner.println1(Ansi.ansi().render(info));
 
     }
 

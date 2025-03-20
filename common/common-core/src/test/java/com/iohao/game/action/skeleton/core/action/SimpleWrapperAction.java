@@ -32,6 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 public class SimpleWrapperAction {
     @ActionMethod(ExampleActionCmd.SimpleWrapperActionActionCmd.testInt)
     public void testInt(int age) {
-        IoGameBanner.println(age);
+        IoGameBanner.println1(age);
     }
 }

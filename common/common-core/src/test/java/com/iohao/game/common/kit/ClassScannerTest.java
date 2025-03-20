@@ -55,10 +55,10 @@ public class ClassScannerTest {
 //        AnsiConsole.systemInstall();
         IoGameBanner.printlnMsg("Hello World");
 
-        IoGameBanner.println(Ansi.ansi().eraseScreen().render(title));
+        IoGameBanner.println1(Ansi.ansi().eraseScreen().render(title));
 
         Ansi render = Ansi.ansi().eraseScreen().render(title);
-        IoGameBanner.println(render.eraseScreen().reset());
+        IoGameBanner.println1(render.eraseScreen().reset());
     }
 
 }

@@ -114,7 +114,7 @@ public final class IoGameBanner {
         out.print(message);
     }
 
-    public static void println(Object message) {
+    public static void println1(Object message) {
         out.println(message);
     }
 

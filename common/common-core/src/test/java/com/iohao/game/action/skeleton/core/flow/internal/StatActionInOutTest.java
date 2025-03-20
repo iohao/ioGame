@@ -32,7 +32,7 @@ public class StatActionInOutTest {
         flowContext.setRequest(requestMessage);
         extracted(region, flowContext);
 
-        region.stream().forEach(IoGameBanner::println);
+        region.stream().forEach(IoGameBanner::println1);
     }
 
     private void setListener(StatActionInOut inOut) {

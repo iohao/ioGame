@@ -110,7 +110,7 @@ public class ClientUserInputCommands {
             return;
         }
 
-        IoGameBanner.println(inputCommand);
+        IoGameBanner.println1(inputCommand);
 
         try {
             // 发起请求
@@ -128,7 +128,7 @@ public class ClientUserInputCommands {
 
     public void listenHelp() {
         IoGameBanner.printlnMsg("---------- 广播监听 help ----------");
-        clientUserChannel.getListenMap().values().forEach(IoGameBanner::println);
+        clientUserChannel.getListenMap().values().forEach(IoGameBanner::println1);
         IoGameBanner.printlnMsg("------------------------------");
     }
 
