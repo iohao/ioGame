@@ -326,15 +326,13 @@ interface SimpleCommunication extends SimpleExecutor
 interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [同步] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     同步调用
      * </pre>
      *
      * @param cmdInfo 路由
@@ -345,15 +343,13 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     }
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [同步] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     同步调用
      * </pre>
      *
      * @param cmdInfo 路由信息
@@ -366,15 +362,13 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     }
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [同步] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     同步调用
      * </pre>
      *
      * @param requestMessage requestMessage
@@ -386,15 +380,13 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     }
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [异步] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     异步调用
      * </pre>
      *
      * @param cmdInfo 路由
@@ -405,15 +397,13 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     }
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [异步] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     异步调用
      * </pre>
      *
      * @param cmdInfo 路由
@@ -426,15 +416,13 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     }
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [异步] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     异步调用
      * </pre>
      *
      * @param requestMessage requestMessage
@@ -445,15 +433,13 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     }
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [异步回调] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
      * </pre>
      *
      * @param cmdInfo  路由
@@ -464,15 +450,13 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     }
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [异步回调] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
      * </pre>
      *
      * @param cmdInfo  路由
@@ -485,15 +469,13 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     }
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [异步回调] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
      * </pre>
      *
      * @param requestMessage requestMessage
@@ -504,15 +486,13 @@ interface SimpleCommunicationInvokeModuleCollect extends SimpleCommunication {
     }
 
     /**
-     * 模块之间的访问，访问【同类型】的多个逻辑服
+     * [异步回调] 模块之间的访问，访问【同类型】的多个逻辑服
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是游戏逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
      *
      *     <a href="https://www.yuque.com/iohao/game/rf9rb9">文档 - 请求同类型多个逻辑服通信结果</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
      * </pre>
      *
      * @param requestMessage   requestMessage
@@ -801,12 +781,8 @@ interface SimpleCommunicationBroadcast extends SimpleCommunication {
 interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     同步调用
-     * </pre>
+     * [同步] 向玩家所在的游戏对外服请求数据。
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param bizCode bizCode
      * @return ResponseCollectExternalMessage 一定不为 null
@@ -816,12 +792,8 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     同步调用
-     * </pre>
+     * [同步] 向玩家所在的游戏对外服请求数据。
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param bizCode bizCode
      * @param data    业务数据
@@ -874,13 +846,9 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问【游戏对外服】，会为 {@link RequestCollectExternalMessage} 添加 userId、traceId 相关信息，
+     * [同步] 访问游戏对外服，会为 {@link RequestCollectExternalMessage} 添加 userId、traceId 相关信息，
      * 如果 request 没有指定 sourceClientId，将会访问所有的游戏对外服。
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     同步调用
-     * </pre>
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param request request
      * @return ResponseCollectExternalMessage 一定不为 null
@@ -903,12 +871,8 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用
-     * </pre>
+     * [异步] 向玩家所在的游戏对外服请求数据。
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param bizCode bizCode
      * @return ResponseCollectExternalMessage 一定不为 null
@@ -918,12 +882,8 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用
-     * </pre>
+     * [异步] 向玩家所在的游戏对外服请求数据。
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param bizCode bizCode
      * @param data    业务数据
@@ -940,13 +900,9 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问【游戏对外服】，会为 {@link RequestCollectExternalMessage} 添加 userId、traceId 相关信息，
+     * [异步] 访问游戏对外服，会为 {@link RequestCollectExternalMessage} 添加 userId、traceId 相关信息，
      * 如果 request 没有指定 sourceClientId，将会访问所有的游戏对外服。
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用
-     * </pre>
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param request request
      * @return ResponseCollectExternalMessage 一定不为 null
@@ -958,12 +914,8 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
+     * [异步回调] 向玩家所在的游戏对外服请求数据。
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param bizCode  bizCode
      * @param callback 异步回调方法
@@ -975,12 +927,8 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
+     * [异步回调] 向玩家所在的游戏对外服请求数据。
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param bizCode  bizCode
      * @param data     业务数据
@@ -997,12 +945,8 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问玩家所在的【游戏对外服】，通常是发起请求的游戏对外服
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
+     * [异步回调] 向玩家所在的游戏对外服请求数据。
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param request  request
      * @param callback 异步回调方法
@@ -1014,12 +958,9 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
     }
 
     /**
-     * 【游戏逻辑服】访问【游戏对外服】，如果 {@link RequestCollectExternalMessage} 没有指定 sourceClientId，将会访问所有的游戏对外服。
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
+     * [异步回调] 访问游戏对外服，如果 {@link RequestCollectExternalMessage} 没有指定 sourceClientId，
+     * 将会访问所有的游戏对外服。
+     * <a href="https://www.yuque.com/iohao/game/ivxsw5">文档 - 获取游戏对外服的数据与扩展</a>
      *
      * @param request          request
      * @param callback         异步回调方法
@@ -1048,7 +989,7 @@ interface SimpleCommunicationInvokeExternalModule extends SimpleCommunication {
 interface SimpleCommunicationInvokeModuleVoid extends SimpleCommunication {
 
     /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
+     * [异步，通知] 请求其他游戏逻辑服的方法，通知方并不关心被调用方是否执行完成。
      * <pre>
      *     异步无阻塞的方法，因为没有返回值；
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">文档 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
@@ -1071,7 +1012,7 @@ interface SimpleCommunicationInvokeModuleVoid extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
+     * [异步，通知] 请求其他游戏逻辑服的方法，通知方并不关心被调用方是否执行完成。
      * <pre>
      *     异步无阻塞的方法，因为没有返回值；
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">文档 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
@@ -1096,7 +1037,7 @@ interface SimpleCommunicationInvokeModuleVoid extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
+     * [异步，通知] 请求其他游戏逻辑服的方法，通知方并不关心被调用方是否执行完成。
      * <pre>
      *     异步无阻塞的方法，因为没有返回值；
      *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">文档 - 游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
@@ -1126,12 +1067,8 @@ interface SimpleCommunicationInvokeModuleVoid extends SimpleCommunication {
 interface SimpleCommunicationInvokeModule extends SimpleCommunication {
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     同步调用
-     * </pre>
+     * [同步] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param cmdInfo 路由
      * @return ResponseMessage
@@ -1141,12 +1078,8 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     同步调用
-     * </pre>
+     * [同步] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param cmdInfo cmdInfo
      * @param data    请求参数
@@ -1158,12 +1091,8 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     同步调用
-     * </pre>
+     * [同步] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param requestMessage requestMessage
      * @return ResponseMessage
@@ -1174,12 +1103,8 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用
-     * </pre>
+     * [异步] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param cmdInfo 路由
      * @return CompletableFuture ResponseMessage
@@ -1189,12 +1114,8 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用
-     * </pre>
+     * [异步] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param cmdInfo 路由
      * @param data    业务数据
@@ -1206,12 +1127,8 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用
-     * </pre>
+     * [异步] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param requestMessage requestMessage
      * @return CompletableFuture ResponseMessage
@@ -1221,12 +1138,8 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
+     * [异步回调] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param cmdInfo  路由
      * @param callback 异步回调方法
@@ -1236,12 +1149,8 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
+     * [异步回调] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param cmdInfo  路由
      * @param data     业务数据
@@ -1253,12 +1162,8 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
+     * [异步回调] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param requestMessage requestMessage
      * @param callback       异步回调方法
@@ -1268,12 +1173,8 @@ interface SimpleCommunicationInvokeModule extends SimpleCommunication {
     }
 
     /**
-     * 根据路由信息来请求其他子服务器（其他游戏逻辑服）的数据
-     * <pre>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
-     *
-     *     异步调用，回调编码风格，具备 traceId
-     * </pre>
+     * [异步回调] 请求其他游戏逻辑服的数据。
+     * <a href="https://www.yuque.com/iohao/game/anguu6">文档 - 游戏逻辑服之间的交互</a>
      *
      * @param requestMessage   requestMessage
      * @param callback         异步回调方法

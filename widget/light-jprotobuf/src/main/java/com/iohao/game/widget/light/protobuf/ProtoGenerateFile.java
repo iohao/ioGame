@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.protobuf;
 
+import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.exception.ThrowKit;
 import com.iohao.game.common.kit.io.FileKit;
@@ -61,7 +62,11 @@ public class ProtoGenerateFile {
     }
 
     private void checked() {
-        Objects.requireNonNull(generateFolder);
+        if (StrKit.isBlank(generateFolder)) {
+            String currentDir = System.getProperty("user.dir");
+            this.generateFolder = ArrayKit.join(new String[]{currentDir, "target", "proto"}, File.separator);
+        }
+
         FileKit.mkdir(this.generateFolder);
 
         if (Objects.isNull(this.protoSourcePath)) {
