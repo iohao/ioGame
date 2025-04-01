@@ -18,10 +18,16 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.iohao.game.action.skeleton.core.ActionCommand;
+import com.iohao.game.action.skeleton.protocol.wrapper.BoolValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
 import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
 import com.iohao.game.common.kit.time.FormatTimeKit;
+import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +41,7 @@ import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
+import org.jctools.maps.NonBlockingHashMap;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -85,7 +92,7 @@ class DocumentGenerateKit {
 @FieldDefaults(level = AccessLevel.PRIVATE)
 final class GameCodeGenerate {
     IoGameDocument ioGameDocument;
-    /** true : 生成框架内置的错误码, see {@link ActionErrorEnum} */
+    /** true : 生成框架内置的错误码，see {@link ActionErrorEnum} */
     boolean internalErrorCode;
 
     Template template;
@@ -278,18 +285,88 @@ class GenerateInternalKit {
     }
 }
 
+@UtilityClass
+class InternalProtoClassKit {
+    final Map<Class<?>, ProtoFileMergeClass> protoClassMap = new NonBlockingHashMap<>();
+
+    void analyseProtoClass(IoGameDocument ioGameDocument) {
+        if (!protoClassMap.isEmpty()) {
+            return;
+        }
+
+        // --------- collect proto class ---------
+        final Set<Class<?>> protoClassSet = new HashSet<>();
+        ioGameDocument.actionDocList.stream()
+                .flatMap(actionDoc -> actionDoc.getActionCommandDocMap().values().stream())
+                .forEach(actionCommandDoc -> {
+                    ActionCommand actionCommand = actionCommandDoc.getActionCommand();
+                    // --------- action return class ---------
+                    ActionCommand.ActionMethodReturnInfo returnInfo = actionCommand.getActionMethodReturnInfo();
+                    if (!returnInfo.isVoid()) {
+                        Class<?> returnTypeClazz = returnInfo.getActualTypeArgumentClazz();
+                        protoClassSet.add(returnTypeClazz);
+                    }
+
+                    // --------- action param class ---------
+                    ActionCommand.ParamInfo bizParam = DocumentAnalyseKit.getBizParam(actionCommand);
+                    if (Objects.nonNull(bizParam)) {
+                        Class<?> actualTypeArgumentClazz = bizParam.getActualTypeArgumentClazz();
+                        protoClassSet.add(actualTypeArgumentClazz);
+                    }
+                });
+
+        ioGameDocument.broadcastDocumentList.forEach(broadcastDocument -> {
+            Class<?> dataClass = broadcastDocument.getDataClass();
+            if (Objects.nonNull(dataClass)) {
+                protoClassSet.add(dataClass);
+            }
+        });
+
+        var excludeTypeList = List.of(
+                int.class, Integer.class, IntValue.class,
+                long.class, Long.class, LongValue.class,
+                boolean.class, Boolean.class, BoolValue.class,
+                String.class, StringValue.class
+        );
+
+        protoClassSet.stream().filter(protoClass -> {
+            for (Class<?> aClass : excludeTypeList) {
+                if (aClass == protoClass) {
+                    return false;
+                }
+            }
+
+            return protoClass.getAnnotation(ProtoFileMerge.class) != null;
+        }).forEach(protoClass -> {
+            ProtoFileMerge annotation = protoClass.getAnnotation(ProtoFileMerge.class);
+            String fileName = annotation.fileName();
+            String filePackage = annotation.filePackage();
+
+            var message = new ProtoFileMergeClass(fileName, filePackage, protoClass);
+            protoClassMap.put(protoClass, message);
+        });
+    }
+}
+
+record ProtoFileMergeClass(String fileName, String filePackage, Class<?> dataClass) {
+}
+
 @Setter
 @FieldDefaults(level = AccessLevel.PACKAGE)
 abstract class AbstractDocumentGenerate implements DocumentGenerate {
     @Getter
+    @Deprecated
     final Set<String> actionImportList = new LinkedHashSet<>();
     @Getter
+    @Deprecated
     final Set<String> broadcastImportList = new LinkedHashSet<>();
     @Getter
+    @Deprecated
     final Set<String> errorCodeImportList = new LinkedHashSet<>();
     /** true : generate ActionErrorEnum */
     boolean internalErrorCode = true;
     /** your .proto path */
+    @Deprecated
     String protoImportPath;
     /**
      * The storage path of the generated files.

@@ -22,6 +22,7 @@ import com.iohao.game.action.skeleton.protocol.wrapper.BoolValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
 import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
+import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +30,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.beetl.core.Template;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Generate C# code, such as broadcast, error code, action
@@ -47,17 +46,20 @@ import java.util.Objects;
 public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
     /** c# namespace that generate files */
     String namespace = "IoGame.Gen";
+    @Setter(AccessLevel.PRIVATE)
+    CsharpAnalyseImport analyseImport;
 
     public CsharpDocumentGenerate() {
         this.typeMappingDocument = new CSharpTypeMappingDocument(this);
-        protoImportPath = "using Pb.Common;";
+//        protoImportPath = "using Pb.Common;";
     }
 
     @Override
     public void generate(IoGameDocument ioGameDocument) {
         Objects.requireNonNull(this.path);
-
-        defaultValue();
+        InternalProtoClassKit.analyseProtoClass(ioGameDocument);
+        Map<Class<?>, ProtoFileMergeClass> protoClassMap = InternalProtoClassKit.protoClassMap;
+        this.analyseImport = new CsharpAnalyseImport(protoClassMap.values());
 
         this.generateAction(ioGameDocument);
         this.generateBroadcast(ioGameDocument);
@@ -66,15 +68,14 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
         log.info("CSharpDocumentGenerate success: {}", this.path);
     }
 
-    private void defaultValue() {
-        this.actionImportList.add(protoImportPath);
-        this.broadcastImportList.add(protoImportPath);
-    }
+//    private void defaultValue() {
+//        this.actionImportList.add(protoImportPath);
+//        this.broadcastImportList.add(protoImportPath);
+//    }
 
     @Override
     protected void generateErrorCode(IoGameDocument ioGameDocument) {
         Template template = ofTemplate("game_code.txt");
-        template.binding("using", String.join("\n", this.errorCodeImportList));
         template.binding("namespace", this.namespace);
 
         new GameCodeGenerate()
@@ -93,7 +94,7 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
         actionDocumentList.forEach(actionDocument -> {
             Template template = ofTemplate("action.txt");
             // using、namespace
-            template.binding("using", String.join("\n", this.actionImportList));
+//            template.binding("using", String.join("\n", this.actionImportList));
             template.binding("namespace", this.namespace);
 
             new ActionGenerate()
@@ -109,7 +110,7 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
     @Override
     protected void generateBroadcast(IoGameDocument ioGameDocument) {
         Template template = ofTemplate(DocumentGenerateKit.broadcastActionTemplatePath);
-        template.binding("using", String.join("\n", this.broadcastImportList));
+//        template.binding("using", String.join("\n", this.broadcastImportList));
         template.binding("namespace", this.namespace);
 
         new BroadcastGenerate()
@@ -177,16 +178,49 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
                 return map.get(protoTypeClazz);
             }
 
-            String simpleName = protoTypeClazz.getSimpleName();
+            var analyseImport = this.documentGenerate.analyseImport;
+            var protoMessage = analyseImport.getProtoMessage(protoTypeClazz);
+
+            String paramTypeName;
+            if (Objects.nonNull(protoMessage)) {
+                paramTypeName = protoMessage.getFullParamTypeName();
+            } else {
+                paramTypeName = protoTypeClazz.getSimpleName();
+            }
 
             var record = new TypeMappingRecord().setInternalType(false)
-                    .setParamTypeName(simpleName).setListParamTypeName("List<%s>".formatted(simpleName))
+                    .setParamTypeName(paramTypeName).setListParamTypeName("List<%s>".formatted(paramTypeName))
                     .setOfMethodTypeName("").setOfMethodListTypeName("ValueList")
-                    .setResultMethodTypeName("GetValue<%s>()".formatted(simpleName)).setResultMethodListTypeName("ListValue<%s>()".formatted(simpleName));
+                    .setResultMethodTypeName("GetValue<%s>()".formatted(paramTypeName)).setResultMethodListTypeName("ListValue<%s>()".formatted(paramTypeName));
 
             map.put(protoTypeClazz, record);
 
             return record;
+        }
+    }
+
+    private static class CsharpAnalyseImport {
+        final Map<Class<?>, CsProtoMessage> map = new HashMap<>();
+
+        CsharpAnalyseImport(Collection<ProtoFileMergeClass> messageList) {
+            messageList.forEach(protoFileMergeClass -> {
+                String filePackage = Arrays.stream(protoFileMergeClass.filePackage().split("\\."))
+                        .map(StrKit::firstCharToUpperCase)
+                        .collect(Collectors.joining("."));
+
+                var message = new CsProtoMessage(filePackage, protoFileMergeClass.dataClass());
+                map.put(message.dataClass, message);
+            });
+        }
+
+        CsProtoMessage getProtoMessage(Class<?> dataClass) {
+            return map.get(dataClass);
+        }
+    }
+
+    private record CsProtoMessage(String filePackage, Class<?> dataClass) {
+        String getFullParamTypeName() {
+            return filePackage + "." + dataClass.getSimpleName();
         }
     }
 }

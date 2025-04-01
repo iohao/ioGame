@@ -18,6 +18,7 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.iohao.game.action.skeleton.core.ActionCommand;
 import com.iohao.game.action.skeleton.core.exception.ActionErrorEnum;
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import com.iohao.game.common.kit.CollKit;
@@ -152,5 +153,12 @@ class DocumentAnalyseKit {
 
             return errorCodeDocument;
         }).filter(Objects::nonNull).toList();
+    }
+
+    ActionCommand.ParamInfo getBizParam(ActionCommand actionCommand) {
+        return actionCommand.streamParamInfo()
+                // 只处理业务参数
+                .filter(ActionCommand.ParamInfo::isBizData)
+                .findAny().orElse(null);
     }
 }

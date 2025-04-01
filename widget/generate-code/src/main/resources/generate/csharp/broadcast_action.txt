@@ -1,6 +1,5 @@
 ${generateTime}
 ${ioGameHome}
-${using}
 using IoGame.Sdk;
 
 namespace ${namespace}
@@ -41,10 +40,16 @@ namespace ${namespace}
       {
         var mergeTitle = CmdKit.ToString(result.GetCmdMerge());
         var title = CmdKit.GetBroadcastTitle(result.GetCmdMerge());
-        ${o.exampleCodeAction!}
+
+    <% if (o.exampleCodeAction == null) { %>
+        IoGameSetting.GameGameConsole.Log($"{mergeTitle}, {title}");
+    <% } else { %>
+        ${o.exampleCodeAction}
         IoGameSetting.GameGameConsole.Log($"{mergeTitle}, {title}, {value}");
+    <%}%>
       });
    <%}%>
+
     }
   }
 }

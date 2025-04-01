@@ -16,5 +16,5 @@ const value = result.${resultMethodName}();
         resultMethodName = resultMethodTypeName;
     }
 %>
-const value = result.${resultMethodName}(ioGame.${dataActualTypeName}Schema);
+const value = result.${resultMethodName}(${dataActualTypeName}Schema);
 <%}%>

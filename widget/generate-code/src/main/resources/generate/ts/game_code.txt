@@ -1,6 +1,5 @@
 ${generateTime}
 ${ioGameHome}
-${imports}
 import {CmdKit} from "iohao-sdk";
 
 /**

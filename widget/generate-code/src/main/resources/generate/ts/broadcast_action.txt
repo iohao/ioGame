@@ -35,8 +35,13 @@ export class Listener {
         Listener.listen${o.methodName}(result => {
             const mergeTitle = CmdKit.toString(result.getCmdMerge());
             const title = CmdKit.getBroadcastTitle(result.getCmdMerge());
+
+        <% if (o.exampleCodeAction == null) { %>
+            console.log(mergeTitle, title);
+        <% } else { %>
             ${o.exampleCodeAction!}
             console.log(mergeTitle, title, value);
+        <%}%>
         });
     <%}%>
     }

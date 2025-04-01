@@ -1,6 +1,5 @@
 ${generateTime}
 ${ioGameHome}
-${using}
 using System.Collections.Generic;
 using IoGame.Sdk;
 

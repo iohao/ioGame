@@ -29,10 +29,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.beetl.core.Template;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Generate TypeScript code, such as broadcast, error code, action
@@ -45,7 +43,10 @@ import java.util.Objects;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
-    String protoPrefix = "ioGame.";
+    //    String protoPrefix = "ioGame.";
+    String protoPrefix = "";
+    @Setter(AccessLevel.PRIVATE)
+    TypeScriptAnalyseImport analyseImport;
 
     public TypeScriptDocumentGenerate() {
         this.typeMappingDocument = new TypeScriptMappingDocument(this);
@@ -54,10 +55,10 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
     @Override
     public void generate(IoGameDocument ioGameDocument) {
         Objects.requireNonNull(this.path);
-        // for example: db://assets/scripts/gen/common_pb
-        Objects.requireNonNull(this.protoImportPath, "your .proto import path");
 
-        defaultValue();
+        InternalProtoClassKit.analyseProtoClass(ioGameDocument);
+        Map<Class<?>, ProtoFileMergeClass> protoClassMap = InternalProtoClassKit.protoClassMap;
+        this.analyseImport = new TypeScriptAnalyseImport(protoClassMap.values());
 
         this.generateAction(ioGameDocument);
         this.generateBroadcast(ioGameDocument);
@@ -66,17 +67,9 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
         log.info("TypeScriptDocumentGenerate success: {}", this.path);
     }
 
-    private void defaultValue() {
-        actionImportList.add("import * as ioGame from \"%s\";".formatted(protoImportPath));
-
-        broadcastImportList.add("import * as ioGame from \"%s\";".formatted(protoImportPath));
-    }
-
     @Override
     protected void generateErrorCode(IoGameDocument ioGameDocument) {
         Template template = ofTemplate(DocumentGenerateKit.gameCodeTemplatePath);
-        // imports
-        template.binding("imports", String.join("\n", this.errorCodeImportList));
 
         new GameCodeGenerate()
                 .setIoGameDocument(ioGameDocument)
@@ -89,8 +82,20 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
 
     @Override
     protected void generateBroadcast(IoGameDocument ioGameDocument) {
+
+        List<Class<?>> protoMessageClassList = new ArrayList<>();
+        ioGameDocument.getBroadcastDocumentList().forEach(broadcastDocument -> {
+            Class<?> dataClass = broadcastDocument.getDataClass();
+            TsProtoMessage bizDataProtoMessage = this.analyseImport.getProtoMessage(dataClass);
+            if (Objects.nonNull(bizDataProtoMessage)) {
+                protoMessageClassList.add(dataClass);
+            }
+        });
+
+        String imports = this.analyseImport.getImportPath(protoMessageClassList);
+
         Template template = ofTemplate(DocumentGenerateKit.broadcastActionTemplatePath);
-        template.binding("imports", String.join("\n", this.broadcastImportList));
+        template.binding("imports", imports);
 
         new BroadcastGenerate()
                 .setIoGameDocument(ioGameDocument)
@@ -106,10 +111,33 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
     protected void generateAction(IoGameDocument ioGameDocument) {
         List<ActionDocument> actionDocumentList = DocumentAnalyseKit.analyseActionDocument(ioGameDocument, typeMappingDocument);
 
+        List<Class<?>> protoMessageClassList = new ArrayList<>();
         actionDocumentList.forEach(actionDocument -> {
+
+            // collect the action inputParam and outputParam
+            List<ActionMethodDocument> actionMethodDocumentList = actionDocument.getActionMethodDocumentList();
+            actionMethodDocumentList.forEach(actionMethodDocument -> {
+                Class<?> bizDataTypeClazz = actionMethodDocument.bizDataTypeClazz;
+                Class<?> returnTypeClazz = actionMethodDocument.returnTypeClazz;
+
+                TsProtoMessage bizDataProtoMessage = this.analyseImport.getProtoMessage(bizDataTypeClazz);
+                TsProtoMessage returnProtoMessage = this.analyseImport.getProtoMessage(returnTypeClazz);
+
+                if (Objects.nonNull(bizDataProtoMessage)) {
+                    protoMessageClassList.add(bizDataProtoMessage.dataClass);
+                }
+
+                if (Objects.nonNull(returnProtoMessage)) {
+                    protoMessageClassList.add(returnProtoMessage.dataClass);
+                }
+            });
+
+            String imports = this.analyseImport.getImportPath(protoMessageClassList);
+
             Template template = ofTemplate(DocumentGenerateKit.actionTemplatePath);
             // imports
-            template.binding("imports", String.join("\n", this.actionImportList));
+//            template.binding("imports", String.join("\n", this.actionImportList));
+            template.binding("imports", imports);
 
             new ActionGenerate()
                     .setActionDocument(actionDocument)
@@ -178,13 +206,61 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
                 return map.get(protoTypeClazz);
             }
 
-            String paramTypeName = protoTypeClazz.getSimpleName();
+            var analyseImport = documentGenerate.analyseImport;
+            var protoMessage = analyseImport.getProtoMessage(protoTypeClazz);
+
+            String paramTypeName;
+            if (Objects.nonNull(protoMessage)) {
+                paramTypeName = protoMessage.getFullParamTypeName();
+            } else {
+                paramTypeName = protoTypeClazz.getSimpleName();
+            }
 
             return new TypeMappingRecord()
                     .setInternalType(false)
                     .setParamTypeName(paramTypeName).setListParamTypeName("%s[]".formatted(paramTypeName))
                     .setOfMethodTypeName("").setOfMethodListTypeName("ValueList")
                     .setResultMethodTypeName("getValue").setResultMethodListTypeName("listValue");
+        }
+    }
+
+    private static class TypeScriptAnalyseImport {
+        final Map<Class<?>, TsProtoMessage> map = new HashMap<>();
+
+        TypeScriptAnalyseImport(Collection<ProtoFileMergeClass> messageList) {
+            messageList.forEach(protoFileMergeClass -> {
+                String fileName = protoFileMergeClass.fileName();
+                String simpleFileName = fileName.substring(0, fileName.lastIndexOf(".proto"));
+                String importFileName = "%s_pb".formatted(simpleFileName);
+
+                var message = new TsProtoMessage(importFileName, protoFileMergeClass.dataClass());
+                map.put(message.dataClass, message);
+            });
+        }
+
+        TsProtoMessage getProtoMessage(Class<?> dataClass) {
+            return map.get(dataClass);
+        }
+
+        String getImportPath(List<? extends Class<?>> dataClassList) {
+            Set<String> importFileNameSet = new HashSet<>();
+            for (Class<?> dataClass : dataClassList) {
+                TsProtoMessage protoMessage = getProtoMessage(dataClass);
+                String importFileName = protoMessage.importFileName;
+                importFileNameSet.add(importFileName);
+            }
+
+            // ts 只需要导入文件
+            return importFileNameSet.stream().map(importFileName -> {
+                String tpl = "import * as %s from \"../%s\";";
+                return tpl.formatted(importFileName, importFileName);
+            }).collect(Collectors.joining("\n"));
+        }
+    }
+
+    private record TsProtoMessage(String importFileName, Class<?> dataClass) {
+        String getFullParamTypeName() {
+            return importFileName + "." + dataClass.getSimpleName();
         }
     }
 }

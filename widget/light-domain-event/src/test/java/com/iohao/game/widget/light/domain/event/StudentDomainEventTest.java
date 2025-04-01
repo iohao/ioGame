@@ -18,10 +18,7 @@
  */
 package com.iohao.game.widget.light.domain.event;
 
-import com.iohao.game.widget.light.domain.event.student.StudentEmailEventHandler1;
-import com.iohao.game.widget.light.domain.event.student.StudentEo;
-import com.iohao.game.widget.light.domain.event.student.StudentGoHomeEventHandler2;
-import com.iohao.game.widget.light.domain.event.student.StudentSleepEventHandler3;
+import com.iohao.game.widget.light.domain.event.student.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

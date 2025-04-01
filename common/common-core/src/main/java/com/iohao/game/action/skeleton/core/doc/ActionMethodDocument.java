@@ -49,7 +49,9 @@ public final class ActionMethodDocument {
     final boolean hasBizData;
     /** 方法参数的名字 */
     String bizDataName;
-    /** 方法参数的 */
+    /** 方法参数的类型 class */
+    Class<?> bizDataTypeClazz;
+    /** 方法参数的类型 */
     String bizDataType;
     /** 方法参数的注释 */
     String bizDataComment;
@@ -69,6 +71,8 @@ public final class ActionMethodDocument {
     /** 方法返回值的注释 */
     String returnComment;
     String returnDataName;
+    /** 返回值类型 class */
+    Class<?> returnTypeClazz;
     /** 返回值类型（原始的，即使参数是 List，也会取泛型） */
     String returnDataActualTypeName;
 
@@ -105,7 +109,7 @@ public final class ActionMethodDocument {
         extractedReturnInfo(actionCommand);
 
         // --------- 方法参数相关 ---------
-        ActionCommand.ParamInfo bizParam = getBizParam(actionCommand);
+        ActionCommand.ParamInfo bizParam = DocumentAnalyseKit.getBizParam(actionCommand);
         this.hasBizData = Objects.nonNull(bizParam);
         if (this.hasBizData) {
             extractedParamInfo(bizParam, actionCommandDoc);
@@ -120,7 +124,7 @@ public final class ActionMethodDocument {
         this.isVoid = returnInfo.isVoid();
         this.returnDataIsList = returnInfo.isList();
 
-        Class<?> returnTypeClazz = returnInfo.getActualTypeArgumentClazz();
+        this.returnTypeClazz = returnInfo.getActualTypeArgumentClazz();
         var typeMappingRecord = typeMappingDocument.getTypeMappingRecord(returnTypeClazz);
         this.returnDataName = typeMappingRecord.getParamTypeName();
         this.returnDataTypeIsInternal = typeMappingRecord.isInternalType();
@@ -131,9 +135,9 @@ public final class ActionMethodDocument {
     }
 
     private void extractedParamInfo(ActionCommand.ParamInfo paramInfo, ActionCommandDoc actionCommandDoc) {
-        Class<?> actualTypeArgumentClazz = paramInfo.getActualTypeArgumentClazz();
+        this.bizDataTypeClazz = paramInfo.getActualTypeArgumentClazz();
         // 方法参数类型
-        var typeMappingRecord = this.typeMappingDocument.getTypeMappingRecord(actualTypeArgumentClazz);
+        var typeMappingRecord = this.typeMappingDocument.getTypeMappingRecord(bizDataTypeClazz);
         this.bizDataTypeIsList = paramInfo.isList();
         this.internalBizDataType = typeMappingRecord.isInternalType();
 
@@ -145,12 +149,5 @@ public final class ActionMethodDocument {
         this.bizDataComment = actionCommandDoc.getMethodParamComment();
 
         this.actualTypeName = typeMappingRecord.getParamTypeName();
-    }
-
-    private ActionCommand.ParamInfo getBizParam(ActionCommand actionCommand) {
-        return actionCommand.streamParamInfo()
-                // 只处理业务参数
-                .filter(ActionCommand.ParamInfo::isBizData)
-                .findAny().orElse(null);
     }
 }

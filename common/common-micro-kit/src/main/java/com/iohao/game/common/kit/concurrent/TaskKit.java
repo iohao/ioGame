@@ -29,6 +29,7 @@ import io.netty.util.Timer;
 import io.netty.util.TimerTask;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 import java.util.Set;
@@ -141,6 +142,7 @@ import java.util.function.Supplier;
  * @author 渔民小镇
  * @date 2023-12-02
  */
+@Slf4j
 @UtilityClass
 public class TaskKit {
     /** 执行一些没有 io 操作的逻辑 */
@@ -283,12 +285,10 @@ public class TaskKit {
     }
 
     private void foreverTimerTask(long tick, TimeUnit timeUnit, Set<IntervalTaskListener> set) {
-
         // 启动定时器
         TaskKit.newTimeout(new TimerTask() {
             @Override
             public void run(Timeout timeout) {
-
                 if (set.isEmpty()) {
                     TaskKit.newTimeout(this, tick, timeUnit);
                     return;
