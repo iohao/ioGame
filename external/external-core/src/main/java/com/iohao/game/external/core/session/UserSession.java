@@ -27,13 +27,13 @@ import com.iohao.game.common.kit.attr.AttrOptionDynamic;
 import com.iohao.game.external.core.message.ExternalCodecKit;
 
 /**
- * UserSession 接口
- * <pre>
- *     对应的动态属性接口 {@link UserSessionOption}
- * </pre>
+ * UserSession interface
+ * <p>
+ * UserSession 接口， 对应的动态属性接口 {@link UserSessionOption}
  *
  * @author 渔民小镇
  * @date 2023-02-18
+ * @see UserSessionOption UserSessionOption for dynamic properties
  */
 public interface UserSession extends AttrOptionDynamic {
     /**
@@ -61,38 +61,46 @@ public interface UserSession extends AttrOptionDynamic {
     long getUserId();
 
     /**
+     * authVerified
+     * <p>
      * 是否进行身份验证
      *
-     * @return true 已经身份验证了，表示登录过了。
+     * @return true: logged in. （true 已经身份验证了，表示登录过了。）
      */
     boolean isVerifyIdentity();
 
     /**
-     * 当前用户（玩家）的 State
+     * UserSessionState of current player
      *
-     * @return 当前用户（玩家）的 State
+     * @return State
      */
     UserSessionState getState();
 
     /**
+     * UserChannelId of current player
+     * <p>
      * 当前用户（玩家）的 UserChannelId
      *
-     * @return 当前用户（玩家）的 UserChannelId
+     * @return UserChannelId
      */
     UserChannelId getUserChannelId();
 
     /**
+     * Adds user info to request.
+     * <p>
+     * Developers can extend data via HeadMetadata.setAttachmentData(byte[]), which will be forwarded to the logic server.
+     * <p>
      * 给请求消息加上一些 user 自身的数据
-     * <pre>
-     *     如果开发者要扩展数据，可通过 {@link HeadMetadata#setAttachmentData(byte[])} 字段来扩展
-     *     这些数据可以传递到逻辑服
-     * </pre>
+     * <p>
+     * 如果开发者要扩展数据，可通过 {@link HeadMetadata#setAttachmentData(byte[])} 字段来扩展，这些数据可以传递到逻辑服
      *
-     * @param requestMessage 请求消息
+     * @param requestMessage requestMessage
      */
     void employ(BarMessage requestMessage);
 
     /**
+     * Attach user data to HeadMetadata
+     * <p>
      * 给 HeadMetadata 加上一些 user 自身的数据
      *
      * @param headMetadata HeadMetadata
@@ -108,16 +116,18 @@ public interface UserSession extends AttrOptionDynamic {
     <T> T writeAndFlush(Object message);
 
     /**
-     * 获取玩家 ip
+     * Get player IP
      *
      * @return 玩家 ip
      */
     String getIp();
 
     /**
+     * Creates RequestMessage with user's own info.
+     * <p>
      * 创建 RequestMessage，内部会将 User 自身的相关信息设置到 RequestMessage 中。
      *
-     * @param cmdInfo 路由
+     * @param cmdInfo cmdInfo
      * @return RequestMessage
      * @since 21.15
      */

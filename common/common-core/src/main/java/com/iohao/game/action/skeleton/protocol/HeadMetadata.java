@@ -33,6 +33,8 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
+ * Meta information
+ * <p>
  * 元信息
  *
  * @author 渔民小镇
@@ -66,6 +68,11 @@ public final class HeadMetadata implements Serializable {
     int cmdMerge;
 
     /**
+     * Source logic server client ID
+     * <p>
+     * If the request is initiated by an external server,
+     * this value should be the external server's clientId (a server's unique identifier).
+     * <p>
      * 来源逻辑服 client id
      * <pre>
      *     比如是对外服发起的请求，这个来源就是对外服的 clientId
@@ -77,6 +84,17 @@ public final class HeadMetadata implements Serializable {
     int sourceClientId;
 
     /**
+     * Target logic server endPointClientId
+     * Used to specify which server should process the request
+     * <p>
+     * For example, with two chess servers (game logic servers) A and B:
+     * When players Player1 and Player2 are in a match, if they started playing on Chess Server A,
+     * then all subsequent requests must be assigned to Chess Server A for processing.
+     * <p>
+     * endPointClientId refers to the server's unique identifier.
+     * <p>
+     * see {@link com.iohao.game.common.kit.HashKit}
+     * <p>
      * 目标逻辑服 endPointClientId
      * <pre>
      *     用于指定请求由哪个服务器处理
@@ -108,15 +126,23 @@ public final class HeadMetadata implements Serializable {
     byte rpcCommandType;
 
     /**
-     * 扩展字段
-     * <pre>
-     *     开发者有特殊业务可以通过这个字段来扩展元信息，该字段的信息会跟随每一个请求；
-     * </pre>
+     * Extended field. Developers can use this field to extend meta-information for special business needs.
+     * The data in this field will be included with every request.
+     * <p>
+     * 扩展字段，开发者有特殊业务可以通过这个字段来扩展元信息，该字段的信息会跟随每一个请求。
      */
     byte[] attachmentData;
 
     /**
-     * netty 的 channelId。
+     * netty channelId
+     * <p>
+     * The framework stores Netty's channelId to allow the external server to look up the corresponding connection.
+     * <p>
+     * After a player logs in, the framework will use the player's userId to locate the corresponding connection (channel) instead of the channelId,
+     * because the channelId string is too long, and transmitting this value to the logic server each time would slightly impact performance.
+     * <p>
+     * Once the player logs in, the framework will no longer use this property.
+     * However, if needed, developers can repurpose this field for their own use.
      * <pre>
      *     框架存放 netty 的 channelId 是为了能在对外服查找到对应的连接。
      *     当玩家登录后，框架将会使用玩家的 userId 来查找对应的连接（channel），而不是 channelId ；
@@ -130,10 +156,20 @@ public final class HeadMetadata implements Serializable {
     /** 消息标记号；由前端请求时设置，服务器响应时会携带上 */
     int msgId;
 
-    /** 框架自用字段。将来变化可能较大，开发者请不要使用。 */
+    /**
+     * Framework's internal fields. Future changes are likely to be significant, so developers should refrain from using them.
+     * <p>
+     * 框架自用字段。将来变化可能较大，开发者请不要使用。
+     */
     int stick;
 
     /**
+     * The IDs of multiple game logic servers bound to the player
+     * <pre>
+     *     All requests related to this game logic server will be routed to the bound game logic server for processing.
+     *     Even if multiple game logic servers of the same type are running, requests will still be directed to the originally bound server.
+     * </pre>
+     * <p>
      * 玩家绑定的多个游戏逻辑服 id
      * <pre>
      *     所有与该游戏逻辑服相关的请求都将被分配给已绑定的游戏逻辑服处理。
@@ -141,28 +177,48 @@ public final class HeadMetadata implements Serializable {
      * </pre>
      */
     int[] bindingLogicServerIds;
-    /** 框架自用字段。将来变化可能较大，开发者请不要使用。 */
+    /**
+     * Framework's internal fields. Future changes are likely to be significant, so developers should refrain from using them.
+     * <p>
+     * 框架自用字段。将来变化可能较大，开发者请不要使用。
+     */
     int cacheCondition;
     /**
-     * 自定义数据，专为开发者预留的一个字段，开发者可以利用该字段来传递自定义数据
-     * <pre>
-     *     该字段由开发者自己定义，框架不会对数据做任何处理，也不会做任何检查，
-     *     开发者可以利用该字段来传递任何数据，包括自定义对象。
-     * </pre>
+     * Custom data, a field reserved specifically for developers.
+     * Developers can use this field to pass custom data.
+     * The field is entirely user-defined—the framework will neither process nor validate its contents.
+     * Developers can leverage it to transmit any data, including custom objects.
+     * <p>
+     * 自定义数据，专为开发者预留的一个字段，开发者可以利用该字段来传递自定义数据。
+     * 该字段由开发者自己定义，框架不会对数据做任何处理，也不会做任何检查，开发者可以利用该字段来传递任何数据，包括自定义对象。
      */
     byte[] customData;
-    /** 所选执行器 */
     ExecutorSelectEnum executorSelect;
-    /** traceId */
     String traceId;
-    /** 框架自用字段。将来变化可能较大，开发者请不要使用。 */
+    /**
+     * Framework's internal fields. Future changes are likely to be significant, so developers should refrain from using them.
+     * <p>
+     * 框架自用字段。将来变化可能较大，开发者请不要使用。
+     */
     byte[] userProcessorExecutorSelectorBytes;
-    /** 临时变量 */
+    /**
+     * Temporary variable
+     * <p>
+     * 临时变量
+     */
     transient Object other;
     transient int withNo;
-    /** 请求命令类型: 0 心跳，1 业务 */
+    /**
+     * Request command type: 0 Heartbeat, 1 Business
+     * <p>
+     * 请求命令类型: 0 心跳，1 业务
+     */
     transient int cmdCode;
-    /** 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验 */
+    /**
+     * Protocol switch: Used for protocol-level control (e.g., security encryption verification). 0: No verification
+     * <p>
+     * 协议开关，用于一些协议级别的开关控制，比如 安全加密校验等。 : 0 不校验
+     */
     transient int protocolSwitch;
     /** 预留 inet */
     @Ignore
@@ -176,18 +232,6 @@ public final class HeadMetadata implements Serializable {
         return this;
     }
 
-    /**
-     * 得到 cmdInfo 命令路由信息
-     * <pre>
-     *     如果只是为了获取 cmd 与 subCmd，下面的方式效率会更高
-     *     cmd = CmdKit.getCmd(cmdMerge);
-     *     subCmd = CmdKit.getSubCmd(cmdMerge);
-     *
-     *     但实际上更推荐使用 CmdInfo，这样使得代码书写简洁，也更容易理解，毕竟代码是给人看的。
-     * </pre>
-     *
-     * @return cmdInfo
-     */
     public CmdInfo getCmdInfo() {
         return CmdInfo.of(this.cmdMerge);
     }
@@ -198,16 +242,18 @@ public final class HeadMetadata implements Serializable {
     }
 
     /**
-     * 类似 clone
+     * Simple clone
      * <p>
-     * 使用场景
+     * Usage scenario （使用场景）
      * <pre>
-     *     与其他游戏逻辑服通信时可以使用
-     *     方法中给 HeadMetadata 赋值了玩家的必要属性：
+     *     Can be used when communicating with other game logic servers.
+     *     The method assigns necessary player attributes to HeadMetadata.
+     *
+     *     （与其他游戏逻辑服通信时可以使用，方法中给 HeadMetadata 赋值了玩家的必要属性）
      *     userId、attachmentData、channelId、bindingLogicServerIds、customData
      *     traceId、executorSelect
      * </pre>
-     * 以下属性不会赋值，如有需要，请自行赋值
+     * Unassigned by default. Set manually when required. （以下属性不会赋值，如有需要，请自行赋值）
      * <pre>
      *     cmdMerge
      *     sourceClientId

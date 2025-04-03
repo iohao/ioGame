@@ -77,7 +77,7 @@ public class Validation {
             ClassScanner classScanner = new ClassScanner(packageName, clazz -> clazz.getName().equals(className));
             List<Class<?>> classList = classScanner.listScan();
             if (classList.isEmpty()) {
-                throw new Exception("缺少类: " + className);
+                throw new ClassNotFoundException(className);
             }
 
             Class<?> clazz = classList.getFirst();
@@ -101,7 +101,7 @@ public class Validation {
         try {
             className = ResourceKit.readStr(fileName, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            log.info("读取 {} 失败，将使用默认类 {} 来处理", fileName, defaultValidator);
+            log.info("Use the default class {} to handle it because reading {} failed.", defaultValidator, fileName);
         }
 
         if (StringUtils.isBlank(className)) {
