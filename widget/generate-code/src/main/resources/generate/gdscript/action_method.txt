@@ -1,0 +1,75 @@
+## ${methodComment}[br]
+##
+## [br][b]@param ${bizDataName}:[/b] ${bizDataComment}
+## [br][b]@param callback:[/b] ${returnComment} (returnType: [code]${returnDataIsList?"list of"} ${returnDataName}[/code])
+## [br][b]@return[/b] [code]IoGame.RequestCommand[/code]
+## [br]
+## [br][b]Example Code[/b]
+## [codeblock]
+## # ${bizDataComment}
+## var ${bizDataName}: ${bizDataType} = ...
+##
+## ${actionSimpleName}.of_${actionMethodName}(${bizDataName}, func(result: IoGame.ResponseResult):
+##     # ${returnComment}
+##     ${exampleCode}
+## ).on_error(func(result: IoGame.ResponseResult):
+##     var error_code := result.get_response_status()
+##     print("error_code: ", error_code)
+##     print("error_info: ", result.get_error_info())
+## )
+## [/codeblock]
+static func of_${actionMethodName}(${bizDataName}: ${bizDataType}, callback: Callable) -> IoGame.RequestCommand:
+<% if (internalBizDataType) { %>
+	return IoGame.RequestCommand.of_${sdkMethodName!}(_${memberCmdName}, ${bizDataName}).on_callback(callback).execute()
+<% } else if (bizDataTypeIsList) { %>
+	var _message := IoGame.Proto.ByteValueList.new()
+	for _value in ${bizDataName}:
+		_message.add_values(_value.to_bytes())
+	var _request := IoGame.RequestCommand.of(_${memberCmdName}, _message.to_bytes()).on_callback(callback)
+	_request.data_source = ${bizDataName}
+	return _request.execute()
+<% } else { %>
+	var _data := ${bizDataName}.to_bytes()
+	var _request := IoGame.RequestCommand.of(_${memberCmdName}, _data).on_callback(callback)
+	_request.data_source = ${bizDataName}
+	return _request.execute()
+<% } %>
+
+
+## ${methodComment}[br]
+##
+## [br][b]@param ${bizDataName}:[/b] ${bizDataComment}
+## [br][b]@return[/b] [code]IoGame.ResponseResult[/code]
+## [br]
+## [br][b]Example Code[/b]
+## [codeblock]
+## # ${bizDataComment}
+## var ${bizDataName}: ${bizDataType} = ...
+##
+## var result := await ${actionSimpleName}.of_await_${actionMethodName}(${bizDataName})
+##
+## if result.success():
+##     # ${returnComment}
+##     ${exampleCode}
+## else:
+##     var error_code := result.get_response_status()
+##     print("error_code: ", error_code)
+##     print("error_info: ", result.get_error_info())
+## [/codeblock]
+static func of_await_${actionMethodName}(${bizDataName}: ${bizDataType}) -> IoGame.ResponseResult:
+<% if (internalBizDataType) { %>
+	return await IoGame.RequestCommand.of_await_${sdkMethodName!}(_${memberCmdName}, ${bizDataName})
+<% } else if (bizDataTypeIsList) { %>
+	var _message := IoGame.Proto.ByteValueList.new()
+	for _value in ${bizDataName}:
+		_message.add_values(_value.to_bytes())
+	var _request := IoGame.RequestCommand.of(_${memberCmdName}, _message.to_bytes())
+	_request.data_source = ${bizDataName}
+	return await IoGame.RequestCommand.of_await_request_command(_request)
+<% } else { %>
+	var _data := ${bizDataName}.to_bytes()
+	var _request := IoGame.RequestCommand.of(_${memberCmdName}, _data)
+	_request.data_source = ${bizDataName}
+	return await IoGame.RequestCommand.of_await_request_command(_request)
+<% } %>
+

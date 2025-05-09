@@ -18,10 +18,6 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.protocol.wrapper.BoolValue;
-import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
-import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
-import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -51,7 +47,6 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
 
     public CsharpDocumentGenerate() {
         this.typeMappingDocument = new CSharpTypeMappingDocument(this);
-//        protoImportPath = "using Pb.Common;";
     }
 
     @Override
@@ -67,11 +62,6 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
 
         log.info("CSharpDocumentGenerate success: {}", this.path);
     }
-
-//    private void defaultValue() {
-//        this.actionImportList.add(protoImportPath);
-//        this.broadcastImportList.add(protoImportPath);
-//    }
 
     @Override
     protected void generateErrorCode(IoGameDocument ioGameDocument) {
@@ -144,7 +134,7 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
                     .setOfMethodTypeName("Int").setOfMethodListTypeName("IntList")
                     .setResultMethodTypeName("GetInt()").setResultMethodListTypeName("ListInt()");
 
-            this.mapping(intTypeMapping, List.of(int.class, Integer.class, IntValue.class));
+            this.mapping(intTypeMapping, intClassList);
 
             // about long
             var longTypeMapping = new TypeMappingRecord()
@@ -152,7 +142,7 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
                     .setOfMethodTypeName("Long").setOfMethodListTypeName("LongList")
                     .setResultMethodTypeName("GetLong()").setResultMethodListTypeName("ListLong()");
 
-            this.mapping(longTypeMapping, List.of(long.class, Long.class, LongValue.class));
+            this.mapping(longTypeMapping, longClassList);
 
             // about boolean
             var boolTypeMapping = new TypeMappingRecord()
@@ -160,7 +150,7 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
                     .setOfMethodTypeName("Bool").setOfMethodListTypeName("BoolList")
                     .setResultMethodTypeName("GetBool()").setResultMethodListTypeName("ListBool()");
 
-            this.mapping(boolTypeMapping, List.of(boolean.class, Boolean.class, BoolValue.class));
+            this.mapping(boolTypeMapping, boolClassList);
 
             // about String
             var stringTypeMapping = new TypeMappingRecord()
@@ -168,7 +158,7 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
                     .setOfMethodTypeName("String").setOfMethodListTypeName("StringList")
                     .setResultMethodTypeName("GetString()").setResultMethodListTypeName("ListString()");
 
-            this.mapping(stringTypeMapping, List.of(String.class, StringValue.class));
+            this.mapping(stringTypeMapping, stringClassList);
         }
 
         @Override

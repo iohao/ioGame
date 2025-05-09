@@ -1,0 +1,22 @@
+<%
+var resultMethodName;
+var variateName = "_value :=";
+if (dataTypeIsInternal) {
+    if (dataIsList) {
+        resultMethodName = resultMethodListTypeName;
+    } else {
+        resultMethodName = resultMethodTypeName;
+    }
+%>
+var ${variateName} result.${resultMethodName}
+<%
+} else {
+    if (dataIsList) {
+        resultMethodName = resultMethodListTypeName;
+        variateName = "_value: Array =";
+    } else {
+        resultMethodName = resultMethodTypeName + " as " + dataActualTypeName;
+    }
+%>
+var ${variateName} result.${resultMethodName}
+<%}%>

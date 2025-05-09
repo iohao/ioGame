@@ -1,0 +1,17 @@
+# ${generateTime}
+# ${ioGameHome}
+
+## ${ActionComment}[br]
+## https://github.com/iohao/ioGame
+class_name ${ActionName}
+extends RefCounted
+
+${imports}
+
+<%for(o in actionMemberCmdDocumentList) {%>
+static var _${o.memberName}: int = IoGame.CmdKit.mapping_request(${o.cmdMerge}, "${o.comment}")
+<%}%>
+
+<%for(o in methodCodeList) {%>
+${o}
+<%}%>

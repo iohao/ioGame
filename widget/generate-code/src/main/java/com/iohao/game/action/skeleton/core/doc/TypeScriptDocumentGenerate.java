@@ -18,10 +18,6 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
-import com.iohao.game.action.skeleton.protocol.wrapper.BoolValue;
-import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
-import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
-import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -136,7 +132,6 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
 
             Template template = ofTemplate(DocumentGenerateKit.actionTemplatePath);
             // imports
-//            template.binding("imports", String.join("\n", this.actionImportList));
             template.binding("imports", imports);
 
             new ActionGenerate()
@@ -172,7 +167,7 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
                     .setOfMethodTypeName("Int").setOfMethodListTypeName("IntList")
                     .setResultMethodTypeName("getInt").setResultMethodListTypeName("listInt");
 
-            this.mapping(intTypeMapping, List.of(int.class, Integer.class, IntValue.class));
+            this.mapping(intTypeMapping, intClassList);
 
             // about long
             var longTypeMapping = new TypeMappingRecord()
@@ -180,7 +175,7 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
                     .setOfMethodTypeName("Long").setOfMethodListTypeName("LongList")
                     .setResultMethodTypeName("getLong").setResultMethodListTypeName("listLong");
 
-            this.mapping(longTypeMapping, List.of(long.class, Long.class, LongValue.class));
+            this.mapping(longTypeMapping, longClassList);
 
             // about boolean
             var boolTypeMapping = new TypeMappingRecord()
@@ -188,7 +183,7 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
                     .setOfMethodTypeName("Bool").setOfMethodListTypeName("BoolList")
                     .setResultMethodTypeName("getBool").setResultMethodListTypeName("listBool");
 
-            this.mapping(boolTypeMapping, List.of(boolean.class, Boolean.class, BoolValue.class));
+            this.mapping(boolTypeMapping, boolClassList);
 
             // about String
             var stringTypeMapping = new TypeMappingRecord()
@@ -196,7 +191,7 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
                     .setOfMethodTypeName("String").setOfMethodListTypeName("StringList")
                     .setResultMethodTypeName("getString").setResultMethodListTypeName("listString");
 
-            this.mapping(stringTypeMapping, List.of(String.class, StringValue.class));
+            this.mapping(stringTypeMapping, stringClassList);
         }
 
         @Override
@@ -250,7 +245,7 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
                 importFileNameSet.add(importFileName);
             }
 
-            // ts 只需要导入文件
+            // import .proto file
             return importFileNameSet.stream().map(importFileName -> {
                 String tpl = "import * as %s from \"../%s\";";
                 return tpl.formatted(importFileName, importFileName);

@@ -34,7 +34,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Accessors(chain = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PACKAGE)
 public final class BroadcastDocument {
     /** 路由 */
     final CmdInfo cmdInfo;

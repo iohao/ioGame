@@ -11,11 +11,66 @@
 
 
 
+### 2025-04-30 - v21.26
+
+https://github.com/iohao/ioGame/releases/tag/21.26
+
+**Version update summary**
+
+> 1. refactor(Code generation): Code generation supports importing multiple .proto files
+> 2. refactor(i18n): #376
+
+------
+
+
+Supports importing multiple .proto files
+
+```java
+public interface SdkProtoFile {
+    String fileName = "common.proto";
+    String filePackage = "common";
+
+    String fileName2 = "common2.proto";
+    String filePackage2 = "common2";
+}
+
+@ToString
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+@ProtoFileMerge(fileName = SdkProtoFile.fileName, filePackage = SdkProtoFile.filePackage)
+public final class LoginVerifyMessage {
+    /** jwt */
+    String jwt;
+}
+
+@ToString
+@ProtobufClass
+@FieldDefaults(level = AccessLevel.PUBLIC)
+@ProtoFileMerge(fileName = SdkProtoFile.fileName2, filePackage = SdkProtoFile.filePackage2)
+public final class BulletMessage {
+    /** id */
+    int bulletId;
+    /** bullet name */
+    String name;
+}
+```
+
+
+**[other updates]**
+
+```xml
+<netty.version>4.1.121.Final</netty.version>
+```
+
+ 
+
+
+
 ### 2025-03-20 - v21.25
 
 https://github.com/iohao/ioGame/releases/tag/21.25
 
-**版本更新汇总**
+**Version update summary**
 
 > 1. fix(broker): DefaultWithElementSelector
 > 2. refactor(net): enhance ResponseCollectItemMessage

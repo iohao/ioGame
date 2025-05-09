@@ -1,0 +1,24 @@
+<%
+var resultMethodName;
+var variateName = "_value :=";
+if (returnDataTypeIsInternal) {
+    // see GDScriptTypeMappingDocument.extractedInitTypeMapping(), TypeMappingRecord
+    if (returnDataIsList) {
+        resultMethodName = resultMethodListTypeName;
+    } else {
+        resultMethodName = resultMethodTypeName;
+    }
+%>
+var ${variateName} result.${resultMethodName}
+<%
+} else {
+    // see TypeScriptMappingDocument.getTypeMappingRecord, ActionMethodDocument.extractedReturnInfo
+    if (returnDataIsList) {
+        resultMethodName = resultMethodListTypeName;
+        variateName = "_value: Array =";
+    } else {
+        resultMethodName = resultMethodTypeName + " as " + returnDataActualTypeName;
+    }
+%>
+var ${variateName} result.${resultMethodName}
+<%}%>

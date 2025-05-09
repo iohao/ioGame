@@ -1,0 +1,11 @@
+## ${methodComment}[br]
+##
+## [br][b]@return[/b] [code]IoGame.RequestCommand void[/code]
+## [br]
+## [br][b]Example Code[/b]
+## [codeblock]
+## ${actionSimpleName}.of_${actionMethodName}();
+## [/codeblock]
+static func of_${actionMethodName}() -> IoGame.RequestCommand:
+	return IoGame.RequestCommand.of_empty(_${memberCmdName}).execute()
+

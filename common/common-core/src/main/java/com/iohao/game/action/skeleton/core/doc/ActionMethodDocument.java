@@ -41,7 +41,7 @@ public final class ActionMethodDocument {
     /** 类名 */
     final String actionSimpleName;
     /** 方法名 */
-    final String actionMethodName;
+    String actionMethodName;
     /** 方法的注释 */
     final String methodComment;
 

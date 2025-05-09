@@ -1,0 +1,29 @@
+## ${methodComment}[br]
+##
+## [br][b]@param ${bizDataName}:[/b] ${bizDataComment}
+## [br][b]@return[/b] [code]IoGame.RequestCommand[/code]
+## [br]
+## [br][b]Example Code[/b]
+## [codeblock]
+## # ${bizDataComment}
+## var ${bizDataName}: ${bizDataType} = ...
+## ${actionSimpleName}.of${actionMethodName}(${bizDataName});
+## [/codeblock]
+static func of_${actionMethodName}(${bizDataName}: ${bizDataType}) -> IoGame.RequestCommand:
+<% if (internalBizDataType) { %>
+	return IoGame.RequestCommand.of_${sdkMethodName!}(_${memberCmdName}, ${bizDataName}).execute()
+<% } else if (bizDataTypeIsList) { %>
+	var _message := IoGame.Proto.ByteValueList.new()
+	for _value in ${bizDataName}:
+		_message.add_values(_value.to_bytes())
+
+	var _request := IoGame.RequestCommand.of_${sdkMethodName}(_${memberCmdName}, _message.to_bytes())
+	_request.data_source = ${bizDataName}
+	return _request.execute()
+<% } else { %>
+	var _data := ${bizDataName}.to_bytes()
+	var _request = IoGame.RequestCommand.of(_${memberCmdName}, _data)
+	_request.data_source = ${bizDataName}
+	return _request.execute()
+<% } %>
+

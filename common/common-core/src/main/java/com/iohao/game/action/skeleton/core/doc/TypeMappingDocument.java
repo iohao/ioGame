@@ -18,6 +18,11 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.iohao.game.action.skeleton.protocol.wrapper.BoolValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.IntValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.LongValue;
+import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
+
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +33,11 @@ import java.util.Map;
  * @date 2024-06-26
  */
 public interface TypeMappingDocument {
+    List<Class<?>> intClassList = List.of(int.class, Integer.class, IntValue.class);
+    List<Class<?>> longClassList = List.of(long.class, Long.class, LongValue.class);
+    List<Class<?>> boolClassList = List.of(boolean.class, Boolean.class, BoolValue.class);
+    List<Class<?>> stringClassList = List.of(String.class, StringValue.class);
+
     Map<Class<?>, TypeMappingRecord> getMap();
 
     TypeMappingRecord getTypeMappingRecord(Class<?> protoTypeClazz);

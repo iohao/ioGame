@@ -1,0 +1,50 @@
+# ${generateTime}
+# ${ioGameHome}
+
+## Broadcast Listener. cn:广播监听[br]
+## https://github.com/iohao/ioGame
+class_name Listener
+extends RefCounted
+
+${imports}
+
+<%for(o in broadcastDocumentList) {%>
+static var _${o.cmdMethodName}_${o.cmd}_${o.subCmd}: int = IoGame.CmdKit.mapping_broadcast(${o.cmdMerge}, "${o.methodDescription}")
+<%}%>
+
+
+<%for(o in broadcastDocumentList) {%>
+## ${o.methodDescription}[br]
+##
+## [br][b]@param callback:[/b] ${o.dataDescription} (returnType: ${o.dataIsList?"list of"} [code]${o.bizDataType}[/code])
+## [br]
+## [br][b]Example Code[/b]
+## [codeblock]
+## Listener.listen_${o.methodName}(func(result: IoGame.ResponseResult):
+##     # ${o.dataDescription!"broadcast notification"}
+##     ${o.exampleCode!}
+## )
+## [/codeblock]
+static func listen_${o.methodName}(callback: Callable) -> void:
+	# ${o.dataDescription!}
+	IoGame.ListenCommand.of(_${o.cmdMethodName}_${o.cmd}_${o.subCmd}, callback)
+
+
+<%}%>
+static func listener_ioGame() -> void:
+	# all listener
+<%for(o in broadcastDocumentList) {%>
+	Listener.listen_${o.methodName}(func(result: IoGame.ResponseResult):
+		var _merge_title := IoGame.CmdKit.to_string_merge(result.get_cmd_merge())
+		var _title := IoGame.CmdKit.get_broadcast_title(result.get_cmd_merge())
+    <% if (o.exampleCodeAction == null) { %>
+		var _format := "[%s], [broadcast_title: %s]" % [_merge_title, _title]
+		IoGame.IoGameSetting.game_console.log(_format)
+    <% } else { %>
+		${o.exampleCodeAction!}
+		var _format := "[%s], [broadcast_title: %s], %s" % [_merge_title, _title, _value]
+		IoGame.IoGameSetting.game_console.log(_format)
+    <%}%>
+	)
+
+<%}%>

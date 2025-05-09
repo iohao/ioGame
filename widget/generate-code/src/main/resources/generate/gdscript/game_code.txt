@@ -1,0 +1,16 @@
+# ${generateTime}
+# ${ioGameHome}
+
+## GameCode、ErrorCode. cn:游戏错误码[br]
+## https://github.com/iohao/ioGame
+class_name GameCode
+extends RefCounted
+
+<%for(o in errorCodeDocumentList) {%>
+## ${o.description}
+static var ${o.name}: int = IoGame.CmdKit.mapping_error_code(${o.value}, "${o.description!}")
+<%}%>
+
+static func init() -> void:
+	# trigger errorCodeMapping init. cn:调用一次方法，触发错误码的初始化操作。
+	pass

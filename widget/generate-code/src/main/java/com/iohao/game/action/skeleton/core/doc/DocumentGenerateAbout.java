@@ -26,6 +26,7 @@ import com.iohao.game.action.skeleton.protocol.wrapper.StringValue;
 import com.iohao.game.common.kit.ArrayKit;
 import com.iohao.game.common.kit.StrKit;
 import com.iohao.game.common.kit.io.FileKit;
+import com.iohao.game.common.kit.time.CacheTimeKit;
 import com.iohao.game.common.kit.time.FormatTimeKit;
 import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
 import lombok.AccessLevel;
@@ -46,6 +47,7 @@ import org.jctools.maps.NonBlockingHashMap;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @UtilityClass
@@ -68,10 +70,32 @@ class DocumentGenerateKit {
         Configuration cfg = Configuration.defaultConfiguration();
         gt = new GroupTemplate(resourceLoader, cfg);
         gt.registerFunction("codeEscape", new ExampleCodeEscape());
+        gt.registerFunction("snakeName", new SnakeName());
     }
 
     Template getTemplate(String path) {
         return gt.getTemplate(path);
+    }
+
+    String toSnakeName(String name) {
+        return Optional.ofNullable(name)
+                .filter(StrKit::isNotEmpty)
+                .map(input -> {
+                    StringBuilder result = new StringBuilder();
+                    result.append(Character.toLowerCase(input.charAt(0)));
+
+                    for (int i = 1; i < input.length(); i++) {
+                        char currentChar = input.charAt(i);
+                        if (Character.isUpperCase(currentChar)) {
+                            result.append('_');
+                            result.append(Character.toLowerCase(currentChar));
+                        } else {
+                            result.append(currentChar);
+                        }
+                    }
+
+                    return result.toString();
+                }).orElse("");
     }
 
     class ExampleCodeEscape implements org.beetl.core.Function {
@@ -85,7 +109,20 @@ class DocumentGenerateKit {
                     }).orElse("");
         }
     }
+
+    class SnakeName implements org.beetl.core.Function {
+        @Override
+        public Object call(Object[] paras, Context ctx) {
+            var value = paras[0];
+            if (Objects.isNull(value)) {
+                return "";
+            }
+
+            return toSnakeName(value.toString());
+        }
+    }
 }
+
 
 @Accessors(chain = true)
 @Setter(AccessLevel.PACKAGE)
@@ -134,6 +171,7 @@ final class BroadcastGenerate {
     String filePath;
     String fileSuffix;
     Function<String, Template> templateCreator;
+    Consumer<BroadcastDocument> broadcastRenderBeforeConsumer;
 
     void generate() {
         Objects.requireNonNull(ioGameDocument);
@@ -167,6 +205,9 @@ final class BroadcastGenerate {
     private void extractedBroadcastExampleCode(BroadcastDocument broadcastDocument) {
         Class<?> dataClass = broadcastDocument.getDataClass();
         if (Objects.isNull(dataClass)) {
+            if (Objects.nonNull(broadcastRenderBeforeConsumer)) {
+                broadcastRenderBeforeConsumer.accept(broadcastDocument);
+            }
             return;
         }
 
@@ -176,6 +217,10 @@ final class BroadcastGenerate {
         broadcastDocument.setResultMethodTypeName(typeMappingRecord.getResultMethodTypeName());
         broadcastDocument.setResultMethodListTypeName(typeMappingRecord.getResultMethodListTypeName());
         broadcastDocument.setDataActualTypeName(typeMappingRecord.getParamTypeName());
+
+        if (Objects.nonNull(broadcastRenderBeforeConsumer)) {
+            broadcastRenderBeforeConsumer.accept(broadcastDocument);
+        }
 
         String exampleCode = render(broadcastDocument, typeMappingRecord, DocumentGenerateKit.broadcastExampleTemplatePath);
         broadcastDocument.setExampleCode(exampleCode);
@@ -276,8 +321,9 @@ final class ActionGenerate {
 @UtilityClass
 class GenerateInternalKit {
     void binding(Template template) {
+        var generateTime = FormatTimeKit.ofPattern("yyyy-MM-dd").format(CacheTimeKit.nowLocalDate());
         String gtKey = new String(new byte[]{103, 101, 110, 101, 114, 97, 116, 101, 84, 105, 109, 101}, StandardCharsets.UTF_8);
-        template.binding(gtKey, "// %s %s".formatted(gtKey, FormatTimeKit.format()));
+        template.binding(gtKey, "// %s %s".formatted(gtKey, generateTime));
 
         String iohao = new String(new byte[]{105, 111, 71, 97, 109, 101, 72, 111, 109, 101}, StandardCharsets.UTF_8);
         String u = new String(new byte[]{104, 116, 116, 112, 115, 58, 47, 47, 103, 105, 116, 104, 117, 98, 46, 99, 111, 109, 47, 105, 111, 104, 97, 111, 47, 105, 111, 71, 97, 109, 101}, StandardCharsets.UTF_8);
@@ -336,9 +382,13 @@ class InternalProtoClassKit {
                 }
             }
 
-            return protoClass.getAnnotation(ProtoFileMerge.class) != null;
+            return true;
         }).forEach(protoClass -> {
             ProtoFileMerge annotation = protoClass.getAnnotation(ProtoFileMerge.class);
+            if (Objects.isNull(annotation)) {
+                return;
+            }
+
             String fileName = annotation.fileName();
             String filePackage = annotation.filePackage();
 

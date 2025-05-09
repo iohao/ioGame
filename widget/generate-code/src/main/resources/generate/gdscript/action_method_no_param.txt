@@ -1,0 +1,34 @@
+## ${methodComment}[br]
+##
+## [br][b]@param callback:[/b] ${returnComment} (returnType: [code]${returnDataIsList?"list of "} ${returnDataName}[/code])
+## [br][b]@return[/b] [code]IoGame.RequestCommand[/code]
+## [br]
+## [br][b]Example Code[/b]
+## [codeblock]
+## ${actionSimpleName}.of_${actionMethodName}(func(result: IoGame.ResponseResult):
+##     # ${returnComment}
+##     ${exampleCode}
+## })
+## [/codeblock]
+static func of_${actionMethodName}(callback: Callable) -> IoGame.RequestCommand:
+	return IoGame.RequestCommand.of_empty(_${memberCmdName}).on_callback(callback).execute()
+
+
+## ${methodComment}[br]
+##
+## [br][b]@return[/b] [code]IoGame.ResponseResult[/code]
+## [br]
+## [br][b]Example Code[/b]
+## [codeblock]
+## var result := await ${actionSimpleName}.of_await_${actionMethodName}()
+##
+## if result.success():
+##     # ${returnComment}
+##     ${exampleCode}
+## else:
+##     var error_code := result.get_response_status()
+##     print("error_code: ", error_code)
+##     print("error_info: ", result.get_error_info())
+static func of_await_${actionMethodName}() -> IoGame.ResponseResult:
+	return await IoGame.RequestCommand.of_await_empty(_${memberCmdName})
+

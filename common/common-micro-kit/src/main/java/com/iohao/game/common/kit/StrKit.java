@@ -22,8 +22,6 @@ import com.iohao.game.common.kit.adapter.AdapterHuUtils;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
-import java.sql.SQLOutput;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -93,7 +91,7 @@ public class StrKit {
      * @return 是否为空
      */
     public boolean isEmpty(String str) {
-        return str == null || str.isEmpty() || str.isBlank();
+        return str == null || str.isBlank();
     }
 
     public boolean isEmpty(CharSequence str) {
