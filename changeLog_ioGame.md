@@ -9,6 +9,70 @@
 
 ------
 
+### 2025-05-09 - v21.27
+
+https://github.com/iohao/ioGame/releases/tag/21.27
+
+
+**Version update summary**
+
+> 1. feat(generate-code): #449 Supports GDScript GenerateCode
+> 2. #444 Provides GDScript SDK
+> 3. #448 Provides GDScript Example with ioGame
+> 4. perf(core): ActionCommandDocKit
+
+------
+
+
+
+**feat(generate-code)**: #449 Supports GDScript GenerateCode
+
+About examples: https://github.com/iohao/ioGameSdkGDScriptExampleGodot
+
+
+
+```java
+public final class GenerateTest {
+    // setting root path
+    static String rootPath = "/Users/join/gitme/ioGame-sdk/";
+
+    public static void main(String[] args) {
+        // CHINA or US
+        Locale.setDefault(Locale.CHINA);
+
+        // Load the business framework of each gameLogicServer
+        // cn: 加载游戏逻辑服的业务框架
+        yourListLogic().forEach(BrokerClientStartup::createBarSkeleton);
+
+        /*
+         * Generate actions, broadcasts, and error codes.
+         * cn: 生成 action、广播、错误码
+         */
+        
+        // ----- About generating GDScript code -----
+        generateCodeGDScriptGodot();
+
+        // Added an enumeration error code class to generate error code related information
+        IoGameDocumentHelper.addErrorCodeClass(YourGameCodeEnum.class);
+        // Generate document
+        IoGameDocumentHelper.generateDocument();
+    }
+
+    private static void generateCodeGDScriptGodot() {
+        var documentGenerate = new GDScriptDocumentGenerate();
+        // By default, it will be generated in the target/code directory
+        // cn: 设置代码生成所存放的路径，如果不做任何设置，将会生成在 target/code 目录中
+        String path = rootPath + "ioGameSdkGDScriptExampleGodot/gen/code";
+        documentGenerate.setPath(path);
+
+        IoGameDocumentHelper.addDocumentGenerate(documentGenerate);
+    }
+}
+```
+
+
+
+
 
 
 ### 2025-04-30 - v21.26
