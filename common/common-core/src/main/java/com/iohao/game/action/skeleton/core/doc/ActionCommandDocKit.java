@@ -86,10 +86,8 @@ public class ActionCommandDocKit {
                 }
 
                 Collection<JavaClass> classes = javaProjectBuilder.getClasses();
-
                 for (JavaClass javaClass : classes) {
-                    JavaClassDocInfo javaClassDocInfo = new JavaClassDocInfo(javaClass);
-                    javaClassDocInfoMap.put(javaClass.toString(), javaClassDocInfo);
+                    javaClassDocInfoMap.computeIfAbsent(javaClass.toString(), key -> new JavaClassDocInfo(javaClass));
                 }
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
