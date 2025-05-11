@@ -179,7 +179,7 @@ ioGame 在内存占用、启动速度、打包等方面也是优秀的。
 >
 > 
 >
-> ioGame 具备一次编写到处对接的能力，你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue、Angular 等 C#、TypeScript 类型的项目生成交互接口，帮助客户端开发者减少巨大的工作量。
+> ioGame 具备一次编写到处对接的能力，你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue、Angular 等 C#、GDScript、TypeScript 类型的项目生成交互接口，帮助客户端开发者减少巨大的工作量。
 
 | Github                                                       | 描述                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -189,6 +189,7 @@ ioGame 在内存占用、启动速度、打包等方面也是优秀的。
 | [ioGameSdkTsExampleVue](https://github.com/iohao/ioGameSdkTsExampleVue) | 与 [Vue](https://github.com/vuejs/) 互通的一个示例。 Vue、Protobuf、Netty、ioGame、TypeScript、WebSocket |
 | [ioGameSdkTsExampleAngular](https://github.com/iohao/ioGameSdkTsExampleAngular) | 与 [Angular](https://github.com/angular/angular) 互通的一个示例。 Angular、Protobuf、Netty、ioGame、TypeScript、WebSocket |
 | [ioGameSdkTsExampleHtml](https://github.com/iohao/ioGameSdkTsExampleHtml) | 与 [webpack](https://github.com/webpack/webpack) 互通的一个示例。 （webpack: html + ts）、Protobuf、Netty、ioGame、TypeScript、WebSocket |
+| [ioGameSdkGDScriptExampleGodot](https://github.com/iohao/ioGameSdkGDScriptExampleGodot) | 与 [Godot](https://godotengine.org/) 互通的一个示例。 GDScript、Godot、Protobuf、Netty、ioGame、WebSocket |
 
 ---
 
@@ -549,7 +550,7 @@ ioGame 是一个轻量级的网络编程框架，适用于**网络游戏服务�
 > 25. 提供优雅的路由访问权限控制。
 > 26. 具备智能的同进程亲和性。
 > 27. JSR380 验证、断言 + 异常机制 = 更少的维护成本。
-> 28. 一次编写到处对接，提升巨大的生产力，能为各客户端生成可交互的代码；你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue、Angular 等 C#、TypeScript 类型的项目生成交互接口。
+> 28. 一次编写到处对接，提升巨大的生产力，能为各客户端生成可交互的代码；你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue、Angular 等 C#、GDScript、TypeScript 类型的项目生成交互接口。
 >
 
 
@@ -567,6 +568,10 @@ ioGame 在打包、内存占用、启动速度等方面也是优秀的。打 jar
 
 
 在学习成本方面，ioGame 的学习成本非常低，可以说是**零学习成本**，即使没有游戏编程经验，也能轻松上手。开发者只需掌握普通的 java 方法或 webMVC 相关知识，就能用框架开发业务。框架不要求开发者改变编码习惯，而是自身适应开发者的需求。
+
+
+
+与客户端对接方面，能帮助客户端开发者**减少巨大的工作量**。ioGame 具备**一次编写到处对接**的能力，从而做到了你们团队提升巨大的生产力可能性。ioGame 提供了多种语言的 SDK 支持及相关语言的[代码生成](https://www.yuque.com/iohao/game/irth38)，分别是 C#、TypeScript、GDScript。这将意味着，你只需要编写一次 java 业务代码，就能为 Godot、Unity、Laya、CocosCreator、Vue 等前端项目生成交互接口，并同时与这些游戏引擎或现代化的前端框架交互。
 
 
 
