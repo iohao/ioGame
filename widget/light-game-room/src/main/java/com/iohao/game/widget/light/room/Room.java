@@ -18,11 +18,15 @@
  */
 package com.iohao.game.widget.light.room;
 
+import com.iohao.game.action.skeleton.core.flow.FlowContext;
+import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
+import com.iohao.game.common.kit.OperationCode;
 import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.common.kit.concurrent.TaskKit;
 import com.iohao.game.widget.light.room.flow.RoomCreateContext;
 import com.iohao.game.widget.light.room.operation.OperationContext;
 import com.iohao.game.widget.light.room.operation.OperationHandler;
+import com.iohao.game.widget.light.room.operation.OperationService;
 import com.iohao.game.widget.light.room.operation.SimpleOperationHandler;
 
 import java.io.Serializable;
@@ -122,14 +126,18 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      * get 房间状态
      *
      * @return 房间状态
+     * @deprecated 没有代替，请开发者自行定义房间状态
      */
+    @Deprecated
     RoomStatusEnum getRoomStatusEnum();
 
     /**
      * set 房间状态
      *
      * @param roomStatusEnum 房间状态
+     * @deprecated 没有代替，请开发者自行定义房间状态
      */
+    @Deprecated
     void setRoomStatusEnum(RoomStatusEnum roomStatusEnum);
 
     /**
@@ -349,7 +357,9 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      *
      * @param roomStatusEnum 房间状态
      * @return true 是所指定的房间状态
+     * @deprecated 没有代替，请开发者自行定义房间状态
      */
+    @Deprecated
     default boolean isStatus(RoomStatusEnum roomStatusEnum) {
         return this.getRoomStatusEnum() == roomStatusEnum;
     }
@@ -497,16 +507,6 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
         this.getPlayerMap().forEach(action);
     }
 
-    /**
-     * create OperationContext
-     *
-     * @param operationHandler 玩法操作业务接口
-     * @return OperationContext 玩法操作上下文
-     * @since 21.23
-     */
-    default OperationContext ofOperationContext(OperationHandler operationHandler) {
-        return OperationContext.of(this, operationHandler);
-    }
 
     /**
      * Executed in domain events, this method is thread-safe
@@ -527,5 +527,138 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      */
     default void executeDelayTask(Runnable task, long delayMilliseconds) {
         TaskKit.runOnceMillis(() -> this.executeTask(task), delayMilliseconds);
+    }
+
+    /**
+     * setOperationService
+     *
+     * @param operationService operationService
+     * @since 21.28
+     */
+    default void setOperationService(OperationService operationService) {
+    }
+
+    /**
+     * getOperationService
+     *
+     * @return OperationService
+     * @since 21.28
+     */
+    default OperationService getOperationService() {
+        return null;
+    }
+
+    /**
+     * get OperationHandler by OperationCode
+     *
+     * @param operationCode operationCode
+     * @return OperationHandler
+     * @since 21.28
+     */
+    default OperationHandler getOperationHandler(OperationCode operationCode) {
+        return this.getOperationService().getOperationHandler(operationCode);
+    }
+
+    /**
+     * create OperationContext
+     *
+     * @param operationHandler operationHandler
+     * @return OperationContext operationHandler
+     * @since 21.23
+     */
+    default OperationContext ofOperationContext(OperationHandler operationHandler) {
+        return OperationContext.of(this, operationHandler);
+    }
+
+    /**
+     * execute operation
+     *
+     * @param operationCode operationCode
+     * @since 21.28
+     */
+    default void operation(OperationCode operationCode) {
+        var operationHandler = this.getOperationHandler(operationCode);
+        var flowContext = FlowContextKit.ofFlowContext(0);
+        this.operation(operationHandler, flowContext, null);
+    }
+
+    /**
+     * execute operation
+     *
+     * @param operationCode operationCode
+     * @param userId        userId
+     * @since 21.28
+     */
+    default void operation(OperationCode operationCode, long userId) {
+        var operationHandler = this.getOperationHandler(operationCode);
+        var flowContext = FlowContextKit.ofFlowContext(userId);
+        this.operation(operationHandler, flowContext, null);
+    }
+
+    /**
+     * execute operation
+     *
+     * @param operationCode  operationCode
+     * @param userId         userId
+     * @param commandMessage commandMessage
+     * @since 21.28
+     */
+    default void operation(OperationCode operationCode, long userId, Object commandMessage) {
+        var operationHandler = this.getOperationHandler(operationCode);
+        var flowContext = FlowContextKit.ofFlowContext(userId);
+        operation(operationHandler, flowContext, commandMessage);
+    }
+
+    /**
+     * execute operation
+     *
+     * @param operationCode operationCode
+     * @param flowContext   flowContext
+     * @since 21.28
+     */
+    default void operation(OperationCode operationCode, FlowContext flowContext) {
+        OperationHandler operationHandler = this.getOperationHandler(operationCode);
+        this.operation(operationHandler, flowContext, null);
+    }
+
+    /**
+     * execute operation
+     *
+     * @param operationCode  operationCode
+     * @param flowContext    flowContext
+     * @param commandMessage commandMessage
+     * @since 21.28
+     */
+    default void operation(OperationCode operationCode, FlowContext flowContext, Object commandMessage) {
+        OperationHandler operationHandler = this.getOperationHandler(operationCode);
+        this.operation(operationHandler, flowContext, commandMessage);
+    }
+
+    /**
+     * execute operation
+     *
+     * @param operationHandler operationHandler
+     * @param userId           userId
+     * @param commandMessage   commandMessage
+     * @since 21.28
+     */
+    default void operation(OperationHandler operationHandler, long userId, Object commandMessage) {
+        var flowContext = FlowContextKit.ofFlowContext(userId);
+        this.operation(operationHandler, flowContext, commandMessage);
+    }
+
+    /**
+     * execute operation
+     *
+     * @param operationHandler operationHandler
+     * @param flowContext      flowContext
+     * @param commandMessage   commandMessage
+     * @since 21.28
+     */
+    default void operation(OperationHandler operationHandler, FlowContext flowContext, Object commandMessage) {
+        this.ofOperationContext(operationHandler)
+                .setFlowContext(flowContext)
+                .setCommand(commandMessage)
+                .execute();
     }
 }

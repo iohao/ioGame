@@ -21,6 +21,7 @@ package com.iohao.game.widget.light.room;
 import com.iohao.game.action.skeleton.core.commumication.CommunicationAggregationContext;
 import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
 import com.iohao.game.widget.light.room.flow.RoomCreateContext;
+import com.iohao.game.widget.light.room.operation.OperationService;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,6 +64,7 @@ public class SimpleRoom implements Room {
      * </pre>
      */
     final Map<Integer, Long> playerSeatMap = new TreeMap<>();
+    OperationService operationService;
     /** 房间唯一 id */
     long roomId;
     /** 创建房间信息 */
@@ -70,6 +72,7 @@ public class SimpleRoom implements Room {
     /** 房间空间大小: 4 就是4个人上限 (根据规则设置) */
     int spaceSize;
     /** 房间状态 */
+    @Deprecated
     RoomStatusEnum roomStatusEnum = RoomStatusEnum.wait;
     CommunicationAggregationContext aggregationContext;
 
