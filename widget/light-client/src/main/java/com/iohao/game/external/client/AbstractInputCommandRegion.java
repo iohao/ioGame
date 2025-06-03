@@ -105,6 +105,12 @@ public abstract class AbstractInputCommandRegion implements InputCommandRegion {
                 .setTitle(title);
     }
 
+    protected void ofListen(CallbackDelegate callback, CmdInfo cmd, String title) {
+        this.ofListen(cmd.getSubCmd())
+                .setCallback(callback)
+                .setTitle(title);
+    }
+
     private ListenCommand ofListen(int subCmd) {
         CmdInfo cmdInfo = inputCommandCreate.ofCmdInfo(subCmd);
         ListenCommand listenCommand = new ListenCommand(cmdInfo);

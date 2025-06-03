@@ -16,22 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.iohao.game.widget.light.room;
+package com.iohao.game.widget.light.room.flow;
+
+import com.iohao.game.widget.light.room.Player;
 
 /**
- * 房间状态
- *
  * @author 渔民小镇
- * @date 2022-03-31
- * @since 17
- * @deprecated Developers should define room states themselves.
+ * @date 2025-06-03
+ * @since 21.28
  */
-@Deprecated
-public enum RoomStatusEnum {
-    /** 等待 */
-    wait,
-    /** 开始 */
-    start,
-    /** 其他（如结算之类的） */
-    none;
+public interface PlayerCreator {
+    /**
+     * 创建房间内的玩家
+     * <pre>
+     *     延迟到子游戏中实现, 以便适应不同的子游戏规则
+     * </pre>
+     *
+     * @param gameFlowContext 游戏流程上下文
+     * @return 玩家
+     */
+    Player createPlayer(GameFlowContext gameFlowContext);
 }

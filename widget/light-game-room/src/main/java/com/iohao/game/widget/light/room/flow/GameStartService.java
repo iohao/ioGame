@@ -40,7 +40,8 @@ public interface GameStartService {
      *
      * @param gameFlowContext 开始游戏上下文
      */
-    void startGameVerify(GameFlowContext gameFlowContext);
+    default void startGameVerify(GameFlowContext gameFlowContext) {
+    }
 
     /**
      * 游戏开始，会在 {@link GameStartService#startGameVerify(GameFlowContext)} 校验成功后执行。
@@ -51,7 +52,8 @@ public interface GameStartService {
      *
      * @param gameFlowContext 开始游戏上下文
      */
-    void startGameVerifyAfter(GameFlowContext gameFlowContext);
+    default void startGameVerifyAfter(GameFlowContext gameFlowContext) {
+    }
 
     /**
      * 执行游戏开始，内部会调用 {@link GameStartService#startGameVerify(GameFlowContext)}

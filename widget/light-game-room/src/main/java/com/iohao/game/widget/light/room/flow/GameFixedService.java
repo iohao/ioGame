@@ -18,9 +18,6 @@
  */
 package com.iohao.game.widget.light.room.flow;
 
-import com.iohao.game.widget.light.room.Player;
-import com.iohao.game.widget.light.room.Room;
-
 /**
  * 游戏流程 - 相对固定的流程。如，创建房间、创建玩家、进入房间；解散房间、退出房间、玩家准备。
  * <pre>
@@ -37,29 +34,7 @@ import com.iohao.game.widget.light.room.Room;
  * @date 2024-05-15
  * @since 21.8
  */
-public interface GameFixedService {
-    /**
-     * 创建房间, 子类只需要关心房间配置和规则信息
-     * <pre>
-     *     延迟到子游戏中实现, 以便适应不同的子游戏规则
-     * </pre>
-     *
-     * @param createContext 创建房间信息（及玩法规则）
-     * @return 房间
-     */
-    Room createRoom(RoomCreateContext createContext);
-
-    /**
-     * 创建房间内的玩家
-     * <pre>
-     *     延迟到子游戏中实现, 以便适应不同的子游戏规则
-     * </pre>
-     *
-     * @param gameFlowContext 游戏流程上下文
-     * @return 玩家
-     */
-    Player createPlayer(GameFlowContext gameFlowContext);
-
+public interface GameFixedService extends RoomCreator, PlayerCreator {
     /**
      * 进入房间 (重连)
      *
@@ -71,6 +46,7 @@ public interface GameFixedService {
      * 解散房间
      *
      * @param gameFlowContext gameFlowContext
+     * @deprecated non
      */
     default void dissolveRoom(GameFlowContext gameFlowContext) {
     }

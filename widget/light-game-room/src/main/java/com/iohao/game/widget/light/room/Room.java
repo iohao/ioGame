@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.room;
 
+import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
 import com.iohao.game.common.kit.OperationCode;
@@ -126,7 +127,7 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      * get 房间状态
      *
      * @return 房间状态
-     * @deprecated 没有代替，请开发者自行定义房间状态
+     * @deprecated Developers should define room states themselves.
      */
     @Deprecated
     RoomStatusEnum getRoomStatusEnum();
@@ -135,7 +136,7 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      * set 房间状态
      *
      * @param roomStatusEnum 房间状态
-     * @deprecated 没有代替，请开发者自行定义房间状态
+     * @deprecated Developers should define room states themselves.
      */
     @Deprecated
     void setRoomStatusEnum(RoomStatusEnum roomStatusEnum);
@@ -357,7 +358,7 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      *
      * @param roomStatusEnum 房间状态
      * @return true 是所指定的房间状态
-     * @deprecated 没有代替，请开发者自行定义房间状态
+     * @deprecated Developers should define room states themselves.
      */
     @Deprecated
     default boolean isStatus(RoomStatusEnum roomStatusEnum) {
@@ -660,5 +661,56 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
                 .setFlowContext(flowContext)
                 .setCommand(commandMessage)
                 .execute();
+    }
+
+    /**
+     * Broadcast data to a specific user.
+     *
+     * @param cmdInfo cmdInfo
+     * @param data    data
+     * @param userId  userId
+     * @since 21.28
+     */
+    default void broadcastToUser(CmdInfo cmdInfo, Object data, long userId) {
+        if (this.isRobot(userId)) {
+            return;
+        }
+
+        this.getAggregationContext().broadcast(cmdInfo, data, userId);
+    }
+
+    /**
+     * Broadcast data, excluding specified players.
+     *
+     * @param cmdInfo       cmdInfo
+     * @param data          data
+     * @param excludeUserId excludeUserId
+     * @since 21.28
+     */
+    default void broadcastRange(CmdInfo cmdInfo, Object data, long excludeUserId) {
+        if (this.isEmptyRealPlayer()) {
+            return;
+        }
+
+        var playerIdList = this.listRealPlayerId();
+        if (playerIdList.isEmpty()) {
+            return;
+        }
+
+        this.ofEmptyRangeBroadcast()
+                .addUserId(playerIdList, excludeUserId)
+                .setResponseMessage(cmdInfo, data)
+                .execute();
+    }
+
+    /**
+     * Broadcast data
+     *
+     * @param cmdInfo cmdInfo
+     * @param data    data
+     * @since 21.28
+     */
+    default void broadcastRange(CmdInfo cmdInfo, Object data) {
+        broadcastRange(cmdInfo, data, 0);
     }
 }
