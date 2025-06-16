@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - <a href="https://www.yuque.com/iohao/game/wiwpwusmktrv35i4">核心流程处理</a>。
+ * 业务框架 - <a href="https://iohao.github.io/game/docs/core/framework">核心流程处理</a>。
  *
  * @author 渔民小镇
  * @date 2024-08-05

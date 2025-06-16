@@ -45,9 +45,6 @@ import java.util.Objects;
  *     动态属性可以更方便的为 FlowContext 实现属性的扩展，以方便开发者。
  *
  *     扩展属性接口 {@link FlowAttr}
- *
- *     FlowContext 还支持开发者自定义，具体参考
- *     <a href="https://www.yuque.com/iohao/game/zz8xiz#sLySn">文档 - FlowContext</a>
  * </pre>
  *
  * @author 渔民小镇

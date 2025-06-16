@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 扩展模块 - <a href="https://www.yuque.com/iohao/game/tc83ud">压测、模拟客户端请求</a>
+ * 扩展模块 - <a href="https://iohao.github.io/game/docs/extension_module/simulation_client">压测、模拟客户端请求</a>
  *
  * @author 渔民小镇
  * @date 2024-08-08

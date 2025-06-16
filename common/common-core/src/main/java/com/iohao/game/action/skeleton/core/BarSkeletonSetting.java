@@ -71,11 +71,10 @@ public final class BarSkeletonSetting {
      *
      * <pre>
      *     关于启 JSR380 验证规范可以参考这里：
-     *     <a href="https://www.yuque.com/iohao/game/ghng6g">文档 - JSR380</a>
+     *     <a href="https://iohao.github.io/game/docs/core/jsr380">文档 - JSR380</a>
      * </pre>
      * <p>
      * 需要在你的项目 maven 中引入相关 pom
-     * 具体参考 https://www.yuque.com/iohao/game/ghng6g#qRSEu
      * <pre>
      *         &lt;!-- hibernate validator -->
      *         &lt;dependency>

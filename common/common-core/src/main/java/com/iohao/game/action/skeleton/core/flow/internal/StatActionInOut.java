@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 业务框架插件 - <a href="https://www.yuque.com/iohao/game/znapzm1dqgehdyw8">action 调用统计插件</a>
+ * 业务框架插件 - <a href="https://iohao.github.io/game/docs/core_plugin/action_stat">action 调用统计插件</a>
  * <pre>
  *     StatActionInOut 是 action 调用统计插件，可以用来统计各 action 调用时的相关数据，
  *     如 action 的执行次数、总耗时、平均耗时、最大耗时、触发异常次数...等相关数据

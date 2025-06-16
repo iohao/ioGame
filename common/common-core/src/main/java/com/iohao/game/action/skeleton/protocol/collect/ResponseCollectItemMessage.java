@@ -104,7 +104,7 @@ public class ResponseCollectItemMessage implements Serializable {
     }
 
     /**
-     * get String 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get String 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -113,7 +113,7 @@ public class ResponseCollectItemMessage implements Serializable {
     }
 
     /**
-     * get list String 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get list String 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -122,7 +122,7 @@ public class ResponseCollectItemMessage implements Serializable {
     }
 
     /**
-     * get int 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get int 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -131,7 +131,7 @@ public class ResponseCollectItemMessage implements Serializable {
     }
 
     /**
-     * get list int 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get list int 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -140,7 +140,7 @@ public class ResponseCollectItemMessage implements Serializable {
     }
 
     /**
-     * get long 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get long 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -149,7 +149,7 @@ public class ResponseCollectItemMessage implements Serializable {
     }
 
     /**
-     * get list long 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get list long 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -158,7 +158,7 @@ public class ResponseCollectItemMessage implements Serializable {
     }
 
     /**
-     * get boolean 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get boolean 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -167,7 +167,7 @@ public class ResponseCollectItemMessage implements Serializable {
     }
 
     /**
-     * get list boolean 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get list boolean 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */

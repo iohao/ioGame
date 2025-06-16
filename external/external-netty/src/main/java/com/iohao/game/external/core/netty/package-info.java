@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 基于 Netty 的实现 <a href="https://www.yuque.com/iohao/game/ea6geg">游戏对外服</a>
+ * 基于 Netty 的实现 <a href="https://iohao.github.io/game/docs/overall/external_intro">游戏对外服</a>
  * <p>
  * 连接方式的支持、切换
  * <pre>

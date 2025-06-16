@@ -93,7 +93,6 @@ import java.util.*;
  * <pre>
  *     除了可以通过 EventBus 发布事件外，框架还在 {@link FlowContext} 中提供了 EventBus 的相关方法。
  *     FlowContext 内部使用 EventBus 来发布事件。
- *     更多使用示例请阅读 <a href="https://www.yuque.com/iohao/game/zz8xiz#3c306ed1">FlowContext - 分布式事件总线</a>文档
  * </pre>
  *
  * @author 渔民小镇

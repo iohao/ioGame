@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - 系统异常全局统一处理，<a href="https://www.yuque.com/iohao/game/avlo99">断言 + 异常机制 = 清晰简洁的代码</a>
+ * 业务框架 - 系统异常全局统一处理，<a href="https://iohao.github.io/game/docs/manual/assert_game_code">断言 + 异常机制 = 清晰简洁的代码</a>
  * <p>
  * 使用示例
  * <pre>{@code

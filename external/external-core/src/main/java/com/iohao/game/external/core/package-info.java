@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * <a href="https://www.yuque.com/iohao/game/ea6geg">游戏对外服</a> - core
+ * <a href="https://iohao.github.io/game/docs/overall/external_intro">游戏对外服</a> - core
  * <p>
  * 游戏对外服的职责
  * <pre>

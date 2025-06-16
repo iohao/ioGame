@@ -32,7 +32,6 @@ public class ProtoJavaTest {
     public void generate() {
         /*
          * .proto 文件生成
-         * 相关文档 https://www.yuque.com/iohao/game/vpe2t6
          *
          * 运行该类，会在当前项目 target/proto 目录下生成 .proto 文件
          */

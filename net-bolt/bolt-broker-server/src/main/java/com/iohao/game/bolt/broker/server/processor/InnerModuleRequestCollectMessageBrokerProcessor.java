@@ -53,7 +53,7 @@ import java.util.concurrent.CompletableFuture;
  *     是把多个相同逻辑服结果聚合在一起
  *
  *     文档
- *          <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
+ *          <a href="https://iohao.github.io/game/docs/communication/request_multiple_response">request/multiple_response</a>
  * </pre>
  *
  * <pre>

@@ -25,7 +25,7 @@ import com.iohao.game.action.skeleton.core.flow.internal.DebugInOut;
 /**
  * inout 接口
  * <pre>
- *     <a href="https://www.yuque.com/iohao/game/bsgvzglvlr5tenao">插件介绍-文档</a>
+ *     <a href="https://iohao.github.io/game/docs/manual/plugin_intro">插件介绍-文档</a>
  *
  *     {@link ActionCommand} 执行前与执行后的逻辑钩子类
  *

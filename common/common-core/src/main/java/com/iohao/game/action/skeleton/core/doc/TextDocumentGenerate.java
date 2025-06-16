@@ -95,7 +95,7 @@ public final class TextDocumentGenerate implements DocumentGenerate {
 
         String gameDocInfo = """
                 ==================== %s ====================
-                https://www.yuque.com/iohao/game/irth38#cJLdC
+                https://iohao.github.io/game/docs/examples/code_generate
                 """.formatted(title);
 
         this.docContentJoiner.add("generate %s".formatted(FormatTimeKit.format()));

@@ -20,7 +20,7 @@ package com.iohao.game.common.kit.concurrent;
 
 /**
  * 任务监听回调，使用场景有：一次性延时任务、任务调度、轻量可控的延时任务、轻量的定时入库辅助功能 ...等其他扩展场景。
- * <a href="https://www.yuque.com/iohao/game/gzsl8pg0si1l4bu3">相关文档</a>
+ * <a href="https://iohao.github.io/game/docs/kit/task_kit">相关文档</a>
  *
  * <pre>
  *     这些使用场景都有一个共同特点，即监听回调。接口提供了 4 个方法，如下

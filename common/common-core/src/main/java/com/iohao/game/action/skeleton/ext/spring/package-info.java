@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 生态融合（集成扩展）- 在生态融合方面，ioGame 可以很方便的与 <a href="https://www.yuque.com/iohao/game/evkgnz">spring 集成（5 行代码）</a>，从而能方便的使用其相关生态。
+ * 生态融合（集成扩展）- 在生态融合方面，ioGame 可以很方便的与 <a href="https://iohao.github.io/game/docs/manual/integration_spring">spring 集成（4 行代码）</a>，从而能方便的使用其相关生态。
  * <pre>{@code
  * @SpringBootApplication
  * public class DemoSpringApplication {

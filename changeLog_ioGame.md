@@ -1,6 +1,5 @@
 文档与日志
-- [ioGame javadoc api](https://iohao.github.io/javadoc/index.html)
-- [框架版本更新日志 (yuque.com)](https://www.yuque.com/iohao/game/ab15oe)
+- [框架版本更新日志](https://iohao.github.io/game/docs/version_log)
 - [ioGame 真.轻量级网络编程框架 - 在线使用文档 ](https://game.iohao.com/)
 - <a target="_blank" href='https://app.codacy.com/gh/iohao/ioGame/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade'><img src="https://app.codacy.com/project/badge/Grade/4981fff112754686baad7442be998b17" alt="github star"/></a>
 
@@ -796,7 +795,7 @@ https://github.com/iohao/ioGame/releases/tag/21.17
 
 **版本更新汇总**
 
-> - [core] 简化 TraceIdSupplier 默认实现（[全链路调用日志跟踪](https://www.yuque.com/iohao/game/zurusq)）
+> - [core] 简化 TraceIdSupplier 全链路调用日志跟踪默认实现
 > - [core] FlowContext 提供用户（玩家）所关联的用户线程执行器信息及虚拟线程执行器信息方法
 
 ---
@@ -851,7 +850,6 @@ https://github.com/iohao/ioGame/releases/tag/21.16
 
 [#291](https://github.com/iohao/ioGame/issues/291) 增加轻量可控的延时任务
 
- 文档 - [轻量可控的延时任务 (yuque.com)](https://www.yuque.com/iohao/game/nykaacfzg4h1ynii)
 
  for example 
 
@@ -928,7 +926,6 @@ see com.iohao.game.common.kit.time
 
 
 
-模块相关文档 - [redis-lock 分布式锁 (yuque.com)](https://www.yuque.com/iohao/game/wz7af5)
 
 ------
 
@@ -945,9 +942,7 @@ see com.iohao.game.common.kit.time
 </dependency>
 ```
 
-模块相关文档 - [timer-task 任务延时器 (yuque.com)](https://www.yuque.com/iohao/game/niflk0)
 
-类似的代替 [轻量可控的延时任务 (yuque.com)](https://www.yuque.com/iohao/game/nykaacfzg4h1ynii)
 
 ------
 
@@ -959,15 +954,15 @@ see com.iohao.game.common.kit.time
 
 生成相关代码的使用及相关文档
 
-- `ExternalGlobalConfig.accessAuthenticationHook`，相关文档 - [路由访问权限控制 (yuque.com)](https://www.yuque.com/iohao/game/nap5y8p5fevhv99y)
-- IoGameDocumentHelper，相关文档 - [游戏对接文档生成 (yuque.com)](https://www.yuque.com/iohao/game/irth38)
+- `ExternalGlobalConfig.accessAuthenticationHook`，相关文档路由访问权限控制
+- IoGameDocumentHelper，相关文档游戏对接文档生成
 
 for example 
 
 ```java
 public class MyExternalServer {
     public static void extractedAccess() {
-        // https://www.yuque.com/iohao/game/nap5y8p5fevhv99y
+        // https://iohao.github.io/game/docs/external/access_authentication
         var accessAuthenticationHook = ExternalGlobalConfig.accessAuthenticationHook;
         ... 省略部分代码
         // 添加 - 拒绝玩家访问权限的控制
@@ -1026,7 +1021,6 @@ public class TestGenerate {
 
 
 
-SDK 相关请阅读：[SDK&对接文档 (yuque.com)](https://www.yuque.com/iohao/game/mywnvkhemv8wm396)
 
 ------
 
@@ -1164,7 +1158,7 @@ https://github.com/iohao/ioGame/releases/tag/21.13
 
 **[core]**
 
-FlowContext 新增 createRequestCollectExternalMessage 方法，request 与游戏对外服交互。相关使用文档请阅读 [获取游戏对外服的数据与扩展 (yuque.com)](https://www.yuque.com/iohao/game/ivxsw5)
+FlowContext 新增 createRequestCollectExternalMessage 方法，request 与游戏对外服交互。
 
 ```java
 ... ... 省略部分代码
@@ -1242,8 +1236,8 @@ FightPlayerEntity player = gameFlowContext.getPlayer();
 
 在该版本中，我们已经新做了对接文档相关模块；该版本功能更加的强大，使用上也更加的简洁。新版本的对接文档模块，除了能提供文本文档的生成外，还能支持生成与客户端联调的代码、并且是可扩展的。通常，客户端联调代码有：
 
-1. 支持生成 C# 客户端的联调代码，通常用在 Unity、Godot 客户端，具体可阅读 [SDK C# 代码生成](https://www.yuque.com/iohao/game/fgrizbhz4qqzd1vl)。
-2. 支持生成 TypeScript 客户端的联调代码，通常用在 cocos、laya 客户端，具体可阅读 [SDK TypeScript 代码生成](https://www.yuque.com/iohao/game/mywnvkhemv8wm396)。
+1. 支持生成 C# 客户端的联调代码，通常用在 Unity、Godot 客户端
+2. 支持生成 TypeScript 客户端的联调代码，通常用在 cocos、laya 客户端
 
 
 
@@ -1273,7 +1267,6 @@ addDocumentGenerate 是可扩展的，这将意味着开发者可以扩展出 C#
 
 
 
-更多内容请阅读 [游戏对接文档生成 (yuque.com)](https://www.yuque.com/iohao/game/irth38)
 
 
 
@@ -1373,7 +1366,7 @@ https://github.com/iohao/ioGame/releases/tag/21.10
 
 **[core]** [315](https://github.com/iohao/ioGame/issues/315) ResponseMessage 增加协议碎片便捷获取，简化跨服调用时的使用
 
-框架具备[协议碎片](https://www.yuque.com/iohao/game/ieimzn)特性。某些业务中，我们需要跨服访问其他游戏逻辑服，以获取某些业务数据；一些简单的数据，我们可以通过协议碎片来返回，从而避免定义过多的协议。
+框架具备协议碎片特性。某些业务中，我们需要跨服访问其他游戏逻辑服，以获取某些业务数据；一些简单的数据，我们可以通过协议碎片来返回，从而避免定义过多的协议。
 
 
 
@@ -1590,7 +1583,7 @@ https://github.com/iohao/ioGame/releases/tag/21.9
 
 **版本更新汇总**
 
-- [core]  [#294](https://github.com/iohao/ioGame/issues/294) 增加范围内的广播接口 RangeBroadcaster，业务参数支持基础类型（[协议碎片](https://www.yuque.com/iohao/game/ieimzn)）的简化使用
+- [core]  [#294](https://github.com/iohao/ioGame/issues/294) 增加范围内的广播接口 RangeBroadcaster，业务参数支持基础类型的简化使用
 - [core-对接文档]  [#293](https://github.com/iohao/ioGame/issues/293) 广播文档构建器支持对参数的单独描述
 - [light-game-room]   [#297](https://github.com/iohao/ioGame/issues/297) 模拟系统创建房间，RoomCreateContext 的使用
 - [light-game-room]   [#298](https://github.com/iohao/ioGame/issues/298) 模拟系统创建房间，GameFlowContext 的使用
@@ -1636,7 +1629,7 @@ public void test() {
 
 **[core]**
 
-[#294](https://github.com/iohao/ioGame/issues/294) 增加范围内的广播接口 RangeBroadcaster，业务参数支持基础类型（[协议碎片](https://www.yuque.com/iohao/game/ieimzn)）的简化使用
+[#294](https://github.com/iohao/ioGame/issues/294) 增加范围内的广播接口 RangeBroadcaster，业务参数支持基础类型的简化使用
 
 ```java
 public void testRangeBroadcaster(FlowContext flowContext) {
@@ -1746,9 +1739,6 @@ public class DemoFightAction {
 >  下面是生成后的对接文档预览
 
 ```text
-==================== 游戏文档格式说明 ====================
-https://www.yuque.com/iohao/game/irth38#cJLdC
-
 ==================== FightHallAction 大厅（类似地图） ====================
  
 路由: 1 - 2  --- 【进入大厅】 --- 【FightHallAction:94】【enterSquare】
@@ -1780,7 +1770,6 @@ TaskListener 任务监听回调，使用场景有：一次性延时任务、任�
 
 
 
-更多介绍与使用，请阅读 [TaskKit (yuque.com)](https://www.yuque.com/iohao/game/gzsl8pg0si1l4bu3)
 
 ---
 
@@ -1797,7 +1786,7 @@ https://github.com/iohao/ioGame/releases/tag/21.8
 
 - [light-game-room]  [#278](https://github.com/iohao/ioGame/issues/278) 桌游类、房间类游戏的扩展模块，简化与规范化房间管理相关的、开始游戏流程相关的、玩法操作相关的相关扩展
 - [core]  [#290](https://github.com/iohao/ioGame/issues/290) 新增广播文档构建器，简化生成广播对接文档
-- [示例集合整理] 将 SimpleExample（文档中所有功能点的示例）、SpringBootExample（[综合示例](https://www.yuque.com/iohao/game/ruaqza)）、ioGameWeb2Game（[web 转游戏 - 示例理解篇](https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z)）、fxglSimpleGame（[移动同步](https://www.yuque.com/iohao/game/bolt) FXGL + netty）合并成一个示例项目。
+- [示例集合整理] 将 SimpleExample、SpringBootExample、ioGameWeb2Game、fxglSimpleGame FXGL + netty合并成一个示例项目。
 
 ---
 
@@ -1872,18 +1861,9 @@ public class MyLogicServer extends AbstractBrokerClientStartup {
 }
 ```
 
-
-
-其他扩展阅读
-- [游戏对接文档生成 (yuque.com)](https://www.yuque.com/iohao/game/irth38)
-- 示例中关于错误码可阅读 [断言 + 异常机制 = 清晰简洁的代码 (yuque.com)](https://www.yuque.com/iohao/game/avlo99)
-- [解决协议碎片 (yuque.com)](https://www.yuque.com/iohao/game/ieimzn)
-
 下面是生成后的对接文档预览
 
 ```text
-==================== 游戏文档格式说明 ====================
-https://www.yuque.com/iohao/game/irth38#cJLdC
 
 ==================== FightHallAction 大厅（类似地图） ====================
 路由: 1 - 1  --- 【登录】 --- 【FightHallAction:67】【loginVerify】
@@ -1967,7 +1947,6 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
 
 **[light-game-room]**
 
-room 模块相关文档 - [room 桌游、房间类 (yuque.com)](https://www.yuque.com/iohao/game/vtzbih)
 
 [#278](https://github.com/iohao/ioGame/issues/278) 桌游类、房间类游戏的扩展模块，简化与规范化房间管理相关的、开始游戏流程相关的、玩法操作相关的相关扩展
 
@@ -2010,7 +1989,6 @@ light-game-room 房间，是 ioGame 提供的一个轻量小部件 - 可按需�
 
 **room 实战简介**
 
-[room 桌游、房间类实战(yuque.com)](https://www.yuque.com/iohao/game/vtzbih#JX2i1)
 
 文档中，我们基于该 room 模块做一个实战示例，该示例整体比较简单，多名玩家在房间里猜拳（石头、剪刀、布）得分。实战示例包括了前后端，前端使用 [FXGL](https://github.com/almasB/FXGL) 引擎，这样开发者在学习时，只需 JDK 环境就可以了，而不需要安装更多的环境。启动游戏后玩家会将加入大厅（类似地图），多名玩家相互可见，并且玩家可以在大厅内移动。
 
@@ -2022,7 +2000,6 @@ light-game-room 房间，是 ioGame 提供的一个轻量小部件 - 可按需�
 
 [示例集合整理] 
 
-将 SimpleExample（文档中所有功能点的示例）、SpringBootExample（[综合示例](https://www.yuque.com/iohao/game/ruaqza)）、ioGameWeb2Game（[web 转游戏 - 示例理解篇](https://www.yuque.com/iohao/game/gpzmc8vadn4vl70z)）、fxglSimpleGame（[移动同步](https://www.yuque.com/iohao/game/bolt) FXGL + netty）合并成一个示例项目。
 
 
 
@@ -2048,7 +2025,7 @@ https://github.com/iohao/ioGame/releases/tag/21.7
 4. [broker] fix [#277](https://github.com/iohao/ioGame/issues/277) 、[#280](https://github.com/iohao/ioGame/issues/280) 偶现 BrokerClientType 为空
 5. [external]  [#271](https://github.com/iohao/ioGame/issues/271) 游戏对外服 - 内置与可选 handler - log 相关的打印（触发异常、断开连接时）
 6. [room] 简化命名:  AbstractPlayer --> Player、AbstractRoom --> Room
-7. 其他优化：预先生成游戏对外服统一协议的代理类及内置的[协议碎片 (yuque.com)](https://www.yuque.com/iohao/game/ieimzn)相关代理类，优化 action 参数解析
+7. 其他优化：预先生成游戏对外服统一协议的代理类及内置的协议碎片相关代理类，优化 action 参数解析
 
 
 
@@ -2056,7 +2033,6 @@ https://github.com/iohao/ioGame/releases/tag/21.7
 
 [#271](https://github.com/iohao/ioGame/issues/271) 游戏对外服 - 内置与可选 handler - log 相关的打印（触发异常、断开连接时）
 
-其他参考 [内置与可选的 Handler (yuque.com)](https://www.yuque.com/iohao/game/gqvf6cooowpo0ukp)
 
 
 
@@ -2127,9 +2103,9 @@ class com.iohao.game.action.skeleton.core.action.Bird
 
 已经预先生成的代理类有
 
-- 游戏对外服[统一协议 ExternalMessage (yuque.com)](https://www.yuque.com/iohao/game/xeokui)
+- 游戏对外服统一协议 ExternalMessage
 - 所有开发者定义的 action 的方法参数及返回值
-- [解决协议碎片 (yuque.com)](https://www.yuque.com/iohao/game/ieimzn)相关，如 int、int list、String、String list、long、long list、ByteValueList ...等
+- 解决协议碎片相关，如 int、int list、String、String list、long、long list、ByteValueList ...等
 
 
 
@@ -2167,7 +2143,6 @@ https://github.com/iohao/ioGame/releases/tag/21.6
 
 [#264](https://github.com/iohao/ioGame/issues/264) 新增属性值变更监听特性
 
-文档 : [属性监听 (yuque.com)](https://www.yuque.com/iohao/game/uqn84q41f58xe5f0)
 
 属性可添加监听器，当某些属性值的发生变化时，触发监听器。
 
@@ -2327,9 +2302,8 @@ clientUser.getClientUserChannel().closeChannel();
 
 
 
-**获取游戏对外服的数据与扩展相关**
+**访问游戏对外服与扩展相关**
 
-文档 [获取游戏对外服的数据与扩展 (yuque.com)](https://www.yuque.com/iohao/game/ivxsw5)
 
 RequestCollectExternalMessage 增加 userId 字段。
 
@@ -2351,7 +2325,7 @@ public class OtherController {
     @GetMapping("/notice")
     public String notice() {
         log.info("other notice");
-        // 使用协议碎片特性 https://www.yuque.com/iohao/game/ieimzn
+        // 使用协议碎片特性 https://iohao.github.io/game/docs/manual/protocol_fragment
         StringValue data = StringValue.of("other GM web msg " + msgId.incrementAndGet());
         // 模拟请求 : 路由 - 业务数据
         RequestMessage requestMessage = BarMessageKit.createRequestMessage(ExchangeCmd.of(ExchangeCmd.notice), data);
@@ -2650,9 +2624,6 @@ https://github.com/game-town/ioGame/releases/tag/21.3
 
 
 
-文档 [游戏对外服-自定义编解码 (yuque.com)](https://www.yuque.com/iohao/game/ea6geg#Z8pbL)
-
-
 
 重写 WebSocketMicroBootstrapFlow createExternalCodec 方法，用于创建开发者自定义的编解码，其他配置则使用 pipelineCodec 中的默认配置。
 
@@ -2726,21 +2697,19 @@ https://github.com/game-town/ioGame/releases/tag/21.1
 
 ioGame21 首发计划
 
-| 功能支持                                                     | 完成 | 描述                   | issu                                                         |
-| ------------------------------------------------------------ | ---- | ---------------------- | ------------------------------------------------------------ |
-| [游戏对外服开放自定义协议](https://www.yuque.com/iohao/game/xeokui) | ✅    | 功能增强               | [#213](https://github.com/game-town/ioGame/issues/213)       |
-| [游戏对外服缓存](https://www.yuque.com/iohao/game/khg23pvbh59a7spm) | ✅    | 功能增强、性能提升     | [#76](https://github.com/game-town/ioGame/issues/76)         |
-| [FlowContext](https://www.yuque.com/iohao/game/zz8xiz#YQOZ5) 增加通信能力，提供同步、异步、异步回调的便捷使用 | ✅    | 功能增强               | [#235](https://github.com/game-town/ioGame/issues/235)       |
-| 虚拟线程支持;  各逻辑服之间通信阻塞部分，改为使用虚拟线程，避免阻塞业务线程 | ✅    | 功能增强、性能提升     |                                                              |
-| 默认不使用 bolt 线程池，减少上下文切换。  ioGame17：netty --> bolt 线程池 --> ioGame 线程池。  ioGame21： 1. netty --> ioGame 线程池。 2. 部分业务将直接在 netty 线程中消费业务。文档 - [ioGame 线程相关](https://www.yuque.com/iohao/game/eixd6x) | ✅    | 性能提升               |                                                              |
-| [全链路调用日志跟踪](https://www.yuque.com/iohao/game/zurusq)；日志增强 traceId | ✅    | 功能增强               | [#230](https://github.com/game-town/ioGame/issues/230)       |
-| [文档自动生成](https://www.yuque.com/iohao/game/irth38)，改为由开发者调用触发。 | ✅    | 整理                   |                                                              |
-| 移除过期代码                                                 | ✅    | 整理                   | [#237](https://github.com/game-town/ioGame/issues/239)       |
-| [分布式事件总线](https://www.yuque.com/iohao/game/gmxz33)  可以代替 redis pub sub 、 MQ ，并且具备全链路调用日志跟踪，这点是中间件产品做不到的。 | ✅    | 功能增强               | [#228](https://github.com/game-town/ioGame/issues/228)       |
-| 日志库使用新版本 slf4j 2.0                                   | ✅    |                        |                                                              |
-| [Fury](https://fury.apache.org/) 支持。  Fury 是一个基于JIT动态编译和零拷贝的高性能多语言序列化框架 |      | 在计划内，不一定会支持 | 因在发布 ioGame21 时，Fury 还未发布稳定版本，所以这里暂不支持。 |
-| [心跳响应前的回调](https://www.yuque.com/iohao/game/lxqbnb#bJ6T8) | ✅    | 功能增强               | [#234](https://github.com/game-town/ioGame/issues/234)       |
-| [FlowContext](https://www.yuque.com/iohao/game/zz8xiz#HQYmm) 增加更新、获取元信息的便捷使用 | ✅    | 功能增强               | [#236](https://github.com/game-town/ioGame/issues/236)       |
+| 功能支持                                                                                                                                                                                           | 完成 | 描述        | issu                                                   |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----|-----------|--------------------------------------------------------|
+| 游戏对外服开放自定义协议                                                                                                                                                                                   | ✅  | 功能增强      | [#213](https://github.com/game-town/ioGame/issues/213) |
+| 游戏对外服缓存                                                                                                                                                                                        | ✅  | 功能增强、性能提升 | [#76](https://github.com/game-town/ioGame/issues/76)   |
+| FlowContext 增加通信能力，提供同步、异步、异步回调的便捷使用                                                                                                                                                           | ✅  | 功能增强      | [#235](https://github.com/game-town/ioGame/issues/235) |
+| 虚拟线程支持;  各逻辑服之间通信阻塞部分，改为使用虚拟线程，避免阻塞业务线程                                                                                                                                                        | ✅  | 功能增强、性能提升 |                                                        |
+| 默认不使用 bolt 线程池，减少上下文切换。  ioGame17：netty --> bolt 线程池 --> ioGame 线程池。  ioGame21： 1. netty --> ioGame 线程池。 2. 部分业务将直接在 netty 线程中消费业务。 | ✅  | 性能提升      |                                                        |
+| 全链路调用日志跟踪；日志增强 traceId                                                                                                                                                                         | ✅  | 功能增强      | [#230](https://github.com/game-town/ioGame/issues/230) |
+| 移除过期代码                                                                                                                                                                                         | ✅  | 整理        | [#237](https://github.com/game-town/ioGame/issues/239) |
+| 分布式事件总线可以代替 redis pub sub 、 MQ ，并且具备全链路调用日志跟踪，这点是中间件产品做不到的。                                                                                                                                    | ✅  | 功能增强      | [#228](https://github.com/game-town/ioGame/issues/228) |
+| 日志库使用新版本 slf4j 2.0                                                                                                                                                                             | ✅  |           |                                                        |
+| 心跳响应前的回调                                                                                                                                                                                       | ✅  | 功能增强      | [#234](https://github.com/game-town/ioGame/issues/234) |
+| FlowContext 增加更新、获取元信息的便捷使用                                                                                                                                                                    | ✅  | 功能增强      | [#236](https://github.com/game-town/ioGame/issues/236) |
 
 
 
@@ -2764,7 +2733,6 @@ ioGame21 首发计划
 
 [#76](https://github.com/game-town/ioGame/issues/76) 游戏对外服缓存 
 
-更多的介绍，请阅读[游戏对外服缓存](https://www.yuque.com/iohao/game/khg23pvbh59a7spm)文档。
 
 
 
@@ -2785,7 +2753,6 @@ private static void extractedExternalCache() {
 
 [#213](https://github.com/game-town/ioGame/issues/213) 游戏对外服开放自定义协议 
 
-更多的介绍，请阅读[游戏对外服的协议说明](https://www.yuque.com/iohao/game/xeokui)文档。
 
 开发者可自定义游戏对外服协议，用于代替框架默认的 ExternalMessage 公共对外协议。
 
@@ -2793,7 +2760,6 @@ private static void extractedExternalCache() {
 
 [#234](https://github.com/game-town/ioGame/issues/234) 心跳响应前的回调 
 
-更多的介绍，请阅读[心跳设置与心跳钩子](https://www.yuque.com/iohao/game/uueq3i)文档。
 
 在部分场景下，在响应心跳前可添加当前时间，使得客户端与服务器时间同步。
 
@@ -2829,7 +2795,6 @@ public class DemoIdleHook implements SocketIdleHook {
 
 [#235](https://github.com/game-town/ioGame/issues/235) FlowContext 增加通信能力，提供同步、异步、异步回调的便捷使用 
 
-更多的介绍，请阅读 [FlowContext](https://www.yuque.com/iohao/game/zz8xiz) 文档。
 
 ```java
 // 跨服请求 - 同步、异步回调演示
@@ -2875,7 +2840,6 @@ public void broadcast(FlowContext flowContext) {
 
 [#236](https://github.com/game-town/ioGame/issues/236) FlowContext 增加更新、获取元信息的便捷使用 
 
-更多的介绍，请阅读 [FlowContext](https://www.yuque.com/iohao/game/zz8xiz) 文档。
 
 ```java
 void test(MyFlowContext flowContext) {
@@ -2909,7 +2873,6 @@ public class MyFlowContext extends FlowContext {
 
 ##### 线程相关 - 无锁高并发
 
-更多的介绍，请阅读 [ioGame 线程相关](https://www.yuque.com/iohao/game/eixd6x)文档。
 
 
 
@@ -3039,7 +3002,6 @@ void executeVirtual() {
 
 [#230](https://github.com/game-town/ioGame/issues/230) 支持全链路调用日志跟踪；
 
-更多的介绍，请阅读[全链路调用日志跟踪](https://www.yuque.com/iohao/game/zurusq)文档。
 
 
 
@@ -3054,7 +3016,7 @@ IoGameGlobalConfig.openTraceId = true;
 
 
 
-将[全链路调用日志跟踪插件](https://www.yuque.com/iohao/game/xhvpqy) TraceIdInOut 添加到业务框架中，表示该游戏逻辑服需要支持全链路调用日志跟踪。如果游戏逻辑服没有添加该插件的，表示不需要记录日志跟踪。
+将全链路调用日志跟踪插件 TraceIdInOut 添加到业务框架中，表示该游戏逻辑服需要支持全链路调用日志跟踪。如果游戏逻辑服没有添加该插件的，表示不需要记录日志跟踪。
 
 ```java
 BarSkeletonBuilder builder = ...;
@@ -3068,10 +3030,6 @@ builder.addInOut(traceIdInOut);
 ##### 分布式事件总线 - 跨服解耦
 
 [#228](https://github.com/game-town/ioGame/issues/228) 分布式事件总线是新增的通讯方式，可以代替 redis pub sub 、 MQ ...等中间件产品；分布式事件总线具备全链路调用日志跟踪，这点是中间件产品所做不到的。
-
-
-
-文档 - [分布式事件总线](https://www.yuque.com/iohao/game/gmxz33)
 
 
 
@@ -3151,4 +3109,4 @@ public class EmailEventBusSubscriber {
 
 #### ioGame17 - 更新日志
 
-see online [ioGame17 - 更新日志](https://www.yuque.com/iohao/game/ot5yruazqpe3uxre) 
+see online [ioGame17 - 更新日志](https://iohao.github.io/game/docs/archive/version_log_17) 

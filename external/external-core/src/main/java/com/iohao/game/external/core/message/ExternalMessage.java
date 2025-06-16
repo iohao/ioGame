@@ -33,7 +33,7 @@ import java.util.Arrays;
 /**
  * 游戏对外服协议
  * <pre>
- *     参考 <a href="https://www.yuque.com/iohao/game/xeokui">游戏对外服的协议 - 文档</a>
+ *     参考 <a href="https://iohao.github.io/game/docs/manual_high/external_message">游戏对外服的协议 - 文档</a>
  * </pre>
  *
  * @author 渔民小镇

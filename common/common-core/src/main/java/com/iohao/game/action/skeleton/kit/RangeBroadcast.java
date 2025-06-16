@@ -77,7 +77,7 @@ import java.util.Set;
  *                 .execute();
  * }
  * </pre>
- * 此外，还支持协议碎片及 List。关于协议碎片可阅读 <a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片 - 文档</a>
+ * 此外，还支持协议碎片及 List。关于协议碎片可阅读 <a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片 - 文档</a>
  * for example
  * <pre>{@code
  *     // ------------ object ------------

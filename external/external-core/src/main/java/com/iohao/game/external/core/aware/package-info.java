@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 游戏对外服 - core - <a href="https://www.yuque.com/iohao/game/psg1as">Aware</a>
+ * 游戏对外服 - core - <a href="https://iohao.github.io/game/docs/external/aware">Aware</a>
  *
  * @author 渔民小镇
  * @date 2024-09-13

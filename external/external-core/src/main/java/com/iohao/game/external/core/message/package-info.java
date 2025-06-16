@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 游戏对外服 - core - <a href="https://www.yuque.com/iohao/game/xeokui">对外服的协议说明</a>、游戏对外服协议编解码、自定义统一的交互协议
+ * 游戏对外服 - core - <a href="https://iohao.github.io/game/docs/manual_high/external_message">对外服的协议说明</a>、游戏对外服协议编解码、自定义统一的交互协议
  * <p>
  * ExternalMessage
  * <pre>

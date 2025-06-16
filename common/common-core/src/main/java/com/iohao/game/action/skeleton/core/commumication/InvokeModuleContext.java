@@ -38,7 +38,6 @@ import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
  *     InvokeModuleContext invokeModuleContext = BrokerClientHelper.getInvokeModuleContext();
  * }
  * </pre>
- * 参考文档 <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
  * <pre>
  *     默认情况下，跨服且有返回值的 action 调用，则都是同步的；
  *     如果想要使用异步的方式，可以通过 CompletableFuture 或虚拟线程来实现。
@@ -84,11 +83,6 @@ public interface InvokeModuleContext {
 
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
-     * <pre>
-     *     异步无阻塞的方法，因为没有返回值；
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
-     * </pre>
      * example
      * <pre>{@code
      *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
@@ -109,11 +103,6 @@ public interface InvokeModuleContext {
 
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
-     * <pre>
-     *     异步无阻塞的方法，因为没有返回值；
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
-     * </pre>
      * example
      * <pre>{@code
      *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
@@ -132,11 +121,6 @@ public interface InvokeModuleContext {
 
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的方法，并且不需要返回值
-     * <pre>
-     *     异步无阻塞的方法，因为没有返回值；
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gtdrv">游戏逻辑服与单个游戏逻辑服通信请求 - 无返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6#cZfdx">单个逻辑服与单个逻辑服通信请求 - 无返回值（可跨进程）</a>
-     * </pre>
      * example
      * <pre>{@code
      *     // 内部模块通讯上下文，内部模块指的是游戏逻辑服
@@ -153,12 +137,6 @@ public interface InvokeModuleContext {
 
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
-     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
-     * </pre>
      * example
      * <pre>{@code
      *     public void count() {
@@ -189,12 +167,6 @@ public interface InvokeModuleContext {
 
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
-     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
-     * </pre>
      * example
      * <pre>{@code
      *     public void count() {
@@ -220,12 +192,6 @@ public interface InvokeModuleContext {
 
     /**
      * 根据 RequestMessage 来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
-     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
-     * </pre>
      * example
      * <pre>{@code
      *     public void count() {
@@ -254,12 +220,6 @@ public interface InvokeModuleContext {
 
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
-     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
-     * </pre>
      * example
      * <pre>{@code
      *     public void count() {
@@ -289,12 +249,6 @@ public interface InvokeModuleContext {
 
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
-     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
-     * </pre>
      * example
      * <pre>{@code
      *     public void count() {
@@ -320,12 +274,6 @@ public interface InvokeModuleContext {
 
     /**
      * 根据路由信息来请求其他子服务器（其他逻辑服）的数据
-     * <pre>
-     *     相关文档
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#L9TAJ">游戏逻辑服与单个游戏逻辑服通信请求 - 有返回值（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/anguu6">游戏逻辑服之间的交互</a>
-     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
-     * </pre>
      * example
      * <pre>{@code
      *     public void count() {
@@ -348,15 +296,6 @@ public interface InvokeModuleContext {
 
     /**
      * 模块之间的访问，访问【同类型】的多个逻辑服
-     * <pre>
-     *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是逻辑服。
-     *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
-     *
-     *     具体的意思可以参考文档中的说明
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gSdya">游戏逻辑服与同类型多个游戏逻辑服通信请求（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
-     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
-     * </pre>
      * example
      * <pre>{@code
      *     public void count() {
@@ -395,11 +334,6 @@ public interface InvokeModuleContext {
      * <pre>
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
-     *
-     *     具体的意思可以参考文档中的说明
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gSdya">游戏逻辑服与同类型多个游戏逻辑服通信请求（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
-     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
      * </pre>
      * example
      * <pre>{@code
@@ -437,11 +371,6 @@ public interface InvokeModuleContext {
      *     模块A 访问 模块B 的某个方法，因为只有模块B持有这些数据，这里的模块指的是逻辑服。
      *     假设启动了多个模块B，分别是：模块B-1、模块B-2、模块B-3、模块B-4 等。
      *     框架支持访问【同类型】的多个逻辑服，并把多个相同逻辑服结果收集到一起。
-     *
-     *     具体的意思可以参考文档中的说明
-     *     <a href="https://www.yuque.com/iohao/game/nelwuz#gSdya">游戏逻辑服与同类型多个游戏逻辑服通信请求（可跨进程）</a>
-     *     <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
-     *     <a href="https://www.yuque.com/iohao/game/gyxf7aykso8nb7z4">异步小技巧</a>
      * </pre>
      * example
      * <pre>{@code

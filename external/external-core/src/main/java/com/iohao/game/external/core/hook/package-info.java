@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 游戏对外服 - core - 钩子接口相关，<a href="https://www.yuque.com/iohao/game/uueq3i">心跳设置与心跳钩子</a>、<a href="https://www.yuque.com/iohao/game/hv5qqh">用户上线、下线的钩子</a>、<a href="https://www.yuque.com/iohao/game/nap5y8p5fevhv99y">路由访问权限的控制</a> 等。
+ * 游戏对外服 - core - 钩子接口相关，<a href="https://iohao.github.io/game/docs/external/idle">心跳设置与心跳钩子</a>、<a href="https://iohao.github.io/game/docs/external/user_hook">用户上线、下线的钩子</a>、<a href="https://iohao.github.io/game/docs/external/access_authentication">路由访问权限的控制</a> 等。
  *
  * @author 渔民小镇
  * @date 2024-09-13

@@ -40,7 +40,6 @@ import java.io.Serializable;
  *     (具体可阅读 RequestMessageClientProcessor、DefaultRequestMessageClientProcessorHook 相关源码)
  *
  *     customExecutor 则是预留给开发者的，如果框架提供的以上策略都满足不了业务的，可以考虑扩展 RequestMessageClientProcessorHook 接口
- *     关于扩展可以参考 <a href="https://www.yuque.com/iohao/game/eixd6x#KA814">ioGame 线程相关文档</a>
  * </pre>
  *
  * @author 渔民小镇

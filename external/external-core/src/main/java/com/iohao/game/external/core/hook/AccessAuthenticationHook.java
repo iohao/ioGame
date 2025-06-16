@@ -23,7 +23,7 @@ import com.iohao.game.external.core.session.UserSession;
 /**
  * 路由访问权限的控制
  * <pre>
- *     参考 <a href="https://www.yuque.com/iohao/game/nap5y8p5fevhv99y">路由访问权限的控制-文档</a>
+ *     参考 <a href="https://iohao.github.io/game/docs/external/access_authentication">路由访问权限的控制-文档</a>
  * </pre>
  *
  * @author 渔民小镇

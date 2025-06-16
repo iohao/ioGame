@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 游戏对外服 - broker client - <a href="https://www.yuque.com/iohao/game/ivxsw5">获取游戏对外服的数据与扩展 - 接口</a>
+ * 游戏对外服 - broker client - <a href="https://iohao.github.io/game/docs/communication/external_biz_region">访问游戏对外服与扩展 - 接口</a>
  * @author 渔民小镇
  * @date 2024-10-15
  */

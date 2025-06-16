@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  *     // 开发者根据游戏业务定制的操作数据
  *     .setCommand(command);
  *
- * // 领域事件相关，https://www.yuque.com/iohao/game/gmfy1k
+ * // 领域事件相关，https://iohao.github.io/game/docs/extension_module/domain_event
  * DomainEventPublish.send(operationContext);
  * }
  * </pre>

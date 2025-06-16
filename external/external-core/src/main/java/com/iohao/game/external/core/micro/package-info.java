@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 游戏对外服 - core micro <a href="https://www.yuque.com/iohao/game/wotnhl">设计</a>，负责与外部通信，与真实用户（玩家）建立连接
+ * 游戏对外服 - 负责与外部通信，与真实用户（玩家）建立连接
  *
  * <pre>
  *     MicroBootstrap 接口

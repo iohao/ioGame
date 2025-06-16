@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * JSR380 - Java Bean Validation，<a href="https://www.yuque.com/iohao/game/ghng6g">开启 JSR380 验证规范</a>
+ * JSR380 - Java Bean Validation，<a href="https://iohao.github.io/game/docs/core/jsr380">开启 JSR380 验证规范</a>
  *
  * @author 渔民小镇
  * @date 2024-08-22

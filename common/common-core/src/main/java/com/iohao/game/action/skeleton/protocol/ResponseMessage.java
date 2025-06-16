@@ -73,7 +73,7 @@ public final class ResponseMessage extends BarMessage {
     }
 
     /**
-     * get String 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get String 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -82,7 +82,7 @@ public final class ResponseMessage extends BarMessage {
     }
 
     /**
-     * get list String 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get list String 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -91,7 +91,7 @@ public final class ResponseMessage extends BarMessage {
     }
 
     /**
-     * get int 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get int 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -100,7 +100,7 @@ public final class ResponseMessage extends BarMessage {
     }
 
     /**
-     * get list int 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get list int 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -109,7 +109,7 @@ public final class ResponseMessage extends BarMessage {
     }
 
     /**
-     * get long 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get long 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -118,7 +118,7 @@ public final class ResponseMessage extends BarMessage {
     }
 
     /**
-     * get list long 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get list long 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -127,7 +127,7 @@ public final class ResponseMessage extends BarMessage {
     }
 
     /**
-     * get boolean 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get boolean 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */
@@ -136,7 +136,7 @@ public final class ResponseMessage extends BarMessage {
     }
 
     /**
-     * get list boolean 业务数据。<a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片</a>
+     * get list boolean 业务数据。<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片</a>
      *
      * @return 业务数据
      */

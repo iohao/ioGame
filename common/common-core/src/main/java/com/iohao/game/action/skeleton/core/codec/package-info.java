@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - 业务数据的编解码器，<a href="https://www.yuque.com/iohao/game/uq2zrltrc7to27bt">扩展协议</a>。
+ * 业务框架 - 业务数据的编解码器，<a href="https://iohao.github.io/game/docs/manual/data_protocol">扩展协议</a>。
  * <br/>
  * 简介
  * <pre>
@@ -40,7 +40,7 @@
  * <pre>
  *     1. 即使是 java 新手也能看得明白，而通过 DSL 生成的 java 代码，是不可能这么清晰的。
  *     2. 同时，java 类定义的协议既能支持 protobuf ，又能支持 json ，且开发者无需做任何变更，这点是 DSL 做不到的。
- *     3. 还能支持 <a href="https://www.yuque.com/iohao/game/ghng6g">JSR380 验证</a>，在属性上添加 JSR380 相关注解即可，这点是 DSL 做不到的。
+ *     3. 还能支持 <a href="https://iohao.github.io/game/docs/core/jsr380">JSR380 验证</a>，在属性上添加 JSR380 相关注解即可，这点是 DSL 做不到的。
  *     4. 此外，还能在协议类中添加一些自定义方法，这点是 DSL 做不到的。
  *     5. 减少学习成本，不需要学习各种 DSL 相关库的语法。
  *

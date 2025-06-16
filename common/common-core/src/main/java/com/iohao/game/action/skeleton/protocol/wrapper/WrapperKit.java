@@ -24,7 +24,7 @@ import java.util.*;
 
 /**
  * 装箱、拆箱包装工具
- * <a href="https://www.yuque.com/iohao/game/ieimzn">解决协议碎片</a>
+ * <a href="https://iohao.github.io/game/docs/manual/protocol_fragment">解决协议碎片</a>
  *
  * @author 渔民小镇
  * @date 2023-06-09

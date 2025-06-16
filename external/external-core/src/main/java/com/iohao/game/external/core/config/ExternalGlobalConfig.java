@@ -35,9 +35,6 @@ public class ExternalGlobalConfig {
 
     /**
      * 访问验证钩子接口
-     * <pre>
-     *     使用文档 <a href="https://www.yuque.com/iohao/game/tywkqv#qEvtB">路由访问权限的控制</a>
-     * </pre>
      */
     public AccessAuthenticationHook accessAuthenticationHook = new DefaultAccessAuthenticationHook();
     /** 游戏对外服路由缓存 */

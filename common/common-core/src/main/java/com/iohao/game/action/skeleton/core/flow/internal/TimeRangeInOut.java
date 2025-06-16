@@ -38,7 +38,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * 业务框架插件 - <a href="https://www.yuque.com/iohao/game/umzk2d6lovo4n9gz">各时间段调用统计插件</a>
+ * 业务框架插件 - <a href="https://iohao.github.io/game/docs/core_plugin/action_time_range">各时间段调用统计插件</a>
  *
  * <pre>{@code
  *     BarSkeletonBuilder builder = ...;

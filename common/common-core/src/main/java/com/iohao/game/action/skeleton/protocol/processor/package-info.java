@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - 内部协议 - <a href="https://www.yuque.com/iohao/game/idl1wm">玩家动态绑定游戏逻辑服</a>
+ * 业务框架 - 内部协议 - <a href="https://iohao.github.io/game/docs/manual/binding_logic_server">玩家动态绑定游戏逻辑服</a>
  * <p>
  * 简介
  * <pre>

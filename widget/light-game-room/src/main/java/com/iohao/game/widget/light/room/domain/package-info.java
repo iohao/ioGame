@@ -18,10 +18,10 @@
  */
 /**
  * 扩展模块 - 桌游类、房间类游戏 - 规避并发的领域事件。
- * see <a href="https://www.yuque.com/iohao/game/gmfy1k">文档 - domain-event 领域事件</a>
+ * see <a href="https://iohao.github.io/game/docs/extension_module/domain_event">文档 - domain-event 领域事件</a>
  * 在使用 room 模块的领域事件时，还需要做以下配置。将领域事件集成到 room 模块中。
  * <p>
- * 启动项. see <a href="https://www.yuque.com/iohao/game/dpwe6r6sqwwtrh1q">文档 - Runner 扩展机制</a>
+ * 启动项. see <a href="https://iohao.github.io/game/docs/core/runner">文档 - Runner 扩展机制</a>
  * <pre>{@code
  * public class MyRoomDomainRunner implements Runner {
  *     @Override
@@ -55,7 +55,7 @@
  *     // 开发者根据游戏业务定制的操作数据
  *     .setCommand(command);
  *
- * // 领域事件相关，https://www.yuque.com/iohao/game/gmfy1k
+ * // 领域事件相关，https://iohao.github.io/game/docs/extension_module/domain_event
  * DomainEventPublish.send(operationContext);
  * }
  * </pre>

@@ -63,8 +63,8 @@ public class IoGameGlobalConfig {
      *         表示在【游戏网关】中找不到指定的【游戏对外服】时，则不管了。
      *
      *     支持的通讯方式场景
-     *         <a href="https://www.yuque.com/iohao/game/qv4qfo">广播、推送</a>
-     *         <a href="https://www.yuque.com/iohao/game/ivxsw5">获取游戏对外服的数据与扩展</a>
+     *         广播
+     *         游戏对外服的数据与扩展
      * </pre>
      * 另一种叙述版本
      * <pre>

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - <a href="https://www.yuque.com/iohao/game/vfnqpum6hrt23mnf">动态属性</a>。
+ * 业务框架 - 动态属性
  *
  * @author 渔民小镇
  * @date 2024-08-05

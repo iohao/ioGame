@@ -21,7 +21,7 @@
  * <p>
  * 相关文档
  * <pre>
- *     <a href="https://www.yuque.com/iohao/game/gzsl8pg0si1l4bu3">TaskKit 任务相关</a>
+ *     <a href="https://iohao.github.io/game/docs/kit/task_kit">TaskKit 任务相关</a>
  * </pre>
  *
  * @author 渔民小镇

@@ -91,7 +91,6 @@ public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
     }
 
     protected WebSocketVerifyHandler createVerifyHandler() {
-        // ws verify 验证; 参考 https://www.yuque.com/iohao/game/tb1126szmgfu6u55
         return null;
     }
 

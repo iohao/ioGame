@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - <a href="https://www.yuque.com/iohao/game/irth38">代码生成</a>，你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue 等前端项目生成交互接口。
+ * 业务框架 - <a href="https://iohao.github.io/game/docs/examples/code_generate">代码生成</a>，你只需要编写一次 java 代码，就能为 Unity、Godot、CocosCreator、Laya、Vue 等前端项目生成交互接口。
  * <pre>{@code
  * public static void main(String[] args) {
  *     // 添加枚举错误码 class，用于生成错误码相关信息

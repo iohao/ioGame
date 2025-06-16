@@ -23,10 +23,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 变更用户 id
- * <pre>
- *     <a href="https://www.yuque.com/iohao/game/tywkqv">用户连接登录编写 文档</a>
- * </pre>
+ * UserIdSettingKit
  *
  * @author 渔民小镇
  * @date 2022-01-19

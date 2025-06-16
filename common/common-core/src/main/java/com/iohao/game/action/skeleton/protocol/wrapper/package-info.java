@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - 内部协议 - <a href="https://www.yuque.com/iohao/game/ieimzn">装箱、拆箱包装；解决协议碎片</a>
+ * 业务框架 - 内部协议 - <a href="https://iohao.github.io/game/docs/manual/protocol_fragment">装箱、拆箱包装；解决协议碎片</a>
  * 主要解决两个问题：碎片协议、使用时可自动装箱和拆箱。
  * <p>
  * for example

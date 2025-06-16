@@ -1,4 +1,4 @@
-参考文档 [游戏对外服使用](https://www.yuque.com/iohao/game/ea6geg)
+参考文档 [游戏对外服使用](https://iohao.github.io/game/docs/overall/external_intro)
 
 
 ![image](https://github.com/iohao/ioGame/assets/26356013/72ba5121-204b-43a7-85b3-3db051725f02)

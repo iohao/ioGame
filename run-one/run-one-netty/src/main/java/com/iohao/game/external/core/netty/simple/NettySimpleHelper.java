@@ -59,7 +59,7 @@ public class NettySimpleHelper {
      *
      *      包括游戏业务文档的生成
      *
-     *      <a href="https://www.yuque.com/iohao/game/ywe7uc">tcp 连接示例文档</a>
+     *      <a href="https://iohao.github.io/game/docs/external/external_tcp">tcp 连接示例文档</a>
      * </pre>
      *
      * @param externalPort 游戏对外服端口

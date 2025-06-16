@@ -27,7 +27,7 @@ import org.slf4j.MDC;
 import java.util.Objects;
 
 /**
- * 业务框架插件 - <a href="https://www.yuque.com/iohao/game/xhvpqy">全链路调用日志跟踪插件</a>
+ * 业务框架插件 - <a href="https://iohao.github.io/game/docs/core_plugin/action_trace">全链路调用日志跟踪插件</a>
  *
  * @author 渔民小镇
  * @date 2023-12-20

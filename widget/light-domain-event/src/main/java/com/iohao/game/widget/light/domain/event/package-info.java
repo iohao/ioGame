@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 扩展模块 - <a href="https://www.yuque.com/iohao/game/gmfy1k">domain-event 领域事件</a> - 可为你的系统实现类似 Guava-EventBus、Spring 事件驱动模型 ApplicationEvent、业务解耦、规避并发、不阻塞主线程...等，各种浪操作。
+ * 扩展模块 - <a href="https://iohao.github.io/game/docs/extension_module/domain_event">domain-event 领域事件</a> - 可为你的系统实现类似 Guava-EventBus、Spring 事件驱动模型 ApplicationEvent、业务解耦、规避并发、不阻塞主线程...等，各种浪操作。
  * <p>
  * 介绍
  * <pre>

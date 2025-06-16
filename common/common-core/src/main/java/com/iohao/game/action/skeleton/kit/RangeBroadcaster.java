@@ -73,7 +73,7 @@ import java.util.Set;
  *                 .execute();
  * }
  * </pre>
- * 此外，还支持协议碎片及 List。关于协议碎片可阅读 <a href="https://www.yuque.com/iohao/game/ieimzn">协议碎片 - 文档</a>
+ * 此外，还支持协议碎片及 List。关于协议碎片可阅读 <a href="https://iohao.github.io/game/docs/manual/protocol_fragment">协议碎片 - 文档</a>
  * for example
  * <pre>{@code
  *     // ------------ object ------------
@@ -252,7 +252,7 @@ public interface RangeBroadcaster {
     }
 
     /**
-     * 设置响应的广播数据。业务数据会使用 {@link ByteValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
+     * 设置响应的广播数据。业务数据会使用 {@link ByteValueList} 来包装（<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">.协议碎片</a>）。
      *
      * @param cmdInfo 路由
      * @param bizData 业务数据
@@ -264,7 +264,7 @@ public interface RangeBroadcaster {
     }
 
     /**
-     * 设置响应的广播数据。业务数据会使用 {@link IntValue} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
+     * 设置响应的广播数据。业务数据会使用 {@link IntValue} 来包装（<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">.协议碎片</a>）。
      *
      * @param cmdInfo 路由
      * @param bizData 业务数据
@@ -276,7 +276,7 @@ public interface RangeBroadcaster {
     }
 
     /**
-     * 设置响应的广播数据。业务数据会使用 {@link IntValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
+     * 设置响应的广播数据。业务数据会使用 {@link IntValueList} 来包装（<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">.协议碎片</a>）。
      *
      * @param cmdInfo 路由
      * @param bizData 业务数据
@@ -288,7 +288,7 @@ public interface RangeBroadcaster {
     }
 
     /**
-     * 设置响应的广播数据。业务数据会使用 {@link LongValue} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
+     * 设置响应的广播数据。业务数据会使用 {@link LongValue} 来包装（<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">.协议碎片</a>）。
      *
      * @param cmdInfo 路由
      * @param bizData 业务数据
@@ -300,7 +300,7 @@ public interface RangeBroadcaster {
     }
 
     /**
-     * 设置响应的广播数据。业务数据会使用 {@link LongValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
+     * 设置响应的广播数据。业务数据会使用 {@link LongValueList} 来包装（<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">.协议碎片</a>）。
      *
      * @param cmdInfo 路由
      * @param bizData 业务数据
@@ -312,7 +312,7 @@ public interface RangeBroadcaster {
     }
 
     /**
-     * 设置响应的广播数据。业务数据会使用 {@link StringValue} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
+     * 设置响应的广播数据。业务数据会使用 {@link StringValue} 来包装（<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">.协议碎片</a>）。
      *
      * @param cmdInfo 路由
      * @param bizData 业务数据
@@ -324,7 +324,7 @@ public interface RangeBroadcaster {
     }
 
     /**
-     * 设置响应的广播数据。业务数据会使用 {@link StringValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
+     * 设置响应的广播数据。业务数据会使用 {@link StringValueList} 来包装（<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">.协议碎片</a>）。
      *
      * @param cmdInfo 路由
      * @param bizData 业务数据
@@ -336,7 +336,7 @@ public interface RangeBroadcaster {
     }
 
     /**
-     * 设置响应的广播数据。业务数据会使用 {@link BoolValue} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
+     * 设置响应的广播数据。业务数据会使用 {@link BoolValue} 来包装（<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">.协议碎片</a>）。
      *
      * @param cmdInfo 路由
      * @param bizData 业务数据
@@ -348,7 +348,7 @@ public interface RangeBroadcaster {
     }
 
     /**
-     * 设置响应的广播数据。业务数据会使用 {@link BoolValueList} 来包装（<a href="https://www.yuque.com/iohao/game/ieimzn">.协议碎片</a>）。
+     * 设置响应的广播数据。业务数据会使用 {@link BoolValueList} 来包装（<a href="https://iohao.github.io/game/docs/manual/protocol_fragment">.协议碎片</a>）。
      *
      * @param cmdInfo 路由
      * @param bizData 业务数据

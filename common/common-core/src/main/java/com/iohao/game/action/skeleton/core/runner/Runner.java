@@ -21,7 +21,7 @@ package com.iohao.game.action.skeleton.core.runner;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 
 /**
- * Runner 机制，会在逻辑服与 Broker（游戏网关）建立连接之前（onStart）、之后（onStartAfter）分别触发一次。<a href="https://www.yuque.com/iohao/game/dpwe6r6sqwwtrh1q">相关文档</a>
+ * Runner 机制，会在逻辑服与 Broker（游戏网关）建立连接之前（onStart）、之后（onStartAfter）分别触发一次。<a href="https://iohao.github.io/game/docs/core/runner">相关文档</a>
  * <pre>
  *     1.在逻辑服与 Broker（游戏网关）建立连接之前调用一次，触发 {@link Runner#onStart(BarSkeleton)} 方法。
  *     2.在逻辑服将信息注册到 Broker（游戏网关）后调用一次，触发 {@link Runner#onStartAfter(BarSkeleton)} 方法。

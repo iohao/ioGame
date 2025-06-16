@@ -85,7 +85,6 @@ public class WebSocketVerifyHandler extends ChannelInboundHandlerAdapter
          * 可以先在这里保存一份想要传递的数据。
          */
 
-        // 参考文档 https://www.yuque.com/iohao/game/tb1126szmgfu6u55
         return true;
     }
 

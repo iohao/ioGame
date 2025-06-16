@@ -22,7 +22,7 @@ import com.iohao.game.external.core.session.UserSession;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 
 /**
- * UserHook 钩子接口，上线时、下线时会触发; <a href="https://www.yuque.com/iohao/game/hv5qqh">用户上线、下线的钩子-文档</a>
+ * UserHook 钩子接口，上线时、下线时会触发; <a href="https://iohao.github.io/game/docs/external/user_hook">用户上线、下线的钩子-文档</a>
  *
  * <pre>
  *     实际上需要真正登录过，才会触发 ：into 和 quit 方法

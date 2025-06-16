@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - <a href="https://www.yuque.com/iohao/game/bsgvzglvlr5tenao">业务框架插件</a>。
+ * 业务框架 - <a href="https://iohao.github.io/game/docs/manual/plugin_intro">业务框架插件</a>。
  * <pre>
  *     ioGame ActionMethodInOut 是业务框架的插件机制，通过这个接口你可以做很多事情，这要看你的想象力有多丰富了。比如：
  *     1. 开发者想记录执行时间比较长的 action 业务

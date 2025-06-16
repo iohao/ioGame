@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 扩展模块 - <a href="https://www.yuque.com/iohao/game/vtzbih">桌游类、房间类游戏</a>，light-game-room + 领域事件 + 内置 Kit  = 轻松搞定桌游类游戏
+ * 扩展模块 - <a href="https://iohao.github.io/game/docs/extension_module/room">桌游类、房间类游戏</a>，light-game-room + 领域事件 + 内置 Kit  = 轻松搞定桌游类游戏
  * <p>
  * 介绍
  * <pre>

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - <a href="https://www.yuque.com/iohao/game/dpwe6r6sqwwtrh1q">Runner 扩展机制</a>，该机制类似于 Spring CommandLineRunner 的启动项，它能够在逻辑服务器启动之后调用一次 Runner 接口实现类，让开发者能够通过实现 Runner 接口来扩展自身的系统。
+ * 业务框架 - <a href="https://iohao.github.io/game/docs/core/runner">Runner 扩展机制</a>，该机制类似于 Spring CommandLineRunner 的启动项，它能够在逻辑服务器启动之后调用一次 Runner 接口实现类，让开发者能够通过实现 Runner 接口来扩展自身的系统。
  * <p>
  * Runner 机制，会在逻辑服与 Broker（游戏网关）建立连接之前、之后分别触发一次对应的方法。
  * <p>

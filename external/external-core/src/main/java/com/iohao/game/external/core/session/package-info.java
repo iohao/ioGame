@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 游戏对外服 - core <a href="https://www.yuque.com/iohao/game/wg6lk7">UserSessions 和 UserSession</a>，UserSessions 是管理所有玩家连接的管理器，UserSession 玩家连接对象，与连接是 1:1 的关系，可取到对应的 userId、channel 等信息。
+ * 游戏对外服 - UserSessions
  *
  * @author 渔民小镇
  * @date 2024-09-13

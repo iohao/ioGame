@@ -21,13 +21,7 @@ package com.iohao.game.action.skeleton.core;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 
 /**
- * action 类对象创建工厂
- * <pre>
- *     负责创建 action 类的实例化对象
- *
- *     对于 action 的解释可以参考这里:
- *     <a href="https://www.yuque.com/iohao/game/sqcevl">Action 相关文档</a>
- * </pre>
+ * action 类对象创建工厂，负责创建 action 类的实例化对象
  *
  * @param <T> t
  * @author 渔民小镇

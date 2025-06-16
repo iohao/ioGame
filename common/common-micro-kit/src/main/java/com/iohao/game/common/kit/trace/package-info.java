@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 工具相关 - Trace 相关工具，相关参考<a href="https://www.yuque.com/iohao/game/zurusq">全链路调用日志跟踪</a>。
+ * 工具相关 - Trace 相关工具，相关参考<a href="https://iohao.github.io/game/docs/manual/trace">全链路调用日志跟踪</a>。
  *
  * @author 渔民小镇
  * @date 2024-08-22

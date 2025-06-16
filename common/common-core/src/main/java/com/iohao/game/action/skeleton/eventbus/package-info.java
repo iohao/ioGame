@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * <a href="https://www.yuque.com/iohao/game/gmxz33">分布式事件总线相关文档</a>，分布式事件总线与 Guava EventBus、Redis 发布订阅、MQ 等产品类似。
+ * <a href="https://iohao.github.io/game/docs/communication/event_bus">分布式事件总线相关文档</a>，分布式事件总线与 Guava EventBus、Redis 发布订阅、MQ 等产品类似。
  * <p>
  * 使用场景与简介
  * <pre>

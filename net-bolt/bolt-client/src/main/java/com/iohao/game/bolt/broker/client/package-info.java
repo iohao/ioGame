@@ -21,8 +21,8 @@
  * <p>
  * 相关文档介绍
  * <pre>
- *     <a href="https://www.yuque.com/iohao/game/wotnhl">游戏对外服</a>
- *     <a href="https://www.yuque.com/iohao/game/ensevx">游戏逻辑服</a>
+ *     <a href="https://iohao.github.io/game/docs/overall/external_intro">游戏对外服</a>
+ *     <a href="https://iohao.github.io/game/docs/overall/logic_intro">游戏逻辑服</a>
  * </pre>
  *
  * @author 渔民小镇

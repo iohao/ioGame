@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - <a href="https://www.yuque.com/iohao/game/wiwpwusmktrv35i4">业务框架简介</a>。
+ * 业务框架 - <a href="https://iohao.github.io/game/docs/core/framework">业务框架简介</a>。
  * <pre>
  *     如果说  sofa-bolt 是为了让 Java 程序员能将更多的精力放在基于网络通信的业务逻辑实现上，而业务框架正是解决业务逻辑如何方便实现这一问题上。
  *     业务框架是游戏框架的一部分，职责是简化程序员的业务逻辑实现，业务框架使程序员能够快速的开始编写游戏业务。

@@ -25,10 +25,6 @@ import java.util.Objects;
 
 /**
  * 业务框架 异常消息
- * <pre>
- *     关于异常机制的解释可以参考这里:
- *     <a href="https://www.yuque.com/iohao/game/avlo99">断言 + 异常机制 = 清晰简洁的代码</a>
- * </pre>
  *
  * @author 渔民小镇
  * @date 2021-12-20

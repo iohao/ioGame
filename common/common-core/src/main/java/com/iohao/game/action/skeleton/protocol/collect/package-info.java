@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 业务框架 - 内部协议 - <a href="https://www.yuque.com/iohao/game/rf9rb9">请求同类型多个逻辑服通信结果</a>
+ * 业务框架 - 内部协议 - <a href="https://iohao.github.io/game/docs/communication/request_multiple_response">请求同类型多个逻辑服通信结果</a>
  * <p>
  * 场景介绍
  * <pre>

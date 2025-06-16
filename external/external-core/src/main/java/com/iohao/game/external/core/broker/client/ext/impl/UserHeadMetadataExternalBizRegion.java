@@ -45,9 +45,6 @@ import java.io.Serializable;
  *     注意事项：
  *         需要玩家是在线的，也就是接入了其中一个游戏对外服的。
  *
- *     其他参考：
- *         模拟玩家请求 <a href="https://www.yuque.com/iohao/game/uwxeg2uk86mu27mp">GM 后台与逻辑服交互 - 文档</a>
- *
  *     使用方式
  * </pre>
  *

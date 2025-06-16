@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * 业务框架插件 - <a href="https://www.yuque.com/iohao/game/zoqabk4gez3bckis">业务线程监控插件</a>
+ * 业务框架插件 - <a href="https://iohao.github.io/game/docs/core_plugin/action_thread_monitor">业务线程监控插件</a>
  * <p>
  * for example
  * <pre>{@code

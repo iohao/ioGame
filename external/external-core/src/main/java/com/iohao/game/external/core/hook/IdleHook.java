@@ -24,7 +24,7 @@ import com.iohao.game.external.core.session.UserSession;
 /**
  * 心跳相关
  * <pre>
- *     参考 <a href="https://www.yuque.com/iohao/game/uueq3i">心跳设置与心跳钩子-文档</a>
+ *     参考 <a href="https://iohao.github.io/game/docs/external/idle">心跳设置与心跳钩子-文档</a>
  * </pre>
  *
  * @author 渔民小镇

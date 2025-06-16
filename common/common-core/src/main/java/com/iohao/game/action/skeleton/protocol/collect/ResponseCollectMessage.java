@@ -37,8 +37,7 @@ import java.util.List;
  *     是把多个相同逻辑服结果聚合在一起
  *
  *     具体的意思可以参考文档中的说明：
- *     https://www.yuque.com/iohao/game/nelwuz#gSdya
- *     https://www.yuque.com/iohao/game/rf9rb9
+ *     <a href="https://iohao.github.io/game/docs/communication/request_multiple_response">request_multiple_response</a>
  * </pre>
  *
  * @author 渔民小镇

@@ -47,7 +47,7 @@ import java.util.stream.Stream;
  *     游戏逻辑服访问游戏对外服，因为只有游戏对外服持有这些数据
  *     把多个游戏对外服的结果聚合在一起
  *
- *     <a href="https://www.yuque.com/iohao/game/ivxsw5">获取游戏对外服的数据与扩展 - 文档</a>
+ *     <a href="https://iohao.github.io/game/docs/communication/external_biz_region">访问游戏对外服与扩展</a>
  * </pre>
  *
  * @author 渔民小镇

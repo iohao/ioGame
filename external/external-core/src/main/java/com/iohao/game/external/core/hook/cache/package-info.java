@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * 游戏对外服 - core - <a href="https://www.yuque.com/iohao/game/khg23pvbh59a7spm">游戏对外服缓存</a>
+ * 游戏对外服 - core - <a href="https://iohao.github.io/game/docs/external/cache">游戏对外服缓存</a>
  *
  * <pre>
  *     我们对业务数据做缓存时，一般的做法是通过 Caffeine、cache2k、ehcache、JetCache 等专业的缓存库，将业务数据缓存在游戏逻辑服中，以实现对业务数据的缓存。

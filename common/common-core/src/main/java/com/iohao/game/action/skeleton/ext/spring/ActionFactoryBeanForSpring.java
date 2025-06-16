@@ -33,9 +33,6 @@ import java.util.Objects;
  * spring集成
  * <pre>
  *     把 action 交由 spring 管理
- *
- *     对于 action 的解释可以参考这里:
- *     <a href="https://www.yuque.com/iohao/game/sqcevl">action</a>
  * </pre>
  *
  * @author 渔民小镇

@@ -39,7 +39,7 @@ import java.util.*;
  * <pre>
  *     关于业务框架的构建器可以参考这里：
  *
- *     <a href="https://www.yuque.com/iohao/game/qiiaq3">文档-业务框架的构建器</a>
+ *     <a href="https://iohao.github.io/game/docs/core/framework">文档-业务框架的构建器</a>
  * </pre>
  *
  * @author 渔民小镇

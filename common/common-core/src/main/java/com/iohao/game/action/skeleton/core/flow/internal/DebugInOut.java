@@ -44,7 +44,7 @@ import java.util.function.BiConsumer;
 
 
 /**
- * 业务框架插件 - <a href="https://www.yuque.com/iohao/game/pf3sx0">控制台输出插件</a>。
+ * 业务框架插件 - <a href="https://iohao.github.io/game/docs/core_plugin/action_debug">控制台输出插件</a>。
  * <p>
  * DebugInOut 是控制台输出插件，主要关注点
  * <pre>
