@@ -18,9 +18,11 @@
  */
 package com.iohao.game.widget.light.room;
 
+import com.iohao.game.action.skeleton.core.BarMessageKit;
 import com.iohao.game.action.skeleton.core.CmdInfo;
 import com.iohao.game.action.skeleton.core.flow.FlowContext;
 import com.iohao.game.action.skeleton.core.flow.FlowContextKit;
+import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 import com.iohao.game.common.kit.OperationCode;
 import com.iohao.game.common.kit.PresentKit;
 import com.iohao.game.common.kit.concurrent.TaskKit;
@@ -667,16 +669,32 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      * Broadcast data to a specific user.
      *
      * @param cmdInfo cmdInfo
-     * @param data    data
      * @param userId  userId
+     * @param data    data
      * @since 21.28
      */
-    default void broadcastToUser(CmdInfo cmdInfo, Object data, long userId) {
+    default void broadcastToUser(CmdInfo cmdInfo, long userId, Object data) {
         if (this.isRobot(userId)) {
             return;
         }
 
         this.getAggregationContext().broadcast(cmdInfo, data, userId);
+    }
+
+    /**
+     * Broadcast data to a specific user.
+     *
+     * @param cmdInfo cmdInfo
+     * @param userId  userId
+     * @since 21.28
+     */
+    default void broadcastToUser(CmdInfo cmdInfo, long userId) {
+        if (this.isRobot(userId)) {
+            return;
+        }
+
+        ResponseMessage responseMessage = BarMessageKit.createResponseMessage(cmdInfo);
+        this.getAggregationContext().broadcast(responseMessage, userId);
     }
 
     /**
@@ -697,10 +715,16 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
             return;
         }
 
-        this.ofEmptyRangeBroadcast()
-                .addUserId(playerIdList, excludeUserId)
-                .setResponseMessage(cmdInfo, data)
-                .execute();
+        var rangeBroadcast = this.ofEmptyRangeBroadcast()
+                .addUserId(playerIdList, excludeUserId);
+
+        if (Objects.nonNull(data)) {
+            rangeBroadcast.setResponseMessage(cmdInfo, data);
+        } else {
+            rangeBroadcast.setResponseMessage(cmdInfo);
+        }
+
+        rangeBroadcast.execute();
     }
 
     /**
@@ -712,5 +736,26 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      */
     default void broadcastRange(CmdInfo cmdInfo, Object data) {
         broadcastRange(cmdInfo, data, 0);
+    }
+
+    /**
+     * Broadcast, excluding specified players.
+     *
+     * @param cmdInfo       cmdInfo
+     * @param excludeUserId excludeUserId
+     * @since 21.28
+     */
+    default void broadcastRangeEmpty(CmdInfo cmdInfo, long excludeUserId) {
+        broadcastRange(cmdInfo, null, excludeUserId);
+    }
+
+    /**
+     * Broadcast
+     *
+     * @param cmdInfo cmdInfo
+     * @since 21.28
+     */
+    default void broadcastRangeEmpty(CmdInfo cmdInfo) {
+        broadcastRange(cmdInfo, null, 0);
     }
 }
