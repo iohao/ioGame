@@ -46,8 +46,23 @@ public class ActionCommandDocKit {
     @Setter
     Function<URL, String> sourceFilePathFun = resourceUrl -> {
         String path = resourceUrl.getPath();
+        boolean isMaven = path.contains("target/classes");
 
-        return path.contains("target/classes")
+        // #459
+        if (!isMaven && path.contains(".jar!")) {
+            // jar 包内的路径，目前只处理了 gradle
+            int indexOf = path.indexOf(":");
+            if (indexOf != -1) {
+                path = path.substring(indexOf + 1);
+            }
+
+            // 定义正则表达式模式
+            String regex = "/build/*/.*?\\.jar!/";
+            // 使用正则表达式替换
+            return path.replaceAll(regex, "/src/main/java/");
+        }
+
+        return isMaven
                 // maven
                 ? path.replace("target/classes", "src/main/java")
                 // gradle

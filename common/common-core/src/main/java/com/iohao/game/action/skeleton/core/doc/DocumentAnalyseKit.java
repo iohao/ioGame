@@ -32,7 +32,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 /**
  * @author 渔民小镇
@@ -90,7 +89,7 @@ class DocumentAnalyseKit {
     AnalyseJavaClassRecord analyseJavaClass(Class<?> clazz) {
 
         URL resource = clazz.getResource(clazz.getSimpleName() + ".class");
-        String srcPath = sourceFilePathFun.apply(resource).replace("class", "java");
+        String srcPath = ActionCommandDocKit.sourceFilePathFun.apply(resource).replace("class", "java");
 
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
 
@@ -113,16 +112,6 @@ class DocumentAnalyseKit {
     record AnalyseJavaClassRecord(boolean exists, JavaClass javaClass) {
 
     }
-
-    private final Function<URL, String> sourceFilePathFun = resourceUrl -> {
-        String path = resourceUrl.getPath();
-
-        return path.contains("target/classes")
-                // maven
-                ? path.replace("target/classes", "src/main/java")
-                // gradle
-                : path.replace("build/classes", "src/main/java");
-    };
 
     private final AtomicInteger gameCodeOrdinal = new AtomicInteger(0);
 
