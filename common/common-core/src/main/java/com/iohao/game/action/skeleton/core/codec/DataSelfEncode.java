@@ -32,5 +32,5 @@ public interface DataSelfEncode {
      * @return EncodeData
      * @since 21.23
      */
-    byte[] getEncodeData();
+    byte[] encodeData();
 }

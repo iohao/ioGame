@@ -68,7 +68,7 @@ public final class BoolValue implements DataSelfEncode {
     }
 
     @Override
-    public byte[] getEncodeData() {
+    public byte[] encodeData() {
         return Objects.nonNull(data) ? data : DataCodecKit.encode(this);
     }
 }

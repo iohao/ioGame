@@ -75,7 +75,7 @@ public abstract sealed class BarMessage implements Serializable permits RequestM
         this.dataClass = data.getClass().getName();
 
         if (data instanceof DataSelfEncode dataSelfEncode) {
-            return this.setData(dataSelfEncode.getEncodeData());
+            return this.setData(dataSelfEncode.encodeData());
         }
 
         byte[] bytes = DataCodecKit.encode(data);
