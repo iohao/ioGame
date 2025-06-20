@@ -83,9 +83,8 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
 
         actionDocumentList.forEach(actionDocument -> {
             Template template = ofTemplate("action.txt");
-            // using、namespace
-//            template.binding("using", String.join("\n", this.actionImportList));
             template.binding("namespace", this.namespace);
+            template.binding("publicActionCmdName", this.publicActionCmdName ? "public" : "private");
 
             new ActionGenerate()
                     .setActionDocument(actionDocument)

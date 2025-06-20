@@ -418,6 +418,7 @@ abstract class AbstractDocumentGenerate implements DocumentGenerate {
     /** your .proto path */
     @Deprecated
     String protoImportPath;
+    boolean publicActionCmdName;
     /**
      * The storage path of the generated files.
      * By default, it will be generated in the ./target/action directory

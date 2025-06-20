@@ -10,7 +10,7 @@ import {CmdKit, RequestCommand, ResponseResult} from "iohao-sdk";
  */
 export class ${ActionName} {
 <%for(o in actionMemberCmdDocumentList) {%>
-    private static readonly ${o.memberName}: number = CmdKit.mappingRequest(${o.cmdMerge}, "${o.comment}");
+    ${publicActionCmdName} static readonly ${o.memberName}: number = CmdKit.mappingRequest(${o.cmdMerge}, "${o.comment}");
 <%}%>
 <%for(o in methodCodeList) {%>
 ${o}

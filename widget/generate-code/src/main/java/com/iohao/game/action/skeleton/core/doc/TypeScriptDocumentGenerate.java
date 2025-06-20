@@ -133,6 +133,7 @@ public final class TypeScriptDocumentGenerate extends AbstractDocumentGenerate {
             Template template = ofTemplate(DocumentGenerateKit.actionTemplatePath);
             // imports
             template.binding("imports", imports);
+            template.binding("publicActionCmdName", this.publicActionCmdName ? "public" : "private");
 
             new ActionGenerate()
                     .setActionDocument(actionDocument)

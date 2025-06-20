@@ -15,7 +15,7 @@ namespace ${namespace}
   public static class ${ActionName}
   {
   <%for(o in actionMemberCmdDocumentList) {%>
-    private static readonly int ${o.memberName} = CmdKit.MappingRequest(${o.cmdMerge}, "${o.comment}");
+    ${publicActionCmdName} static readonly int ${o.memberName} = CmdKit.MappingRequest(${o.cmdMerge}, "${o.comment}");
   <%}%>
 
   <%for(o in methodCodeList) {%>
