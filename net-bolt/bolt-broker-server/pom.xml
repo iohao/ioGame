@@ -41,7 +41,18 @@
                     <artifactId>*</artifactId>
                     <groupId>io.netty</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>io.projectreactor.netty</groupId>
+                    <artifactId>reactor-netty</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty</artifactId>
+            <!-- https://mvnrepository.com/artifact/io.projectreactor.netty/reactor-netty -->
+            <version>1.2.7</version>
         </dependency>
 
     </dependencies>
