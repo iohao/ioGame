@@ -16,5 +16,5 @@ var value = result.${resultMethodName};
         resultMethodName = resultMethodTypeName;
     }
 %>
-var value = result.${resultMethodName};
+var value = result.${codeEscape(resultMethodName)};
 <%}%>

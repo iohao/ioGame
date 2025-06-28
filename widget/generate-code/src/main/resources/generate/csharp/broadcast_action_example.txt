@@ -7,7 +7,7 @@ if (dataTypeIsInternal) {
         resultMethodName = resultMethodTypeName;
     }
 %>
-const value = result.${resultMethodName};
+var value = result.${resultMethodName};
 <%
 } else {
     if (dataIsList) {
@@ -16,5 +16,5 @@ const value = result.${resultMethodName};
         resultMethodName = resultMethodTypeName;
     }
 %>
-const value = result.${codeEscape(resultMethodName)};
+var value = result.${codeEscape(resultMethodName)};
 <%}%>

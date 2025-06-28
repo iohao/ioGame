@@ -149,4 +149,8 @@ public class RandomKit {
                 ? array[0]
                 : array[randomInt(array.length)];
     }
+
+    public double nextDouble() {
+        return generator.nextDouble();
+    }
 }
