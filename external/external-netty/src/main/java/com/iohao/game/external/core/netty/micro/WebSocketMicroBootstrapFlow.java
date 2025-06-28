@@ -22,6 +22,7 @@ import com.iohao.game.action.skeleton.protocol.BarMessage;
 import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.micro.PipelineContext;
 import com.iohao.game.external.core.netty.handler.codec.WebSocketExternalCodec;
+import com.iohao.game.external.core.netty.handler.check.HttpFallbackHandler;
 import com.iohao.game.external.core.netty.handler.ws.WebSocketVerifyHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
@@ -140,5 +141,7 @@ public class WebSocketMicroBootstrapFlow extends SocketMicroBootstrapFlow {
          * 到完整的 Http 请求或响应
          */
         context.addLast("aggregator", new HttpObjectAggregator(65536));
+
+        context.addLast("http-fallback", HttpFallbackHandler.me());
     }
 }

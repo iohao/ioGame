@@ -60,6 +60,8 @@ public class TcpMicroBootstrapFlow extends SocketMicroBootstrapFlow {
 
     @Override
     public void pipelineCodec(PipelineContext context) {
+//        context.addLast("tcp-check", new TcpProtocolSanityCheckHandler());
+
         // 数据包长度 = 长度域的值 + lengthFieldOffset + lengthFieldLength + lengthAdjustment。
         context.addLast(new LengthFieldBasedFrameDecoder(
                 ExternalGlobalConfig.CoreOption.packageMaxSize,
