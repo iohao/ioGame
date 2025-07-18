@@ -18,9 +18,13 @@
  */
 package com.iohao.game.action.skeleton.core.doc;
 
+import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.core.DataCodecKit;
+import com.iohao.game.action.skeleton.core.codec.ProtoDataCodec;
 import com.iohao.game.action.skeleton.protocol.wrapper.ByteValueList;
 import com.iohao.game.action.skeleton.protocol.wrapper.WrapperKit;
+import com.iohao.game.common.kit.ProtoKit;
 import com.iohao.game.common.kit.StrKit;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -28,6 +32,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 广播文档构建器
@@ -140,6 +145,8 @@ public class BroadcastDocumentBuilder {
     public BroadcastDocument build() {
         String theMethodName = getMethodName();
 
+        extractedPreparedProto();
+
         return new BroadcastDocument(this.cmdInfo)
                 // 方法相关
                 .setMethodDescription(this.methodDescription)
@@ -150,6 +157,14 @@ public class BroadcastDocumentBuilder {
                 .setDataClassName(this.dataClassName)
                 .setDataDescription(this.dataDescription)
                 .setDataIsList(this.list);
+    }
+
+    private void extractedPreparedProto() {
+        if (DataCodecKit.getDataCodec() instanceof ProtoDataCodec) {
+            Optional.ofNullable(this.dataClass)
+                    .filter(clazz -> Objects.nonNull(clazz.getAnnotation(ProtobufClass.class)))
+                    .ifPresent(ProtoKit::create);
+        }
     }
 
     /**
