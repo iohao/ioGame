@@ -6,11 +6,12 @@
     <parent>
         <groupId>com.iohao.game</groupId>
         <artifactId>ioGame</artifactId>
-        <version>21.28</version>
+        <version>21.29</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>external-netty</artifactId>
+    <name>external-netty for ioGame</name>
 
     <dependencies>
         <dependency>

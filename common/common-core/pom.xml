@@ -5,15 +5,15 @@
     <parent>
         <artifactId>ioGame</artifactId>
         <groupId>com.iohao.game</groupId>
-        <version>21.28</version>
+        <version>21.29</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>common-core</artifactId>
+    <name>common-core for ioGame</name>
 
     <dependencies>
-
         <dependency>
             <groupId>com.iohao.game</groupId>
             <artifactId>common-kit</artifactId>

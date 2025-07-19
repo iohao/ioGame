@@ -6,11 +6,12 @@
     <parent>
         <groupId>com.iohao.game</groupId>
         <artifactId>ioGame</artifactId>
-        <version>21.28</version>
+        <version>21.29</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>common-micro-kit</artifactId>
+    <name>common-micro-kit for ioGame</name>
 
     <dependencies>
         <dependency>
