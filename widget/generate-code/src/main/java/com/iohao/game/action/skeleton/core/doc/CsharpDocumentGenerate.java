@@ -99,7 +99,6 @@ public final class CsharpDocumentGenerate extends AbstractDocumentGenerate {
     @Override
     protected void generateBroadcast(IoGameDocument ioGameDocument) {
         Template template = ofTemplate(DocumentGenerateKit.broadcastActionTemplatePath);
-//        template.binding("using", String.join("\n", this.broadcastImportList));
         template.binding("namespace", this.namespace);
 
         new BroadcastGenerate()

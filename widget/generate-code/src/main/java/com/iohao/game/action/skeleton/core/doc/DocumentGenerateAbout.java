@@ -70,6 +70,7 @@ class DocumentGenerateKit {
         Configuration cfg = Configuration.defaultConfiguration();
         gt = new GroupTemplate(resourceLoader, cfg);
         gt.registerFunction("codeEscape", new ExampleCodeEscape());
+        gt.registerFunction("originalCode", new ExampleOriginalCode());
         gt.registerFunction("snakeName", new SnakeName());
     }
 
@@ -106,6 +107,18 @@ class DocumentGenerateKit {
                     .map(str -> {
                         // Escape
                         return str.replace("<", "&lt;").replace(">", "&gt;");
+                    }).orElse("");
+        }
+    }
+
+    class ExampleOriginalCode implements org.beetl.core.Function {
+        @Override
+        public Object call(Object[] paras, Context ctx) {
+            return Optional.ofNullable(paras[0])
+                    .map(Object::toString)
+                    .map(str -> {
+                        // Escape
+                        return str.replace("&lt;", "<").replace("&gt;", ">");
                     }).orElse("");
         }
     }

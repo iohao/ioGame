@@ -1,10 +1,46 @@
 文档与日志
 - [框架版本更新日志](https://iohao.github.io/game/docs/version_log)
 - [ioGame 真.轻量级网络编程框架 - 在线使用文档 ](https://game.iohao.com/)
-- <a target="_blank" href='https://app.codacy.com/gh/iohao/ioGame/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade'><img src="https://app.codacy.com/project/badge/Grade/4981fff112754686baad7442be998b17" alt="github star"/></a>
 
 
 > ioGame 每月会发 1 ~ 2 个版本，通常在大版本内升级总是兼容的，如 21.1 升级到任意 21.x 的高版本。
+
+
+### 2025-07-19 - v21.29
+https://github.com/iohao/ioGame/releases/tag/21.29
+
+**Version update summary**
+
+> 1. [#473](https://github.com/iohao/ioGame/issues/473) fix(core): Change the method name from DataSelfEncode getEncodeData to encodeData to avoid JSON serialization.
+> 2. fix(doc): [#459](https://github.com/iohao/ioGame/issues/459) Supporting the referencing of classes within a JAR file in a multi-module Gradle environment.
+> 3. feat(generate-code): [#452](https://github.com/iohao/ioGame/issues/452)
+> 4. fix(generate-code): broadcast_action_example_action.txt、broadcast_action_example.txt
+> 5. feat(external): [#469](https://github.com/iohao/ioGame/issues/469) Add HttpFallbackHandler to determine if it's a WebSocket upgrade request.
+> 6. perf(doc): Pre-create the Pb for the BroadcastDocument dataClass.
+
+**[other updates]**
+
+Upgrade reactor-netty 1.2.7、commons-io 2.19.0
+
+
+### 2025-06-17 - v21.28
+https://github.com/iohao/ioGame/releases/tag/21.28
+
+**Version update summary**
+
+> 1. feat(room): The room supports convenient operations. 
+> 2. Deprecated RoomStatusEnum. 
+> 3. feat(room): The room supports convenient broadcastRange. 
+> 4. docs(all): Update documentation link (https://iohao.github.io/game). 
+> 5. [#451](https://github.com/iohao/ioGame/issues/451) Refactor the usage documentation to use the new access address: https://iohao.github.io/game/ .
+
+------
+
+**[other updates]**
+
+```xml
+<netty.version>4.1.122.Final</netty.version>
+```
 
 ------
 

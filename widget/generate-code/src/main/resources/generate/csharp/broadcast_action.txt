@@ -44,7 +44,7 @@ namespace ${namespace}
     <% if (o.exampleCodeAction == null) { %>
         IoGameSetting.GameGameConsole.Log($"{mergeTitle}, {title}");
     <% } else { %>
-        ${o.exampleCodeAction}
+        ${originalCode(o.exampleCodeAction)}
         IoGameSetting.GameGameConsole.Log($"{mergeTitle}, {title}, {value}");
     <%}%>
       });
