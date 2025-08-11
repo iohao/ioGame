@@ -5,6 +5,13 @@
 
 > ioGame 每月会发 1 ~ 2 个版本，通常在大版本内升级总是兼容的，如 21.1 升级到任意 21.x 的高版本。
 
+### 2025-08-11 - v21.30
+https://github.com/iohao/ioGame/releases/tag/21.30
+
+**Version update summary**
+
+> 1. fix(generate-code): [#490](https://github.com/iohao/ioGame/issues/490) Fixed the escaping of special characters in the Listener exampleCode for the code generation module. 修复 C# 代码生成时的转义字符
+
 
 ### 2025-07-19 - v21.29
 https://github.com/iohao/ioGame/releases/tag/21.29

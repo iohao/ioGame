@@ -6,7 +6,7 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>ioGame</artifactId>
-    <version>21.29</version>
+    <version>21.30</version>
     <name>ioGame</name>
     <description>
         生产资料公有制。
@@ -361,29 +361,6 @@
                             <waitUntil>published</waitUntil>
                         </configuration>
                     </plugin>
-<!--                    <plugin>-->
-<!--                        <groupId>org.sonatype.plugins</groupId>-->
-<!--                        <artifactId>nexus-staging-maven-plugin</artifactId>-->
-<!--                        <version>1.6.8</version>-->
-<!--                        <extensions>true</extensions>-->
-<!--                        <configuration>-->
-<!--                            <serverId>oss-ioGame</serverId>-->
-<!--                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
-<!--                            &lt;!&ndash; false 手动关闭 release &ndash;&gt;-->
-<!--                            <autoReleaseAfterClose>false</autoReleaseAfterClose>-->
-<!--                        </configuration>-->
-<!--                        <dependencies>-->
-<!--                            &lt;!&ndash;-->
-<!--                            apparently this needs to be exactly this version-->
-<!--                            https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream-->
-<!--                            &ndash;&gt;-->
-<!--                            <dependency>-->
-<!--                                <groupId>com.thoughtworks.xstream</groupId>-->
-<!--                                <artifactId>xstream</artifactId>-->
-<!--                                <version>1.4.15</version>-->
-<!--                            </dependency>-->
-<!--                        </dependencies>-->
-<!--                    </plugin>-->
 
                     <!-- Javadoc -->
                     <plugin>
