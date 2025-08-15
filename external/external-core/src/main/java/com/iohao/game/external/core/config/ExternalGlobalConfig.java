@@ -56,4 +56,43 @@ public class ExternalGlobalConfig {
         /** http 升级 websocket 协议地址 */
         public String websocketPath = "/websocket";
     }
+
+    /**
+     * 流量过载保护配置
+     */
+    @UtilityClass
+    public class TrafficProtectionOption {
+        /** 是否启用流量保护功能 */
+        public boolean enableTrafficProtection = false;
+        
+        /** 最大连接数限制，默认5000 */
+        public int maxConnections = 5000;
+        
+        /** 是否启用自适应限流 */
+        public boolean enableAdaptiveRateLimit = true;
+        
+        /** 监控间隔（毫秒），默认1000ms */
+        public int monitorInterval = 1000;
+        
+        /** 自适应限流窗口大小（秒），默认60秒 */
+        public int adaptiveWindowSize = 60;
+        
+        /** 最小限流阈值（连接数），默认1000 */
+        public int minRateLimitThreshold = 1000;
+        
+        /** 最大限流阈值（连接数），默认8000 */
+        public int maxRateLimitThreshold = 8000;
+        
+        /** CPU使用率阈值（百分比），超过此值将触发限流 */
+        public double cpuThreshold = 80.0;
+        
+        /** 内存使用率阈值（百分比），超过此值将触发限流 */
+        public double memoryThreshold = 85.0;
+        
+        /** 是否启用连接拒绝日志 */
+        public boolean enableRejectionLog = true;
+        
+        /** 是否启用系统资源监控 */
+        public boolean enableResourceMonitoring = true;
+    }
 }
