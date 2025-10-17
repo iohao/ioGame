@@ -209,8 +209,13 @@ public class ProtoJavaAnalyse {
             ProtoJavaRegionKey regionKey = protoJavaParent.getProtoJavaRegionKey();
             ProtoJavaRegion protoJavaRegion = this.getProtoJavaRegion(regionKey);
             protoJavaRegion.addOtherProtoFile(protoJavaFieldType);
-            // 不在同一个文件中
-            fieldProtoType = StrKit.format("{}.{}", filePackage, className);
+            if (Objects.equals(protoJavaParent.getFilePackage(), filePackage)) {
+                // 不在同一个文件夹，但是在同一个包下
+                fieldProtoType = className;
+            } else {
+                // 不在同一个文件中
+                fieldProtoType = StrKit.format("{}.{}", filePackage, className);
+            }
         }
 
         return fieldProtoType;
