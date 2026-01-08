@@ -524,6 +524,10 @@ final class DefaultEventBus implements EventBus {
         this.id = Objects.requireNonNull(id);
     }
 
+    public void setBrokerClientContext(BrokerClientContext brokerClientContext) {
+        this.brokerClientContext = brokerClientContext;
+    }
+
     @Override
     public void register(Object eventBusSubscriber) {
 
