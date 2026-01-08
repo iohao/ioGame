@@ -22,6 +22,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import io.netty.util.ReferenceCountUtil;
 
 /**
  * @author 渔民小镇
@@ -33,11 +34,16 @@ public final class HttpFallbackHandler extends SimpleChannelInboundHandler<FullH
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) {
-        // 检查是否是 WebSocket 升级请求
-        if ("websocket".equalsIgnoreCase(req.headers().get(HttpHeaderNames.UPGRADE))) {
-            ctx.fireChannelRead(req.retain());
-        } else {
-            ctx.close();
+        try {
+            // 检查是否是 WebSocket 升级请求
+            if ("websocket".equalsIgnoreCase(req.headers().get(HttpHeaderNames.UPGRADE))) {
+                ctx.fireChannelRead(req.retain());
+            } else {
+                ctx.close();
+            }
+        } finally {
+            // 释放当前 handler 的引用
+            ReferenceCountUtil.release(req);
         }
     }
 
