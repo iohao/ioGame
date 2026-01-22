@@ -20,6 +20,7 @@ package com.iohao.game.widget.light.profile;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
 import java.net.URL;
 import java.util.*;
@@ -35,7 +36,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @UtilityClass
 public final class ProfileManager {
-    /** 主配置key */
+    /**
+     * 主配置key
+     */
     final String MAIN_CONFIG = "main_config";
     /**
      * <pre>
@@ -99,6 +102,14 @@ public final class ProfileManager {
         // 将配置文件内容加载的 Profile 中
         Profile profile = profile();
         profile.load(urlList);
+
+        // 检查环境变量是否同名的参数 如果有则覆盖
+        profile.map.forEach((key, value) -> {
+            String envValue = System.getenv(key);
+            if (StringUtils.isNotEmpty(envValue)) {
+                profile.map.put(key, envValue);
+            }
+        });
 
         log.debug("配置内容 - size:{} - {}", ProfileManager.profile().map.size(), ProfileManager.profile());
 
