@@ -6,14 +6,14 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>ioGame</artifactId>
-    <version>21.30</version>
+    <version>21.31</version>
     <name>ioGame</name>
     <description>
         生产资料公有制。
         让网络游戏服务器的编程变得轻松简单。
         ioGame 是一个轻量级的网络编程框架，适用于网络游戏服务器、物联网、内部系统及各种需要长连接的场景。
     </description>
-    <url>http://game.iohao.com</url>
+    <url>https://iohao.github.io/game</url>
 
     <modules>
         <!-- 网络游戏框架 - 业务框架 -->

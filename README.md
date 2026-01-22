@@ -37,7 +37,7 @@
   <strong>javaSE</strong>
 </p>
 <p align="center">
-	<a href="http://game.iohao.com">http://game.iohao.com</a>
+	<a href="http://game.iohao.com">https://iohao.github.io/game</a>
 </p>
 <p align="center">
 	<a target="_blank" href="https://www.oracle.com/java/technologies/downloads/#java21">
@@ -61,9 +61,10 @@
 </p>
 <hr />
 
+Documentation: https://iohao.github.io/game/docs/intro
+
 ## 愿景
 让网络游戏服务器的编程变得轻松简单。 改变行业现状，降低使用难度，让游戏开发领域的生产资料公有制！
-
 
 
 ## 开放、自由、友好的开源协议
@@ -554,10 +555,3 @@ public class DemoAction {
 
 推荐实际编程经验一年以上的人员。
 
-
-
-## 感谢 JetBrains 对开源项目支持
-
-<a href="https://jb.gg/OpenSourceSupport">
-  <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains logo." height="100" width="314">
-</a>
