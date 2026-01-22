@@ -49,8 +49,6 @@ public final class ProfileManager {
      */
     private final Map<String, Profile> profileMap = new ConcurrentHashMap<>();
 
-    private static final DefaultConversionService CONVERTER = new DefaultConversionService();
-
     public Profile profile() {
         return profile(MAIN_CONFIG);
     }
