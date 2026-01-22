@@ -40,7 +40,6 @@ public class ProfileStaticBinder {
                     // 匹配规则：原始名一致 OR 归一化后一致
                     if (fieldName.equalsIgnoreCase(configKey) || normalize(fieldName).equals(normalizedConfigKey)) {
                         try {
-                            field.setAccessible(true);
                             Object convertedValue = CONVERTER.convert(value, field.getType());
                             field.set(null, convertedValue);
                         } catch (Exception e) {
