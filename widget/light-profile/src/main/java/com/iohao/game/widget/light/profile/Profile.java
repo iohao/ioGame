@@ -149,18 +149,21 @@ public class Profile {
      */
     public void load(List<URL> urls) {
         // 需要加载的配置文件
-        urls.forEach(url -> {
-
-            try (InputStream inputStream = url.openStream()) {
-                Properties properties = new Properties();
-                properties.load(inputStream);
-
-                this.load(properties);
-
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        });
+        urls.forEach(this::load);
     }
 
+    /**
+     * 需要加载的配置文件
+     *
+     */
+    public void load(URL url) {
+        // 需要加载的配置文件
+        try (InputStream inputStream = url.openStream()) {
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            this.load(properties);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }

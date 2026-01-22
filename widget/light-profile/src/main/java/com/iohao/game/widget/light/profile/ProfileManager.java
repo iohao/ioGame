@@ -21,6 +21,7 @@ package com.iohao.game.widget.light.profile;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.core.convert.support.DefaultConversionService;
 
 import java.net.URL;
 import java.util.*;
@@ -48,6 +49,7 @@ public final class ProfileManager {
      */
     private final Map<String, Profile> profileMap = new ConcurrentHashMap<>();
 
+    private static final DefaultConversionService CONVERTER = new DefaultConversionService();
 
     public Profile profile() {
         return profile(MAIN_CONFIG);
@@ -113,6 +115,37 @@ public final class ProfileManager {
 
         log.debug("配置内容 - size:{} - {}", ProfileManager.profile().map.size(), ProfileManager.profile());
 
+    }
+
+    /**
+     * 加载特定环境的配置文件
+     *
+     * @param env      环境名称
+     * @param fileName 配置文件名 (不需要带 .props 后缀)
+     */
+    public Profile loadEnvFile(String env, String fileName) {
+        if (StringUtils.isEmpty(env) || StringUtils.isEmpty(fileName)) {
+            log.warn("环境或文件名为空，跳过加载");
+            return null;
+        }
+        URL fileURL = ResourcePatternResolverProfile.getFileURL(env, fileName);
+        Profile profile = profile(fileName);
+        profile.load(fileURL);
+        log.debug("配置内容 - size:{} - {}", profile.map.size(), profile.map);
+        return profile;
+    }
+
+    public void loadEnvFileFillStaticClass(String env, String fileName, Class<?> staticClass) {
+        if (StringUtils.isEmpty(env) || StringUtils.isEmpty(fileName)) {
+            log.warn("环境或文件名为空，跳过加载");
+            return;
+        }
+        Profile profile = loadEnvFile(env, fileName);
+        if (Objects.isNull(profile)) {
+            log.warn("加载配置文件失败，跳过加载");
+            return;
+        }
+        ProfileStaticBinder.bind(staticClass, profile.map);
     }
 
 
