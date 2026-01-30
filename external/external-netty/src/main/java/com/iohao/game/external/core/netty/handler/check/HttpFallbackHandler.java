@@ -20,6 +20,7 @@ package com.iohao.game.external.core.netty.handler.check;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.util.ReferenceCountUtil;
@@ -30,13 +31,19 @@ import io.netty.util.ReferenceCountUtil;
  * @since 21.29
  */
 @ChannelHandler.Sharable
-public final class HttpFallbackHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+public final class HttpFallbackHandler extends ChannelInboundHandlerAdapter {
+
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) {
-        if ("websocket".equalsIgnoreCase(req.headers().get(HttpHeaderNames.UPGRADE))) {
-            ctx.fireChannelRead(req.retain());
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (msg instanceof FullHttpRequest req) {
+            if ("websocket".equalsIgnoreCase(req.headers().get(HttpHeaderNames.UPGRADE))) {
+                ctx.fireChannelRead(msg);
+            } else {
+                ReferenceCountUtil.release(msg);
+                ctx.close();
+            }
         } else {
-            ctx.close();
+            ctx.fireChannelRead(msg);
         }
     }
 

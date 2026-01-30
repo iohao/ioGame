@@ -28,6 +28,8 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
 
+import io.netty.util.ReferenceCountUtil;
+
 import java.util.Optional;
 
 /**
@@ -63,16 +65,19 @@ public final class HttpRealIpHandler extends ChannelInboundHandlerAdapter
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg instanceof FullHttpRequest request) {
-            HttpHeaders headers = request.headers();
-            // 保存真实 ip
-            String realIp = headers.get("X-Real-IP");
-            Optional.ofNullable(userSessions.getUserSession(ctx))
-                    .ifPresent(session -> session.option(UserSessionOption.realIp, realIp));
+        try {
+            if (msg instanceof FullHttpRequest request) {
+                HttpHeaders headers = request.headers();
+                String realIp = headers.get("X-Real-IP");
+                Optional.ofNullable(userSessions.getUserSession(ctx))
+                        .ifPresent(session -> session.option(UserSessionOption.realIp, realIp));
 
-            ctx.pipeline().remove(this);
+                ctx.pipeline().remove(this);
+            }
+
+            super.channelRead(ctx, msg);
+        } finally {
+            ReferenceCountUtil.release(msg);
         }
-
-        super.channelRead(ctx, msg);
     }
 }
