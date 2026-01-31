@@ -23,7 +23,7 @@ import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.hook.cache.ExternalCmdCache;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.util.Objects;
 
@@ -34,14 +34,13 @@ import java.util.Objects;
  * @date 2023-07-02
  */
 @ChannelHandler.Sharable
-public final class CmdCacheHandler extends SimpleChannelInboundHandler<BarMessage> {
+public final class CmdCacheHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-
         ExternalCmdCache externalCmdCache = ExternalGlobalConfig.externalCmdCache;
         if (Objects.isNull(externalCmdCache)) {
-            // 删除自身处理器
+            // 如果没有配置缓存，移除自身处理器
             ctx.pipeline().remove(this);
         }
 
@@ -49,18 +48,23 @@ public final class CmdCacheHandler extends SimpleChannelInboundHandler<BarMessag
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, BarMessage message) {
-        ExternalCmdCache externalCmdCache = ExternalGlobalConfig.externalCmdCache;
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        if (msg instanceof BarMessage message) {
+            ExternalCmdCache externalCmdCache = ExternalGlobalConfig.externalCmdCache;
 
-        BarMessage cache = externalCmdCache.getCache(message);
-        if (Objects.nonNull(cache)) {
-            // 从缓存中取到了数据，直接返回缓存数据
-            ctx.writeAndFlush(cache);
-            return;
+            if (externalCmdCache != null) {
+                BarMessage cache = externalCmdCache.getCache(message);
+                if (Objects.nonNull(cache)) {
+                    // 从缓存中取到了数据，直接返回缓存数据
+                    ctx.writeAndFlush(cache);
+                    return;
+                }
+            }
+
+            ctx.fireChannelRead(message);
+        } else {
+            ctx.fireChannelRead(msg);
         }
-
-        // 交给下一个业务处理 (handler) , 下一个业务指的是你编排 handler 时的顺序
-        ctx.fireChannelRead(message);
     }
 
     public CmdCacheHandler() {
@@ -70,7 +74,6 @@ public final class CmdCacheHandler extends SimpleChannelInboundHandler<BarMessag
         return Holder.ME;
     }
 
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
         static final CmdCacheHandler ME = new CmdCacheHandler();
     }

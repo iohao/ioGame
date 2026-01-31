@@ -25,7 +25,7 @@ import com.iohao.game.core.common.cmd.CmdRegions;
 import com.iohao.game.external.core.message.ExternalCodecKit;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
  * 路由是否存在检测
@@ -39,23 +39,25 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @date 2023-05-01
  */
 @ChannelHandler.Sharable
-public final class CmdCheckHandler extends SimpleChannelInboundHandler<BarMessage>
+public final class CmdCheckHandler extends ChannelInboundHandlerAdapter
         implements CmdRegionsAware {
     CmdRegions cmdRegions;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, BarMessage message) {
-        int cmdMerge = message.getHeadMetadata().getCmdMerge();
-        // 路由存在
-        if (cmdRegions.existCmdMerge(cmdMerge)) {
-            // 交给下一个业务处理 (handler) , 下一个业务指的是你编排 handler 时的顺序
-            ctx.fireChannelRead(message);
-            return;
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        if (msg instanceof BarMessage message) {
+            int cmdMerge = message.getHeadMetadata().getCmdMerge();
+
+            // 2. 检查路由是否存在
+            if (cmdRegions.existCmdMerge(cmdMerge)) {
+                ctx.fireChannelRead(message);
+            } else {
+                ExternalCodecKit.employError(message, ActionErrorEnum.cmdInfoErrorCode);
+                ctx.writeAndFlush(message);
+            }
+        } else {
+            ctx.fireChannelRead(msg);
         }
-
-        ExternalCodecKit.employError(message, ActionErrorEnum.cmdInfoErrorCode);
-
-        ctx.writeAndFlush(message);
     }
 
     @Override
@@ -70,7 +72,6 @@ public final class CmdCheckHandler extends SimpleChannelInboundHandler<BarMessag
         return Holder.ME;
     }
 
-    /** 通过 JVM 的类加载机制, 保证只加载一次 (singleton) */
     private static class Holder {
         static final CmdCheckHandler ME = new CmdCheckHandler();
     }

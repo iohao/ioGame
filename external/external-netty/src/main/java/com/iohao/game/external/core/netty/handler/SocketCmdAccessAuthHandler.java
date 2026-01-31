@@ -25,11 +25,10 @@ import com.iohao.game.external.core.config.ExternalGlobalConfig;
 import com.iohao.game.external.core.hook.AccessAuthenticationHook;
 import com.iohao.game.external.core.message.ExternalCodecKit;
 import com.iohao.game.external.core.netty.session.SocketUserSessions;
-import com.iohao.game.external.core.session.UserSession;
 import com.iohao.game.external.core.session.UserSessions;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
  * 路由访问权限相关处理
@@ -38,27 +37,33 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @date 2023-05-05
  */
 @ChannelHandler.Sharable
-public class SocketCmdAccessAuthHandler extends SimpleChannelInboundHandler<BarMessage>
+public class SocketCmdAccessAuthHandler extends ChannelInboundHandlerAdapter
         implements UserSessionsAware {
+
     protected UserSessions<?, ?> userSessions;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, BarMessage message) {
-        if (reject(ctx, message)) {
-            // 拒绝玩家直接访问 action
-            return;
-        }
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        if (msg instanceof BarMessage message) {
+            if (reject(ctx, message)) {
+                // 拒绝玩家直接访问 action
+                return;
+            }
 
-        SocketUserSessions socketUserSessions = (SocketUserSessions) this.userSessions;
-        UserSession userSession = socketUserSessions.getUserSession(ctx);
-        boolean loginSuccess = userSession.isVerifyIdentity();
-        if (notPass(ctx, message, loginSuccess)) {
-            // 访问了需要登录才能访问的 action
-            return;
-        }
+            SocketUserSessions socketUserSessions = (SocketUserSessions) this.userSessions;
+            var userSession = socketUserSessions.getUserSession(ctx);
+            if (userSession != null) {
+                boolean loginSuccess = userSession.isVerifyIdentity();
+                if (notPass(ctx, message, loginSuccess)) {
+                    // 访问了需要登录才能访问的 action
+                    return;
+                }
+            }
 
-        // 交给下一个业务处理 (handler) , 下一个业务指的是你编排 handler 时的顺序
-        ctx.fireChannelRead(message);
+            ctx.fireChannelRead(message);
+        } else {
+            ctx.fireChannelRead(msg);
+        }
     }
 
     protected boolean reject(ChannelHandlerContext ctx, BarMessage message) {
@@ -68,9 +73,7 @@ public class SocketCmdAccessAuthHandler extends SimpleChannelInboundHandler<BarM
 
         if (reject) {
             ExternalCodecKit.employError(message, ActionErrorEnum.cmdInfoErrorCode);
-            // 响应结果给玩家
             ctx.writeAndFlush(message);
-
             return true;
         }
 
