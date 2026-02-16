@@ -21,8 +21,8 @@ package com.iohao.game.external.core.netty.handler.check;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.util.ReferenceCountUtil;
 
 /**
@@ -35,16 +35,18 @@ public final class HttpFallbackHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg instanceof FullHttpRequest req) {
-            if ("websocket".equalsIgnoreCase(req.headers().get(HttpHeaderNames.UPGRADE))) {
-                ctx.fireChannelRead(msg);
-            } else {
-                ReferenceCountUtil.release(msg);
-                ctx.close();
-            }
-        } else {
+        if (!(msg instanceof FullHttpRequest req)) {
             ctx.fireChannelRead(msg);
+            return;
         }
+
+        if ("websocket".equalsIgnoreCase(req.headers().get(HttpHeaderNames.UPGRADE))) {
+            ctx.fireChannelRead(msg);
+            return;
+        }
+
+        ReferenceCountUtil.release(msg);
+        ctx.close();
     }
 
     private HttpFallbackHandler() {
