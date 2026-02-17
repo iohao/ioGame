@@ -6,7 +6,7 @@
 
     <groupId>com.iohao.game</groupId>
     <artifactId>ioGame</artifactId>
-    <version>21.32</version>
+    <version>21.34</version>
     <name>ioGame</name>
     <description>
         生产资料公有制。
@@ -349,7 +349,7 @@
                         </executions>
                     </plugin>
 
-                    <!-- 自动发布 -->
+                    <!-- 自动发布 https://mvnrepository.com/artifact/org.sonatype.central/central-publishing-maven-plugin -->
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>

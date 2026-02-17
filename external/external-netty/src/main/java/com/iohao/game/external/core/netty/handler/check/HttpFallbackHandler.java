@@ -34,7 +34,7 @@ import io.netty.util.ReferenceCountUtil;
 public final class HttpFallbackHandler extends ChannelInboundHandlerAdapter {
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (!(msg instanceof FullHttpRequest req)) {
             ctx.fireChannelRead(msg);
             return;
