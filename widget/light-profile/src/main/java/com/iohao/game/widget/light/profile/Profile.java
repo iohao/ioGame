@@ -22,8 +22,9 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,7 +43,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @ToString
 public class Profile {
-    /** key */
     String key;
 
     Map<String, Object> map = new ConcurrentHashMap<>();
@@ -149,18 +149,20 @@ public class Profile {
      */
     public void load(List<URL> urls) {
         // 需要加载的配置文件
-        urls.forEach(url -> {
-
-            try (InputStream inputStream = url.openStream()) {
-                Properties properties = new Properties();
-                properties.load(inputStream);
-
-                this.load(properties);
-
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        });
+        urls.forEach(this::load);
     }
 
+    public void load(URL url) {
+        if (url == null) {
+            log.warn("加载配置失败：URL 为空");
+            return;
+        }
+        try (InputStreamReader reader = new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)) {
+            Properties properties = new Properties();
+            properties.load(reader);
+            this.load(properties);
+        } catch (IOException e) {
+            log.error("读取配置文件异常 [{}]: {}", url, e.getMessage(), e);
+        }
+    }
 }
