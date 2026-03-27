@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.profile;
 
+import com.iohao.game.widget.light.profile.bean.DbProps;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -38,7 +39,17 @@ public class ResourcePatternResolverProfileTest {
 
         List<URL> urls = config.toUrls();
         log.info("local profile {}", urls.size());
+    }
 
+    @Test
+    public void loadEnvFile() {
+        ProfileManager.loadEnvFile("local", "db.props");
+    }
 
+    @Test
+    public void loadEnvFileStaticBinder() {
+        ProfileManager.loadEnvFileFillStaticClass("local", "db.props", DbProps.class);
+        log.info("DbProps.jdbcUser = {}", DbProps.JDBC_USER);
+        log.info("DbProps.jdbcPwd = {}", DbProps.JDBC_PWD);
     }
 }
