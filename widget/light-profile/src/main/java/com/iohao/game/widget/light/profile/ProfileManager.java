@@ -21,7 +21,6 @@ package com.iohao.game.widget.light.profile;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.core.convert.support.DefaultConversionService;
 
 import java.net.URL;
 import java.util.*;
@@ -143,8 +142,8 @@ public final class ProfileManager {
             log.warn("加载配置文件失败，跳过加载");
             return;
         }
-        ProfileStaticBinder.bind(staticClass, profile.map);
+        ProfileStaticBinder profileStaticBinder = new ProfileStaticBinder(profile.map);
+        profileStaticBinder.bind(staticClass);
     }
-
 
 }

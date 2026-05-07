@@ -127,18 +127,9 @@ public abstract non-sealed class AbstractBrokerClientStartup implements BrokerCl
         // 注册用户处理器
         this.registerUserProcessor(this.brokerClientBuilder);
 
-        // 实验性功能
-        experiment();
-
         return this.brokerClientBuilder;
     }
 
-    /**
-     * 实验性功能，将来可能移除的。
-     */
-    private void experiment() {
-        //        ExtRegions.me().add(new MonitorExtRegion());
-    }
 
     @Override
     public void setWithNo(int withNo) {

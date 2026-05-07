@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Profile {
     String key;
 
-    Map<String, Object> map = new ConcurrentHashMap<>();
+    Map<String, String> map = new ConcurrentHashMap<>();
 
     Profile() {
     }
@@ -134,10 +134,7 @@ public class Profile {
     public void load(Properties properties) {
         for (Object o : properties.keySet()) {
             String key = o.toString();
-
-            Object value = properties.get(o);
-            // 理论上在这里做数据类型解析会好一些，但现在不着急
-
+            String value = properties.getProperty(key);
             this.map.put(key, value);
         }
     }
