@@ -18,6 +18,7 @@
  */
 package com.iohao.game.widget.light.profile;
 
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @ToString
 public class Profile {
     String key;
-
+    @Getter
     Map<String, String> map = new ConcurrentHashMap<>();
 
     Profile() {
@@ -162,4 +163,5 @@ public class Profile {
             log.error("读取配置文件异常 [{}]: {}", url, e.getMessage(), e);
         }
     }
+
 }
