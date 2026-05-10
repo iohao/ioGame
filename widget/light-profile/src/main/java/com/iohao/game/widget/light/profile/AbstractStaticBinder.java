@@ -23,7 +23,7 @@ public abstract class AbstractStaticBinder {
 
         Field[] fields = targetClass.getDeclaredFields();
 
-        Map<String, String> dataMap = getDataMap();
+        Map<String, Object> dataMap = getDataMap();
         dataMap.forEach((key, value) -> {
             if (key == null || value == null) {
                 return;
@@ -59,7 +59,7 @@ public abstract class AbstractStaticBinder {
     /**
      * 获取数据映射（键值对）
      */
-    protected abstract Map<String, String> getDataMap();
+    protected abstract Map<String, Object> getDataMap();
 
     /**
      * 获取数据源名称（用于日志输出）

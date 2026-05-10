@@ -19,9 +19,9 @@ public class EnvStaticBinder extends AbstractStaticBinder {
     }
 
     @Override
-    protected Map<String, String> getDataMap() {
+    protected Map<String, Object> getDataMap() {
         // 合并配置文件和环境变量数据，配置文件优先
-        Map<String, String> mergedData = new HashMap<>(configFileData);
+        Map<String, Object> mergedData = new HashMap<>(configFileData);
         System.getenv().forEach((key, value) -> {
             mergedData.putIfAbsent(key, value); // 环境变量作为备选
         });

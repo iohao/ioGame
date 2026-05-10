@@ -8,9 +8,9 @@ import java.util.Map;
  */
 public class ProfileStaticBinder extends AbstractStaticBinder {
 
-    private final Map<String, String> configMap;
+    private final Map<String, Object> configMap;
 
-    public ProfileStaticBinder(Map<String, String> configMap) {
+    public ProfileStaticBinder(Map<String, Object> configMap) {
         this.configMap = configMap;
     }
 
@@ -20,7 +20,7 @@ public class ProfileStaticBinder extends AbstractStaticBinder {
     }
 
     @Override
-    protected Map<String, String> getDataMap() {
+    protected Map<String, Object> getDataMap() {
         return configMap;
     }
 

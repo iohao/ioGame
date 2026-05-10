@@ -46,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Profile {
     String key;
     @Getter
-    Map<String, String> map = new ConcurrentHashMap<>();
+    Map<String, Object> map = new ConcurrentHashMap<>();
 
     Profile() {
     }
