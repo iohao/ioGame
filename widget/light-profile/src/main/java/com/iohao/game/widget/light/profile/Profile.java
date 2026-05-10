@@ -18,12 +18,14 @@
  */
 package com.iohao.game.widget.light.profile;
 
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,9 +44,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @ToString
 public class Profile {
-    /** key */
     String key;
-
+    @Getter
     Map<String, Object> map = new ConcurrentHashMap<>();
 
     Profile() {
@@ -134,10 +135,7 @@ public class Profile {
     public void load(Properties properties) {
         for (Object o : properties.keySet()) {
             String key = o.toString();
-
-            Object value = properties.get(o);
-            // 理论上在这里做数据类型解析会好一些，但现在不着急
-
+            String value = properties.getProperty(key);
             this.map.put(key, value);
         }
     }
@@ -149,18 +147,21 @@ public class Profile {
      */
     public void load(List<URL> urls) {
         // 需要加载的配置文件
-        urls.forEach(url -> {
+        urls.forEach(this::load);
+    }
 
-            try (InputStream inputStream = url.openStream()) {
-                Properties properties = new Properties();
-                properties.load(inputStream);
-
-                this.load(properties);
-
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        });
+    public void load(URL url) {
+        if (url == null) {
+            log.warn("加载配置失败：URL 为空");
+            return;
+        }
+        try (InputStreamReader reader = new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)) {
+            Properties properties = new Properties();
+            properties.load(reader);
+            this.load(properties);
+        } catch (IOException e) {
+            log.error("读取配置文件异常 [{}]: {}", url, e.getMessage(), e);
+        }
     }
 
 }

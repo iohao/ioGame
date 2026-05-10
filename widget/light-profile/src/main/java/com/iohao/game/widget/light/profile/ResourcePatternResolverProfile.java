@@ -34,17 +34,25 @@ import java.util.List;
  */
 @Slf4j
 class ResourcePatternResolverProfile {
-    /** 默认主目录 */
+    /**
+     * 默认主目录
+     */
     @Setter
     private static String rootDir = "conf";
-    /** 默认加载主目录-子目录 */
+    /**
+     * 默认加载主目录-子目录
+     */
     @Setter
     private static String defaultDir = "common";
-    /** 默认加载指定后缀文件 */
+    /**
+     * 默认加载指定后缀文件
+     */
     @Setter
     private static String suffix = ".props";
 
-    /** 需要加载的目录列表 */
+    /**
+     * 需要加载的目录列表
+     */
     private final LinkedList<String> dirNameList = new LinkedList<>();
 
     /**
@@ -68,15 +76,11 @@ class ResourcePatternResolverProfile {
 
         List<URL> files = new LinkedList<>();
 
-        String locationPatternTemplate = "classpath*:%s/%s/*%s";
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
         try {
             for (String dir : dirNameList) {
-                String locationPattern = String.format(locationPatternTemplate, rootDir, dir, suffix);
-
-                Resource[] resources = resolver.getResources(locationPattern);
-                log.debug("locationPattern: {}", locationPattern);
+                Resource[] resources = getResourcesForDirectory(resolver, dir);
                 for (Resource resource : resources) {
                     URL url = resource.getURL();
                     files.add(url);
@@ -87,6 +91,44 @@ class ResourcePatternResolverProfile {
         }
 
         return files;
+    }
+
+    public static URL getFileURL(String env, String fileName) {
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        Resource[] resources;
+        try {
+            resources = getResourcesForDirectory(resolver, env);
+        } catch (IOException e) {
+            log.error("Error getting resources for directory: " + env, e);
+            return null;
+        }
+
+        for (Resource resource : resources) {
+            try {
+                URL url = resource.getURL();
+                if (url.getFile().contains(fileName)) {
+                    return url;
+                }
+            } catch (IOException e) {
+                log.warn("Error getting URL for resource: " + resource.getDescription(), e);
+                // Continue to next resource
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取指定目录下的资源
+     *
+     * @param resolver 资源解析器
+     * @param directory 目录名
+     * @return 资源数组
+     */
+    private static Resource[] getResourcesForDirectory(PathMatchingResourcePatternResolver resolver, String directory) throws IOException {
+        String locationPatternTemplate = "classpath*:%s/%s/*%s";
+        String locationPattern = String.format(locationPatternTemplate, rootDir, directory, suffix);
+        log.debug("locationPattern: {}", locationPattern);
+        return resolver.getResources(locationPattern);
     }
 
 }
