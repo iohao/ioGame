@@ -115,46 +115,45 @@ public final class ProfileManager {
     }
 
     /**
-     * 加载特定环境的配置文件
+     * 解析环境列表字符串为环境名称列表
+     * <pre>
+     * 支持逗号分隔的多个环境名称，例如: "blocks,local"
+     * 会自动去除空格和空字符串
+     * </pre>
      *
-     * @param env      环境名称
+     * @param env 环境名称字符串，支持逗号分隔
+     * @return 环境名称列表
+     */
+    private List<String> parseEnvList(String env) {
+        final String separator = ",";
+        return Arrays.stream(env.split(separator))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 按顺序加载多个环境的配置文件并合并
+     * <pre>
+     * env 参数支持逗号分隔的多个环境名称，例如: "blocks,local"
+     * 会按顺序加载每个环境的配置文件，后面的环境配置会覆盖前面的同名配置项
+     * </pre>
+     *
+     * @param env      环境名称，支持逗号分隔的多个环境，例如: "blocks,local"
      * @param fileName 配置文件名 (不需要带 .props 后缀)
+     * @return 合并后的 Profile 对象，如果加载失败返回 null
      */
     public Profile loadEnvFile(String env, String fileName) {
         if (StringUtils.isEmpty(env) || StringUtils.isEmpty(fileName)) {
             log.warn("环境或文件名为空，跳过加载");
             return null;
         }
-        URL fileURL = ResourcePatternResolverProfile.getFileURL(env, fileName);
-        Profile profile = profile(fileName);
-        profile.load(fileURL);
-        log.debug("配置内容 - size:{} - {}", profile.map.size(), profile.map);
-        return profile;
-    }
 
-    /**
-     * 加载特定环境的配置文件并填充到静态类
-     * <pre>
-     * env 参数支持逗号分隔的多个环境名称，例如: "blocks,local"
-     * 会按顺序加载每个环境的配置文件，后面的环境配置会覆盖前面的同名配置项
-     * 所有环境配置加载完成后，再统一进行静态类的映射绑定
-     * </pre>
-     *
-     * @param env         环境名称，支持逗号分隔的多个环境，例如: "blocks,local"
-     * @param fileName    配置文件名 (不需要带 .props 后缀)
-     * @param staticClass 需要绑定的静态类
-     */
-    public void loadEnvFileFillStaticClass(String env, String fileName, Class<?> staticClass) {
-        if (StringUtils.isEmpty(env) || StringUtils.isEmpty(fileName)) {
-            log.warn("环境或文件名为空，跳过加载");
-            return;
+        List<String> envList = parseEnvList(env);
+        if (envList.isEmpty()) {
+            log.warn("环境列表为空，跳过加载");
+            return null;
         }
-
-        final String separator = ",";
-        List<String> envList = Arrays.stream(env.split(separator))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.toList());
 
         log.debug("加载的环境列表 - size {} - {}", envList.size(), envList);
 
@@ -173,12 +172,35 @@ public final class ProfileManager {
 
         if (mergedProfile.map.isEmpty()) {
             log.warn("加载配置文件失败，跳过加载");
+            return null;
+        }
+
+        log.debug("配置内容 - size:{} - {}", mergedProfile.map.size(), mergedProfile.map);
+        return mergedProfile;
+    }
+
+    /**
+     * 加载特定环境的配置文件并填充到静态类
+     * <pre>
+     * env 参数支持逗号分隔的多个环境名称，例如: "blocks,local"
+     * 会按顺序加载每个环境的配置文件，后面的环境配置会覆盖前面的同名配置项
+     * 所有环境配置加载完成后，再统一进行静态类的映射绑定
+     * </pre>
+     *
+     * @param env         环境名称，支持逗号分隔的多个环境，例如: "blocks,local"
+     * @param fileName    配置文件名 (不需要带 .props 后缀)
+     * @param staticClass 需要绑定的静态类
+     */
+    public void loadEnvFileFillStaticClass(String env, String fileName, Class<?> staticClass) {
+        Profile profile = loadEnvFile(env, fileName);
+        if (Objects.isNull(profile) || profile.map.isEmpty()) {
+            log.warn("加载配置文件失败，跳过绑定静态类");
             return;
         }
 
-        ProfileStaticBinder profileStaticBinder = new ProfileStaticBinder(mergedProfile.map);
+        ProfileStaticBinder profileStaticBinder = new ProfileStaticBinder(profile.map);
         profileStaticBinder.bind(staticClass);
-        log.debug("配置内容已绑定到静态类 - size:{} - {}", mergedProfile.map.size(), mergedProfile.map);
+        log.debug("配置内容已绑定到静态类 - size:{} - {}", profile.map.size(), profile.map);
     }
 
 }
