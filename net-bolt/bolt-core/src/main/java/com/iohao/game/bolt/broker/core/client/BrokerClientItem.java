@@ -115,6 +115,8 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
     private int retryCount = 0;
     /** 是否正在重试中（防止并发触发） */
     private final AtomicBoolean isRetrying = new AtomicBoolean(false);
+    /** 是否注册到网关 */
+    private final AtomicBoolean registered = new AtomicBoolean(false);
     // ====================================================
 
     public BrokerClientItem(String address) {
@@ -125,6 +127,14 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
         // 重连选项
         rpcClient.option(BoltClientOption.CONN_RECONNECT_SWITCH, true);
         rpcClient.option(BoltClientOption.CONN_MONITOR_SWITCH, true);
+    }
+
+    /**
+     * 获取逻辑服名称（用于日志标识）
+     * 如果 brokerClient 尚未设置，则返回 address 作为降级
+     */
+    private String getClientName() {
+        return this.brokerClient != null ? this.brokerClient.getAppName() : this.address;
     }
 
     public Object invokeSync(final Object request, final int timeoutMillis) throws RemotingException, InterruptedException {
@@ -308,15 +318,20 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
         }
     }
 
-    // ================== 核心修改：替换原有 startup / send / registerToBroker ==================
     /**
      * 注册到网关（保持 public，供外部调用）
      * <p>
      * 此方法只执行注册逻辑，不触发重试。
      * 外部调用时（如网关请求），不触发重试，由外部决定是否重试。
+     *
      * @return true 注册成功，false 注册失败
      */
     public boolean registerToBroker() {
+        // 防止重复注册（无论来自哪里）
+        if (!registered.compareAndSet(false, true)) {
+            log.debug("【{}】已注册或正在注册，忽略重复调用", getClientName());
+            return true;  // 返回 true 表示已注册成功
+        }
         try {
             BrokerClientModuleMessage brokerClientModuleMessage = this.brokerClient.getBrokerClientModuleMessage();
             this.rpcClient.oneway(address, brokerClientModuleMessage);
@@ -326,10 +341,10 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
             this.barSkeleton.getRunners().onStartAfter();
             this.with();
 
-            log.info("逻辑服注册网关成功: {}", address);
+            log.info("【{}】逻辑服注册网关成功: {}", getClientName(), address);
             return true;
         } catch (RemotingException | InterruptedException e) {
-            log.error("注册网关失败: {}", address, e);
+            log.error("【{}】注册网关失败: {}", getClientName(), address, e);
             // 注意：外部调用时（如 Processor），不触发重试，仅记录日志
             // 内部调用时（如 tryConnect），由调用方负责重试
             return false;
@@ -344,7 +359,28 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
      */
     public void startup() {
         this.rpcClient.startup();
-        // 首次尝试连接（非阻塞）
+
+        // 注册 CONNECT 事件处理器：连接建立时尝试注册
+        this.addConnectionEventProcessor(ConnectionEventType.CONNECT, (remoteAddr, conn) -> {
+            // 延时一小段时间，确保连接完全就绪
+            DelayTaskKit.of("connect_event_" + this.address, () -> {
+                if (this.status == Status.ACTIVE) {
+                    return; // 已注册，忽略
+                }
+                // 尝试连接并注册（会发送握手消息并调用 registerToBroker）
+                this.tryConnect();
+            }).plusTime(Duration.ofMillis(200)).task();
+        });
+
+        // 注册 CLOSE 事件处理器（可选，用于重置状态）
+        this.addConnectionEventProcessor(ConnectionEventType.CLOSE, (remoteAddr, conn) -> {
+            this.status = Status.DISCONNECT;
+            this.registered.set(false);
+            this.cancelRetry();
+            log.debug("【{}】网关连接关闭，已重置状态: {}", getClientName(), this.address);
+        });
+
+        // 首次尝试连接（启动时）
         this.tryConnect();
     }
 
@@ -359,7 +395,7 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
         }
 
         if (!isRetrying.compareAndSet(false, true)) {
-            log.debug("已有重试任务进行中，忽略本次触发");
+            log.debug("【{}】已有重试任务进行中，忽略本次触发", getClientName());
             return;
         }
 
@@ -369,7 +405,7 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
             this.rpcClient.oneway(address, message);
 
             // 2. 连接成功，执行注册
-            log.info("网关连接成功: {}", address);
+            log.info("【{}】网关连接成功: {}", getClientName(), address);
             this.status = Status.ACTIVE;
             // 直接调用 public 方法注册
             // 如果注册失败，回退状态并触发重试
@@ -391,7 +427,7 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
             this.scheduleRetry(e);
         } catch (Exception e) {
             isRetrying.set(false);
-            log.error("连接网关时发生未知异常，将重试", e);
+            log.error("【{}】连接网关时发生未知异常，将重试", getClientName(), e);
             this.scheduleRetry(e);
         }
     }
@@ -402,25 +438,25 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
     private void scheduleRetry(Exception e) {
         // 检查是否达到最大重试次数（-1 表示无限重试）
         if (maxRetryCount != -1 && retryCount >= maxRetryCount) {
-            log.error("重试次数已达上限 ({}), 放弃连接: {}", maxRetryCount, address);
+            log.error("【{}】重试次数已达上限 ({}), 放弃连接: {}", getClientName(), maxRetryCount, address);
             return;
         }
 
         retryCount++;
         // 创建延时任务，覆盖之前的同名任务
         DelayTaskKit.of(retryTaskId, () -> {
-            log.info("执行第 {} 次重试，连接网关: {}", retryCount, address);
+            log.info("【{}】执行第 {} 次重试，连接网关: {}", getClientName(), retryCount, address);
             // 递归调用 tryConnect 进行重试
             this.tryConnect();
         }).plusTime(Duration.ofMillis(retryDelayMillis)).task();
 
         // 日志记录（区分 DNS 错误和其他错误）
         if (e.getCause() instanceof UnknownHostException) {
-            log.warn("DNS解析失败 ({}), {} 秒后重试 (第 {} 次)",
-                    address, retryDelayMillis / 1000, retryCount);
+            log.warn("【{}】DNS解析失败 ({}), {} 秒后重试 (第 {} 次)",
+                    getClientName(), address, retryDelayMillis / 1000, retryCount);
         } else {
-            log.warn("连接网关失败 ({}), {} 秒后重试 (第 {} 次): {}",
-                    address, retryDelayMillis / 1000, retryCount, e.getMessage());
+            log.warn("【{}】连接网关失败 ({}), {} 秒后重试 (第 {} 次): {}",
+                    getClientName(), address, retryDelayMillis / 1000, retryCount, e.getMessage());
         }
     }
 
@@ -430,9 +466,8 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
     public void cancelRetry() {
         DelayTaskKit.cancel(retryTaskId);
         isRetrying.set(false);
-        log.info("已取消网关重连任务: {}", address);
+        log.debug("【{}】已取消网关重连任务: {}", getClientName(), address);
     }
-
 
     private void with() {
         int withNo = this.brokerClient.getWithNo();
