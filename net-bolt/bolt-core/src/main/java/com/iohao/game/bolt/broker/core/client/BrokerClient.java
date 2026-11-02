@@ -2,19 +2,6 @@
  * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package com.iohao.game.bolt.broker.core.client;
 
@@ -164,13 +151,30 @@ public class BrokerClient implements BrokerClientContext, GroupWith, AttrOptionD
         return this.brokerClientManager.next();
     }
 
+    /**
+     * 获取可用的 BrokerClientItem，带有防 NPE 的自愈兜底机制
+     */
+    private BrokerClientItem getSafeNextClient() throws RemotingException {
+        BrokerClientItem nextClient = next();
+        if (nextClient == null) {
+            log.warn("【{}】获取网关节点失败，可能正处于重连空窗期，尝试强制刷新 Selector...", appName);
+            this.brokerClientManager.resetSelector();
+            nextClient = next();
+            if (nextClient == null) {
+                // 抛出受控异常，交由业务层捕获处理，而不是抛出底层的 NullPointerException
+                throw new RemotingException("【" + appName + "】网关节点全部不可用，请求失败，请稍后重试");
+            }
+        }
+        return nextClient;
+    }
+
     @Override
     public CommunicationAggregationContext getCommunicationAggregationContext() {
         return this.brokerClientManager.next();
     }
 
     public <T> T invokeSync(final Object request, final int timeoutMillis) throws RemotingException, InterruptedException {
-        BrokerClientItem nextClient = next();
+        BrokerClientItem nextClient = getSafeNextClient();
         return (T) nextClient.invokeSync(request, timeoutMillis);
     }
 
@@ -181,7 +185,7 @@ public class BrokerClient implements BrokerClientContext, GroupWith, AttrOptionD
 
     @Override
     public void oneway(final Object request) throws Exception {
-        BrokerClientItem nextClient = next();
+        BrokerClientItem nextClient = getSafeNextClient();
         nextClient.oneway(request);
     }
 
@@ -191,14 +195,14 @@ public class BrokerClient implements BrokerClientContext, GroupWith, AttrOptionD
     }
 
     void invokeWithCallback(Object request) throws RemotingException {
-        BrokerClientItem nextClient = next();
+        BrokerClientItem nextClient = getSafeNextClient();
         nextClient.invokeWithCallback(request);
     }
 
     @Override
     public void sendResponse(Object responseObject) {
         try {
-            BrokerClientItem nextClient = next();
+            BrokerClientItem nextClient = getSafeNextClient();
             nextClient.oneway(responseObject);
         } catch (RemotingException e) {
             log.error(e.getMessage(), e);
