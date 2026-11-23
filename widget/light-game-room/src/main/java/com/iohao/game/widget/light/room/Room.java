@@ -308,9 +308,7 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
         player.setRoomId(this.getRoomId());
         var userId = player.getUserId();
         this.getPlayerMap().put(userId, player);
-        if(player.getSeat() > 0) {
-            this.getPlayerSeatMap().put(player.getSeat(), userId);
-        }
+        this.getPlayerSeatMap().put(player.getSeat(), userId);
 
         if (notOverrideRealAndRobotMap()) {
             return;
