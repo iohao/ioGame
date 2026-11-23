@@ -77,6 +77,11 @@ public class ConnectEventClientProcessor implements ConnectionEventProcessor, Br
 
         BrokerClient brokerClient = brokerClientItem.getBrokerClient();
         BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
+
+        // ======= 核心修改：确保注册前状态是 ACTIVE =======
+        brokerClientItem.setStatus(BrokerClientItem.Status.ACTIVE);
+        // ===============================================
+
         // 重连
         brokerClientManager.register(brokerClientItem);
 

@@ -2,19 +2,6 @@
  * ioGame
  * Copyright (C) 2021 - present  渔民小镇 （262610965@qq.com、luoyizhu@gmail.com） . All Rights Reserved.
  * # iohao.com . 渔民小镇
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package com.iohao.game.bolt.broker.core.client;
 
@@ -59,7 +46,6 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -99,6 +85,7 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
     /** broker 的 client */
     BrokerClient brokerClient;
 
+    /** 当前节点状态，默认断开 */
     Status status = Status.DISCONNECT;
     /** aware 注入扩展 */
     AwareInject awareInject;
@@ -127,6 +114,10 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
         rpcClient.option(BoltClientOption.CONN_MONITOR_SWITCH, true);
     }
 
+    private String getClientName() {
+        return this.brokerClient != null ? this.brokerClient.getAppName() : this.address;
+    }
+
     public Object invokeSync(final Object request, final int timeoutMillis) throws RemotingException, InterruptedException {
         return rpcClient.invokeSync(connection, request, timeoutMillis);
     }
@@ -145,12 +136,10 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
 
     @Override
     public void broadcast(ResponseMessage responseMessage, Collection<Long> userIdList) {
-
         if (CollKit.isEmpty(userIdList)) {
             log.warn("广播无效 userIdList : {}", userIdList);
             return;
         }
-
         this.broadcast.broadcast(responseMessage, userIdList);
     }
 
@@ -207,7 +196,6 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
 
     @Override
     public ResponseCollectMessage invokeModuleCollectMessage(RequestMessage requestMessage) {
-
         RequestCollectMessage requestCollectMessage = new RequestCollectMessage()
                 .setRequestMessage(requestMessage);
 
@@ -219,7 +207,6 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
             responseCollectMessage.setStatusCode(ActionErrorEnum.systemOtherErrCode.getCode());
             responseCollectMessage.setStatusMes(e.getMessage());
             responseCollectMessage.setMessageList(Collections.emptyList());
-
             return responseCollectMessage;
         }
     }
@@ -229,7 +216,6 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
         RequestCollectExternalMessage request = new RequestCollectExternalMessage()
                 .setBizCode(bizCode)
                 .setData(data);
-
         return this.invokeExternalModuleCollectMessage(request);
     }
 
@@ -240,64 +226,12 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);
         }
-
-        /*
-         * 给一个空对象，这样调用端可以减少一些 null 判断。
-         * 而且正常情况下，也走不到这里。
-         */
         return new ResponseCollectExternalMessage();
     }
 
     @Override
     public void invokeOneway(Object message) {
         this.internalOneway(message);
-    }
-
-    void addConnectionEventProcessor(ConnectionEventType type, ConnectionEventProcessor processor) {
-
-        aware(processor);
-
-        this.rpcClient.addConnectionEventProcessor(type, processor);
-    }
-
-    void registerUserProcessor(UserProcessor<?> processor) {
-
-        aware(processor);
-
-        this.rpcClient.registerUserProcessor(processor);
-    }
-
-    @Override
-    public void aware(Object obj) {
-        /*
-         * 目前 aware 系列由框架提供，
-         * 虽然这里可以开放给开发者来控制，但目前暂时不考虑开放
-         */
-        if (Objects.nonNull(this.awareInject)) {
-            this.awareInject.aware(obj);
-        }
-
-        AwareKit.aware(obj);
-
-        if (obj instanceof BrokerClientItemAware aware) {
-            aware.setBrokerClientItem(this);
-        }
-
-        if (obj instanceof BrokerClientAware aware) {
-            aware.setBrokerClient(this.brokerClient);
-        }
-
-        if (obj instanceof PulseConsumerAware aware) {
-            Pulses pulses = this.barSkeleton.option(SkeletonAttr.pulses);
-            PulseConsumers pulseConsumers = pulses.getPulseConsumers();
-            aware.setPulseConsumers(pulseConsumers);
-        }
-
-        if (obj instanceof PulseProducerAware aware) {
-            Pulses pulses = this.barSkeleton.option(SkeletonAttr.pulses);
-            PulseProducers pulseProducers = pulses.getPulseProducers();
-            aware.setPulseProducers(pulseProducers);
-        }
     }
 
     private void internalOneway(Object responseObject) {
@@ -308,39 +242,68 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
         }
     }
 
-    // ================== 核心修改：替换原有 startup / send / registerToBroker ==================
+    void addConnectionEventProcessor(ConnectionEventType type, ConnectionEventProcessor processor) {
+        aware(processor);
+        this.rpcClient.addConnectionEventProcessor(type, processor);
+    }
+
+    void registerUserProcessor(UserProcessor<?> processor) {
+        aware(processor);
+        this.rpcClient.registerUserProcessor(processor);
+    }
+
+    @Override
+    public void aware(Object obj) {
+        if (Objects.nonNull(this.awareInject)) {
+            this.awareInject.aware(obj);
+        }
+        AwareKit.aware(obj);
+        if (obj instanceof BrokerClientItemAware aware) {
+            aware.setBrokerClientItem(this);
+        }
+        if (obj instanceof BrokerClientAware aware) {
+            aware.setBrokerClient(this.brokerClient);
+        }
+        if (obj instanceof PulseConsumerAware aware) {
+            Pulses pulses = this.barSkeleton.option(SkeletonAttr.pulses);
+            PulseConsumers pulseConsumers = pulses.getPulseConsumers();
+            aware.setPulseConsumers(pulseConsumers);
+        }
+        if (obj instanceof PulseProducerAware aware) {
+            Pulses pulses = this.barSkeleton.option(SkeletonAttr.pulses);
+            PulseProducers pulseProducers = pulses.getPulseProducers();
+            aware.setPulseProducers(pulseProducers);
+        }
+    }
+
     /**
-     * 注册到网关（保持 public，供外部调用）
+     * 注册到网关
      * <p>
-     * 此方法只执行注册逻辑，不触发重试。
-     * 外部调用时（如网关请求），不触发重试，由外部决定是否重试。
+     * 此方法由 RequestBrokerClientModuleMessageClientProcessor 触发
+     * 负责将模块信息（cmd列表）发送给网关。
+     *
      * @return true 注册成功，false 注册失败
      */
     public boolean registerToBroker() {
         try {
             BrokerClientModuleMessage brokerClientModuleMessage = this.brokerClient.getBrokerClientModuleMessage();
+            // 发送真正的业务模块信息给网关
             this.rpcClient.oneway(address, brokerClientModuleMessage);
 
-            TimeUnit.MILLISECONDS.sleep(100);
-            this.brokerClient.getBrokerClientManager().resetSelector();
+            // 执行启动后的回调
             this.barSkeleton.getRunners().onStartAfter();
             this.with();
 
-            log.info("逻辑服注册网关成功: {}", address);
+            log.info("【{}】逻辑服业务注册网关成功: {}", getClientName(), address);
             return true;
-        } catch (RemotingException | InterruptedException e) {
-            log.error("注册网关失败: {}", address, e);
-            // 注意：外部调用时（如 Processor），不触发重试，仅记录日志
-            // 内部调用时（如 tryConnect），由调用方负责重试
+        } catch (Exception e) {
+            log.error("【{}】逻辑服业务注册网关失败: {}", getClientName(), address, e);
             return false;
         }
     }
 
     /**
      * 启动客户端（非阻塞）
-     * <p>
-     * 首次尝试连接，若失败则通过 DelayTaskKit 自动重试，直到成功或达到最大重试次数。
-     * 解决了 DNS 临时失效、网关未启动等场景下的连接恢复问题。
      */
     public void startup() {
         this.rpcClient.startup();
@@ -350,8 +313,7 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
 
     /**
      * 尝试连接网关（内部方法）
-     * <p>
-     * 发送握手消息，成功后调用 registerToBroker()，若失败则调度重试
+     * 注意：这里只负责发送握手消息，状态流转交由 ConnectEventClientProcessor 处理
      */
     private void tryConnect() {
         if (this.status == Status.ACTIVE) {
@@ -359,39 +321,22 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
         }
 
         if (!isRetrying.compareAndSet(false, true)) {
-            log.debug("已有重试任务进行中，忽略本次触发");
+            log.debug("【{}】已有重试任务进行中，忽略本次触发", getClientName());
             return;
         }
 
         try {
-            // 1. 发送连接握手消息（原 send 逻辑）
+            // 1. 发送连接握手消息，唤醒底层 Bolt 去建连
             var message = new BrokerClientItemConnectMessage();
             this.rpcClient.oneway(address, message);
 
-            // 2. 连接成功，执行注册
-            log.info("网关连接成功: {}", address);
-            this.status = Status.ACTIVE;
-            // 直接调用 public 方法注册
-            // 如果注册失败，回退状态并触发重试
-            if (!this.registerToBroker()) {
-                this.status = Status.DISCONNECT;
-                isRetrying.set(false);//先释放锁，再调度重试
-                this.scheduleRetry(new RemotingException("注册失败"));
-                return;
-            }
-            // 重置重试计数
-            retryCount = 0;
+            // 2. 发送后释放锁，真正的状态修改和业务注册由底层 Bolt 触发 CONNECT 事件后，
+            // 交给 ConnectEventClientProcessor 自动完成。这里不再手动注册。
             isRetrying.set(false);
 
-        } catch (RemotingException | InterruptedException e) {
-            // 连接失败（握手失败），释放锁并调度重试
-            isRetrying.set(false);
-            // 注意：如果是因为注册失败导致异常，这里也会重试，但由于 registerToBroker 内部捕获了异常，不会向外抛出
-            // 所以这里捕获的主要是握手异常（如连接被拒绝、DNS 解析失败等）
-            this.scheduleRetry(e);
         } catch (Exception e) {
             isRetrying.set(false);
-            log.error("连接网关时发生未知异常，将重试", e);
+            log.warn("【{}】无法连接网关 ({}): {}，将在稍后重试", getClientName(), address, e.getMessage());
             this.scheduleRetry(e);
         }
     }
@@ -400,49 +345,38 @@ public class BrokerClientItem implements CommunicationAggregationContext, AwareI
      * 使用 DelayTaskKit 调度下一次重试
      */
     private void scheduleRetry(Exception e) {
-        // 检查是否达到最大重试次数（-1 表示无限重试）
         if (maxRetryCount != -1 && retryCount >= maxRetryCount) {
-            log.error("重试次数已达上限 ({}), 放弃连接: {}", maxRetryCount, address);
+            log.error("【{}】重试次数已达上限 ({}), 放弃连接: {}", getClientName(), maxRetryCount, address);
             return;
         }
 
         retryCount++;
-        // 创建延时任务，覆盖之前的同名任务
         DelayTaskKit.of(retryTaskId, () -> {
-            log.info("执行第 {} 次重试，连接网关: {}", retryCount, address);
-            // 递归调用 tryConnect 进行重试
+            log.info("【{}】执行第 {} 次重试，连接网关: {}", getClientName(), retryCount, address);
             this.tryConnect();
         }).plusTime(Duration.ofMillis(retryDelayMillis)).task();
 
-        // 日志记录（区分 DNS 错误和其他错误）
         if (e.getCause() instanceof UnknownHostException) {
-            log.warn("DNS解析失败 ({}), {} 秒后重试 (第 {} 次)",
-                    address, retryDelayMillis / 1000, retryCount);
+            log.warn("【{}】DNS解析失败 ({}), {} 秒后重试 (第 {} 次)",
+                    getClientName(), address, retryDelayMillis / 1000, retryCount);
         } else {
-            log.warn("连接网关失败 ({}), {} 秒后重试 (第 {} 次): {}",
-                    address, retryDelayMillis / 1000, retryCount, e.getMessage());
+            log.warn("【{}】连接网关失败 ({}), {} 秒后重试 (第 {} 次): {}",
+                    getClientName(), address, retryDelayMillis / 1000, retryCount, e.getMessage());
         }
     }
 
-    /**
-     * 取消重试任务（可在应用关闭时调用）
-     */
     public void cancelRetry() {
         DelayTaskKit.cancel(retryTaskId);
         isRetrying.set(false);
-        log.info("已取消网关重连任务: {}", address);
+        log.debug("【{}】已取消网关重连任务: {}", getClientName(), address);
     }
-
 
     private void with() {
         int withNo = this.brokerClient.getWithNo();
-
         if (withNo == 0 || withNo != this.brokerServerWithNo) {
             this.brokerServerWithNo = 0;
             return;
         }
-
-        // 连接与当前 brokerClientItem 是同一个进程的。
         BrokerClientManager manager = brokerClient.getBrokerClientManager();
         manager.setBrokerClientItemWith(this);
     }

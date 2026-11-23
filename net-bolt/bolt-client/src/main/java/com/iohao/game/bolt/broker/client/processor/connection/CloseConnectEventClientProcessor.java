@@ -70,6 +70,10 @@ public class CloseConnectEventClientProcessor implements ConnectionEventProcesso
         BrokerClient brokerClient = brokerClientItem.getBrokerClient();
         BrokerClientManager brokerClientManager = brokerClient.getBrokerClientManager();
 
+        // ======= 核心修改：断开时重置状态为 DISCONNECT =======
+        brokerClientItem.setStatus(BrokerClientItem.Status.DISCONNECT);
+        // ==================================================
+
         //  在集群时，需要移除与当前 broker （游戏网关）连接的 brokerClientItem
         brokerClientManager.remove(brokerClientItem);
 

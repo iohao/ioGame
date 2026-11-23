@@ -441,7 +441,7 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      * @return true 房间内没有 Robot
      */
     default boolean isEmptyRobot() {
-        return this.getRealPlayerMap().isEmpty();
+        return this.getRobotMap().isEmpty();
     }
 
     /**
