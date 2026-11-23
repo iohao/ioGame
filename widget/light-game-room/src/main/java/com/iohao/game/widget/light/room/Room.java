@@ -308,7 +308,9 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
         player.setRoomId(this.getRoomId());
         var userId = player.getUserId();
         this.getPlayerMap().put(userId, player);
-        this.getPlayerSeatMap().put(player.getSeat(), userId);
+        if(player.getSeat() > 0) {
+            this.getPlayerSeatMap().put(player.getSeat(), userId);
+        }
 
         if (notOverrideRealAndRobotMap()) {
             return;
@@ -441,7 +443,7 @@ public interface Room extends Serializable, RoomBroadcastEnhance {
      * @return true 房间内没有 Robot
      */
     default boolean isEmptyRobot() {
-        return this.getRealPlayerMap().isEmpty();
+        return this.getRobotMap().isEmpty();
     }
 
     /**
